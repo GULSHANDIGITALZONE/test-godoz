@@ -1,0 +1,36 @@
+# robots.txt for https://www.godoz.in/
+# GoDoz Technology & Digital Solutions | Founder: RS GULSHAN PRAJAPATI
+
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /admin
+Disallow: /profile.html
+Disallow: /profile
+Disallow: /payment-success.html
+Disallow: /payment-success
+Disallow: /.*
+
+# Allow AI Search & Indexing Crawlers (Google AI, OpenAI, Anthropic, Perplexity, Bing)
+User-agent: Googlebot
+Allow: /
+Disallow: /admin.html
+Disallow: /profile.html
+Disallow: /payment-success.html
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: https://www.godoz.in/sitemap.xml

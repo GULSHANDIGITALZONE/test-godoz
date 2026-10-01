@@ -1,0 +1,2753 @@
+<!DOCTYPE html>
+<html lang="hi" data-theme="light">
+<head>
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-4514064358809691">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4514064358809691" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <script>
+    (function(){
+      const savedTheme = localStorage.getItem('godoz_theme') || 
+        (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+
+    // Universal Instant Drawer Navigation Handlers (0ms response)
+    window.openMobileDrawer = window.openLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const sidebar = document.getElementById('appSidebar');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.add('open');
+      if (sidebar) sidebar.classList.add('open');
+      if (backdrop) backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeMobileDrawer = window.closeLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const sidebar = document.getElementById('appSidebar');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.remove('open');
+      if (sidebar) sidebar.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    window.toggleMobileDrawer = window.toggleLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const sidebar = document.getElementById('appSidebar');
+      const isOpen = (sidebar && sidebar.classList.contains('open')) || (drawer && drawer.classList.contains('open'));
+      if (isOpen) {
+        window.closeMobileDrawer();
+      } else {
+        window.openMobileDrawer();
+      }
+    };
+  </script>
+  
+  <!-- Topic Cluster & Silo SEO Meta Tags -->
+  <title>Client Profile &amp; Project Dashboard | GoDoz Technology</title>
+  <meta name="description" content="Manage your GoDoz Technology client profile, track ordered Android apps and website development projects, make online payments via Razorpay, and manage your account.">
+  <meta name="keywords" content="GoDoz Profile, Client Dashboard GoDoz, Pay Online GoDoz, My Apps Orders, RS GULSHAN PRAJAPATI Client Portal">
+  <meta name="author" content="RS GULSHAN PRAJAPATI">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://www.godoz.in/profile.html">
+  <link rel="shortcut icon" href="./official logo.png" type="image/x-icon">
+  <link rel="manifest" href="./manifest.json">
+
+  <!-- Font Awesome & Base Stylesheet -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="./style.css">
+
+  <!-- Razorpay Official Checkout SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <style>
+    .profile-hero-section {
+      background: var(--bg-surface-alt, #f8fafc);
+      color: var(--text-main) !important;
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color, #e2e8f0);
+      margin-bottom: 24px;
+    }
+    .profile-hero-section h1 {
+      color: var(--text-main) !important;
+      text-shadow: none;
+    }
+    .profile-hero-section p {
+      color: var(--text-muted) !important;
+    }
+    .profile-container {
+      max-width: 1080px;
+      margin: 0 auto 40px;
+      padding: 0 16px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .profile-layout-grid {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 24px;
+      align-items: flex-start;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+    }
+    .profile-sidebar {
+      background: var(--bg-surface, #ffffff);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+      text-align: center;
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    .profile-avatar-wrapper {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 14px;
+    }
+    .profile-avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary, #1266e8);
+      background: #f1f5f9;
+    }
+    .avatar-edit-badge {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: var(--accent, #ff6900);
+      color: #fff;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      cursor: pointer;
+      border: 2px solid #fff;
+    }
+    .profile-nav-tabs {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 20px;
+      text-align: left;
+    }
+    .profile-tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      background: transparent;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text-muted, #64748b);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+    .profile-tab-btn:hover {
+      background: var(--bg-surface-alt, #f8fafc);
+      color: var(--text-main, #0f172a);
+    }
+    .profile-tab-btn.active {
+      background: rgba(18,102,232,0.08);
+      color: var(--primary, #1266e8);
+      border-color: rgba(18,102,232,0.2);
+    }
+    .profile-tab-btn i {
+      font-size: 1.1rem;
+      width: 20px;
+      text-align: center;
+    }
+    .profile-content-card {
+      background: var(--bg-surface, #ffffff);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    .stats-metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-metric-box {
+      background: var(--bg-surface-alt, #f8fafc);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .product-order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 20px;
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 16px;
+      margin-bottom: 16px;
+      background: var(--bg-surface-alt, #f8fafc);
+      flex-wrap: wrap;
+      gap: 16px;
+      transition: all 0.2s ease;
+    }
+    .product-order-item:hover {
+      border-color: rgba(18, 102, 232, 0.35);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .status-active { background: rgba(34,197,94,0.15); color: #16a34a; }
+    .status-dev { background: rgba(18,102,232,0.15); color: #1266e8; }
+    .status-pending { background: rgba(234,179,8,0.15); color: #ca8a04; }
+
+    /* Project Financial Summary Box */
+    .project-finance-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      background: var(--bg-surface, #ffffff);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin: 12px 0 10px;
+    }
+    .finance-metric-cell {
+      display: flex;
+      flex-direction: column;
+    }
+    .finance-metric-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted, #64748b);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .finance-metric-val {
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    /* Payment Ledger / History Timeline */
+    .payment-ledger-box {
+      background: var(--bg-surface, #ffffff);
+      border: 1px dashed var(--border-color, #cbd5e1);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-top: 10px;
+      font-size: 0.82rem;
+    }
+    .ledger-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 800;
+      color: var(--text-main, #0f172a);
+      font-size: 0.8rem;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-color, #e2e8f0);
+    }
+    .ledger-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .ledger-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .ledger-pay-id {
+      font-family: monospace;
+      font-size: 0.75rem;
+      background: rgba(18,102,232,0.08);
+      color: var(--primary, #1266e8);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* Project Pay More Modal Styles */
+    .godoz-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.68);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 99999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      animation: fadeIn 0.2s ease;
+    }
+    .godoz-modal-backdrop.open {
+      display: flex !important;
+    }
+    .godoz-modal-card {
+      background: var(--bg-surface, #ffffff);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 20px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color, #e2e8f0);
+      background: var(--bg-surface, #ffffff);
+    }
+    .modal-body {
+      padding: 20px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .quick-amount-pill {
+      border: 1px solid var(--border-color, #e2e8f0);
+      background: var(--bg-surface-alt, #f8fafc);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--text-main, #0f172a);
+      transition: all 0.15s ease;
+    }
+    .quick-amount-pill:hover, .quick-amount-pill.active {
+      border-color: var(--primary, #1266e8);
+      background: rgba(18, 102, 232, 0.1);
+      color: var(--primary, #1266e8);
+    }
+
+    .payment-tier-card {
+      border: 2px solid var(--border-color, #e2e8f0);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .payment-tier-card:hover, .payment-tier-card.selected {
+      border-color: var(--primary, #1266e8);
+      background: rgba(18,102,232,0.03);
+    }
+
+    @media (max-width: 991px) {
+      .profile-layout-grid {
+        grid-template-columns: 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        gap: 16px;
+      }
+      .profile-sidebar {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        padding: 18px 14px;
+      }
+      .profile-nav-tabs {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 4px 2px 10px;
+        gap: 8px;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        scrollbar-width: thin;
+      }
+      .profile-tab-btn {
+        white-space: nowrap;
+        flex-shrink: 0;
+        width: auto !important;
+        padding: 9px 14px;
+        font-size: 0.84rem;
+      }
+      .profile-content-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        padding: 18px 14px;
+        overflow-x: hidden;
+      }
+      .profile-container {
+        padding: 0 12px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      .stats-metric-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .project-finance-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        padding: 10px 8px;
+      }
+      .finance-metric-val {
+        font-size: 0.92rem;
+      }
+      .product-order-item {
+        padding: 14px 12px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .profile-header-actions .btn-text-hide {
+        display: none;
+      }
+      .profile-header-actions .btn {
+        padding: 6px 10px;
+        font-size: 0.82rem;
+      }
+    }
+
+    /* Skeleton Shimmer & Smooth Fade Transitions */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .skeleton-shimmer {
+      background: linear-gradient(90deg, var(--bg-surface-alt, #f1f5f9) 25%, var(--border-color, #e2e8f0) 50%, var(--bg-surface-alt, #f1f5f9) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+    }
+    /* Mobile Fixed Bottom Navigation Bar */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      max-width: 100vw;
+      z-index: 9990;
+      background: var(--glass-bg, rgba(255, 255, 255, 0.96));
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border-color, #e2e8f0);
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+      padding: 6px 4px max(6px, env(safe-area-inset-bottom));
+      justify-content: space-around;
+      align-items: center;
+      min-height: 56px;
+    }
+    .mobile-bottom-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: var(--text-muted, #64748b);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 5px 4px;
+      border-radius: 10px;
+      transition: all 0.15s ease;
+      flex: 1;
+      text-align: center;
+      gap: 2px;
+      min-height: 46px;
+    }
+    .mobile-bottom-item i {
+      font-size: 1.25rem;
+      transition: transform 0.15s ease;
+    }
+    .mobile-bottom-item:hover, .mobile-bottom-item.active, .mobile-bottom-item:focus {
+      color: var(--primary, #1266e8);
+    }
+    @media (max-width: 991px) {
+      .mobile-bottom-nav {
+        display: flex !important;
+      }
+      body {
+        padding-bottom: 68px !important;
+      }
+    }
+    /* Desktop Horizontal Navigation Bar */
+    .desktop-nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      flex-wrap: nowrap;
+    }
+    .desktop-nav-link {
+      color: var(--text-main, #0f172a);
+      font-weight: 700;
+      font-size: 0.86rem;
+      text-decoration: none;
+      padding: 7px 11px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .desktop-nav-link:hover, .desktop-nav-link.active {
+      color: var(--primary, #1266e8);
+      background: rgba(18, 102, 232, 0.08);
+    }
+    @media (max-width: 1080px) {
+      .desktop-nav-menu {
+        display: none !important;
+      }
+    }
+
+    .mobile-menu-toggle {
+      background: var(--bg-surface-alt, #f8fafc);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 8px;
+      font-size: 1.15rem;
+      color: var(--text-main, #0f172a);
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .mobile-menu-toggle:hover {
+      background: var(--border-color, #e2e8f0);
+      color: var(--primary, #1266e8);
+    }
+
+    /* Off-Canvas Left Slide Navigation Drawer & Backdrop */
+    .mobile-nav-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 9998;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .mobile-nav-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-nav-drawer {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 320px;
+      max-width: 86vw;
+      height: 100vh;
+      background: var(--bg-surface, #ffffff);
+      border-right: 1px solid var(--border-color, #e2e8f0);
+      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.25);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .mobile-nav-drawer.open {
+      transform: translateX(0) !important;
+    }
+
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color, #e2e8f0);
+      background: var(--bg-surface, #ffffff);
+      flex-shrink: 0;
+    }
+    .drawer-close-btn {
+      background: var(--bg-surface-alt, #f8fafc);
+      border: 1px solid var(--border-color, #e2e8f0);
+      color: var(--text-main, #0f172a);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .drawer-close-btn:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border-color: #ef4444;
+    }
+
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .drawer-nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 10px;
+      color: var(--text-main, #0f172a);
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: all 0.18s ease;
+      background: transparent;
+    }
+    .drawer-nav-item span {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .drawer-nav-item:hover, .drawer-nav-item.active {
+      background: var(--bg-surface-alt, #f8fafc);
+      color: var(--primary, #1266e8);
+      transform: translateX(4px);
+    }
+    .drawer-divider {
+      height: 1px;
+      background: var(--border-color, #e2e8f0);
+      margin: 10px 0 4px;
+    }
+    .drawer-section-title {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted, #64748b);
+      padding: 4px 6px;
+    }
+  </style>
+</head>
+<body id="top">
+
+  <!-- Global Branded GoDoz Page Loader Overlay -->
+  <div id="globalPageLoader" class="godoz-page-loader">
+    <div class="godoz-spinner-wrap">
+      <div class="godoz-spinner-ring"></div>
+      <img src="./official logo.png" alt="GoDoz Logo" class="godoz-spinner-logo">
+    </div>
+    <div class="godoz-loader-text">Loading Client Dashboard...</div>
+  </div>
+
+  <!-- ========================================================================
+       Sticky Modern Header Navigation (Universal Standard)
+       ======================================================================== -->
+  <header class="navbar">
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+      
+      <!-- Left: Hamburger Button + Brand Logo -->
+      <div class="navbar-left">
+        <button id="mobileMenuToggle" class="mobile-menu-toggle" aria-label="Toggle Navigation Sidebar" title="Toggle Sidebar Navigation" onclick="window.toggleMobileDrawer()" style="display:inline-flex !important;">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <a href="/index.html" class="brand-logo-wrap" style="display:flex; align-items:center; gap:8px; text-decoration:none;">
+          <img src="./official logo.png" alt="GoDoz Logo" class="brand-logo-img" style="height:34px; width:auto; border-radius:6px;" onerror="this.src='./logo w bg.png'">
+          <div>
+            <div style="font-size:1.3rem; font-weight:900; line-height:1; letter-spacing:-0.5px;">
+              <span style="color:var(--primary, #1266e8);">Go</span><span style="color:var(--accent, #ff6900);">Doz</span>
+            </div>
+            <div style="font-size:0.62rem; font-weight:700; color:var(--text-muted, #64748b); letter-spacing:0.8px; text-transform:uppercase;">
+              Technology
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center: Desktop Horizontal Navigation Menu -->
+      <nav class="desktop-nav-menu" aria-label="Desktop Main Navigation">
+        <a href="/index.html" class="desktop-nav-link"><i class="fa-solid fa-house" style="font-size:0.8rem;"></i> Home</a>
+        <a href="/index.html#services" class="desktop-nav-link"><i class="fa-solid fa-laptop-code" style="font-size:0.8rem; color:var(--primary);"></i> Services</a>
+        <a href="/apps/index.html" class="desktop-nav-link"><i class="fa-solid fa-mobile-screen" style="font-size:0.8rem; color:var(--accent);"></i> Apps Hub</a>
+        <a href="/index.html#cost-estimator" class="desktop-nav-link"><i class="fa-solid fa-calculator" style="font-size:0.8rem; color:#10b981;"></i> Calculator</a>
+        <a href="/help/index.html" class="desktop-nav-link"><i class="fa-solid fa-circle-question" style="font-size:0.8rem; color:#f59e0b;"></i> Help</a>
+        <a href="/feedback.html" class="desktop-nav-link"><i class="fa-solid fa-star" style="font-size:0.8rem; color:#f59e0b;"></i> Reviews</a>
+      </nav>
+
+      <!-- Right: Action Buttons -->
+      <div class="header-actions">
+        <!-- Track Order Quick Trigger -->
+        <button type="button" onclick="window.openTrackOrderModal()" class="btn btn-sm btn-outline header-btn-track" title="Track Live Project Order" style="padding:6px 11px; font-size:0.84rem; font-weight:700; border-color:var(--primary);">
+          <i class="fa-solid fa-magnifying-glass" style="color:var(--primary);"></i> <span class="btn-text">Track Order</span>
+        </button>
+
+        <!-- Profile / Portal Button -->
+        <a href="/profile.html" class="btn btn-sm btn-outline header-btn-auth" title="Client Portal &amp; Profile" style="padding:6px 11px; font-size:0.84rem; font-weight:700; border-color:var(--primary); background:rgba(18,102,232,0.08);">
+          <i class="fa-solid fa-user-check" style="color:var(--primary);"></i> <span class="btn-text">Dashboard</span>
+        </a>
+
+        <!-- Theme Toggle Button -->
+        <button id="themeToggleBtn" onclick="window.toggleGoDozTheme()" class="btn btn-sm btn-outline header-btn-theme" aria-label="Toggle Theme" title="Switch Theme" style="padding:6px 10px; border-radius:8px; cursor:pointer;">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <!-- WhatsApp Support -->
+        <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20want%20to%20discuss%20my%20Project/Payment." target="_blank" class="btn btn-sm btn-accent header-btn-chat" style="padding:6px 12px; font-size:0.84rem; font-weight:700;">
+          <i class="fa-brands fa-whatsapp"></i> <span class="btn-text">Support</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       Off-Canvas Left Slide Navigation Drawer & Backdrop
+       ======================================================================== -->
+  <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="window.closeMobileDrawer()"></div>
+
+  <!-- Slide-Out Mobile Navigation Drawer -->
+  <aside id="mobileNavDrawer" class="mobile-nav-drawer" aria-label="Mobile Navigation">
+    <div class="drawer-header">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="app-sidebar-header-icon" style="width:34px; height:34px; border-radius:8px; background:rgba(18,102,232,0.12); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+          <i class="fa-solid fa-compass" style="font-size:1.1rem;"></i>
+        </div>
+        <div>
+          <div style="font-size:1.1rem; font-weight:900; line-height:1.1; color:var(--text-main);">
+            GoDoz Menu
+          </div>
+          <div style="font-size:0.65rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">
+            Quick Navigation
+          </div>
+        </div>
+      </div>
+      <button type="button" class="drawer-close-btn" onclick="window.closeMobileDrawer()" aria-label="Close Navigation Menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="drawer-body" style="flex:1; overflow-y:auto; padding:10px 14px 90px; -webkit-overflow-scrolling:touch; overscroll-behavior:contain;">
+      <!-- Menu Group 1: Services & Work -->
+      <div style="padding:4px 0;">
+        <div class="app-section-label">Services &amp; Work</div>
+        <ul class="app-menu-list">
+          <li>
+            <a href="/index.html#home-top" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-house app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Home Page</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#services" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-laptop-code app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Services Offered</span>
+              </div>
+              <span class="app-menu-badge">6 Services</span>
+            </a>
+          </li>
+          <li>
+            <a href="/apps/index.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-mobile-screen app-menu-icon" style="color:var(--accent);"></i>
+                <span class="app-menu-text">Our Apps &amp; Work</span>
+              </div>
+              <span class="app-menu-badge">6+ Apps</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#cost-estimator" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-calculator app-menu-icon" style="color:#10b981;"></i>
+                <span class="app-menu-text">Project Cost Calculator</span>
+              </div>
+              <span class="app-menu-badge">Calculator</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#live-tools" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-toolbox app-menu-icon" style="color:#06b6d4;"></i>
+                <span class="app-menu-text">Live Web Tools</span>
+              </div>
+              <span class="app-menu-badge">Tools</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Menu Group 2: Company & Founder -->
+      <div style="padding:4px 0; border-top:1px solid var(--border-color);">
+        <div class="app-section-label">Company &amp; Founder</div>
+        <ul class="app-menu-list">
+          <li>
+            <a href="/About.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-tie app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">About Founder &amp; GoDoz</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#why-hire-us" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-award app-menu-icon" style="color:#8b5cf6;"></i>
+                <span class="app-menu-text">Why Choose GoDoz</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#tech-stack" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-microchip app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Tech Stack &amp; Cloud</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#official-verification" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-shield-halved app-menu-icon" style="color:var(--accent);"></i>
+                <span class="app-menu-text">Official Publisher Info</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/feedback.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-star app-menu-icon" style="color:#f59e0b;"></i>
+                <span class="app-menu-text">Client Reviews &amp; Feedback</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Menu Group 3: Portal & Orders -->
+      <div style="padding:4px 0; border-top:1px solid var(--border-color);">
+        <div class="app-section-label">Portal &amp; Orders</div>
+        <ul class="app-menu-list">
+          <li>
+            <a href="/profile.html#products" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-box-open app-menu-icon" style="color:#10b981;"></i>
+                <span class="app-menu-text">My Products</span>
+              </div>
+              <span class="app-menu-badge" style="background:rgba(16,185,129,0.15); color:#10b981; font-weight:700;">Active</span>
+            </a>
+          </li>
+          <li>
+            <a href="/profile.html" class="app-menu-item active">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-id-card app-menu-icon" style="color:#8b5cf6;"></i>
+                <span class="app-menu-text">My Profile / Dashboard</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" onclick="window.openTrackOrderModal(); window.closeMobileDrawer();" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-magnifying-glass app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Track Live Order</span>
+              </div>
+              <span class="app-menu-badge" style="background:rgba(18,102,232,0.12); color:var(--primary); font-weight:700;">LIVE</span>
+            </a>
+          </li>
+          <li>
+            <a href="/admin.html" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-shield app-menu-icon" style="color:#7c3aed;"></i>
+                <span class="app-menu-text">Admin Hub</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#contact-section" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-paper-plane app-menu-icon" style="color:#ef4444;"></i>
+                <span class="app-menu-text">Contact &amp; Inquiry</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/help/index.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-circle-question app-menu-icon" style="color:#f59e0b;"></i>
+                <span class="app-menu-text">Help &amp; Knowledgebase</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/login.html" id="drawerAuthNavItem" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-circle app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Client Portal / Login</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="app-sidebar-footer" style="padding:14px 0 20px; border-top:1px solid var(--border-color); margin-top:8px;">
+        <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20want%20to%20discuss%20a%20project!" target="_blank" class="app-sidebar-wa-btn">
+          <i class="fa-brands fa-whatsapp"></i> Chat with Developer
+        </a>
+        <div style="font-size:0.7rem; color:var(--text-muted); text-align:center; margin-top:8px;">
+          GoDoz Technology &bull; Sheikhpura
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Profile Layout -->
+  <div class="app-layout-container">
+
+    <!-- Left Navigation Menu Sidebar -->
+    <aside id="appSidebar" class="app-sidebar" aria-label="Left Navigation Menu Sidebar">
+
+      <!-- Menu Group 1: Navigation & Services -->
+      <div style="padding:4px 0;">
+        <div class="app-section-label">Services &amp; Work</div>
+        <ul class="app-menu-list">
+
+          <li>
+            <a href="/index.html#home-top" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-house app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Home Page</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#services" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-laptop-code app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Services Offered</span>
+              </div>
+              <span class="app-menu-badge">6 Services</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#portfolio" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-mobile-screen app-menu-icon" style="color:var(--accent);"></i>
+                <span class="app-menu-text">Our Apps &amp; Work</span>
+              </div>
+              <span class="app-menu-badge">6+ Apps</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#cost-estimator" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-calculator app-menu-icon" style="color:#10b981;"></i>
+                <span class="app-menu-text">Project Cost Calculator</span>
+              </div>
+              <span class="app-menu-badge">Calculator</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#live-tools" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-toolbox app-menu-icon" style="color:#06b6d4;"></i>
+                <span class="app-menu-text">Live Web Tools</span>
+              </div>
+              <span class="app-menu-badge">Tools</span>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+      <!-- Menu Group 2: Company & Founder -->
+      <div style="padding:4px 0; border-top:1px solid var(--border-color);">
+        <div class="app-section-label">Company &amp; Founder</div>
+        <ul class="app-menu-list">
+
+          <li>
+            <a href="/About.html" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-tie app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">About Founder &amp; GoDoz</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#why-hire-us" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-award app-menu-icon" style="color:#8b5cf6;"></i>
+                <span class="app-menu-text">Why Choose GoDoz</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#tech-stack" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-microchip app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Tech Stack &amp; Cloud</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#official-verification" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-shield-halved app-menu-icon" style="color:var(--accent);"></i>
+                <span class="app-menu-text">Official Publisher Info</span>
+              </div>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+      <!-- Menu Group 3: Portal & Orders -->
+      <div style="padding:4px 0; border-top:1px solid var(--border-color);">
+        <div class="app-section-label">Portal &amp; Orders</div>
+        <ul class="app-menu-list">
+
+          <li>
+            <a href="/profile.html#products" onclick="if(window.location.pathname.includes('profile')){document.querySelector('[data-tab=products]')?.click();}" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-box-open app-menu-icon" style="color:#10b981;"></i>
+                <span class="app-menu-text">My Products</span>
+              </div>
+              <span class="app-menu-badge" style="background:rgba(16,185,129,0.15); color:#10b981; font-weight:700;">Active</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/profile.html" class="app-menu-item active">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-id-card app-menu-icon" style="color:#8b5cf6;"></i>
+                <span class="app-menu-text">My Profile / Dashboard</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="javascript:void(0)" onclick="window.openTrackOrderModal()" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-magnifying-glass app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Track Live Order</span>
+              </div>
+              <span class="app-menu-badge" style="background:rgba(18,102,232,0.12); color:var(--primary); font-weight:700;">LIVE</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/admin.html" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-shield app-menu-icon" style="color:#7c3aed;"></i>
+                <span class="app-menu-text">Admin Hub</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#contact-section" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-paper-plane app-menu-icon" style="color:#ef4444;"></i>
+                <span class="app-menu-text">Contact &amp; Inquiry</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/help/index.html" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-circle-question app-menu-icon" style="color:#f59e0b;"></i>
+                <span class="app-menu-text">Help &amp; Knowledgebase</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/login.html" id="sidebarAuthLink" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-circle app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text" id="sidebarAuthText">Client Portal / Login</span>
+              </div>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+      <!-- Sidebar Footer -->
+      <div class="app-sidebar-footer">
+        <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20want%20to%20discuss%20a%20project!" target="_blank" class="app-sidebar-wa-btn">
+          <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+        </a>
+      </div>
+
+    </aside>
+
+    <main class="app-main-content container profile-container">
+
+      <!-- Hero Header -->
+      <section class="profile-hero-section">
+        <div style="font-size:0.82rem; color:var(--text-muted); margin-bottom:8px;">
+          <a href="/index.html" style="color:var(--primary); text-decoration:none;">Home</a> / <a href="/login.html" style="color:var(--primary); text-decoration:none;">Client Portal</a> / <span style="color:var(--text-main);">Profile Management</span>
+        </div>
+        <h1 style="font-size:clamp(1.5rem, 3vw, 2rem); font-weight:900; margin:0 0 6px; color:var(--text-main);">
+          Client Management &amp; Projects Dashboard
+        </h1>
+
+    <!-- PROFILE SKELETON LOADER (Shown smoothly while loading) -->
+    <div id="profileLoadingSkeleton" class="profile-layout-grid" style="display:grid; opacity:0.85;">
+      <!-- Skeleton Sidebar -->
+      <aside class="profile-sidebar" style="pointer-events:none; text-align:center;">
+        <div class="godoz-spinner-wrap" style="margin:0 auto 12px;">
+          <div class="godoz-spinner-ring"></div>
+          <img src="./official logo.png" alt="GoDoz Logo" class="godoz-spinner-logo">
+        </div>
+        <div style="font-size:0.85rem; font-weight:800; color:var(--primary); margin-bottom:12px;">Syncing Dashboard...</div>
+        <div class="skeleton-shimmer" style="width:84px; height:84px; border-radius:50%; margin:0 auto 14px;"></div>
+        <div class="skeleton-shimmer" style="width:140px; height:20px; margin:0 auto 8px;"></div>
+        <div class="skeleton-shimmer" style="width:180px; height:14px; margin:0 auto 16px;"></div>
+        <div class="skeleton-shimmer" style="width:100px; height:22px; border-radius:20px; margin:0 auto 20px;"></div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div class="skeleton-shimmer" style="width:100%; height:38px; border-radius:10px;"></div>
+          <div class="skeleton-shimmer" style="width:100%; height:38px; border-radius:10px;"></div>
+          <div class="skeleton-shimmer" style="width:100%; height:38px; border-radius:10px;"></div>
+        </div>
+      </aside>
+
+      <!-- Skeleton Content -->
+      <div class="profile-content-card" style="pointer-events:none;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+          <div class="skeleton-shimmer" style="width:200px; height:24px;"></div>
+          <div class="skeleton-shimmer" style="width:120px; height:32px; border-radius:20px;"></div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; margin-bottom:24px;">
+          <div class="skeleton-shimmer" style="height:90px; border-radius:14px;"></div>
+          <div class="skeleton-shimmer" style="height:90px; border-radius:14px;"></div>
+          <div class="skeleton-shimmer" style="height:90px; border-radius:14px;"></div>
+        </div>
+        <div class="skeleton-shimmer" style="height:120px; border-radius:16px; margin-bottom:20px;"></div>
+        <div class="skeleton-shimmer" style="height:70px; border-radius:12px;"></div>
+      </div>
+    </div>
+    
+    <!-- NOT LOGGED IN NOTICE (Shown if no session) -->
+    <div id="unauthNotice" style="display:none; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:20px; padding:35px 20px; text-align:center; box-shadow:var(--shadow-md); margin-bottom:30px;">
+      <div style="font-size:3rem; color:var(--primary); margin-bottom:12px;"><i class="fa-solid fa-lock"></i></div>
+      <h2 style="margin:0 0 8px; font-size:1.5rem;">Please Sign In to Access Your Client Profile</h2>
+      <p style="color:var(--text-muted); max-width:550px; margin:0 auto 20px; font-size:0.95rem;">
+        You can log in with your Google account, enter your email / user ID, or continue as a guest to manage quotes and project payments.
+      </p>
+      <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+        <a href="/login.html" class="btn btn-primary" style="padding:10px 24px;"><i class="fa-solid fa-right-to-bracket"></i> Go to Sign In</a>
+        <button id="btnGuestLoginQuick" class="btn btn-outline" style="padding:10px 20px;"><i class="fa-solid fa-user-secret"></i> Continue as Guest</button>
+      </div>
+    </div>
+
+    <!-- LOGGED IN MAIN INTERFACE -->
+    <div id="authProfileInterface" class="profile-layout-grid" style="display:none;">
+      
+      <!-- Left Profile Sidebar -->
+      <aside class="profile-sidebar">
+        <div class="profile-avatar-wrapper">
+          <img id="dashAvatar" src="./official logo.png" alt="Profile Avatar" class="profile-avatar-img">
+          <div class="avatar-edit-badge" title="Edit Avatar URL" id="btnEditAvatar"><i class="fa-solid fa-camera"></i></div>
+        </div>
+        <h3 id="dashName" style="margin:0 0 4px; font-size:1.2rem; color:var(--text-main);">Client Name</h3>
+        <p id="dashEmail" style="color:var(--text-muted); font-size:0.82rem; margin:0 0 12px; word-break:break-all;">client@email.com</p>
+        
+        <div style="display:inline-block; padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:800; background:rgba(18,102,232,0.1); color:var(--primary); margin-bottom:18px;" id="dashTierBadge">
+          🟢 Verified Client
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="profile-nav-tabs">
+          <a href="/admin.html" id="btnSidebarAdminHub" class="profile-tab-btn" style="display:none; color:#7c3aed; font-weight:800; background:rgba(124,58,237,0.08); border:1px solid rgba(124,58,237,0.25); text-decoration:none;">
+            <i class="fa-solid fa-crown" style="color:#7c3aed;"></i> Master Manager Hub
+          </a>
+          <button type="button" class="profile-tab-btn active" data-tab="overview" onclick="window.switchProfileTab('overview')"><i class="fa-solid fa-gauge-high"></i> Overview</button>
+          <button type="button" class="profile-tab-btn" data-tab="products" onclick="window.switchProfileTab('products')"><i class="fa-solid fa-mobile-screen"></i> My Products</button>
+          <button type="button" class="profile-tab-btn" data-tab="payments" onclick="window.switchProfileTab('payments')"><i class="fa-solid fa-receipt"></i> Payment History &amp; Receipts</button>
+          <button type="button" class="profile-tab-btn" data-tab="edit-profile" onclick="window.switchProfileTab('edit-profile')"><i class="fa-solid fa-user-pen"></i> Edit Profile</button>
+          <button type="button" class="profile-tab-btn" data-tab="security" onclick="window.switchProfileTab('security')"><i class="fa-solid fa-shield-halved"></i> Settings</button>
+          <button type="button" class="profile-tab-btn" id="btnSidebarLogout" onclick="window.handleLogout()" style="color:#dc2626;"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
+        </div>
+      </aside>
+
+      <!-- Right Tab Contents Area -->
+      <div class="profile-content-card">
+        
+        <!-- Alerts -->
+        <div id="dashAlertSuccess" style="display:none; padding:10px 14px; border-radius:8px; background:#f0fdf4; border:1px solid #bbf7d0; color:#16a34a; font-size:0.88rem; margin-bottom:16px;"></div>
+        <div id="dashAlertError" style="display:none; padding:10px 14px; border-radius:8px; background:#fef2f2; border:1px solid #fecaca; color:#dc2626; font-size:0.88rem; margin-bottom:16px;"></div>
+
+        <!-- Admin / Master Manager Quick Banner (Shown for privileged users) -->
+        <div id="adminQuickBanner" style="display:none; background:linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(18, 102, 232, 0.08)); border:2px solid #7c3aed; border-radius:16px; padding:16px 20px; margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg, #7c3aed, #4f46e5); color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;">
+                <i class="fa-solid fa-user-shield" id="adminBannerIcon"></i>
+              </div>
+              <div>
+                <div style="font-size:1rem; font-weight:800; color:var(--text-main);" id="adminBannerRoleTitle">Master Manager Control Center Active</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);" id="adminBannerRoleDesc">Manage all client orders, verify COD advances, assign support admins, and manage payment links.</div>
+              </div>
+            </div>
+            <a href="/admin.html" class="btn btn-primary" id="adminBannerLink" style="background:#7c3aed; border-color:#7c3aed; font-weight:800; padding:9px 16px; font-size:0.88rem; text-decoration:none;">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Admin Control Panel
+            </a>
+          </div>
+        </div>
+
+        <!-- ==================== TAB 1: OVERVIEW ==================== -->
+        <section id="tab-overview" class="tab-pane">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
+            <h2 style="margin:0; font-size:1.35rem; color:var(--text-main);">Welcome Back, <span id="dashGreetingName">User</span>!</h2>
+            <button class="btn btn-sm btn-accent" id="btnQuickPayTop"><i class="fa-solid fa-bolt"></i> Quick Pay (Razorpay)</button>
+          </div>
+
+          <div class="stats-metric-grid">
+            <div class="stat-metric-box">
+              <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">ACTIVE PROJECTS</div>
+              <div style="font-size:1.6rem; font-weight:900; color:var(--primary); margin:4px 0;" id="metricActiveProjects">0</div>
+              <div style="font-size:0.75rem; color:#16a34a;"><i class="fa-solid fa-arrow-trend-up"></i> In Progress</div>
+            </div>
+
+            <div class="stat-metric-box">
+              <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">TOTAL PRODUCTS</div>
+              <div style="font-size:1.6rem; font-weight:900; color:var(--text-main); margin:4px 0;" id="metricTotalOrders">0</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Apps &amp; Web Services</div>
+            </div>
+
+            <div class="stat-metric-box">
+              <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">TOTAL INVESTED</div>
+              <div style="font-size:1.6rem; font-weight:900; color:#16a34a; margin:4px 0;" id="metricTotalPaid">₹0</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Paid via Razorpay / UPI</div>
+            </div>
+          </div>
+
+          <!-- Developer Direct Support Box -->
+          <div style="background:linear-gradient(135deg, rgba(18,102,232,0.06), rgba(255,105,0,0.06)); border:1px solid var(--border-color); border-radius:16px; padding:20px; margin-bottom:24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+              <div>
+                <h4 style="margin:0 0 4px; font-size:1.05rem;">Need a Custom Feature or Project Update?</h4>
+                <p style="margin:0; font-size:0.85rem; color:var(--text-muted);">Direct priority channel with Founder &amp; Lead Architect <strong>RS GULSHAN PRAJAPATI</strong>.</p>
+              </div>
+              <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20am%20logged%20in%20to%20my%20GoDoz%20Client%20Portal%20and%20need%20a%20project%20update." target="_blank" class="btn btn-sm btn-accent">
+                <i class="fa-brands fa-whatsapp"></i> Chat with Developer
+              </a>
+            </div>
+          </div>
+
+          <h3 style="font-size:1.1rem; margin-bottom:12px; color:var(--text-main);">Recent Project Milestones</h3>
+          <div id="recentOrdersList">
+            <!-- Dynamic item inserted via JS -->
+            <div class="product-order-item">
+              <div>
+                <div style="font-weight:700; font-size:0.95rem; color:var(--text-main);">Custom Android Application</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);">Order ID: #GoDoz-88219 • Milestone 2: UI/UX &amp; Firebase Setup</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span class="status-badge status-dev">In Development (70%)</span>
+                <a href="#payments" class="btn btn-sm btn-outline" onclick="document.querySelector('[data-tab=payments]').click();">Pay Balance</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 2: MY PRODUCTS ==================== -->
+        <section id="tab-products" class="tab-pane" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
+            <h2 style="margin:0; font-size:1.35rem; color:var(--text-main);">My Products &amp; Ordered Services</h2>
+            <a href="/index.html#cost-estimator" class="btn btn-sm btn-primary"><i class="fa-solid fa-plus"></i> Order New Project</a>
+          </div>
+          
+          <div id="myProductsContainer">
+            <div class="product-order-item">
+              <div>
+                <div style="font-weight:700; font-size:0.95rem; color:var(--text-main);">Syncing your products &amp; active licenses...</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);">Fetching from Cloud Firestore &amp; your client profile.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 3: PAYMENT HISTORY & DIGITAL RECEIPTS ==================== -->
+        <section id="tab-payments" class="tab-pane" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h2 style="margin:0 0 4px; font-size:1.35rem; color:var(--text-main);"><i class="fa-solid fa-receipt" style="color:var(--primary);"></i> Payment History &amp; Official Receipts</h2>
+              <p style="color:var(--text-muted); font-size:0.88rem; margin:0;">
+                Complete record of all online &amp; milestone transactions. Click 'View Receipt' on any payment to view, download, or print your official success invoice anytime!
+              </p>
+            </div>
+            <button type="button" onclick="document.querySelector('[data-tab=products]')?.click();" class="btn btn-sm btn-primary">
+              <i class="fa-solid fa-credit-card"></i> Pay Milestone via My Products
+            </button>
+          </div>
+
+          <!-- Payment History List Container -->
+          <div id="clientPaymentHistoryContainer" style="margin-top:16px;">
+            <div style="background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:14px; padding:20px; text-align:center; color:var(--text-muted);">
+              <i class="fa-solid fa-spinner fa-spin" style="color:var(--primary); font-size:1.5rem; margin-bottom:8px;"></i>
+              <div>Syncing payment history &amp; official receipts from Firestore...</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 4: EDIT PROFILE ==================== -->
+        <section id="tab-edit-profile" class="tab-pane" style="display:none;">
+          <h2 style="margin:0 0 16px; font-size:1.35rem; color:var(--text-main);">Edit Client Profile &amp; Billing</h2>
+          
+          <form id="editProfileForm">
+            <div class="form-group">
+              <label class="form-label" for="inputEditName">Full Name / Display Name</label>
+              <input type="text" id="inputEditName" class="form-input" style="padding-left:14px;" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="inputEditPhone">WhatsApp / Mobile Number</label>
+              <input type="tel" id="inputEditPhone" class="form-input" style="padding-left:14px;" placeholder="+91 0000000000">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="inputEditCompany">Business / Company Name</label>
+              <input type="text" id="inputEditCompany" class="form-input" style="padding-left:14px;" placeholder="e.g. My Business Pvt Ltd">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="inputEditAvatarUrl">Profile Photo / Avatar Image URL</label>
+              <input type="url" id="inputEditAvatarUrl" class="form-input" style="padding-left:14px;" placeholder="https://lh3.googleusercontent.com/... or direct image link">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="inputEditAddress">City &amp; State / Billing Address</label>
+              <input type="text" id="inputEditAddress" class="form-input" style="padding-left:14px;" placeholder="your city">
+            </div>
+
+            <button type="submit" id="btnSaveProfile" class="btn btn-primary" style="padding:12px 24px;">
+              <i class="fa-solid fa-floppy-disk"></i> Save Profile Changes
+            </button>
+          </form>
+        </section>
+
+        <!-- ==================== TAB 5: SECURITY & SETTINGS ==================== -->
+        <section id="tab-security" class="tab-pane" style="display:none;">
+          <h2 style="margin:0 0 16px; font-size:1.35rem; color:var(--text-main);">Account Security &amp; Settings</h2>
+          
+          <div style="background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:14px; padding:18px; margin-bottom:16px;">
+            <div style="font-weight:700; margin-bottom:4px;">Firebase Account UID</div>
+            <code id="displayUserUID" style="font-size:0.8rem; word-break:break-all;">Loading...</code>
+          </div>
+
+          <div style="background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:14px; padding:18px; margin-bottom:20px;">
+            <div style="font-weight:700; margin-bottom:4px;">Reset Password</div>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin:0 0 10px;">Send a password recovery email to your registered address.</p>
+            <button id="btnSendPasswordReset" class="btn btn-sm btn-outline"><i class="fa-solid fa-envelope"></i> Send Password Reset Link</button>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" id="btnLogoutSecurity" onclick="window.handleLogout()" class="btn btn-outline" style="color:#dc2626; border-color:#fecaca;"><i class="fa-solid fa-right-from-bracket"></i> Sign Out from All Sessions</button>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Footer -->
+      <footer style="background:#0b1b36; color:#94a3b8; padding:24px; text-align:center; font-size:0.86rem; border-top:3px solid var(--primary); border-radius:16px; margin-top:30px;">
+        <div class="container">
+          <div style="font-size:1.2rem; font-weight:800; color:#fff; margin-bottom:6px;">
+            <span style="color:#2788ff;">Go</span><span style="color:#ff6900;">Doz</span> Technology
+          </div>
+          <p style="margin:0 0 10px;">
+            Official Website: <a href="https://www.godoz.in" style="color:#38bdf8;">www.godoz.in</a> | Developer: <strong>RS GULSHAN PRAJAPATI</strong>
+          </p>
+          <div>&copy; 2026 GoDoz Technology. All Rights Reserved.</div>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+  <!-- Firebase Auth & Dashboard Logic Script -->
+  <script type="module">
+    import { 
+      subscribeToAuth, 
+      loginAsGuest, 
+      logoutUser, 
+      resetPassword,
+      updateUserProfileData,
+      listenToClientOrders,
+      listenToClientPayments,
+      isUserAdmin,
+      isUserManager,
+      recordRazorpayPayment,
+      getOrderFinancials,
+      RAZORPAY_CONFIG
+    } from "./firebase-init.js";
+
+    // DOM Elements
+    const unauthNotice = document.getElementById('unauthNotice');
+    const authProfileInterface = document.getElementById('authProfileInterface');
+    const dashAvatar = document.getElementById('dashAvatar');
+    const dashName = document.getElementById('dashName');
+    const dashEmail = document.getElementById('dashEmail');
+    const dashGreetingName = document.getElementById('dashGreetingName');
+    const dashTierBadge = document.getElementById('dashTierBadge');
+    const displayUserUID = document.getElementById('displayUserUID');
+    const dashAlertSuccess = document.getElementById('dashAlertSuccess');
+    const dashAlertError = document.getElementById('dashAlertError');
+    const customPayAmount = document.getElementById('customPayAmount');
+    const btnPayAmountDisplay = document.getElementById('btnPayAmountDisplay');
+    const btnTriggerRazorpay = document.getElementById('btnTriggerRazorpay');
+    const editProfileForm = document.getElementById('editProfileForm');
+    const inputEditName = document.getElementById('inputEditName');
+    const inputEditPhone = document.getElementById('inputEditPhone');
+    const inputEditCompany = document.getElementById('inputEditCompany');
+    const inputEditAvatarUrl = document.getElementById('inputEditAvatarUrl');
+    const inputEditAddress = document.getElementById('inputEditAddress');
+    const skeletonLoader = document.getElementById('profileLoadingSkeleton');
+    const metricTotalOrdersEl = document.getElementById('metricTotalOrders');
+    const metricActiveProjectsEl = document.getElementById('metricActiveProjects');
+    const metricTotalPaidEl = document.getElementById('metricTotalPaid');
+
+    // DOM Elements for Project Milestone Modal & Payments
+    const paySelectProject = document.getElementById('paySelectProject');
+
+    function escapeHTML(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Left Drawer Navigation Handlers
+    window.openMobileDrawer = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.add('open');
+      if (backdrop) backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeMobileDrawer = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    // Modal: Open Project-Specific Milestone Payment Dialog
+    let currentModalOrderId = '';
+    let currentModalProjectName = '';
+    let currentModalRemaining = 0;
+
+    window.openProjectPayMore = function(orderId, projectName, totalPrice, amountPaid, remainingBalance) {
+      try {
+        currentModalOrderId = orderId || '';
+        currentModalProjectName = projectName || 'Custom Software Project';
+        currentModalRemaining = Number(remainingBalance) || 0;
+
+        const modal = document.getElementById('projectPayModal');
+        if (!modal) return;
+
+        const modalOrderIdEl = document.getElementById('modalProjectOrderId');
+        const modalProjectNameEl = document.getElementById('modalProjectName');
+        const modalTotalCostEl = document.getElementById('modalTotalCost');
+        const modalPaidAmountEl = document.getElementById('modalPaidAmount');
+        const modalRemainingAmountEl = document.getElementById('modalRemainingAmount');
+        const modalCustomAmountInput = document.getElementById('modalCustomAmount');
+        const modalPayNoteInput = document.getElementById('modalPayNote');
+        const btnModalFullBalance = document.getElementById('btnModalFullBalance');
+        const modalPayBtnDisplay = document.getElementById('modalPayButtonAmountDisplay');
+
+        if (modalOrderIdEl) modalOrderIdEl.textContent = '#' + currentModalOrderId;
+        if (modalProjectNameEl) modalProjectNameEl.textContent = currentModalProjectName;
+        if (modalTotalCostEl) modalTotalCostEl.textContent = '₹' + Number(totalPrice || 0).toLocaleString('en-IN');
+        if (modalPaidAmountEl) modalPaidAmountEl.textContent = '₹' + Number(amountPaid || 0).toLocaleString('en-IN');
+        if (modalRemainingAmountEl) modalRemainingAmountEl.textContent = '₹' + Number(currentModalRemaining).toLocaleString('en-IN');
+
+        const defaultAmount = currentModalRemaining > 0 ? currentModalRemaining : 1000;
+        if (modalCustomAmountInput) {
+          modalCustomAmountInput.value = defaultAmount;
+        }
+        if (modalPayNoteInput) {
+          modalPayNoteInput.value = `Milestone Installment for ${currentModalProjectName}`;
+        }
+        if (modalPayBtnDisplay) {
+          modalPayBtnDisplay.textContent = Number(defaultAmount).toLocaleString('en-IN');
+        }
+
+        // Reset pill selection
+        document.querySelectorAll('#projectPayModal .quick-amount-pill').forEach(p => p.classList.remove('active'));
+        if (btnModalFullBalance) btnModalFullBalance.classList.add('active');
+
+        modal.style.display = 'flex';
+        modal.classList.add('active');
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      } catch (err) {
+        console.error("Error opening project pay modal:", err);
+        document.body.style.overflow = '';
+      }
+    };
+
+    // Delegated Event Listener for Pay More / Installment Buttons
+    document.addEventListener('click', (e) => {
+      const trigger = e.target.closest('.btn-pay-more-trigger');
+      if (trigger) {
+        e.preventDefault();
+        const orderId = trigger.getAttribute('data-order-id');
+        const projectName = trigger.getAttribute('data-project-name');
+        const totalPrice = trigger.getAttribute('data-total-cost');
+        const amountPaid = trigger.getAttribute('data-paid-amount');
+        const remainingBalance = trigger.getAttribute('data-remaining-balance');
+        window.openProjectPayMore(orderId, projectName, totalPrice, amountPaid, remainingBalance);
+      }
+    });
+
+    window.closeProjectPayModal = function() {
+      const modal = document.getElementById('projectPayModal');
+      if (modal) {
+        modal.classList.remove('active');
+        modal.classList.remove('open');
+        modal.style.display = 'none';
+      }
+      document.body.style.overflow = '';
+    };
+
+    window.setModalPayAmount = function(amt, el) {
+      document.querySelectorAll('#projectPayModal .quick-amount-pill').forEach(p => p.classList.remove('active'));
+      if (el) el.classList.add('active');
+      const modalCustomAmountInput = document.getElementById('modalCustomAmount');
+      if (modalCustomAmountInput) {
+        modalCustomAmountInput.value = amt;
+      }
+      document.getElementById('modalPayButtonAmountDisplay').textContent = Number(amt).toLocaleString('en-IN');
+    };
+
+    window.setModalPayRemaining = function(el) {
+      const amt = currentModalRemaining > 0 ? currentModalRemaining : 1000;
+      window.setModalPayAmount(amt, el);
+    };
+
+    const modalCustomAmountInput = document.getElementById('modalCustomAmount');
+    if (modalCustomAmountInput) {
+      modalCustomAmountInput.addEventListener('input', () => {
+        const val = Number(modalCustomAmountInput.value || 0);
+        document.getElementById('modalPayButtonAmountDisplay').textContent = val.toLocaleString('en-IN');
+      });
+    }
+
+    // Trigger Razorpay for Modal Project-Specific Payment
+    document.getElementById('btnExecuteProjectRazorpay')?.addEventListener('click', () => {
+      const amount = Number(document.getElementById('modalCustomAmount').value);
+      if (!amount || amount < 1) {
+        showError("Please enter a valid amount of at least ₹1.");
+        return;
+      }
+
+      const clientName = currentUser ? (currentUser.displayName || "Client") : (localStorage.getItem('godoz_user_name') || "Client");
+      const clientEmail = currentUser ? (currentUser.email || (localStorage.getItem('godoz_user_email') || "")) : (localStorage.getItem('godoz_user_email') || "");
+      const clientPhone = currentUser ? (currentUser.phoneNumber || (localStorage.getItem('godoz_user_phone') || "")) : (localStorage.getItem('godoz_user_phone') || "");
+      const payNote = document.getElementById('modalPayNote').value || `Milestone Payment for #${currentModalOrderId}`;
+
+      let isPaymentCompleted = false;
+
+      const options = {
+        key: RAZORPAY_CONFIG.keyId,
+        amount: Math.round(amount * 100),
+        currency: RAZORPAY_CONFIG.currency,
+        name: RAZORPAY_CONFIG.merchantName,
+        description: `${payNote} (Order #${currentModalOrderId})`,
+        image: RAZORPAY_CONFIG.logoUrl,
+        notes: {
+          order_id: currentModalOrderId,
+          project_name: currentModalProjectName
+        },
+        prefill: {
+          name: clientName,
+          email: clientEmail,
+          contact: clientPhone
+        },
+        theme: {
+          color: RAZORPAY_CONFIG.themeColor
+        },
+        payment_capture: 1,
+        handler: async function (response) {
+          isPaymentCompleted = true;
+          const payId = response.razorpay_payment_id || ('pay_' + Date.now());
+
+          // Save payment record to Firestore linked with order
+          await recordRazorpayPayment({
+            paymentId: payId,
+            orderId: currentModalOrderId,
+            amount: amount,
+            clientName: clientName,
+            clientEmail: clientEmail,
+            clientPhone: clientPhone,
+            projectName: currentModalProjectName,
+            projectRef: `Order #${currentModalOrderId} - ${currentModalProjectName}`,
+            note: payNote
+          });
+
+          // Update local storage stats
+          const payTime = new Date().toLocaleString('en-IN');
+          const curPaid = parseInt(localStorage.getItem('godoz_total_paid') || "0");
+          localStorage.setItem('godoz_total_paid', (curPaid + amount).toString());
+          localStorage.setItem('godoz_last_pay_id', payId);
+          localStorage.setItem('godoz_last_pay_amount', amount.toString());
+          localStorage.setItem('godoz_last_order_id', currentModalOrderId);
+          localStorage.setItem('godoz_pay_time_' + payId, payTime);
+          localStorage.setItem('godoz_last_pay_time', payTime);
+
+          window.closeProjectPayModal();
+          window.location.href = `./payment-success.html?razorpay_payment_id=${encodeURIComponent(payId)}&order_id=${encodeURIComponent(currentModalOrderId)}&amount=${amount}&client_name=${encodeURIComponent(clientName)}&client_phone=${encodeURIComponent(clientPhone)}&time=${encodeURIComponent(payTime)}`;
+        },
+        modal: {
+          ondismiss: function() {
+            if (!isPaymentCompleted) {
+              console.log('Razorpay modal closed');
+            }
+          }
+        }
+      };
+
+      try {
+        const rzp = new Razorpay(options);
+        rzp.on('payment.failed', function (resp) {
+          showError("Payment error: " + (resp.error.description || "Payment not completed."));
+        });
+        rzp.open();
+      } catch (err) {
+        console.warn("Razorpay trigger error:", err);
+        showError("Unable to open Razorpay modal. Please check your network.");
+      }
+    });
+
+    // Render Client Products & Orders dynamically
+    function renderClientOrders(orders) {
+      clientLoadedOrders = orders || [];
+      const container = document.getElementById('myProductsContainer');
+      const recentContainer = document.getElementById('recentOrdersList');
+      const metricTotalOrdersEl = document.getElementById('metricTotalOrders');
+      const metricActiveProjectsEl = document.getElementById('metricActiveProjects');
+      const metricTotalPaidEl = document.getElementById('metricTotalPaid');
+
+      if (!container) return;
+
+      if (!orders || orders.length === 0) {
+        container.innerHTML = `
+          <div style="background:var(--bg-surface-alt); border:1px dashed var(--border-color); border-radius:16px; padding:36px 20px; text-align:center;">
+            <div style="font-size:2.5rem; color:var(--text-muted); margin-bottom:12px;"><i class="fa-solid fa-box-open"></i></div>
+            <h3 style="margin:0 0 6px; font-size:1.15rem; color:var(--text-main);">No Products or Orders Found</h3>
+            <p style="font-size:0.86rem; color:var(--text-muted); max-width:480px; margin:0 auto 16px;">
+              When you order a custom Android App, iOS App, or Web Solution, your live development sprints, deliverables, and payment receipts will appear here.
+            </p>
+            <a href="/index.html#cost-estimator" class="btn btn-sm btn-primary"><i class="fa-solid fa-calculator"></i> Estimate &amp; Order New Project</a>
+          </div>
+        `;
+        if (recentContainer) {
+          recentContainer.innerHTML = `
+            <div style="padding:20px; background:var(--bg-surface-alt); border-radius:12px; text-align:center; color:var(--text-muted); font-size:0.88rem;">
+              No recent milestones yet. Place an order to see live development updates.
+            </div>
+          `;
+        }
+        if (metricTotalOrdersEl) metricTotalOrdersEl.textContent = '0';
+        if (metricActiveProjectsEl) metricActiveProjectsEl.textContent = '0';
+        renderClientPayments(orders || [], clientLoadedPayments);
+        return;
+      }
+
+      let activeCount = 0;
+      let totalCalculatedPaid = 0;
+
+      container.innerHTML = '';
+      if (recentContainer) recentContainer.innerHTML = '';
+
+      orders.forEach((order, index) => {
+        const orderId = order.id || order.orderId || ('GoDoz-' + (index + 1));
+        const projectName = order.projectName || order.name || 'Custom Application';
+        const progress = Number(order.progress !== undefined ? order.progress : 5);
+        if (progress < 100) activeCount++;
+
+        const fin = getOrderFinancials(order);
+        const totalPrice = fin.totalPrice;
+        const amountPaid = fin.amountPaid;
+        const remainingBalance = fin.remainingBalance;
+        const isFullyPaid = fin.isFullyPaid;
+        const paidPercent = fin.paidPercent;
+        totalCalculatedPaid += amountPaid;
+
+        const stage = order.stage || 'Step 01: Order Placed & Discovery Phase';
+        const paymentMode = order.paymentMode || 'Milestone Escrow';
+        const paymentStatus = order.paymentStatus || (isFullyPaid ? 'Full Paid (100%)' : (amountPaid > 0 ? `Partially Paid (₹${amountPaid})` : 'Payment Pending'));
+        const deliverableUrl = order.deliverableUrl || '';
+
+        // Status badge class
+        let statusBadgeClass = 'status-pending';
+        if (progress >= 100 || paymentStatus.toLowerCase().includes('completed') || paymentStatus.toLowerCase().includes('accepted') || isFullyPaid) {
+          statusBadgeClass = 'status-active';
+        } else if (progress > 0) {
+          statusBadgeClass = 'status-dev';
+        }
+
+        // Payment Ledger HTML if payments exist
+        let ledgerHtml = '';
+        const history = Array.isArray(order.paymentHistory) ? order.paymentHistory : [];
+        if (history.length > 0) {
+          ledgerHtml = `
+            <div class="payment-ledger-box">
+              <div class="ledger-header">
+                <span><i class="fa-solid fa-receipt" style="color:var(--primary);"></i> Payment Transaction History (${history.length})</span>
+                <span style="color:#16a34a; font-weight:800;">₹${amountPaid.toLocaleString('en-IN')} Received</span>
+              </div>
+              ${history.map(item => `
+                <div class="ledger-item">
+                  <div>
+                    <span class="ledger-pay-id">${item.paymentId || item.id || 'PAY_ID'}</span>
+                    <span style="font-weight:600; margin-left:6px; color:var(--text-main);">${item.note || item.description || 'Milestone Payment'}</span>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <strong style="color:#16a34a;">₹${Number(item.amount || 0).toLocaleString('en-IN')}</strong>
+                    <span style="font-size:0.7rem; color:var(--text-muted);">${item.date || item.createdAt || 'Verified'}</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        } else if (amountPaid > 0) {
+          ledgerHtml = `
+            <div class="payment-ledger-box">
+              <div class="ledger-header">
+                <span><i class="fa-solid fa-receipt" style="color:var(--primary);"></i> Initial Advance / Escrow Payment</span>
+                <span style="color:#16a34a; font-weight:800;">₹${amountPaid.toLocaleString('en-IN')} Verified</span>
+              </div>
+              <div class="ledger-item">
+                <span style="font-weight:600; color:var(--text-main);">Booking Advance / Milestone 1</span>
+                <strong style="color:#16a34a;">₹${amountPaid.toLocaleString('en-IN')}</strong>
+              </div>
+            </div>
+          `;
+        }
+
+        // Card HTML for My Products
+        const orderCard = document.createElement('div');
+        orderCard.className = 'product-order-item';
+        orderCard.style.display = 'block';
+        orderCard.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <h3 style="margin:0; font-size:1.15rem; color:var(--text-main); font-weight:800;">${escapeHTML(projectName)}</h3>
+                <span style="background:rgba(18,102,232,0.1); color:var(--primary); font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:6px;">#${escapeHTML(orderId)}</span>
+              </div>
+              <div style="font-size:0.8rem; color:var(--text-muted); margin-top:3px;">
+                <i class="fa-solid fa-credit-card"></i> ${escapeHTML(paymentMode)} • Status: <strong style="color:var(--text-main);">${escapeHTML(paymentStatus)}</strong>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <span class="status-badge ${statusBadgeClass}">
+                <i class="fa-solid ${progress >= 100 ? 'fa-check-circle' : 'fa-spinner fa-spin'}"></i> ${escapeHTML(stage)} (${progress}%)
+              </span>
+            </div>
+          </div>
+
+          <!-- Project Development Sprint Progress Bar -->
+          <div style="margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-bottom:4px;">
+              <span>Development Stage Progress</span>
+              <span style="color:var(--primary);">${progress}%</span>
+            </div>
+            <div style="height:7px; background:var(--border-color); border-radius:10px; overflow:hidden;">
+              <div style="width:${progress}%; height:100%; background:linear-gradient(90deg, var(--primary), #38bdf8); border-radius:10px; transition:width 0.4s ease;"></div>
+            </div>
+          </div>
+
+          <!-- Financial Breakdown Metric Box -->
+          <div class="project-finance-grid">
+            <div class="finance-metric-cell">
+              <span class="finance-metric-label">Total Cost</span>
+              <span class="finance-metric-val" style="color:var(--text-main);">₹${totalPrice.toLocaleString('en-IN')}</span>
+            </div>
+            <div class="finance-metric-cell">
+              <span class="finance-metric-label">Amount Paid</span>
+              <span class="finance-metric-val" style="color:#16a34a;">₹${amountPaid.toLocaleString('en-IN')}</span>
+            </div>
+            <div class="finance-metric-cell">
+              <span class="finance-metric-label">Balance Due</span>
+              <span class="finance-metric-val" style="color:${remainingBalance > 0 ? '#ff6900' : '#16a34a'};">
+                ₹${remainingBalance.toLocaleString('en-IN')}
+              </span>
+            </div>
+          </div>
+
+          <!-- Payment Completion Bar -->
+          <div style="margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--text-muted); font-weight:700; margin-bottom:4px;">
+              <span>Payment Completed</span>
+              <span style="color:${isFullyPaid ? '#16a34a' : '#ff6900'};">${paidPercent}%</span>
+            </div>
+            <div style="height:6px; background:var(--border-color); border-radius:10px; overflow:hidden;">
+              <div style="width:${paidPercent}%; height:100%; background:${isFullyPaid ? '#16a34a' : 'linear-gradient(90deg, #f59e0b, #10b981)'}; border-radius:10px; transition:width 0.4s ease;"></div>
+            </div>
+          </div>
+
+          ${ledgerHtml}
+
+          <!-- Project Actions Toolbar -->
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:14px; padding-top:12px; border-top:1px solid var(--border-color);">
+            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              ${deliverableUrl ? `
+                <a href="${escapeHTML(deliverableUrl)}" target="_blank" class="btn btn-sm btn-outline" style="color:var(--primary); font-weight:700;">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Deliverable / Preview
+                </a>
+              ` : ''}
+              <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20have%20a%20question%20regarding%20my%20Order%20%23${escapeHTML(orderId)}%20(${encodeURIComponent(projectName)})." target="_blank" class="btn btn-sm btn-outline" style="color:#16a34a;">
+                <i class="fa-brands fa-whatsapp"></i> Chat Support
+              </a>
+            </div>
+
+            <div style="display:flex; gap:8px; align-items:center;">
+              ${remainingBalance > 0 ? `
+                <button type="button" class="btn btn-sm btn-accent btn-pay-more-trigger" style="font-weight:800; padding:8px 16px;" data-order-id="${escapeHTML(orderId)}" data-project-name="${escapeHTML(projectName)}" data-total-cost="${totalPrice}" data-paid-amount="${amountPaid}" data-remaining-balance="${remainingBalance}">
+                  <i class="fa-solid fa-bolt"></i> Pay More / Installment (₹${remainingBalance.toLocaleString('en-IN')})
+                </button>
+              ` : `
+                <span class="status-badge status-active" style="padding:6px 12px; font-size:0.82rem;">
+                  <i class="fa-solid fa-check-double"></i> 100% Paid in Full
+                </span>
+              `}
+            </div>
+          </div>
+        `;
+        container.appendChild(orderCard);
+
+        // Also add top 2 to Overview tab
+        if (recentContainer && index < 2) {
+          const recentItem = document.createElement('div');
+          recentItem.className = 'product-order-item';
+          recentItem.innerHTML = `
+            <div>
+              <div style="font-weight:800; font-size:0.95rem; color:var(--text-main);">${escapeHTML(projectName)}</div>
+              <div style="font-size:0.8rem; color:var(--text-muted);">Order ID: #${escapeHTML(orderId)} • Stage: ${escapeHTML(stage)}</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              <span class="status-badge ${statusBadgeClass}">${progress}% Done</span>
+              ${remainingBalance > 0 ? `
+                <button type="button" class="btn btn-sm btn-accent btn-pay-more-trigger" data-order-id="${escapeHTML(orderId)}" data-project-name="${escapeHTML(projectName)}" data-total-cost="${totalPrice}" data-paid-amount="${amountPaid}" data-remaining-balance="${remainingBalance}">
+                  Pay More
+                </button>
+              ` : `
+                <span style="font-size:0.8rem; color:#16a34a; font-weight:700;"><i class="fa-solid fa-check"></i> Paid</span>
+              `}
+            </div>
+          `;
+          recentContainer.appendChild(recentItem);
+        }
+      });
+
+      // Update metric counters with exact verified financial sum
+      if (metricTotalOrdersEl) metricTotalOrdersEl.textContent = orders.length;
+      if (metricActiveProjectsEl) metricActiveProjectsEl.textContent = activeCount;
+
+      // Also render Payment History & Receipts Table and compute verified total paid
+      renderClientPayments(orders, clientLoadedPayments);
+    }
+
+    // Render Client Payment History & Receipts Table
+    function renderClientPayments(orders, directPayments) {
+      const container = document.getElementById('clientPaymentHistoryContainer');
+      if (!container) return;
+
+      const allPaymentsMap = new Map();
+
+      // 1. Direct payments from Firestore 'payments' collection
+      if (Array.isArray(directPayments)) {
+        directPayments.forEach(p => {
+          const pid = p.paymentId || p.id;
+          if (pid) {
+            allPaymentsMap.set(pid, {
+              paymentId: pid,
+              orderId: p.orderId || 'Direct Payment',
+              projectName: p.projectName || p.projectRef || 'Project Milestone Payment',
+              amount: Number(p.amount || 0),
+              date: p.dateFormatted || p.date || (p.createdAtRaw ? new Date(p.createdAtRaw).toLocaleString('en-IN') : 'Recent'),
+              dateFormatted: p.dateFormatted || p.date || 'Recent',
+              createdAtRaw: p.createdAtRaw || '',
+              method: p.method || p.gateway || 'Razorpay Live Online',
+              note: p.note || 'Verified Online Payment',
+              status: p.status || 'SUCCESS'
+            });
+          }
+        });
+      }
+
+      // 2. Payments from all Orders' paymentHistory
+      if (Array.isArray(orders)) {
+        orders.forEach(order => {
+          const ordId = order.id || order.orderId || 'Order';
+          const projName = order.projectName || order.name || 'Custom Application';
+          const history = Array.isArray(order.paymentHistory) ? order.paymentHistory : [];
+
+          history.forEach(p => {
+            const pid = p.paymentId || ('pay_' + Math.random().toString(36).substring(2, 10));
+            if (!allPaymentsMap.has(pid)) {
+              allPaymentsMap.set(pid, {
+                paymentId: pid,
+                orderId: ordId,
+                projectName: projName,
+                amount: Number(p.amount || 0),
+                date: p.dateFormatted || (p.date ? new Date(p.date).toLocaleString('en-IN') : 'Recent'),
+                dateFormatted: p.dateFormatted || (p.date ? new Date(p.date).toLocaleString('en-IN') : 'Recent'),
+                createdAtRaw: p.date || '',
+                method: p.method || p.gateway || 'Online Milestone Pay',
+                note: p.note || 'Milestone Installment',
+                status: 'SUCCESS'
+              });
+            }
+          });
+        });
+      }
+
+      // 3. Local storage persistent full payment history list
+      try {
+        const localHistory = JSON.parse(localStorage.getItem('godoz_payments_history') || '[]');
+        if (Array.isArray(localHistory)) {
+          localHistory.forEach(loc => {
+            const pid = loc.paymentId || loc.id;
+            if (pid && !allPaymentsMap.has(pid)) {
+              allPaymentsMap.set(pid, {
+                paymentId: pid,
+                orderId: loc.orderId || 'Order',
+                projectName: loc.projectName || 'Project Milestone Payment',
+                amount: Number(loc.amount || 0),
+                date: loc.dateFormatted || loc.date || new Date().toLocaleString('en-IN'),
+                dateFormatted: loc.dateFormatted || loc.date || new Date().toLocaleString('en-IN'),
+                createdAtRaw: loc.date || '',
+                method: loc.method || 'Razorpay Live Online',
+                note: loc.note || 'Verified Online Payment',
+                status: loc.status || 'SUCCESS'
+              });
+            }
+          });
+        }
+      } catch(e) {}
+
+      // 4. Backward-compatible last pay ID check
+      try {
+        const localPayId = localStorage.getItem('godoz_last_pay_id');
+        const localPayAmt = Number(localStorage.getItem('godoz_last_pay_amount') || 0);
+        const localOrdId = localStorage.getItem('godoz_last_order_id') || 'Order';
+        const localPayTime = localStorage.getItem('godoz_pay_time_' + localPayId) || localStorage.getItem('godoz_last_pay_time') || new Date().toLocaleString('en-IN');
+
+        if (localPayId && localPayAmt > 0 && !allPaymentsMap.has(localPayId)) {
+          allPaymentsMap.set(localPayId, {
+            paymentId: localPayId,
+            orderId: localOrdId,
+            projectName: 'Project Milestone Payment',
+            amount: localPayAmt,
+            date: localPayTime,
+            dateFormatted: localPayTime,
+            createdAtRaw: '',
+            method: 'Razorpay Live Online',
+            note: 'Verified Razorpay Online Payment',
+            status: 'SUCCESS'
+          });
+        }
+      } catch(e) {}
+
+      const allPayments = Array.from(allPaymentsMap.values());
+
+      // Dynamically calculate and display 100% verified Real-Time Total Paid amount
+      let totalVerifiedPaid = 0;
+      allPayments.forEach(p => {
+        totalVerifiedPaid += Number(p.amount || 0);
+      });
+      if (metricTotalPaidEl) {
+        metricTotalPaidEl.textContent = `₹${totalVerifiedPaid.toLocaleString('en-IN')}`;
+      }
+
+      if (allPayments.length === 0) {
+        container.innerHTML = `
+          <div style="background:var(--bg-surface-alt); border:1px dashed var(--border-color); border-radius:16px; padding:36px 20px; text-align:center;">
+            <div style="font-size:2.5rem; color:var(--text-muted); margin-bottom:12px;"><i class="fa-solid fa-receipt"></i></div>
+            <h3 style="margin:0 0 6px; font-size:1.15rem; color:var(--text-main);">No Payment History Yet</h3>
+            <p style="font-size:0.86rem; color:var(--text-muted); max-width:480px; margin:0 auto 16px;">
+              When you pay a milestone installment or token advance via Razorpay / UPI, your official receipts and success invoices will appear here.
+            </p>
+            <button onclick="document.querySelector('[data-tab=products]')?.click();" class="btn btn-sm btn-primary">
+              <i class="fa-solid fa-box-open"></i> Go to My Products &amp; Pay Milestone
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      // Sort newest payments first
+      allPayments.sort((a, b) => {
+        const timeA = new Date(a.createdAtRaw || a.date).getTime() || 0;
+        const timeB = new Date(b.createdAtRaw || b.date).getTime() || 0;
+        return timeB - timeA;
+      });
+
+      container.innerHTML = `
+        <div class="order-table-wrap" style="overflow-x:auto;">
+          <table class="admin-table" style="width:100%;">
+            <thead>
+              <tr>
+                <th>Payment ID</th>
+                <th>Project Reference</th>
+                <th>Amount Paid</th>
+                <th>Date &amp; Time</th>
+                <th>Status</th>
+                <th>Receipt Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${allPayments.map(p => `
+                <tr>
+                  <td><strong style="color:var(--primary); font-family:var(--font-mono); font-size:0.85rem;">${escapeHTML(p.paymentId)}</strong></td>
+                  <td>
+                    <div style="font-weight:800; color:var(--text-main); font-size:0.9rem;">${escapeHTML(p.projectName)}</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted);">Ref: #${escapeHTML(p.orderId)}</div>
+                  </td>
+                  <td><span style="font-weight:900; color:#16a34a; font-size:1rem;">₹${p.amount.toLocaleString('en-IN')}</span></td>
+                  <td><div style="font-size:0.8rem; color:var(--text-muted);">${escapeHTML(p.date)}</div></td>
+                  <td><span class="admin-badge badge-paid"><i class="fa-solid fa-circle-check"></i> SUCCESS</span></td>
+                  <td>
+                    <a href="/payment-success.html?razorpay_payment_id=${encodeURIComponent(p.paymentId)}&order_id=${encodeURIComponent(p.orderId)}&amount=${p.amount}&time=${encodeURIComponent(p.dateFormatted || p.date || '')}" target="_blank" class="btn btn-sm btn-outline" style="padding:4px 10px; font-size:0.75rem; font-weight:800; color:var(--primary); border-color:var(--primary);">
+                      <i class="fa-solid fa-receipt"></i> View Receipt &rarr;
+                    </a>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    // Global in-memory cache for smooth real-time updates
+    let clientLoadedOrders = [];
+    let clientLoadedPayments = [];
+    let currentUser = null;
+    let unsubscribeOrders = null;
+    let unsubscribePayments = null;
+
+    // Synchronous Pre-Hydration from Cache for 0ms instant loading
+    (function preHydrateDashboard() {
+      const cachedName = localStorage.getItem('godoz_user_name') || localStorage.getItem('godoz_auth_name');
+      const cachedEmail = localStorage.getItem('godoz_user_email') || localStorage.getItem('godoz_auth_email');
+      const cachedPhone = localStorage.getItem('godoz_user_phone');
+      const cachedAvatar = localStorage.getItem('godoz_user_avatar');
+      const cachedPaid = localStorage.getItem('godoz_total_paid');
+      const cachedOrders = localStorage.getItem('godoz_orders_cache');
+      const cachedPayments = localStorage.getItem('godoz_payments_history');
+      const hasSession = localStorage.getItem('godoz_auth_logged_in') === 'true' || Boolean(cachedName || cachedEmail);
+
+      if (hasSession) {
+        if (skeletonLoader) skeletonLoader.style.display = 'none';
+        if (unauthNotice) unauthNotice.style.display = 'none';
+        if (authProfileInterface) authProfileInterface.style.display = 'grid';
+
+        const name = cachedName || "Client User";
+        if (dashName) dashName.textContent = name;
+        if (dashGreetingName) dashGreetingName.textContent = name.split(' ')[0];
+        if (dashEmail) dashEmail.textContent = cachedEmail || "client@email.com";
+        if (cachedAvatar && dashAvatar) dashAvatar.src = cachedAvatar;
+        if (cachedPhone && inputEditPhone) inputEditPhone.value = cachedPhone;
+
+        if (cachedPaid && metricTotalPaidEl) {
+          metricTotalPaidEl.textContent = `₹${Number(cachedPaid).toLocaleString('en-IN')}`;
+        }
+
+        if (cachedPayments) {
+          try {
+            const parsedPay = JSON.parse(cachedPayments);
+            if (Array.isArray(parsedPay) && parsedPay.length > 0) {
+              clientLoadedPayments = parsedPay;
+            }
+          } catch(e){}
+        }
+
+        if (cachedOrders) {
+          try {
+            const parsed = JSON.parse(cachedOrders);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              clientLoadedOrders = parsed;
+              renderClientOrders(parsed);
+            }
+          } catch(e){}
+        }
+
+        renderClientPayments(clientLoadedOrders, clientLoadedPayments);
+      } else {
+        // Keep skeleton loader active, don't show unauthNotice until Firebase check confirms
+        if (skeletonLoader) skeletonLoader.style.display = 'grid';
+        if (unauthNotice) unauthNotice.style.display = 'none';
+        if (authProfileInterface) authProfileInterface.style.display = 'none';
+      }
+    })();
+
+    function showSuccess(msg) {
+      dashAlertError.style.display = 'none';
+      dashAlertSuccess.textContent = msg;
+      dashAlertSuccess.style.display = 'block';
+      setTimeout(() => { dashAlertSuccess.style.display = 'none'; }, 4000);
+    }
+
+    function showError(msg) {
+      dashAlertSuccess.style.display = 'none';
+      dashAlertError.textContent = msg;
+      dashAlertError.style.display = 'block';
+      setTimeout(() => { dashAlertError.style.display = 'none'; }, 4000);
+    }
+
+    // Tabs Switcher & Deep Linking Hash Router
+    window.switchProfileTab = function(targetTabName) {
+      if (!targetTabName) return;
+      targetTabName = targetTabName.replace('#', '').trim();
+      const allBtns = document.querySelectorAll('.profile-tab-btn[data-tab]');
+      const allPanes = document.querySelectorAll('.tab-pane');
+      const targetBtn = document.querySelector(`.profile-tab-btn[data-tab="${targetTabName}"]`);
+      const targetPane = document.getElementById('tab-' + targetTabName);
+
+      if (targetPane) {
+        allBtns.forEach(b => b.classList.remove('active'));
+        allPanes.forEach(p => p.style.display = 'none');
+        if (targetBtn) targetBtn.classList.add('active');
+        targetPane.style.display = 'block';
+        if (window.location.hash !== '#' + targetTabName) {
+          window.history.replaceState(null, null, '#' + targetTabName);
+        }
+      }
+    };
+
+    document.querySelectorAll('.profile-tab-btn[data-tab]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = btn.getAttribute('data-tab');
+        window.switchProfileTab(target);
+      });
+    });
+
+    // Auto-open tab from URL hash on load and on hashchange (e.g. profile.html#products)
+    function handleInitialHash() {
+      const hash = window.location.hash.replace('#', '').trim();
+      if (hash) {
+        window.switchProfileTab(hash);
+      }
+    }
+    handleInitialHash();
+    window.addEventListener('hashchange', handleInitialHash);
+
+    // Payment Tier Selector Helper for General Payments
+    window.selectPayAmount = function(amount, el) {
+      document.querySelectorAll('#tab-payments .quick-amount-pill').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+      const customPayAmount = document.getElementById('customPayAmount');
+      const btnPayAmountDisplay = document.getElementById('btnPayAmountDisplay');
+      if (customPayAmount) customPayAmount.value = amount;
+      if (btnPayAmountDisplay) btnPayAmountDisplay.textContent = Number(amount).toLocaleString('en-IN');
+    };
+
+    document.getElementById('customPayAmount')?.addEventListener('input', () => {
+      const customPayAmount = document.getElementById('customPayAmount');
+      const btnPayAmountDisplay = document.getElementById('btnPayAmountDisplay');
+      if (btnPayAmountDisplay && customPayAmount) {
+        btnPayAmountDisplay.textContent = Number(customPayAmount.value || 0).toLocaleString('en-IN');
+      }
+    });
+
+    // Project Dropdown in Tab 3 Selector
+    document.getElementById('paySelectProject')?.addEventListener('change', () => {
+      const paySelectProject = document.getElementById('paySelectProject');
+      const selectedId = paySelectProject ? paySelectProject.value : '';
+      if (!selectedId) {
+        const refInput = document.getElementById('payProjectRef');
+        if (refInput) refInput.value = "App/Website Development Milestone";
+        return;
+      }
+      const ord = clientLoadedOrders.find(o => o.id === selectedId || o.orderId === selectedId);
+      if (ord) {
+        const refInput = document.getElementById('payProjectRef');
+        const customPayAmount = document.getElementById('customPayAmount');
+        const btnPayAmountDisplay = document.getElementById('btnPayAmountDisplay');
+        if (refInput) refInput.value = `Milestone for #${ord.id}: ${ord.projectName}`;
+        const fin = getOrderFinancials(ord);
+        const remaining = fin.remainingBalance;
+        if (remaining > 0) {
+          if (customPayAmount) customPayAmount.value = remaining;
+          if (btnPayAmountDisplay) btnPayAmountDisplay.textContent = remaining.toLocaleString('en-IN');
+        }
+      }
+    });
+
+    document.getElementById('btnQuickPayTop')?.addEventListener('click', () => {
+      document.querySelector('[data-tab=payments]')?.click();
+    });
+
+    // Razorpay Integration General Checkout Trigger (Safe Optional Chaining)
+    document.getElementById('btnTriggerRazorpay')?.addEventListener('click', () => {
+      const customPayAmount = document.getElementById('customPayAmount');
+      const paySelectProject = document.getElementById('paySelectProject');
+      const amount = Number(customPayAmount?.value || 0);
+      if (!amount || amount < 1) {
+        showError("Please enter a valid amount of at least ₹1.");
+        return;
+      }
+
+      const clientName = currentUser ? (currentUser.displayName || "Client") : (localStorage.getItem('godoz_user_name') || "Client");
+      const clientEmail = currentUser ? (currentUser.email || (localStorage.getItem('godoz_user_email') || "")) : (localStorage.getItem('godoz_user_email') || "");
+      const clientPhone = currentUser ? (currentUser.phoneNumber || (localStorage.getItem('godoz_user_phone') || "")) : (localStorage.getItem('godoz_user_phone') || "");
+      const projectRef = document.getElementById('payProjectRef')?.value || "App/Website Project Milestone";
+      const linkedOrderId = paySelectProject?.value || null;
+
+      let isPaymentCompleted = false;
+
+      const options = {
+        key: RAZORPAY_CONFIG.keyId,
+        amount: Math.round(amount * 100),
+        currency: RAZORPAY_CONFIG.currency,
+        name: RAZORPAY_CONFIG.merchantName,
+        description: `Milestone Payment for ${projectRef}`,
+        image: RAZORPAY_CONFIG.logoUrl,
+        notes: {
+          order_id: linkedOrderId || "general",
+          project_ref: projectRef
+        },
+        prefill: {
+          name: clientName,
+          email: clientEmail,
+          contact: clientPhone
+        },
+        theme: {
+          color: RAZORPAY_CONFIG.themeColor
+        },
+        payment_capture: 1,
+        handler: async function (response) {
+          isPaymentCompleted = true;
+          const payId = response.razorpay_payment_id || ('pay_' + Date.now());
+
+          await recordRazorpayPayment({
+            paymentId: payId,
+            orderId: linkedOrderId,
+            amount: amount,
+            clientName: clientName,
+            clientEmail: clientEmail,
+            clientPhone: clientPhone,
+            projectRef: projectRef
+          });
+
+          const payTime = new Date().toLocaleString('en-IN');
+          const curPaid = parseInt(localStorage.getItem('godoz_total_paid') || "0");
+          localStorage.setItem('godoz_total_paid', (curPaid + amount).toString());
+          localStorage.setItem('godoz_last_pay_id', payId);
+          localStorage.setItem('godoz_last_pay_amount', amount.toString());
+          if (linkedOrderId) localStorage.setItem('godoz_last_order_id', linkedOrderId);
+          localStorage.setItem('godoz_pay_time_' + payId, payTime);
+          localStorage.setItem('godoz_last_pay_time', payTime);
+
+          window.location.href = `./payment-success.html?razorpay_payment_id=${encodeURIComponent(payId)}&order_id=${encodeURIComponent(linkedOrderId || '')}&amount=${amount}&client_name=${encodeURIComponent(clientName)}&client_phone=${encodeURIComponent(clientPhone)}&time=${encodeURIComponent(payTime)}`;
+        },
+        modal: {
+          ondismiss: function() {
+            if (!isPaymentCompleted) {
+              console.log('Razorpay payment modal closed');
+            }
+          }
+        }
+      };
+
+      try {
+        const rzp = new Razorpay(options);
+        rzp.on('payment.failed', function (resp) {
+          showError("Payment notice: " + (resp.error.description || "Payment was not completed."));
+        });
+        rzp.open();
+      } catch (err) {
+        console.warn("Razorpay checkout error:", err);
+        showError("Unable to initialize Razorpay checkout. Please check internet connection.");
+      }
+    });
+
+    // Edit Profile form submission
+    editProfileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newName = inputEditName.value.trim();
+      const newPhone = inputEditPhone.value.trim();
+      const newCompany = inputEditCompany.value.trim();
+      const newAvatar = inputEditAvatarUrl.value.trim();
+      const newAddress = inputEditAddress.value.trim();
+
+      localStorage.setItem('godoz_user_phone', newPhone);
+      localStorage.setItem('godoz_user_company', newCompany);
+      localStorage.setItem('godoz_user_address', newAddress);
+
+      const updatePayload = { displayName: newName };
+      if (newAvatar) updatePayload.photoURL = newAvatar;
+
+      const res = await updateUserProfileData(updatePayload);
+      if (res.success) {
+        showSuccess("Profile information updated successfully!");
+        dashName.textContent = newName;
+        dashGreetingName.textContent = newName.split(' ')[0];
+        if (newAvatar) dashAvatar.src = newAvatar;
+      } else {
+        showError(res.error || "Failed to update profile.");
+      }
+    });
+
+    // Edit Avatar Click
+    document.getElementById('btnEditAvatar').addEventListener('click', () => {
+      const url = prompt("Enter new profile image URL:", dashAvatar.src);
+      if (url && url.startsWith('http')) {
+        inputEditAvatarUrl.value = url;
+        dashAvatar.src = url;
+        updateUserProfileData({ photoURL: url });
+        showSuccess("Avatar photo updated!");
+      }
+    });
+
+    // Password Reset
+    document.getElementById('btnSendPasswordReset').addEventListener('click', async () => {
+      if (currentUser && currentUser.email) {
+        const res = await resetPassword(currentUser.email);
+        if (res.success) {
+          showSuccess("Password reset email sent to " + currentUser.email);
+        } else {
+          showError(res.error || "Could not send reset email.");
+        }
+      }
+    });
+
+    // Guest login trigger
+    document.getElementById('btnGuestLoginQuick')?.addEventListener('click', async () => {
+      const res = await loginAsGuest();
+      if (res.success) {
+        window.location.reload();
+      }
+    });
+
+    // Real-Time Firebase Auth & Order Synchronization Observer
+    subscribeToAuth(async (user) => {
+      try {
+        if (user) {
+          currentUser = user;
+          if (skeletonLoader) skeletonLoader.style.display = 'none';
+          if (authProfileInterface) authProfileInterface.style.display = 'grid';
+          if (unauthNotice) unauthNotice.style.display = 'none';
+
+          const isMgr = (user.isManager === true) || (await isUserManager(user));
+          const isAdm = (user.isAdmin === true) || isMgr || (await isUserAdmin(user, true));
+
+          const name = user.displayName || localStorage.getItem('godoz_user_name') || (isMgr ? "RS GULSHAN PRAJAPATI" : "Client User");
+          const email = user.email || localStorage.getItem('godoz_user_email') || "client@email.com";
+          const phone = user.phoneNumber || localStorage.getItem('godoz_user_phone') || "";
+          const photo = user.photoURL || localStorage.getItem('godoz_user_avatar') || "./official logo.png";
+
+          dashName.textContent = name;
+          dashGreetingName.textContent = name.split(' ')[0];
+          dashEmail.textContent = email;
+          dashAvatar.src = photo;
+          if (displayUserUID) displayUserUID.textContent = user.uid;
+
+          // Role & Administrative Privileges Detection
+          const btnSidebarAdminHub = document.getElementById('btnSidebarAdminHub');
+          const adminQuickBanner = document.getElementById('adminQuickBanner');
+          const adminBannerRoleTitle = document.getElementById('adminBannerRoleTitle');
+          const adminBannerRoleDesc = document.getElementById('adminBannerRoleDesc');
+          const adminBannerLink = document.getElementById('adminBannerLink');
+
+          if (isMgr) {
+            if (dashTierBadge) {
+              dashTierBadge.innerHTML = '<i class="fa-solid fa-crown" style="color:#fbbf24;"></i> Master Manager (Founder/Owner)';
+              dashTierBadge.style.background = 'linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(79, 70, 229, 0.15))';
+              dashTierBadge.style.color = '#7c3aed';
+              dashTierBadge.style.border = '1px solid #7c3aed';
+            }
+            if (btnSidebarAdminHub) {
+              btnSidebarAdminHub.style.display = 'flex';
+              btnSidebarAdminHub.innerHTML = '<i class="fa-solid fa-crown" style="color:#7c3aed;"></i> Master Manager Hub';
+            }
+            if (adminQuickBanner) {
+              adminQuickBanner.style.display = 'block';
+              if (adminBannerRoleTitle) adminBannerRoleTitle.textContent = 'Master Manager Control Center Active';
+              if (adminBannerRoleDesc) adminBannerRoleDesc.textContent = 'Full privileges: Manage client orders, verify COD advances, assign admins, and manage payments.';
+            }
+          } else if (isAdm) {
+            if (dashTierBadge) {
+              dashTierBadge.innerHTML = '<i class="fa-solid fa-shield-halved"></i> Support Administrator';
+              dashTierBadge.style.background = 'rgba(217, 119, 6, 0.15)';
+              dashTierBadge.style.color = '#d97706';
+              dashTierBadge.style.border = '1px solid #d97706';
+            }
+            if (btnSidebarAdminHub) {
+              btnSidebarAdminHub.style.display = 'flex';
+              btnSidebarAdminHub.innerHTML = '<i class="fa-solid fa-shield-halved" style="color:#d97706;"></i> Support Admin Panel';
+              btnSidebarAdminHub.style.color = '#d97706';
+              btnSidebarAdminHub.style.background = 'rgba(217, 119, 6, 0.08)';
+              btnSidebarAdminHub.style.borderColor = 'rgba(217, 119, 6, 0.25)';
+            }
+            if (adminQuickBanner) {
+              adminQuickBanner.style.display = 'block';
+              adminQuickBanner.style.borderColor = '#d97706';
+              if (adminBannerRoleTitle) adminBannerRoleTitle.textContent = 'Support Administrator Active';
+              if (adminBannerRoleDesc) adminBannerRoleDesc.textContent = 'Manage client orders, verify COD advances, and view project sprint progress.';
+              if (adminBannerLink) {
+                adminBannerLink.style.background = '#d97706';
+                adminBannerLink.style.borderColor = '#d97706';
+              }
+            }
+          } else {
+            if (dashTierBadge) {
+              dashTierBadge.innerHTML = '🟢 Verified Client';
+              dashTierBadge.style.background = 'rgba(18, 102, 232, 0.1)';
+              dashTierBadge.style.color = 'var(--primary)';
+              dashTierBadge.style.border = 'none';
+            }
+            if (btnSidebarAdminHub) btnSidebarAdminHub.style.display = 'none';
+            if (adminQuickBanner) adminQuickBanner.style.display = 'none';
+          }
+
+          // Populate Form Inputs
+          if (inputEditName) inputEditName.value = name;
+          if (inputEditPhone && phone) inputEditPhone.value = phone;
+          if (inputEditCompany) inputEditCompany.value = localStorage.getItem('godoz_user_company') || "";
+          if (inputEditAddress) inputEditAddress.value = localStorage.getItem('godoz_user_address') || "";
+          if (inputEditAvatarUrl) inputEditAvatarUrl.value = photo.startsWith('http') ? photo : '';
+
+          // Real-time Firestore Client Orders & Payments Listeners
+          if (unsubscribeOrders) unsubscribeOrders();
+          unsubscribeOrders = listenToClientOrders(email, user.uid, (orders) => {
+            try {
+              localStorage.setItem('godoz_orders_cache', JSON.stringify(orders));
+            } catch(e) {}
+            clientLoadedOrders = orders;
+            renderClientOrders(orders);
+          });
+
+          if (unsubscribePayments) unsubscribePayments();
+          unsubscribePayments = listenToClientPayments(email, user.uid, (payments) => {
+            clientLoadedPayments = payments;
+            renderClientPayments(clientLoadedOrders, clientLoadedPayments);
+          });
+        } else {
+          currentUser = null;
+          const cachedName = localStorage.getItem('godoz_user_name') || localStorage.getItem('godoz_auth_name');
+          const cachedEmail = localStorage.getItem('godoz_user_email') || localStorage.getItem('godoz_auth_email');
+          const hasSession = localStorage.getItem('godoz_auth_logged_in') === 'true' || Boolean(cachedName || cachedEmail);
+
+          if (hasSession) {
+            if (skeletonLoader) skeletonLoader.style.display = 'none';
+            if (unauthNotice) unauthNotice.style.display = 'none';
+            if (authProfileInterface) authProfileInterface.style.display = 'grid';
+
+            if (unsubscribeOrders) unsubscribeOrders();
+            unsubscribeOrders = listenToClientOrders(cachedEmail || '', null, (orders) => {
+              try {
+                localStorage.setItem('godoz_orders_cache', JSON.stringify(orders));
+              } catch(e) {}
+              clientLoadedOrders = orders;
+              renderClientOrders(orders);
+            });
+
+            if (unsubscribePayments) unsubscribePayments();
+            unsubscribePayments = listenToClientPayments(cachedEmail || '', null, (payments) => {
+              clientLoadedPayments = payments;
+              renderClientPayments(clientLoadedOrders, clientLoadedPayments);
+            });
+          } else {
+            if (skeletonLoader) skeletonLoader.style.display = 'none';
+            if (authProfileInterface) authProfileInterface.style.display = 'none';
+            if (unauthNotice) unauthNotice.style.display = 'block';
+          }
+        }
+      } catch (err) {
+        console.warn("Profile auth check notice:", err);
+      }
+    });
+
+    // Logout
+    window.handleLogout = function() {
+      try {
+        localStorage.removeItem('godoz_auth_logged_in');
+        localStorage.removeItem('godoz_user_name');
+        localStorage.removeItem('godoz_user_email');
+        localStorage.removeItem('godoz_auth_name');
+        localStorage.removeItem('godoz_auth_email');
+        localStorage.removeItem('godoz_auth_uid');
+        localStorage.removeItem('godoz_user_avatar');
+        localStorage.removeItem('godoz_user_role');
+        localStorage.removeItem('godoz_admin_role');
+      } catch(e) {}
+      logoutUser().finally(() => {
+        window.location.href = "./login.html";
+      });
+    };
+    document.getElementById('btnSidebarLogout')?.addEventListener('click', window.handleLogout);
+    document.getElementById('btnLogoutSecurity')?.addEventListener('click', window.handleLogout);
+
+    // Global Safety Fallback to dismiss skeleton loader after 1200ms
+    setTimeout(() => {
+      const sk = document.getElementById('profileLoadingSkeleton');
+      if (sk && sk.style.display !== 'none') {
+        const authEl = document.getElementById('authProfileInterface');
+        const unauthEl = document.getElementById('unauthNotice');
+        const hasSession = currentUser || localStorage.getItem('godoz_auth_logged_in') === 'true' || localStorage.getItem('godoz_user_email') || localStorage.getItem('godoz_auth_email');
+        
+        sk.style.display = 'none';
+        if (hasSession) {
+          if (authEl) authEl.style.display = 'grid';
+          if (unauthEl) unauthEl.style.display = 'none';
+        } else {
+          if (authEl) authEl.style.display = 'none';
+          if (unauthEl) unauthEl.style.display = 'block';
+        }
+      }
+
+      // Safety check for payment history table
+      const payContainer = document.getElementById('clientPaymentHistoryContainer');
+      if (payContainer && payContainer.innerHTML.includes('Syncing payment history')) {
+        renderClientPayments(clientLoadedOrders, clientLoadedPayments);
+      }
+    }, 1200);
+  </script>
+
+  <!-- Modal: Project Milestone / Installment Payment Dialog -->
+  <div id="projectPayModal" class="godoz-modal-backdrop" onclick="if(event.target === this) window.closeProjectPayModal()">
+    <div class="godoz-modal-card">
+      <div class="modal-head">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="width:34px; height:34px; border-radius:8px; background:rgba(18,102,232,0.1); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:1.05rem;">
+            <i class="fa-solid fa-credit-card"></i>
+          </div>
+          <div>
+            <h3 style="margin:0; font-size:1.05rem; color:var(--text-main);">Pay Project Installment</h3>
+            <span id="modalProjectOrderId" style="font-size:0.75rem; color:var(--primary); font-weight:700;">#GoDoz-2026-XXXX</span>
+          </div>
+        </div>
+        <button type="button" class="drawer-close-btn" onclick="window.closeProjectPayModal()" aria-label="Close Modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div style="background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:14px; padding:14px; margin-bottom:16px;">
+          <div style="font-weight:800; font-size:1rem; color:var(--text-main); margin-bottom:8px;" id="modalProjectName">Custom Software Project</div>
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; text-align:center;">
+            <div style="background:var(--bg-surface); padding:8px 6px; border-radius:8px; border:1px solid var(--border-color);">
+              <div style="font-size:0.65rem; color:var(--text-muted); font-weight:700;">TOTAL COST</div>
+              <div style="font-size:0.92rem; font-weight:800; color:var(--text-main);" id="modalTotalCost">₹0</div>
+            </div>
+            <div style="background:var(--bg-surface); padding:8px 6px; border-radius:8px; border:1px solid var(--border-color);">
+              <div style="font-size:0.65rem; color:var(--text-muted); font-weight:700;">PAID SO FAR</div>
+              <div style="font-size:0.92rem; font-weight:800; color:#16a34a;" id="modalPaidAmount">₹0</div>
+            </div>
+            <div style="background:var(--bg-surface); padding:8px 6px; border-radius:8px; border:1px solid var(--border-color);">
+              <div style="font-size:0.65rem; color:var(--text-muted); font-weight:700;">BALANCE DUE</div>
+              <div style="font-size:0.92rem; font-weight:800; color:#ff6900;" id="modalRemainingAmount">₹0</div>
+            </div>
+          </div>
+        </div>
+
+        <label class="form-label" style="margin-bottom:6px; font-weight:700;">Quick Select Amount:</label>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+          <button type="button" class="quick-amount-pill" onclick="window.setModalPayAmount(1, this)">⚡ ₹1 (Test)</button>
+          <button type="button" class="quick-amount-pill" onclick="window.setModalPayAmount(500, this)">₹500</button>
+          <button type="button" class="quick-amount-pill" onclick="window.setModalPayAmount(1000, this)">₹1,000</button>
+          <button type="button" class="quick-amount-pill" onclick="window.setModalPayAmount(2500, this)">₹2,500</button>
+          <button type="button" class="quick-amount-pill active" id="btnModalFullBalance" onclick="window.setModalPayRemaining(this)">Full Balance</button>
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px;">
+          <label class="form-label" for="modalCustomAmount">Payment Amount to Pay (INR ₹):</label>
+          <input type="number" id="modalCustomAmount" class="form-input" min="1" style="padding-left:14px; font-weight:800; font-size:1.15rem; color:var(--primary);">
+        </div>
+
+        <div class="form-group" style="margin-bottom:18px;">
+          <label class="form-label" for="modalPayNote">Payment Note / Milestone Description:</label>
+          <input type="text" id="modalPayNote" class="form-input" value="Milestone Installment" style="padding-left:14px;">
+        </div>
+
+        <button type="button" id="btnExecuteProjectRazorpay" class="btn btn-accent" style="width:100%; padding:14px; font-size:1.05rem; font-weight:800; justify-content:center;">
+          <i class="fa-solid fa-lock"></i> Pay ₹<span id="modalPayButtonAmountDisplay">0</span> with Razorpay
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Master Interactive Script -->
+  <script src="./script.js"></script>
+
+  <!-- ========================================================================
+       Live Project Order Tracker Modal (Universal Across All Pages)
+       ======================================================================== -->
+  <div id="trackOrderModal" class="godoz-modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="trackModalTitle">
+    <div class="godoz-modal-box" style="max-width:560px;">
+      
+      <!-- Modal Header -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--border-color);">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:40px; height:40px; border-radius:10px; background:rgba(18,102,232,0.12); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:18px;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <div>
+            <h3 id="trackModalTitle" style="margin:0; font-size:1.2rem; color:var(--text-main);">Track Live Project Order</h3>
+            <div style="font-size:0.75rem; color:var(--text-muted);">Real-time engineering progress &amp; milestone status</div>
+          </div>
+        </div>
+        <button type="button" onclick="window.closeTrackOrderModal()" aria-label="Close modal" style="background:none; border:none; font-size:1.2rem; color:var(--text-muted); cursor:pointer; padding:4px;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Search Box -->
+      <div style="margin-bottom:18px;">
+        <label for="trackInputQuery" style="display:block; font-size:0.84rem; font-weight:700; margin-bottom:6px; color:var(--text-main);">
+          Enter Order ID or WhatsApp Phone:
+        </label>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="trackInputQuery" aria-label="Enter Order ID or WhatsApp Phone" placeholder="e.g. GoDoz-2026-882194 or 9288521731" style="flex:1; padding:10px 14px; border-radius:10px; border:2px solid var(--border-color); background:var(--bg-surface-alt); color:var(--text-main); font-size:0.92rem; outline:none;">
+          <button type="button" onclick="window.trackOrderById()" class="btn btn-primary" style="padding:10px 18px; font-weight:700;">
+            <i class="fa-solid fa-bolt"></i> Track
+          </button>
+        </div>
+      </div>
+
+      <!-- Results Container -->
+      <div id="trackResultContainer" style="display:none;">
+        <div style="background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:14px; padding:16px; margin-bottom:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span id="trackResultId" style="font-weight:800; font-size:0.95rem; color:var(--primary);">#GoDoz-2026-881</span>
+            <span id="trackResultStatusBadge" style="background:rgba(34,197,94,0.15); color:#16a34a; font-weight:800; font-size:0.75rem; padding:3px 10px; border-radius:12px;">Active Development</span>
+          </div>
+          <div style="font-size:0.95rem; font-weight:800; color:var(--text-main); margin-bottom:4px;" id="trackResultProjectName">
+            Custom Android Application
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;" id="trackResultClient">
+            Client: Partner &bull; ₹9,999
+          </div>
+
+          <!-- Progress Bar Stepper -->
+          <div class="track-step-progress">
+            <div class="track-step-progress-bar" id="trackProgressBar" style="width:30%;"></div>
+            
+            <div class="track-step-item completed" id="trackStep1">
+              <div class="track-step-circle"><i class="fa-solid fa-check"></i></div>
+              <div class="track-step-label">Discovery &amp; NDA</div>
+            </div>
+            <div class="track-step-item active" id="trackStep2">
+              <div class="track-step-circle">2</div>
+              <div class="track-step-label">UI &amp; Architecture</div>
+            </div>
+            <div class="track-step-item" id="trackStep3">
+              <div class="track-step-circle">3</div>
+              <div class="track-step-label">Cloud &amp; DB Sync</div>
+            </div>
+            <div class="track-step-item" id="trackStep4">
+              <div class="track-step-circle">4</div>
+              <div class="track-step-label">Live Release</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+          <a id="trackWhatsappQueryBtn" href="https://wa.me/919288521731" target="_blank" class="btn btn-accent" style="flex:1; padding:10px; font-size:0.88rem; font-weight:700;">
+            <i class="fa-brands fa-whatsapp"></i> Chat with Lead Engineer
+          </a>
+          <button type="button" onclick="window.closeTrackOrderModal()" class="btn btn-outline" style="padding:10px 16px; font-size:0.88rem;">
+            Close
+          </button>
+        </div>
+      </div>
+
+      <!-- Not Found View -->
+      <div id="trackNotFoundView" style="display:none; text-align:center; padding:16px; background:rgba(239,68,68,0.06); border-radius:12px; border:1px dashed #ef4444; margin-top:12px;">
+        <i class="fa-solid fa-triangle-exclamation" style="font-size:24px; color:#ef4444; margin-bottom:6px;"></i>
+        <div style="font-weight:700; color:var(--text-main); font-size:0.9rem;">Order Not Found</div>
+        <p style="font-size:0.78rem; color:var(--text-muted); margin:4px 0 10px;">No active project order matched your query. Contact RS GULSHAN PRAJAPATI directly for manual lookup.</p>
+        <a href="https://wa.me/919288521731" target="_blank" class="btn btn-sm btn-accent" style="padding:6px 14px; font-size:0.8rem;">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Mobile App-Style Fixed Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav" aria-label="Mobile Bottom App Navigation">
+    <a href="/index.html" class="mobile-bottom-item">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </a>
+    <a href="/index.html#services" class="mobile-bottom-item">
+      <i class="fa-solid fa-laptop-code"></i>
+      <span>Services</span>
+    </a>
+    <a href="/profile.html" class="mobile-bottom-item">
+      <i class="fa-solid fa-box-open"></i>
+      <span>My Products</span>
+    </a>
+    <a href="/index.html#cost-estimator" class="mobile-bottom-item">
+      <i class="fa-solid fa-calculator"></i>
+      <span>Calculator</span>
+    </a>
+    <a href="/profile.html" class="mobile-bottom-item active">
+      <i class="fa-solid fa-user"></i>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+</body>
+</html>

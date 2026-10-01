@@ -1,0 +1,25 @@
+{
+  "name": "GoDoz Technology - Custom Android Apps & Websites",
+  "short_name": "GoDoz",
+  "description": "Custom Android apps and scalable website development by RS GULSHAN PRAJAPATI.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b1b36",
+  "theme_color": "#1266e8",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./official logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./official logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

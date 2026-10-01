@@ -1,0 +1,26 @@
+# ========================================================================
+# GoDoz Technology - Netlify Clean URLs & Routing Rules
+# Founder & Lead Software Engineer: RS GULSHAN PRAJAPATI
+# Domain: https://www.godoz.in
+# ========================================================================
+
+# Clean Route Aliases (No .html needed in URL bar)
+/admin          /admin.html          200
+/login          /login.html          200
+/profile        /profile.html        200
+/about          /About.html          200
+/terms          /terms.html          200
+/privacy        /privacy-policy.html 200
+/privacy-policy /privacy-policy.html 200
+/feedback       /feedback.html       200
+/help           /help/index.html     200
+/help/account   /help/account/index.html 200
+/help/faq       /help/faq/index.html     200
+/help/payment   /help/payment/index.html 200
+/connect        /index.html#contact-section 302
+/godoz-about    /GoDoz_About.html    200
+/founder        /RS_GULSHAN_PRAJAPATI_About.html 200
+/payment-success /payment-success.html 200
+
+# 404 Fallback
+/*              /404.html            404

@@ -1,0 +1,923 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-4514064358809691">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4514064358809691" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy – GoDoz Technology & Digital Solutions</title>
+  <meta name="description" content="Privacy Policy for GoDoz Technology website, applications, and digital tools. Founded by RS GULSHAN PRAJAPATI.">
+  <link rel="shortcut icon" href="./official logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    const savedTheme = localStorage.getItem('godoz_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // Universal Instant Drawer Navigation Handlers (0ms response)
+    window.openMobileDrawer = window.openLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const sidebar = document.getElementById('appSidebar');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.add('open');
+      if (sidebar) sidebar.classList.add('open');
+      if (backdrop) backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeMobileDrawer = window.closeLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const sidebar = document.getElementById('appSidebar');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.remove('open');
+      if (sidebar) sidebar.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    window.toggleMobileDrawer = window.toggleLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const sidebar = document.getElementById('appSidebar');
+      const isOpen = (sidebar && sidebar.classList.contains('open')) || (drawer && drawer.classList.contains('open'));
+      if (isOpen) {
+        window.closeMobileDrawer();
+      } else {
+        window.openMobileDrawer();
+      }
+    };
+  </script>
+  <style>
+    .legal-content {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: clamp(24px, 4vw, 40px);
+      box-shadow: var(--shadow-sm);
+      margin: 30px auto 60px;
+      line-height: 1.8;
+      color: var(--text-main);
+    }
+    .legal-content h2 {
+      font-size: 1.4rem;
+      color: var(--primary);
+      margin: 28px 0 12px;
+      border-left: 4px solid var(--accent);
+      padding-left: 12px;
+    }
+    .legal-content p, .legal-content li {
+      color: var(--text-muted);
+      font-size: 0.96rem;
+    }
+    .legal-content ul {
+      padding-left: 20px;
+      margin-bottom: 16px;
+    }
+    .legal-content li {
+      margin-bottom: 8px;
+    }
+    .badge-updated {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(18, 102, 232, 0.1);
+      color: var(--primary);
+    }
+    /* Left Navigation Button & Slide Drawer */
+    .mobile-menu-toggle {
+      background: var(--bg-surface-alt, #f8fafc);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 10px;
+      padding: 8px;
+      font-size: 1.15rem;
+      color: var(--text-main, #0f172a);
+      cursor: pointer;
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .mobile-menu-toggle:hover {
+      background: var(--border-color, #e2e8f0);
+      color: var(--primary, #1266e8);
+    }
+    .mobile-nav-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 9998;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .mobile-nav-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .mobile-nav-drawer {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 320px;
+      max-width: 86vw;
+      height: 100vh;
+      background: var(--bg-surface, #ffffff);
+      border-right: 1px solid var(--border-color, #e2e8f0);
+      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.25);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .mobile-nav-drawer.open {
+      transform: translateX(0) !important;
+    }
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color, #e2e8f0);
+      background: var(--bg-surface, #ffffff);
+      flex-shrink: 0;
+    }
+    .drawer-close-btn {
+      background: var(--bg-surface-alt, #f8fafc);
+      border: 1px solid var(--border-color, #e2e8f0);
+      color: var(--text-main, #0f172a);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .drawer-close-btn:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border-color: #ef4444;
+    }
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .drawer-nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 10px;
+      color: var(--text-main, #0f172a);
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: all 0.18s ease;
+      background: transparent;
+    }
+    .drawer-nav-item span {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .drawer-nav-item:hover, .drawer-nav-item.active {
+      background: var(--bg-surface-alt, #f8fafc);
+      color: var(--primary, #1266e8);
+      transform: translateX(4px);
+    }
+    .drawer-divider {
+      height: 1px;
+      background: var(--border-color, #e2e8f0);
+      margin: 10px 0 4px;
+    }
+    .drawer-section-title {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted, #64748b);
+      padding: 4px 6px;
+    }
+    .drawer-footer {
+      padding: 14px 16px;
+      border-top: 1px solid var(--border-color, #e2e8f0);
+      background: var(--bg-surface, #ffffff);
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    /* Mobile Fixed Bottom Navigation Bar */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 9990;
+      background: var(--glass-bg, rgba(255, 255, 255, 0.96));
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border-color, #e2e8f0);
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+      padding: 6px 4px max(6px, env(safe-area-inset-bottom));
+      justify-content: space-around;
+      align-items: center;
+    }
+    .mobile-bottom-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: var(--text-muted, #64748b);
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 4px 6px;
+      border-radius: 10px;
+      transition: all 0.15s ease;
+      flex: 1;
+      text-align: center;
+      gap: 2px;
+    }
+    .mobile-bottom-item i {
+      font-size: 1.15rem;
+      transition: transform 0.15s ease;
+    }
+    .mobile-bottom-item:hover, .mobile-bottom-item.active, .mobile-bottom-item:focus {
+      color: var(--primary, #1266e8);
+    }
+    @media (max-width: 991px) {
+      .mobile-bottom-nav {
+        display: flex !important;
+      }
+      body {
+        padding-bottom: 60px !important;
+      }
+    }
+    [data-theme="dark"] .mobile-bottom-nav {
+      background: rgba(16, 25, 46, 0.96) !important;
+      border-top-color: #1e2e4f !important;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Global Branded GoDoz Page Loader Overlay -->
+  <div id="globalPageLoader" class="godoz-page-loader">
+    <div class="godoz-spinner-wrap">
+      <div class="godoz-spinner-ring"></div>
+      <img src="./official logo.png" alt="GoDoz Logo" class="godoz-spinner-logo">
+    </div>
+    <div class="godoz-loader-text">Loading Privacy Policy...</div>
+  </div>
+
+  <!-- Left Navigation Drawer Backdrop -->
+  <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="window.closeMobileDrawer()"></div>
+
+  <!-- Slide-Out Left Drawer Navigation -->
+  <!-- Slide-Out Mobile Navigation Drawer -->
+  <aside id="mobileNavDrawer" class="mobile-nav-drawer" aria-label="Mobile Navigation">
+    <div class="drawer-header">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="app-sidebar-header-icon" style="width:34px; height:34px; border-radius:8px; background:rgba(18,102,232,0.12); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+          <i class="fa-solid fa-compass" style="font-size:1.1rem;"></i>
+        </div>
+        <div>
+          <div style="font-size:1.1rem; font-weight:900; line-height:1.1; color:var(--text-main);">
+            GoDoz Menu
+          </div>
+          <div style="font-size:0.65rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">
+            Quick Navigation
+          </div>
+        </div>
+      </div>
+      <button type="button" class="drawer-close-btn" onclick="window.closeMobileDrawer()" aria-label="Close Navigation Menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="drawer-body" style="flex:1; overflow-y:auto; padding:10px 14px 90px; -webkit-overflow-scrolling:touch; overscroll-behavior:contain;">
+      <!-- Menu Group 1: Services & Work -->
+      <div style="padding:4px 0;">
+        <div class="app-section-label">Services &amp; Work</div>
+        <ul class="app-menu-list">
+          <li>
+            <a href="/index.html#home-top" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-house app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Home Page</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#services" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-laptop-code app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Services Offered</span>
+              </div>
+              <span class="app-menu-badge">6 Services</span>
+            </a>
+          </li>
+          <li>
+            <a href="/apps/index.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-mobile-screen app-menu-icon" style="color:var(--accent);"></i>
+                <span class="app-menu-text">Our Apps &amp; Work</span>
+              </div>
+              <span class="app-menu-badge">6+ Apps</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#cost-estimator" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-calculator app-menu-icon" style="color:#10b981;"></i>
+                <span class="app-menu-text">Project Cost Calculator</span>
+              </div>
+              <span class="app-menu-badge">Calculator</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#live-tools" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-toolbox app-menu-icon" style="color:#06b6d4;"></i>
+                <span class="app-menu-text">Live Web Tools</span>
+              </div>
+              <span class="app-menu-badge">Tools</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Menu Group 2: Company & Founder -->
+      <div style="padding:4px 0; border-top:1px solid var(--border-color);">
+        <div class="app-section-label">Company &amp; Founder</div>
+        <ul class="app-menu-list">
+          <li>
+            <a href="/About.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-tie app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">About Founder &amp; GoDoz</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#why-hire-us" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-award app-menu-icon" style="color:#8b5cf6;"></i>
+                <span class="app-menu-text">Why Choose GoDoz</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#tech-stack" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-microchip app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Tech Stack &amp; Cloud</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#official-verification" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-shield-halved app-menu-icon" style="color:var(--accent);"></i>
+                <span class="app-menu-text">Official Publisher Info</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/feedback.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-star app-menu-icon" style="color:#f59e0b;"></i>
+                <span class="app-menu-text">Client Reviews &amp; Feedback</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Menu Group 3: Portal & Orders -->
+      <div style="padding:4px 0; border-top:1px solid var(--border-color);">
+        <div class="app-section-label">Portal &amp; Orders</div>
+        <ul class="app-menu-list">
+          <li>
+            <a href="/profile.html#products" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-box-open app-menu-icon" style="color:#10b981;"></i>
+                <span class="app-menu-text">My Products</span>
+              </div>
+              <span class="app-menu-badge" style="background:rgba(16,185,129,0.15); color:#10b981; font-weight:700;">Active</span>
+            </a>
+          </li>
+          <li>
+            <a href="/profile.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-id-card app-menu-icon" style="color:#8b5cf6;"></i>
+                <span class="app-menu-text">My Profile / Dashboard</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" onclick="window.openTrackOrderModal(); window.closeMobileDrawer();" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-magnifying-glass app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Track Live Order</span>
+              </div>
+              <span class="app-menu-badge" style="background:rgba(18,102,232,0.12); color:var(--primary); font-weight:700;">LIVE</span>
+            </a>
+          </li>
+          <li>
+            <a href="/admin.html" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-shield app-menu-icon" style="color:#7c3aed;"></i>
+                <span class="app-menu-text">Admin Hub</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#contact-section" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-paper-plane app-menu-icon" style="color:#ef4444;"></i>
+                <span class="app-menu-text">Contact &amp; Inquiry</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/help/index.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-circle-question app-menu-icon" style="color:#f59e0b;"></i>
+                <span class="app-menu-text">Help &amp; Knowledgebase</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/login.html" id="drawerAuthNavItem" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-circle app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Client Portal / Login</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="app-sidebar-footer" style="padding:14px 0 20px; border-top:1px solid var(--border-color); margin-top:8px;">
+        <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20want%20to%20discuss%20a%20project!" target="_blank" class="app-sidebar-wa-btn">
+          <i class="fa-brands fa-whatsapp"></i> Chat with Developer
+        </a>
+        <div style="font-size:0.7rem; color:var(--text-muted); text-align:center; margin-top:8px;">
+          GoDoz Technology &bull; Sheikhpura
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Sticky Modern Header Navigation (Universal Standard) -->
+  <header class="navbar">
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+      
+      <!-- Left: Hamburger Button + Brand Logo -->
+      <div class="navbar-left">
+        <button id="mobileMenuToggle" class="mobile-menu-toggle" aria-label="Toggle Navigation Sidebar" title="Toggle Sidebar Navigation" onclick="window.toggleMobileDrawer()" style="display:inline-flex !important;">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <a href="/index.html" class="brand-logo-wrap" style="display:flex; align-items:center; gap:8px; text-decoration:none;">
+          <img src="./official logo.png" alt="GoDoz Logo" class="brand-logo-img" style="height:34px; width:auto; border-radius:6px;" onerror="this.src='./logo w bg.png'">
+          <div>
+            <div style="font-size:1.3rem; font-weight:900; line-height:1; letter-spacing:-0.5px;">
+              <span style="color:var(--primary, #1266e8);">Go</span><span style="color:var(--accent, #ff6900);">Doz</span>
+            </div>
+            <div style="font-size:0.62rem; font-weight:700; color:var(--text-muted, #64748b); letter-spacing:0.8px; text-transform:uppercase;">
+              Technology
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center: Desktop Horizontal Navigation Menu -->
+      <nav class="desktop-nav-menu" aria-label="Desktop Main Navigation">
+        <a href="/index.html" class="desktop-nav-link"><i class="fa-solid fa-house" style="font-size:0.8rem;"></i> Home</a>
+        <a href="/index.html#services" class="desktop-nav-link"><i class="fa-solid fa-laptop-code" style="font-size:0.8rem; color:var(--primary);"></i> Services</a>
+        <a href="/apps/index.html" class="desktop-nav-link"><i class="fa-solid fa-mobile-screen" style="font-size:0.8rem; color:var(--accent);"></i> Apps Hub</a>
+        <a href="/index.html#cost-estimator" class="desktop-nav-link"><i class="fa-solid fa-calculator" style="font-size:0.8rem; color:#10b981;"></i> Calculator</a>
+        <a href="/help/index.html" class="desktop-nav-link"><i class="fa-solid fa-circle-question" style="font-size:0.8rem; color:#f59e0b;"></i> Help</a>
+        <a href="/feedback.html" class="desktop-nav-link"><i class="fa-solid fa-star" style="font-size:0.8rem; color:#f59e0b;"></i> Reviews</a>
+      </nav>
+
+      <!-- Right: Action Buttons -->
+      <div class="header-actions">
+        <!-- Track Order Quick Trigger -->
+        <button type="button" onclick="window.openTrackOrderModal()" class="btn btn-sm btn-outline header-btn-track" title="Track Live Project Order" style="padding:6px 11px; font-size:0.84rem; font-weight:700; border-color:var(--primary);">
+          <i class="fa-solid fa-magnifying-glass" style="color:var(--primary);"></i> <span class="btn-text">Track Order</span>
+        </button>
+
+        <!-- Profile / Portal Button -->
+        <a href="/profile.html" class="btn btn-sm btn-outline header-btn-auth" title="Client Portal &amp; Profile" style="padding:6px 11px; font-size:0.84rem; font-weight:700;">
+          <i class="fa-solid fa-user"></i> <span class="btn-text">Client Portal</span>
+        </a>
+
+        <!-- Theme Toggle Button -->
+        <button id="themeToggleBtn" onclick="window.toggleGoDozTheme()" class="btn btn-sm btn-outline header-btn-theme" aria-label="Toggle Theme" title="Switch Theme" style="padding:6px 10px; border-radius:8px; cursor:pointer;">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <!-- WhatsApp Support -->
+        <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20have%20an%20inquiry%20regarding%20Privacy%20Policy." target="_blank" class="btn btn-sm btn-accent header-btn-chat" style="padding:6px 12px; font-size:0.84rem; font-weight:700;">
+          <i class="fa-brands fa-whatsapp"></i> <span class="btn-text">Chat Now</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <div class="app-layout-container">
+
+    <!-- Left Navigation Menu Sidebar -->
+    <aside id="appSidebar" class="app-sidebar" aria-label="Left Navigation Menu Sidebar">
+
+      <!-- Menu Group 1: Navigation & Services -->
+      <div style="padding:4px 0;">
+        <div class="app-section-label">Services &amp; Work</div>
+        <ul class="app-menu-list">
+
+          <li>
+            <a href="/index.html#home-top" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-house app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Home Page</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#services" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-laptop-code app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Services Offered</span>
+              </div>
+              <span class="app-menu-badge">6 Services</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#portfolio" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-mobile-screen app-menu-icon" style="color:var(--accent);"></i>
+                <span class="app-menu-text">Our Apps &amp; Work</span>
+              </div>
+              <span class="app-menu-badge">6+ Apps</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#cost-estimator" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-calculator app-menu-icon" style="color:#10b981;"></i>
+                <span class="app-menu-text">Project Cost Calculator</span>
+              </div>
+              <span class="app-menu-badge">Calculator</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#live-tools" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-toolbox app-menu-icon" style="color:#06b6d4;"></i>
+                <span class="app-menu-text">Live Web Tools</span>
+              </div>
+              <span class="app-menu-badge">Tools</span>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+      <!-- Menu Group 2: Company & Founder -->
+      <div style="padding:4px 0; border-top:1px solid var(--border-color);">
+        <div class="app-section-label">Company &amp; Founder</div>
+        <ul class="app-menu-list">
+
+          <li>
+            <a href="/About.html" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-tie app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">About Founder &amp; GoDoz</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#why-hire-us" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-award app-menu-icon" style="color:#8b5cf6;"></i>
+                <span class="app-menu-text">Why Choose GoDoz</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#tech-stack" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-microchip app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Tech Stack &amp; Cloud</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#official-verification" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-shield-halved app-menu-icon" style="color:var(--accent);"></i>
+                <span class="app-menu-text">Official Publisher Info</span>
+              </div>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+      <!-- Menu Group 3: Portal & Orders -->
+      <div style="padding:4px 0; border-top:1px solid var(--border-color);">
+        <div class="app-section-label">Portal &amp; Orders</div>
+        <ul class="app-menu-list">
+
+          <li>
+            <a href="/profile.html#products" onclick="if(window.location.pathname.includes('profile')){document.querySelector('[data-tab=products]')?.click();}" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-box-open app-menu-icon" style="color:#10b981;"></i>
+                <span class="app-menu-text">My Products</span>
+              </div>
+              <span class="app-menu-badge" style="background:rgba(16,185,129,0.15); color:#10b981; font-weight:700;">Active</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/profile.html" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-id-card app-menu-icon" style="color:#8b5cf6;"></i>
+                <span class="app-menu-text">My Profile / Dashboard</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="javascript:void(0)" onclick="window.openTrackOrderModal()" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-magnifying-glass app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Track Live Order</span>
+              </div>
+              <span class="app-menu-badge" style="background:rgba(18,102,232,0.12); color:var(--primary); font-weight:700;">LIVE</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/admin.html" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-shield app-menu-icon" style="color:#7c3aed;"></i>
+                <span class="app-menu-text">Admin Hub</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#contact-section" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-paper-plane app-menu-icon" style="color:#ef4444;"></i>
+                <span class="app-menu-text">Contact &amp; Inquiry</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/help/index.html" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-circle-question app-menu-icon" style="color:#f59e0b;"></i>
+                <span class="app-menu-text">Help &amp; Knowledgebase</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/login.html" id="sidebarAuthLink" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-circle app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text" id="sidebarAuthText">Client Portal / Login</span>
+              </div>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+      <!-- Sidebar Footer -->
+      <div class="app-sidebar-footer">
+        <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20want%20to%20discuss%20a%20project!" target="_blank" class="app-sidebar-wa-btn">
+          <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+        </a>
+      </div>
+
+    </aside>
+
+    <main class="app-main-content container" style="max-width: 960px;">
+    <div class="legal-content">
+      
+      <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 24px;">
+        <span class="badge-updated">Privacy &amp; Data Protection</span>
+        <h1 style="font-size: 2.2rem; margin-bottom: 8px; color: var(--text-main);">Privacy Policy</h1>
+        <p style="margin: 0; color: var(--text-muted); font-size: 0.92rem;">
+          GoDoz Technology &amp; Digital Solutions (Formerly <em>Gulshan Digital Zone / GDZ</em>) | Founder: <strong>RS GULSHAN PRAJAPATI</strong>
+        </p>
+      </div>
+
+      <h2>1. Introduction &amp; Commitment to Privacy</h2>
+      <p>
+        At <strong>GoDoz Technology &amp; Digital Solutions</strong> (<a href="https://www.godoz.in" style="color:var(--primary); font-weight:600;">https://www.godoz.in</a>), we value your privacy and are committed to ensuring full transparency regarding data handling. This Privacy Policy details how we treat information when you visit our website, utilize our curated links directory, or use applications developed by RS GULSHAN PRAJAPATI.
+      </p>
+
+      <h2>2. Information We Collect</h2>
+      <p>We believe in data minimization. In general, our website does not require registration or collecting sensitive personal data for basic directory browsing:</p>
+      <ul>
+        <li><strong>Voluntary Contact Details:</strong> When you send us an inquiry via WhatsApp, email, or our contact forms, we receive your name, phone number, and message context solely to respond to your project request.</li>
+        <li><strong>Analytics &amp; Usage Telemetry:</strong> We use privacy-respecting standard web analytics (such as Google Analytics) to gather anonymous statistical telemetry (e.g., browser type, approximate country/city level location, pages viewed) to improve website performance and responsiveness.</li>
+        <li><strong>Local In-Browser Storage:</strong> Preferences like Light/Dark theme selection and cookie dismissal states are saved locally inside your device's browser localStorage and are never transmitted to external servers.</li>
+      </ul>
+
+      <h2>3. How We Use Collected Information</h2>
+      <p>Any information received is strictly used to:</p>
+      <ul>
+        <li>Provide, operate, optimize, and maintain our web pages, tools, and directory links.</li>
+        <li>Communicate with clients regarding custom software/app development proposals and service inquiries.</li>
+        <li>Detect, troubleshoot, and prevent technical errors or malicious cyber attacks.</li>
+      </ul>
+
+      <h2>4. In-Browser Client-Side Tools &amp; Local Processing</h2>
+      <p>
+        GoDoz live tools (such as our PDF Master reader, Text Analyzer, QR Generator, and Base64 encoder) process data <strong>100% client-side in your web browser memory</strong>. Your text inputs, PDF documents, or generated codes are NOT uploaded, logged, or stored on our servers.
+      </p>
+
+      <h2>5. Cookies &amp; Third-Party Services</h2>
+      <p>
+        We may use standard cookies and trusted third-party partners:
+      </p>
+      <ul>
+        <li><strong>Google Analytics (gtag.js):</strong> For anonymous traffic analytics.</li>
+        <li><strong>Google AdSense:</strong> Third-party advertising vendors may use cookies to serve relevant ads based on prior web visits. Users can opt out of personalized advertising by visiting Google Ads Settings.</li>
+        <li><strong>External Portals:</strong> When clicking outward links (e.g., Bihar RTPS, UIDAI, Google Play), those independent third-party platforms have their own separate privacy policies.</li>
+      </ul>
+
+      <h2>6. Data Security &amp; Protection</h2>
+      <p>
+        We employ industry-standard HTTPS encryption (SSL/TLS) across our entire web infrastructure to secure all data transmissions. We do not sell, rent, or trade your personal contact details to third parties.
+      </p>
+
+      <h2>7. Children's Privacy Protection</h2>
+      <p>
+        Our services and applications do not knowingly collect identifiable information from children under the age of 13. If you believe your child has provided personal information to us, please contact us immediately, and we will promptly remove the records.
+      </p>
+
+      <h2>8. Policy Updates &amp; Contact Us</h2>
+      <p>
+        We may periodically update this policy to reflect new features or regulatory requirements. If you have questions about our privacy practices, please contact our founder directly:
+      </p>
+      <div style="background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:16px; margin-top:12px;">
+        <p style="margin:4px 0;"><strong>Brand:</strong> GoDoz Technology &amp; Digital Solutions</p>
+        <p style="margin:4px 0;"><strong>Founder &amp; Architect:</strong> RS GULSHAN PRAJAPATI</p>
+        <p style="margin:4px 0;"><strong>Email:</strong> <a href="mailto:godoz.info@gmail.com" style="color:var(--primary);">godoz.info@gmail.com</a></p>
+        <p style="margin:4px 0;"><strong>WhatsApp / Phone:</strong> <a href="https://wa.me/919288521731" target="_blank" style="color:var(--success);">+91 92885 21731</a> / <a href="tel:+919288521731">+91 9288521731</a></p>
+        <p style="margin:4px 0;"><strong>Address:</strong> Sheikhpura, Bihar, India</p>
+      </div>
+
+      <!-- Footer -->
+      <footer class="site-footer" style="margin-top:40px; border-radius:16px;">
+        <div class="container">
+          <div class="footer-grid">
+            <div class="footer-col">
+              <div class="brand-name" style="margin-bottom:12px;"><span class="go">Go</span><span class="doz">Doz</span></div>
+              <p style="font-size:0.88rem; line-height:1.6; color:#94a3b8; margin-bottom:20px;">
+                GoDoz is a premier digital technology brand founded by RS GULSHAN PRAJAPATI. We build world-class mobile apps, full-stack websites, scalable SaaS, and digital tools.
+              </p>
+            </div>
+
+            <div class="footer-col">
+              <h4>Navigation</h4>
+              <ul class="footer-links">
+                <li><a href="index.html">Home Direct Directory</a></li>
+                <li><a href="index.html#portfolio">Published Apps</a></li>
+                <li><a href="index.html#services">Services</a></li>
+                <li><a href="index.html#cost-estimator">Cost Calculator</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-col">
+              <h4>Legal &amp; Policy</h4>
+              <ul class="footer-links">
+                <li><a href="About.html">About GoDoz &amp; Website</a></li>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms.html">Terms &amp; Conditions</a></li>
+                <li><a href="RS_GULSHAN_PRAJAPATI_About.html">Founder Dossier</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="footer-bottom">
+            <div>
+              &copy; 2026 <strong>GoDoz Technology &amp; Digital Solutions</strong>. All Rights Reserved. Founder: <strong>RS GULSHAN PRAJAPATI</strong>.
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+  <!-- Mobile App-Style Fixed Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav" aria-label="Mobile Bottom App Navigation">
+    <a href="/index.html" class="mobile-bottom-item">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </a>
+    <a href="/index.html#services" class="mobile-bottom-item">
+      <i class="fa-solid fa-laptop-code"></i>
+      <span>Services</span>
+    </a>
+    <a href="/profile.html" class="mobile-bottom-item">
+      <i class="fa-solid fa-box-open"></i>
+      <span>My Products</span>
+    </a>
+    <a href="/profile.html" class="mobile-bottom-item">
+      <i class="fa-solid fa-user"></i>
+      <span>Profile</span>
+    </a>
+    <a href="/feedback.html" class="mobile-bottom-item">
+      <i class="fa-solid fa-star"></i>
+      <span>Review</span>
+    </a>
+  </nav>
+
+  <!-- Track Live Project Order Modal Component (Universal) -->
+  <div id="trackOrderModal" class="modal-backdrop" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.75); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:16px;">
+    <div class="modal-card" style="background:var(--bg-surface, #ffffff); border-radius:20px; max-width:540px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 25px 60px rgba(0,0,0,0.3); border:1px solid var(--border-color, #e2e8f0); animation:modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
+      
+      <!-- Modal Header -->
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:18px 24px; border-bottom:1px solid var(--border-color, #e2e8f0); background:var(--bg-surface-alt, #f8fafc); border-radius:20px 20px 0 0;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:36px; height:36px; border-radius:10px; background:rgba(18,102,232,0.12); color:var(--primary, #1266e8); display:flex; align-items:center; justify-content:center; font-size:1.1rem;">
+            <i class="fa-solid fa-magnifying-glass-location"></i>
+          </div>
+          <div>
+            <h3 style="margin:0; font-size:1.1rem; font-weight:800; color:var(--text-main);">Live Order Tracker</h3>
+            <p style="margin:0; font-size:0.75rem; color:var(--text-muted); font-weight:600;">Check real-time build status &amp; deliverables</p>
+          </div>
+        </div>
+        <button type="button" onclick="window.closeTrackOrderModal()" aria-label="Close Tracker" style="background:none; border:none; color:var(--text-muted); font-size:1.2rem; cursor:pointer; width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:8px; transition:0.2s;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div style="padding:22px 24px;">
+        <p style="font-size:0.88rem; color:var(--text-muted); margin-top:0; margin-bottom:14px; line-height:1.5;">
+          Enter your <strong>10-digit Phone Number</strong> or unique <strong>Order / Project ID</strong> to track progress instantly:
+        </p>
+
+        <form id="publicTrackOrderForm" onsubmit="window.handlePublicTrackOrder(event)" style="display:flex; gap:8px; margin-bottom:18px;">
+          <input type="text" id="trackOrderInput" placeholder="e.g. 9288521731 or GoDoz-2026-882194" required style="flex:1; padding:11px 14px; border:1.5px solid var(--border-color, #cbd5e1); border-radius:10px; font-size:0.92rem; outline:none; background:var(--bg-surface, #ffffff); color:var(--text-main); font-family:inherit;">
+          <button type="submit" id="trackOrderSubmitBtn" class="btn btn-primary" style="padding:11px 18px; font-weight:700; white-space:nowrap; border-radius:10px;">
+            <i class="fa-solid fa-bolt"></i> Track
+          </button>
+        </form>
+
+        <div id="trackOrderResultContainer" style="display:none; margin-top:14px;"></div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div style="padding:14px 24px; border-top:1px solid var(--border-color, #e2e8f0); background:var(--bg-surface-alt, #f8fafc); border-radius:0 0 20px 20px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-shield-check" style="color:#10b981;"></i> Official Client Verification</span>
+        <button type="button" onclick="window.closeTrackOrderModal()" class="btn btn-sm btn-outline" style="padding:6px 14px; font-size:0.82rem;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>

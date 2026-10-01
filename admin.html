@@ -1,0 +1,2833 @@
+<!DOCTYPE html>
+<html lang="hi" data-theme="light">
+<head>
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-4514064358809691">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4514064358809691" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <script>
+    (function(){
+      const savedTheme = localStorage.getItem('godoz_theme') || 
+        (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+
+    // Universal Instant Drawer Navigation Handlers (0ms response)
+    window.openMobileDrawer = window.openLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const sidebar = document.getElementById('appSidebar');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.add('open');
+      if (sidebar) sidebar.classList.add('open');
+      if (backdrop) backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeMobileDrawer = window.closeLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const sidebar = document.getElementById('appSidebar');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.remove('open');
+      if (sidebar) sidebar.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    window.toggleMobileDrawer = window.toggleLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const sidebar = document.getElementById('appSidebar');
+      const isOpen = (sidebar && sidebar.classList.contains('open')) || (drawer && drawer.classList.contains('open'));
+      if (isOpen) {
+        window.closeMobileDrawer();
+      } else {
+        window.openMobileDrawer();
+      }
+    };
+  </script>
+  <title>GoDoz Admin Panel | Firestore Orders, COD &amp; Leads Hub</title>
+  <meta name="description" content="Official GoDoz Technology Enterprise Admin Portal. Real-time Firestore synchronization for orders, COD verifications, sprint tracking, managers and admins collections.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="shortcut icon" href="./official logo.png" type="image/x-icon">
+
+  <!-- Font Awesome & Base Styles -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="./style.css">
+
+  <style>
+    .admin-hero {
+      background: var(--bg-surface-alt, #f8fafc);
+      color: var(--text-main) !important;
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color, #e2e8f0);
+      margin-bottom: 24px;
+    }
+    .admin-hero h1 {
+      color: var(--text-main) !important;
+      text-shadow: none;
+    }
+    .admin-hero p {
+      color: var(--text-muted) !important;
+    }
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto 40px;
+      padding: 0 16px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .admin-card {
+      background: var(--bg-surface, #ffffff);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+      margin-bottom: 24px;
+    }
+    .admin-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .admin-stat-box {
+      background: var(--bg-surface-alt, #f8fafc);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 16px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .admin-nav-tabs {
+      display: flex;
+      gap: 10px;
+      border-bottom: 2px solid var(--border-color, #e2e8f0);
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .admin-tab-btn {
+      padding: 10px 18px;
+      border: none;
+      background: transparent;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text-muted, #64748b);
+      cursor: pointer;
+      border-radius: 10px 10px 0 0;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .admin-tab-btn.active {
+      color: var(--primary, #1266e8);
+      background: rgba(18,102,232,0.08);
+      border-bottom: 3px solid var(--primary, #1266e8);
+    }
+    .order-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-top: 14px;
+    }
+    .admin-table {
+      width: 100%;
+      min-width: 800px;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .admin-table th {
+      background: var(--bg-surface-alt, #f8fafc);
+      padding: 12px 14px;
+      text-align: left;
+      font-weight: 800;
+      color: var(--text-main, #0f172a);
+      border-bottom: 2px solid var(--border-color, #e2e8f0);
+    }
+    .admin-table td {
+      padding: 14px;
+      border-bottom: 1px solid var(--border-color, #e2e8f0);
+      vertical-align: middle;
+    }
+    .admin-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge-cod { background: rgba(245, 158, 11, 0.15); color: #d97706; }
+    .badge-paid { background: rgba(34, 197, 94, 0.15); color: #16a34a; }
+    .badge-pending { background: rgba(239, 68, 68, 0.15); color: #dc2626; }
+    .badge-sprint { background: rgba(18, 102, 232, 0.15); color: #1266e8; }
+    .badge-live { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; }
+    .badge-mgr { background: rgba(139, 92, 246, 0.15); color: #7c3aed; }
+    /* Skeleton Shimmer & Smooth Transitions */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .skeleton-shimmer {
+      background: linear-gradient(90deg, var(--bg-surface-alt, #f1f5f9) 25%, var(--border-color, #e2e8f0) 50%, var(--bg-surface-alt, #f1f5f9) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+    .modal-content {
+      background: var(--bg-surface, #ffffff);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 20px;
+      padding: 24px;
+      max-width: 550px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    .pulse-sync {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #16a34a;
+      box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7);
+      animation: pulse-sync-anim 1.8s infinite;
+      margin-right: 4px;
+    }
+    @keyframes pulse-sync-anim {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(22, 163, 74, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+    }
+    @media (max-width: 600px) {
+      .hide-mobile-text {
+        display: none !important;
+      }
+    }
+
+    /* Left Navigation Button & Slide Drawer */
+    .mobile-menu-toggle {
+      background: var(--bg-surface-alt, #f8fafc);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 10px;
+      padding: 8px;
+      font-size: 1.15rem;
+      color: var(--text-main, #0f172a);
+      cursor: pointer;
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .mobile-menu-toggle:hover {
+      background: var(--border-color, #e2e8f0);
+      color: var(--primary, #1266e8);
+    }
+    .mobile-nav-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 9998;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .mobile-nav-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .mobile-nav-drawer {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 320px;
+      max-width: 86vw;
+      height: 100vh;
+      background: var(--bg-surface, #ffffff);
+      border-right: 1px solid var(--border-color, #e2e8f0);
+      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.25);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .mobile-nav-drawer.open {
+      transform: translateX(0) !important;
+    }
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color, #e2e8f0);
+      background: var(--bg-surface, #ffffff);
+      flex-shrink: 0;
+    }
+    .drawer-close-btn {
+      background: var(--bg-surface-alt, #f8fafc);
+      border: 1px solid var(--border-color, #e2e8f0);
+      color: var(--text-main, #0f172a);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .drawer-close-btn:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border-color: #ef4444;
+    }
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .drawer-nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 10px;
+      color: var(--text-main, #0f172a);
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: all 0.18s ease;
+      background: transparent;
+    }
+    .drawer-nav-item span {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .drawer-nav-item:hover, .drawer-nav-item.active {
+      background: var(--bg-surface-alt, #f8fafc);
+      color: var(--primary, #1266e8);
+      transform: translateX(4px);
+    }
+    .drawer-divider {
+      height: 1px;
+      background: var(--border-color, #e2e8f0);
+      margin: 10px 0 4px;
+    }
+    .drawer-section-title {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted, #64748b);
+      padding: 4px 6px;
+    }
+    .drawer-footer {
+      padding: 14px 16px;
+      border-top: 1px solid var(--border-color, #e2e8f0);
+      background: var(--bg-surface, #ffffff);
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body id="top">
+
+  <!-- Global Branded GoDoz Page Loader Overlay -->
+  <div id="globalPageLoader" class="godoz-page-loader">
+    <div class="godoz-spinner-wrap">
+      <div class="godoz-spinner-ring"></div>
+      <img src="./official logo.png" alt="GoDoz Logo" class="godoz-spinner-logo">
+    </div>
+    <div class="godoz-loader-text">Loading GoDoz Admin...</div>
+  </div>
+
+  <!-- ========================================================================
+       Sticky Modern Header Navigation (Universal Standard)
+       ======================================================================== -->
+  <header class="navbar">
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+      
+      <!-- Left: Hamburger Button + Brand Logo -->
+      <div class="navbar-left">
+        <button id="mobileMenuToggle" class="mobile-menu-toggle" aria-label="Toggle Navigation Sidebar" title="Toggle Sidebar Navigation" onclick="window.toggleMobileDrawer()" style="display:inline-flex !important;">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <a href="/index.html" class="brand-logo-wrap" style="display:flex; align-items:center; gap:8px; text-decoration:none;">
+          <img src="./official logo.png" alt="GoDoz Logo" class="brand-logo-img" style="height:34px; width:auto; border-radius:6px;" onerror="this.src='./logo w bg.png'">
+          <div>
+            <div style="font-size:1.3rem; font-weight:900; line-height:1; letter-spacing:-0.5px;">
+              <span style="color:var(--primary, #1266e8);">Go</span><span style="color:var(--accent, #ff6900);">Doz</span>
+              <span id="roleIndicatorBadge" style="font-size:0.65rem; background:#7c3aed; color:#fff; padding:2px 7px; border-radius:8px; vertical-align:middle; margin-left:4px;">ADMIN</span>
+            </div>
+            <div style="font-size:0.62rem; font-weight:700; color:var(--text-muted, #64748b); letter-spacing:0.8px; text-transform:uppercase;">
+              Technology
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center: Desktop Horizontal Navigation Menu -->
+      <nav class="desktop-nav-menu" aria-label="Desktop Main Navigation">
+        <a href="/index.html" class="desktop-nav-link"><i class="fa-solid fa-house" style="font-size:0.8rem;"></i> Home</a>
+        <a href="/index.html#services" class="desktop-nav-link"><i class="fa-solid fa-laptop-code" style="font-size:0.8rem; color:var(--primary);"></i> Services</a>
+        <a href="/apps/index.html" class="desktop-nav-link"><i class="fa-solid fa-mobile-screen" style="font-size:0.8rem; color:var(--accent);"></i> Apps Hub</a>
+        <a href="/index.html#cost-estimator" class="desktop-nav-link"><i class="fa-solid fa-calculator" style="font-size:0.8rem; color:#10b981;"></i> Calculator</a>
+        <a href="/help/index.html" class="desktop-nav-link"><i class="fa-solid fa-circle-question" style="font-size:0.8rem; color:#f59e0b;"></i> Help</a>
+        <a href="/feedback.html" class="desktop-nav-link"><i class="fa-solid fa-star" style="font-size:0.8rem; color:#f59e0b;"></i> Reviews</a>
+      </nav>
+
+      <!-- Right: Action Buttons -->
+      <div class="header-actions">
+        <!-- Live Sync Status -->
+        <span id="firestoreStatusBadge" style="font-size:0.75rem; font-weight:700; color:#16a34a; background:rgba(22,163,74,0.1); padding:5px 10px; border-radius:20px; display:inline-flex; align-items:center;">
+          <span class="pulse-sync"></span> <span class="hide-mobile-text">Live</span>
+        </span>
+
+        <!-- Track Order Quick Trigger -->
+        <button type="button" onclick="window.openTrackOrderModal()" class="btn btn-sm btn-outline header-btn-track" title="Track Live Project Order" style="padding:6px 11px; font-size:0.84rem; font-weight:700; border-color:var(--primary);">
+          <i class="fa-solid fa-magnifying-glass" style="color:var(--primary);"></i> <span class="btn-text">Track Order</span>
+        </button>
+
+        <!-- Client Portal Button -->
+        <a href="/profile.html" class="btn btn-sm btn-outline header-btn-auth" title="Client Portal" style="padding:6px 11px; font-size:0.84rem; font-weight:700;">
+          <i class="fa-solid fa-user"></i> <span class="btn-text">Client Portal</span>
+        </a>
+
+        <!-- Theme Toggle Button -->
+        <button id="themeToggleBtn" onclick="window.toggleGoDozTheme()" class="btn btn-sm btn-outline header-btn-theme" aria-label="Toggle Theme" title="Switch Theme" style="padding:6px 10px; border-radius:8px; cursor:pointer;">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <!-- Logout Button -->
+        <button id="btnAdminLogout" class="btn btn-sm btn-outline" title="Sign Out" style="color:#ef4444; border-color:#fecaca; display:none; padding:6px 10px;">
+          <i class="fa-solid fa-right-from-bracket"></i> <span class="btn-text">Exit</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       Off-Canvas Left Slide Navigation Drawer & Backdrop
+       ======================================================================== -->
+  <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="window.closeMobileDrawer()"></div>
+
+  <!-- Slide-Out Mobile Navigation Drawer -->
+  <aside id="mobileNavDrawer" class="mobile-nav-drawer" aria-label="Mobile Navigation">
+    <div class="drawer-header">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="app-sidebar-header-icon" style="width:34px; height:34px; border-radius:8px; background:rgba(18,102,232,0.12); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+          <i class="fa-solid fa-compass" style="font-size:1.1rem;"></i>
+        </div>
+        <div>
+          <div style="font-size:1.1rem; font-weight:900; line-height:1.1; color:var(--text-main);">
+            GoDoz Menu
+          </div>
+          <div style="font-size:0.65rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">
+            Quick Navigation
+          </div>
+        </div>
+      </div>
+      <button type="button" class="drawer-close-btn" onclick="window.closeMobileDrawer()" aria-label="Close Navigation Menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="drawer-body" style="flex:1; overflow-y:auto; padding:10px 14px 90px; -webkit-overflow-scrolling:touch; overscroll-behavior:contain;">
+      <!-- Menu Group 1: Services & Work -->
+      <div style="padding:4px 0;">
+        <div class="app-section-label">Services &amp; Work</div>
+        <ul class="app-menu-list">
+          <li>
+            <a href="/index.html#home-top" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-house app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Home Page</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#services" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-laptop-code app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Services Offered</span>
+              </div>
+              <span class="app-menu-badge">6 Services</span>
+            </a>
+          </li>
+          <li>
+            <a href="/apps/index.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-mobile-screen app-menu-icon" style="color:var(--accent);"></i>
+                <span class="app-menu-text">Our Apps &amp; Work</span>
+              </div>
+              <span class="app-menu-badge">6+ Apps</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#cost-estimator" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-calculator app-menu-icon" style="color:#10b981;"></i>
+                <span class="app-menu-text">Project Cost Calculator</span>
+              </div>
+              <span class="app-menu-badge">Calculator</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#live-tools" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-toolbox app-menu-icon" style="color:#06b6d4;"></i>
+                <span class="app-menu-text">Live Web Tools</span>
+              </div>
+              <span class="app-menu-badge">Tools</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Menu Group 2: Company & Founder -->
+      <div style="padding:4px 0; border-top:1px solid var(--border-color);">
+        <div class="app-section-label">Company &amp; Founder</div>
+        <ul class="app-menu-list">
+          <li>
+            <a href="/About.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-tie app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">About Founder &amp; GoDoz</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#why-hire-us" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-award app-menu-icon" style="color:#8b5cf6;"></i>
+                <span class="app-menu-text">Why Choose GoDoz</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#tech-stack" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-microchip app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Tech Stack &amp; Cloud</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#official-verification" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-shield-halved app-menu-icon" style="color:var(--accent);"></i>
+                <span class="app-menu-text">Official Publisher Info</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/feedback.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-star app-menu-icon" style="color:#f59e0b;"></i>
+                <span class="app-menu-text">Client Reviews &amp; Feedback</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Menu Group 3: Portal & Orders -->
+      <div style="padding:4px 0; border-top:1px solid var(--border-color);">
+        <div class="app-section-label">Portal &amp; Orders</div>
+        <ul class="app-menu-list">
+          <li>
+            <a href="/profile.html#products" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-box-open app-menu-icon" style="color:#10b981;"></i>
+                <span class="app-menu-text">My Products</span>
+              </div>
+              <span class="app-menu-badge" style="background:rgba(16,185,129,0.15); color:#10b981; font-weight:700;">Active</span>
+            </a>
+          </li>
+          <li>
+            <a href="/profile.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-id-card app-menu-icon" style="color:#8b5cf6;"></i>
+                <span class="app-menu-text">My Profile / Dashboard</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" onclick="window.openTrackOrderModal(); window.closeMobileDrawer();" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-magnifying-glass app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Track Live Order</span>
+              </div>
+              <span class="app-menu-badge" style="background:rgba(18,102,232,0.12); color:var(--primary); font-weight:700;">LIVE</span>
+            </a>
+          </li>
+          <li>
+            <a href="/admin.html" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-shield app-menu-icon" style="color:#7c3aed;"></i>
+                <span class="app-menu-text">Admin Hub</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html#contact-section" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-paper-plane app-menu-icon" style="color:#ef4444;"></i>
+                <span class="app-menu-text">Contact &amp; Inquiry</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/help/index.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-circle-question app-menu-icon" style="color:#f59e0b;"></i>
+                <span class="app-menu-text">Help &amp; Knowledgebase</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/login.html" id="drawerAuthNavItem" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-circle app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Client Portal / Login</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="app-sidebar-footer" style="padding:14px 0 20px; border-top:1px solid var(--border-color); margin-top:8px;">
+        <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20want%20to%20discuss%20a%20project!" target="_blank" class="app-sidebar-wa-btn">
+          <i class="fa-brands fa-whatsapp"></i> Chat with Developer
+        </a>
+        <div style="font-size:0.7rem; color:var(--text-muted); text-align:center; margin-top:8px;">
+          GoDoz Technology &bull; Sheikhpura
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Container -->
+  <div class="app-layout-container">
+
+    <!-- Left Navigation Menu Sidebar -->
+    <aside id="appSidebar" class="app-sidebar" aria-label="Left Navigation Menu Sidebar">
+
+      <!-- Menu Group 1: Navigation & Services -->
+      <div style="padding:4px 0;">
+        <div class="app-section-label">Services &amp; Work</div>
+        <ul class="app-menu-list">
+
+          <li>
+            <a href="/index.html#home-top" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-house app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Home Page</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#services" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-laptop-code app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Services Offered</span>
+              </div>
+              <span class="app-menu-badge">6 Services</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#portfolio" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-mobile-screen app-menu-icon" style="color:var(--accent);"></i>
+                <span class="app-menu-text">Our Apps &amp; Work</span>
+              </div>
+              <span class="app-menu-badge">6+ Apps</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#cost-estimator" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-calculator app-menu-icon" style="color:#10b981;"></i>
+                <span class="app-menu-text">Project Cost Calculator</span>
+              </div>
+              <span class="app-menu-badge">Calculator</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#live-tools" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-toolbox app-menu-icon" style="color:#06b6d4;"></i>
+                <span class="app-menu-text">Live Web Tools</span>
+              </div>
+              <span class="app-menu-badge">Tools</span>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+      <!-- Menu Group 2: Company & Founder -->
+      <div style="padding:4px 0; border-top:1px solid var(--border-color);">
+        <div class="app-section-label">Company &amp; Founder</div>
+        <ul class="app-menu-list">
+
+          <li>
+            <a href="/About.html" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-tie app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">About Founder &amp; GoDoz</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#why-hire-us" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-award app-menu-icon" style="color:#8b5cf6;"></i>
+                <span class="app-menu-text">Why Choose GoDoz</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#tech-stack" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-microchip app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Tech Stack &amp; Cloud</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#official-verification" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-shield-halved app-menu-icon" style="color:var(--accent);"></i>
+                <span class="app-menu-text">Official Publisher Info</span>
+              </div>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+      <!-- Menu Group 3: Portal & Orders -->
+      <div style="padding:4px 0; border-top:1px solid var(--border-color);">
+        <div class="app-section-label">Portal &amp; Orders</div>
+        <ul class="app-menu-list">
+
+          <li>
+            <a href="/profile.html#products" onclick="if(window.location.pathname.includes('profile')){document.querySelector('[data-tab=products]')?.click();}" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-box-open app-menu-icon" style="color:#10b981;"></i>
+                <span class="app-menu-text">My Products</span>
+              </div>
+              <span class="app-menu-badge" style="background:rgba(16,185,129,0.15); color:#10b981; font-weight:700;">Active</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/profile.html" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-id-card app-menu-icon" style="color:#8b5cf6;"></i>
+                <span class="app-menu-text">My Profile / Dashboard</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="javascript:void(0)" onclick="window.openTrackOrderModal()" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-magnifying-glass app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Track Live Order</span>
+              </div>
+              <span class="app-menu-badge" style="background:rgba(18,102,232,0.12); color:var(--primary); font-weight:700;">LIVE</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/admin.html" class="app-menu-item active">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-shield app-menu-icon" style="color:#7c3aed;"></i>
+                <span class="app-menu-text">Admin Hub</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/index.html#contact-section" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-paper-plane app-menu-icon" style="color:#ef4444;"></i>
+                <span class="app-menu-text">Contact &amp; Inquiry</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/help/index.html" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-circle-question app-menu-icon" style="color:#f59e0b;"></i>
+                <span class="app-menu-text">Help &amp; Knowledgebase</span>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/login.html" id="sidebarAuthLink" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-circle app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text" id="sidebarAuthText">Client Portal / Login</span>
+              </div>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+      <!-- Sidebar Footer -->
+      <div class="app-sidebar-footer">
+        <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20want%20to%20discuss%20a%20project!" target="_blank" class="app-sidebar-wa-btn">
+          <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+        </a>
+      </div>
+
+    </aside>
+
+    <main class="app-main-content container admin-container">
+
+      <!-- Hero -->
+      <section class="admin-hero">
+        <div style="display:inline-block; padding:3px 12px; border-radius:20px; background:rgba(18,102,232,0.1); color:var(--primary); font-size:0.78rem; font-weight:700; margin-bottom:8px;">
+          🛡️ Cloud Firestore Role-Based Access Control (RBAC)
+        </div>
+        <h1 style="font-size:clamp(1.5rem, 3vw, 2rem); font-weight:900; margin:0 0 6px; color:var(--text-main);">
+          GoDoz Project, COD &amp; Firestore Management Hub
+        </h1>
+        <p style="color:var(--text-muted); font-size:0.92rem; margin:0;">
+          Role-protected operations: Managers create Admins &bull; Admins verify COD &amp; manage project sprints &bull; All synced with Firestore.
+        </p>
+      </section>
+
+    <!-- 0. ADMIN SKELETON LOADER (Shown smoothly while verifying auth & loading Firestore) -->
+    <div id="adminLoadingSkeleton" style="display:block; opacity:0.95; text-align:center; padding:30px 10px;">
+      <div class="godoz-spinner-wrap" style="margin:0 auto 12px;">
+        <div class="godoz-spinner-ring"></div>
+        <img src="./official logo.png" alt="GoDoz Logo" class="godoz-spinner-logo">
+      </div>
+      <div style="font-size:0.9rem; font-weight:800; color:var(--primary);">Verifying Admin Permissions...</div>
+      <!-- Skeleton Header Bar -->
+      <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:16px 20px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+        <div class="skeleton-shimmer" style="width:240px; height:20px;"></div>
+        <div class="skeleton-shimmer" style="width:120px; height:24px; border-radius:20px;"></div>
+      </div>
+
+      <!-- Skeleton Stat Metrics Grid (4 cards) -->
+      <div class="admin-stat-grid" style="margin-bottom:24px;">
+        <div class="admin-stat-box" style="gap:14px;">
+          <div class="skeleton-shimmer" style="width:48px; height:48px; border-radius:12px; flex-shrink:0;"></div>
+          <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+            <div class="skeleton-shimmer" style="width:60%; height:14px;"></div>
+            <div class="skeleton-shimmer" style="width:40%; height:26px;"></div>
+          </div>
+        </div>
+        <div class="admin-stat-box" style="gap:14px;">
+          <div class="skeleton-shimmer" style="width:48px; height:48px; border-radius:12px; flex-shrink:0;"></div>
+          <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+            <div class="skeleton-shimmer" style="width:75%; height:14px;"></div>
+            <div class="skeleton-shimmer" style="width:35%; height:26px;"></div>
+          </div>
+        </div>
+        <div class="admin-stat-box" style="gap:14px;">
+          <div class="skeleton-shimmer" style="width:48px; height:48px; border-radius:12px; flex-shrink:0;"></div>
+          <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+            <div class="skeleton-shimmer" style="width:55%; height:14px;"></div>
+            <div class="skeleton-shimmer" style="width:50%; height:26px;"></div>
+          </div>
+        </div>
+        <div class="admin-stat-box" style="gap:14px;">
+          <div class="skeleton-shimmer" style="width:48px; height:48px; border-radius:12px; flex-shrink:0;"></div>
+          <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+            <div class="skeleton-shimmer" style="width:65%; height:14px;"></div>
+            <div class="skeleton-shimmer" style="width:40%; height:26px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skeleton Tabs & Action Toolbar -->
+      <div style="display:flex; gap:12px; margin-bottom:20px; border-bottom:2px solid var(--border-color); padding-bottom:6px; overflow-x:auto;">
+        <div class="skeleton-shimmer" style="width:160px; height:36px; border-radius:10px 10px 0 0; flex-shrink:0;"></div>
+        <div class="skeleton-shimmer" style="width:160px; height:36px; border-radius:10px 10px 0 0; flex-shrink:0;"></div>
+        <div class="skeleton-shimmer" style="width:140px; height:36px; border-radius:10px 10px 0 0; flex-shrink:0;"></div>
+      </div>
+
+      <!-- Skeleton Table Card -->
+      <div class="admin-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <div class="skeleton-shimmer" style="width:280px; height:22px;"></div>
+            <div class="skeleton-shimmer" style="width:200px; height:14px;"></div>
+          </div>
+          <div class="skeleton-shimmer" style="width:180px; height:38px; border-radius:10px;"></div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="skeleton-shimmer" style="width:100%; height:46px; border-radius:8px;"></div>
+          <div class="skeleton-shimmer" style="width:100%; height:46px; border-radius:8px;"></div>
+          <div class="skeleton-shimmer" style="width:100%; height:46px; border-radius:8px;"></div>
+          <div class="skeleton-shimmer" style="width:100%; height:46px; border-radius:8px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. AUTHENTICATION GATE (Strictly checks Firestore 'managers' or 'admins' collections) -->
+    <div id="adminAuthGate" class="admin-card" style="display:none; max-width:460px; margin:20px auto; text-align:center;">
+      <div style="width:64px; height:64px; border-radius:50%; background:rgba(18,102,232,0.1); color:var(--primary, #1266e8); display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 16px;">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h2 style="font-size:1.4rem; margin-bottom:6px; color:var(--text-main);">Admin / Manager Access</h2>
+      <p style="color:var(--text-muted); font-size:0.86rem; margin-bottom:20px;">
+        Sign in with an authorized account registered in the Firestore <code>managers</code> or <code>admins</code> collection.
+      </p>
+
+      <!-- Google Sign-In for Admin -->
+      <button id="btnAdminGoogleLogin" class="btn btn-outline" style="width:100%; padding:12px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:16px;">
+        <svg width="20" height="20" viewBox="0 0 48 48">
+          <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+          <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+          <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+          <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+        </svg>
+        <span>Sign in with Google Account</span>
+      </button>
+
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px; color:var(--text-muted); font-size:0.75rem;">
+        <div style="flex:1; height:1px; background:var(--border-color);"></div>
+        <span>OR SIGN IN WITH EMAIL</span>
+        <div style="flex:1; height:1px; background:var(--border-color);"></div>
+      </div>
+
+      <form id="adminEmailLoginForm" style="display:flex; flex-direction:column; gap:12px; text-align:left;">
+        <div>
+          <label for="adminAuthEmail" style="font-size:0.84rem; font-weight:700; color:var(--text-main); display:block; margin-bottom:4px;">Admin Email Address</label>
+          <input type="email" id="adminAuthEmail" aria-label="Admin Email Address" placeholder="admin@godoz.in" style="width:100%; padding:12px 14px; border:1.5px solid var(--border-color); border-radius:12px; font-size:0.95rem; outline:none; background:var(--bg-surface-alt); color:var(--text-main);" required>
+        </div>
+        <div>
+          <label for="adminAuthPassword" style="font-size:0.84rem; font-weight:700; color:var(--text-main); display:block; margin-bottom:4px;">Password</label>
+          <input type="password" id="adminAuthPassword" aria-label="Admin Password" placeholder="Enter Password..." style="width:100%; padding:12px 14px; border:1.5px solid var(--border-color); border-radius:12px; font-size:0.95rem; outline:none; background:var(--bg-surface-alt); color:var(--text-main);" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="padding:12px; font-weight:800; font-size:0.95rem;">
+          <i class="fa-solid fa-unlock-keyhole"></i> Sign In &amp; Verify Permissions
+        </button>
+      </form>
+      <div id="adminAuthError" style="display:none; margin-top:12px; color:#ef4444; font-size:0.84rem; font-weight:700;"></div>
+    </div>
+
+    <!-- 2. ADMIN DASHBOARD CONTENT (Shown upon authorized unlock) -->
+    <div id="adminDashboardContent" style="display:none;">
+
+      <!-- User Greeting & Role Banner -->
+      <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:14px 20px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div>
+          <span style="font-size:0.85rem; color:var(--text-muted);">Logged in as:</span>
+          <strong id="activeAdminEmailDisplay" style="color:var(--text-main); margin-left:6px;">admin@godoz.in</strong>
+        </div>
+        <div>
+          <span id="activeRoleBadge" class="admin-badge badge-paid"><i class="fa-solid fa-shield"></i> Verified Admin</span>
+        </div>
+      </div>
+
+      <!-- Metrics Row -->
+      <div class="admin-stat-grid">
+        <div class="admin-stat-box">
+          <div class="stat-icon" style="background:rgba(18,102,232,0.1); color:var(--primary);"><i class="fa-solid fa-cubes"></i></div>
+          <div>
+            <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Total Projects</div>
+            <div id="metricTotalOrders" style="font-size:1.6rem; font-weight:900; color:var(--text-main);">0</div>
+          </div>
+        </div>
+
+        <div class="admin-stat-box">
+          <div class="stat-icon" style="background:rgba(245,158,11,0.1); color:#d97706;"><i class="fa-solid fa-handshake"></i></div>
+          <div>
+            <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Pending COD / Verification</div>
+            <div id="metricPendingCOD" style="font-size:1.6rem; font-weight:900; color:#d97706;">0</div>
+          </div>
+        </div>
+
+        <div class="admin-stat-box">
+          <div class="stat-icon" style="background:rgba(34,197,94,0.1); color:#16a34a;"><i class="fa-solid fa-wallet"></i></div>
+          <div>
+            <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Total Revenue</div>
+            <div id="metricTotalRevenue" style="font-size:1.6rem; font-weight:900; color:#16a34a;">₹0</div>
+          </div>
+        </div>
+
+        <div class="admin-stat-box">
+          <div class="stat-icon" style="background:rgba(139,92,246,0.1); color:#8b5cf6;"><i class="fa-solid fa-rocket"></i></div>
+          <div>
+            <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">In Development</div>
+            <div id="metricActiveSprints" style="font-size:1.6rem; font-weight:900; color:#8b5cf6;">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="admin-nav-tabs">
+        <button class="admin-tab-btn active" id="tabBtnOrders" onclick="switchAdminTab('orders')"><i class="fa-solid fa-list-check"></i> Orders &amp; COD Management</button>
+        <button class="admin-tab-btn" id="tabBtnAdmins" onclick="switchAdminTab('admins')"><i class="fa-solid fa-user-shield"></i> Admins &amp; Managers (Firestore)</button>
+        <button class="admin-tab-btn" id="tabBtnInquiries" onclick="switchAdminTab('inquiries')"><i class="fa-solid fa-inbox"></i> Client Inquiries &amp; Leads</button>
+        <button class="admin-tab-btn" id="tabBtnPayments" onclick="switchAdminTab('payments')"><i class="fa-solid fa-credit-card"></i> Razorpay Live Gateway &amp; Logs</button>
+        <button class="admin-tab-btn" id="tabBtnCoupons" onclick="switchAdminTab('coupons')"><i class="fa-solid fa-ticket"></i> Promo Codes &amp; Coupons</button>
+      </div>
+
+      <!-- ==================== TAB 1: ORDERS & COD MANAGEMENT ==================== -->
+      <section id="sectionOrders">
+        <!-- Action Toolbar & Material Filter Chips -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="openNewOrderModal()"><i class="fa-solid fa-plus"></i> Add New Client Order</button>
+            <input type="text" id="orderSearchInput" placeholder="Filter orders by client, ID, or phone..." oninput="filterOrdersTable()" style="padding:8px 12px; border:1px solid var(--border-color); border-radius:10px; font-size:0.86rem; background:var(--bg-surface); color:var(--text-main); width:280px;">
+          </div>
+        </div>
+
+        <!-- Material Status Filter Chips -->
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:16px;" id="orderFilterChips">
+          <button class="status-chip active" onclick="window.setOrderFilter('all', this)">
+            <i class="fa-solid fa-layer-group"></i> All Orders (<span id="chipCountAll">0</span>)
+          </button>
+          <button class="status-chip" onclick="window.setOrderFilter('active', this)">
+            <i class="fa-solid fa-spinner fa-spin"></i> In Progress (<span id="chipCountActive">0</span>)
+          </button>
+          <button class="status-chip" onclick="window.setOrderFilter('hold', this)">
+            <i class="fa-solid fa-pause-circle" style="color:#f59e0b;"></i> On Hold (<span id="chipCountHold">0</span>)
+          </button>
+          <button class="status-chip" onclick="window.setOrderFilter('completed', this)">
+            <i class="fa-solid fa-circle-check" style="color:#10b981;"></i> Completed (<span id="chipCountCompleted">0</span>)
+          </button>
+          <button class="status-chip" onclick="window.setOrderFilter('cancelled', this)">
+            <i class="fa-solid fa-ban" style="color:#ef4444;"></i> Cancelled (<span id="chipCountCancelled">0</span>)
+          </button>
+          <button class="status-chip" onclick="window.setOrderFilter('cod', this)">
+            <i class="fa-solid fa-hand-holding-dollar" style="color:#0ea5e9;"></i> Pending COD (<span id="chipCountCOD">0</span>)
+          </button>
+        </div>
+
+        <!-- Orders Table Card -->
+        <div class="admin-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);">Client Project Orders &amp; COD Requests</h3>
+              <p style="margin:0; font-size:0.84rem; color:var(--text-muted);">Managed by Admins &amp; Managers in Firestore <code>orders</code> collection.</p>
+            </div>
+          </div>
+
+          <div class="order-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Project Name &amp; Stage</th>
+                  <th>Client Name &amp; Contact</th>
+                  <th>Price &amp; Payment</th>
+                  <th>Payment Status</th>
+                  <th>Sprint Progress</th>
+                  <th>Quick Actions</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTableBody">
+                <tr>
+                  <td><div class="skeleton-shimmer" style="width:90px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:140px; height:18px; margin-bottom:4px;"></div><div class="skeleton-shimmer" style="width:90px; height:12px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:130px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:110px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:100px; height:22px; border-radius:20px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:120px; height:16px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:80px; height:30px; border-radius:8px;"></div></td>
+                </tr>
+                <tr>
+                  <td><div class="skeleton-shimmer" style="width:90px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:130px; height:18px; margin-bottom:4px;"></div><div class="skeleton-shimmer" style="width:85px; height:12px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:120px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:100px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:100px; height:22px; border-radius:20px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:120px; height:16px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:80px; height:30px; border-radius:8px;"></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 2: ADMINS & MANAGERS ==================== -->
+      <section id="sectionAdmins" style="display:none;">
+        <div class="admin-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);">Admin Users Management (Firestore <code>admins</code> Collection)</h3>
+              <p style="margin:0; font-size:0.84rem; color:var(--text-muted);">
+                <strong style="color:var(--accent);">Security Rule:</strong> Only accounts in the <code>managers</code> collection can add or revoke Admin users.
+              </p>
+            </div>
+            <div id="managerActionWrapper">
+              <button id="btnOpenAddAdmin" class="btn btn-primary btn-sm" onclick="openAddAdminModal()"><i class="fa-solid fa-user-plus"></i> Grant New Admin Access</button>
+            </div>
+          </div>
+
+          <div id="managerRestrictedNotice" style="display:none; background:#fef2f2; border:1px solid #fecaca; color:#b91c1c; padding:10px 14px; border-radius:10px; font-size:0.84rem; margin-bottom:14px;">
+            <i class="fa-solid fa-lock"></i> You are logged in as an <strong>Admin</strong>. You have full access to customer orders and COD, but only <strong>Managers</strong> (in the <code>managers</code> collection) can grant or revoke Admin roles.
+          </div>
+
+          <div class="order-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Admin Email Address</th>
+                  <th>Designation / Role</th>
+                  <th>Granted By</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="adminsTableBody">
+                <tr>
+                  <td><div class="skeleton-shimmer" style="width:160px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:130px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:90px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:90px; height:22px; border-radius:20px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:70px; height:26px; border-radius:6px;"></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 3: INQUIRIES & LEADS ==================== -->
+      <section id="sectionInquiries" style="display:none;">
+        <div class="admin-card">
+          <div style="margin-bottom:16px;">
+            <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);">Live Inquiries, Quotes &amp; Feedback Leads</h3>
+            <p style="margin:0; font-size:0.84rem; color:var(--text-muted);">Submissions from Cost Estimator, Contact Form, and Feedback Widget in Firestore <code>inquiries</code> collection.</p>
+          </div>
+
+          <div class="order-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Date &amp; Source</th>
+                  <th>Client Contact</th>
+                  <th>Service / Scope</th>
+                  <th>Budget</th>
+                  <th>Message / Scope</th>
+                  <th>Direct Connect</th>
+                </tr>
+              </thead>
+              <tbody id="inquiriesTableBody">
+                <tr>
+                  <td><div class="skeleton-shimmer" style="width:100px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:130px; height:18px; margin-bottom:4px;"></div><div class="skeleton-shimmer" style="width:90px; height:12px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:120px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:80px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:180px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:80px; height:28px; border-radius:6px;"></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 4: RAZORPAY LIVE GATEWAY & RECEIPTS ==================== -->
+      <section id="sectionPayments" style="display:none;">
+        
+        <!-- Razorpay Live Key Configuration Card -->
+        <div class="admin-card" style="margin-bottom:24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);"><i class="fa-solid fa-key" style="color:#f59e0b;"></i> Razorpay Live Key ID Configuration</h3>
+              <p style="margin:0; font-size:0.84rem; color:var(--text-muted);">
+                Paste your official <strong>Live Key ID</strong> from your <a href="https://dashboard.razorpay.com/#/app/keys" target="_blank" style="color:var(--primary); font-weight:700;">Razorpay Dashboard &rarr; API Keys</a>.
+              </p>
+            </div>
+            <div>
+              <span id="gatewayStatusBadge" class="admin-badge badge-paid">🟢 Ready</span>
+            </div>
+          </div>
+
+          <form id="formSaveRazorpayKey" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <div style="flex:1; min-width:280px;">
+              <input type="text" id="inputLiveRazorpayKey" placeholder="rzp_live_xxxxxxxxxxxxxxxx" style="width:100%; padding:10px 14px; border:1.5px solid var(--border-color); border-radius:10px; font-size:0.92rem; background:var(--bg-surface-alt); color:var(--text-main); font-family:monospace;" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="padding:10px 20px;">
+              <i class="fa-solid fa-floppy-disk"></i> Save Live Key
+            </button>
+          </form>
+          <div id="keySaveAlert" style="display:none; margin-top:10px; font-size:0.85rem; font-weight:700; color:#16a34a;"></div>
+        </div>
+
+        <!-- Live Payment Receipts Log -->
+        <div class="admin-card">
+          <div style="margin-bottom:16px;">
+            <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);">Live Razorpay Payment Receipts &amp; Logs</h3>
+            <p style="margin:0; font-size:0.84rem; color:var(--text-muted);">Real-time transactions received through the website checkout.</p>
+          </div>
+
+          <div class="order-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Payment ID</th>
+                  <th>Order Reference</th>
+                  <th>Client Contact</th>
+                  <th>Amount</th>
+                  <th>Status &amp; Gateway</th>
+                  <th>Date &amp; Time</th>
+                </tr>
+              </thead>
+              <tbody id="paymentsTableBody">
+                <tr>
+                  <td><div class="skeleton-shimmer" style="width:110px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:130px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:120px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:80px; height:18px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:90px; height:22px; border-radius:20px;"></div></td>
+                  <td><div class="skeleton-shimmer" style="width:100px; height:18px;"></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 5: PROMO CODES & COUPONS ==================== -->
+      <section id="sectionCoupons" style="display:none;">
+        <div class="admin-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);"><i class="fa-solid fa-ticket" style="color:var(--accent);"></i> Promo Codes &amp; Discount Coupons</h3>
+              <p style="margin:0; font-size:0.84rem; color:var(--text-muted);">Manage active promotional discount codes stored in Firestore <code>coupons</code> collection.</p>
+            </div>
+            <div>
+              <button class="btn btn-primary btn-sm" onclick="window.openCreateCouponModal()"><i class="fa-solid fa-plus"></i> Create New Promo Code</button>
+            </div>
+          </div>
+
+          <div class="order-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Promo Code</th>
+                  <th>Discount Type &amp; Value</th>
+                  <th>Min Order Value</th>
+                  <th>Usage Count</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="couponsTableBody">
+                <tr>
+                  <td colspan="6" style="text-align:center; padding:20px; color:var(--text-muted);">Loading coupons from Firestore...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer style="background:#0b1b36; color:#e2e8f0; padding:30px 20px; font-size:0.84rem; border-radius:16px; margin-top:30px; border-top:3px solid var(--primary, #1266e8);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div>
+            <strong>GoDoz Technology Admin Hub</strong> &bull; Founded by <strong>RS GULSHAN PRAJAPATI</strong>
+          </div>
+          <div>
+            Support: <a href="mailto:godoz.info@gmail.com" style="color:#38bdf8;">godoz.info@gmail.com</a>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+
+  </main>
+</div>
+
+  <!-- 3. MODAL: EDIT / UPDATE PROJECT STATUS & COD ACCEPTANCE -->
+  <div id="editOrderModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+        <h3 style="margin:0; font-size:1.2rem; color:var(--text-main);"><i class="fa-solid fa-sliders"></i> Update Order &amp; Progress</h3>
+        <button onclick="closeEditModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-muted);">&times;</button>
+      </div>
+
+      <form id="editOrderForm" style="display:flex; flex-direction:column; gap:14px;">
+        <input type="hidden" id="editOrderId">
+
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Project Title / Name</label>
+          <input type="text" id="editProjectName" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);" required>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div>
+            <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Client Name</label>
+            <input type="text" id="editClientName" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);" required>
+          </div>
+          <div>
+            <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Client Phone</label>
+            <input type="text" id="editClientPhone" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);" required>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div>
+            <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Total Price (₹)</label>
+            <input type="number" id="editPrice" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);" required>
+          </div>
+          <div>
+            <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Payment Mode</label>
+            <select id="editPaymentMode" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);">
+              <option value="Cash on Delivery (COD Milestone)">Cash on Delivery (COD Milestone)</option>
+              <option value="Online Razorpay Escrow">Online Razorpay Escrow</option>
+              <option value="UPI / QR Code Direct">UPI / QR Code Direct</option>
+              <option value="Bank NEFT / IMPS">Bank NEFT / IMPS</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- COD & Payment Verification Status -->
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Payment Status</label>
+          <select id="editPaymentStatus" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);">
+            <option value="COD Requested (Pending Verification)">⏳ COD Requested (Pending Verification)</option>
+            <option value="COD Accepted (Advance Verified)">✅ COD Accepted (Advance Verified)</option>
+            <option value="Milestone 1 Paid (30%)">🟢 Milestone 1 Paid (30% Advance)</option>
+            <option value="Milestone 2 Paid (50%)">🟢 Milestone 2 Paid (50% Mid-Sprint)</option>
+            <option value="100% Fully Paid">🏆 100% Fully Paid &amp; Completed</option>
+          </select>
+        </div>
+
+        <!-- Sprint Stage Preset + Manual Title Input -->
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Sprint Stage Preset &amp; Custom Stage Title</label>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <select id="editStageSelect" onchange="window.applyStagePreset(this, 'editStage', 'editProgress', 'editProgressRange')" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main); font-weight:600;">
+              <option value="">-- Choose Stage Preset OR Type Custom Below --</option>
+              <option value="Step 01: Order Placed (5%)">Step 01: Order Placed (5%)</option>
+              <option value="Step 02: Discussed with Agent (15%)">Step 02: Discussed with Agent (15%)</option>
+              <option value="Step 03: Work Started &amp; Sample Preview Shown (35%)">Step 03: Work Started &amp; Sample Preview Shown (35%)</option>
+              <option value="Step 04: Active Coding &amp; Core Dev (65%)">Step 04: Active Coding &amp; Core Dev (65%)</option>
+              <option value="Step 05: QA Testing &amp; Beta APK Demo (85%)">Step 05: QA Testing &amp; Beta APK Demo (85%)</option>
+              <option value="Step 06: Live Launch &amp; 100% Handover (100%)">Step 06: Live Launch &amp; 100% Handover (100%)</option>
+            </select>
+            <input type="text" id="editStage" placeholder="Type custom stage name (e.g. Work Started &amp; Sample Preview Shown)" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main); font-weight:700;" required>
+          </div>
+        </div>
+
+        <!-- Manual Progress % Input + Slider -->
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Manual Development Progress (%)</label>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <input type="number" id="editProgress" min="0" max="100" placeholder="5" oninput="document.getElementById('editProgressRange').value = this.value" style="width:100px; padding:8px 12px; border:1.5px solid var(--primary); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main); font-weight:800; font-size:1rem;" required>
+            <input type="range" id="editProgressRange" min="0" max="100" value="5" oninput="document.getElementById('editProgress').value = this.value" style="flex:1;">
+          </div>
+        </div>
+
+        <!-- Deliverables -->
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Beta APK / Live Preview URL (Optional)</label>
+          <input type="url" id="editDeliverableUrl" placeholder="https://preview.godoz.in/... or live demo URL" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);">
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:8px;">
+          <button type="submit" class="btn btn-primary" style="flex:1; padding:10px;"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+          <button type="button" onclick="closeEditModal()" class="btn btn-outline" style="padding:10px;">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. MODAL: CREATE NEW CLIENT ORDER -->
+  <div id="newOrderModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+        <h3 style="margin:0; font-size:1.2rem; color:var(--text-main);"><i class="fa-solid fa-circle-plus"></i> Create New Client Order</h3>
+        <button onclick="closeNewOrderModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-muted);">&times;</button>
+      </div>
+
+      <form id="newOrderForm" style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Project Name / Scope *</label>
+          <input type="text" id="newProjectName" placeholder="e.g. Android Ecommerce & Delivery App" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);" required>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div>
+            <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Client Name *</label>
+            <input type="text" id="newClientName" placeholder="e.g. Vikram Singh" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);" required>
+          </div>
+          <div>
+            <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Phone Number *</label>
+            <input type="text" id="newClientPhone" placeholder="e.g. 9876543210" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);" required>
+          </div>
+        </div>
+
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Client Email (For dashboard linking)</label>
+          <input type="email" id="newClientEmail" placeholder="client@domain.com" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);">
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div>
+            <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Total Budget (₹) *</label>
+            <input type="number" id="newPrice" placeholder="e.g. 19999" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);" required>
+          </div>
+          <div>
+            <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Payment Method</label>
+            <select id="newPaymentMode" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);">
+              <option value="Cash on Delivery (COD Milestone)">Cash on Delivery (COD Milestone)</option>
+              <option value="Online Razorpay Escrow">Online Razorpay Escrow</option>
+              <option value="UPI / QR Code Direct">UPI / QR Code Direct</option>
+              <option value="Bank NEFT / IMPS">Bank NEFT / IMPS</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-accent" style="padding:12px; font-weight:800; margin-top:8px;">
+          <i class="fa-solid fa-cloud-arrow-up"></i> Save &amp; Sync to Firestore
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. MODAL: ADD ADMIN USER (Manager Only) -->
+  <div id="addAdminModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+        <h3 style="margin:0; font-size:1.2rem; color:var(--text-main);"><i class="fa-solid fa-user-shield"></i> Grant Administrator Access</h3>
+        <button onclick="closeAddAdminModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-muted);">&times;</button>
+      </div>
+
+      <form id="addAdminForm" style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">New Admin Email Address *</label>
+          <input type="email" id="adminNewEmail" placeholder="support.admin@godoz.in" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);" required>
+        </div>
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Admin Full Name / Title</label>
+          <input type="text" id="adminNewName" placeholder="e.g. Operations Executive" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="padding:12px; font-weight:800; margin-top:8px;">
+          <i class="fa-solid fa-check"></i> Save to <code>admins</code> Collection
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. MODAL: CREATE PROMO CODE / COUPON -->
+  <div id="createCouponModal" class="godoz-modal-backdrop" style="display:none;" role="dialog" aria-modal="true" onclick="if(event.target===this) window.closeCreateCouponModal()">
+    <div class="godoz-modal-box" style="max-width:480px; padding:24px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+        <h3 style="margin:0; font-size:1.1rem; color:var(--text-main);"><i class="fa-solid fa-ticket" style="color:var(--accent);"></i> Create Promo Code / Coupon</h3>
+        <button type="button" onclick="window.closeCreateCouponModal()" style="background:none; border:none; font-size:1.2rem; color:var(--text-muted); cursor:pointer;">&times;</button>
+      </div>
+
+      <form id="createCouponForm" onsubmit="window.handleCreateCouponSubmit(event)">
+        <div style="margin-bottom:12px;">
+          <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Coupon Code Name *</label>
+          <input type="text" id="couponCodeInput" placeholder="e.g. GODZO10, LAUNCH1000, FESTIVE20" required style="width:100%; text-transform:uppercase; padding:9px 12px; border:1px solid var(--border-color); border-radius:8px; font-weight:800; font-size:0.9rem; background:var(--bg-surface); color:var(--text-main);">
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+          <div>
+            <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Discount Type *</label>
+            <select id="couponTypeInput" style="width:100%; padding:9px 12px; border:1px solid var(--border-color); border-radius:8px; font-weight:700; font-size:0.85rem; background:var(--bg-surface); color:var(--text-main);">
+              <option value="percent">Percentage (%) OFF</option>
+              <option value="flat">Flat Fixed Amount (₹) OFF</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Discount Value *</label>
+            <input type="number" id="couponValueInput" placeholder="10 (for 10%) or 1000 (for ₹1000)" required min="1" style="width:100%; padding:9px 12px; border:1px solid var(--border-color); border-radius:8px; font-weight:800; font-size:0.9rem; background:var(--bg-surface); color:var(--text-main);">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+          <div>
+            <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Min Order Value (₹)</label>
+            <input type="number" id="couponMinOrderInput" placeholder="0 for any amount" value="0" min="0" style="width:100%; padding:9px 12px; border:1px solid var(--border-color); border-radius:8px; font-weight:700; font-size:0.85rem; background:var(--bg-surface); color:var(--text-main);">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Initial Status</label>
+            <select id="couponStatusInput" style="width:100%; padding:9px 12px; border:1px solid var(--border-color); border-radius:8px; font-weight:700; font-size:0.85rem; background:var(--bg-surface); color:var(--text-main);">
+              <option value="active">Active (Usable)</option>
+              <option value="inactive">Deactive / Paused</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" id="btnSaveCoupon" class="btn btn-primary" style="width:100%; padding:11px; font-weight:800;">
+          Save Promo Code in Firestore
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase & Firestore Admin Integration Module -->
+  <script type="module">
+    import { 
+      auth,
+      subscribeToAuth, 
+      isUserAdmin, 
+      isUserManager,
+      getUserRole,
+      loginWithGoogle, 
+      loginWithEmail,
+      logoutUser,
+      listenToAllOrders,
+      saveOrderToFirestore,
+      updateOrderInFirestore,
+      deleteOrderFromFirestore,
+      listenToAdmins,
+      listenToManagers,
+      addAdminByManager,
+      removeAdminByManager,
+      listenToInquiries,
+      listenToPayments,
+      getOrderFinancials,
+      RAZORPAY_CONFIG,
+      saveCouponToFirestore,
+      getCouponsFromFirestore,
+      toggleCouponStatusInFirestore,
+      deleteCouponFromFirestore
+    } from "./firebase-init.js";
+
+    let currentOrders = [];
+    let currentAdmins = [];
+    let currentManagers = [];
+    let currentInquiries = [];
+    let currentPayments = [];
+    let isCurrentUserManager = false;
+    let listenersInitialized = false;
+
+    const skeletonLoader = document.getElementById('adminLoadingSkeleton');
+    const authGate = document.getElementById('adminAuthGate');
+    const dashboardContent = document.getElementById('adminDashboardContent');
+
+    function escapeHTML(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // ========================================================================
+    // 0. INSTANT PRE-HYDRATION (0ms Zero-Flicker Admin Interface Load)
+    // ========================================================================
+    (function preHydrateAdmin() {
+      const cachedAdminRole = localStorage.getItem('godoz_admin_role');
+      const cachedAdminEmail = localStorage.getItem('godoz_admin_email') || localStorage.getItem('godoz_user_email');
+      const cachedOrders = localStorage.getItem('godoz_admin_orders');
+
+      if (cachedAdminRole === 'manager' || cachedAdminRole === 'admin') {
+        if (skeletonLoader) skeletonLoader.style.display = 'none';
+        if (authGate) authGate.style.display = 'none';
+        if (dashboardContent) dashboardContent.style.display = 'block';
+        const logoutBtn = document.getElementById('btnAdminLogout');
+        if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+
+        if (cachedAdminEmail) {
+          const emailDisplay = document.getElementById('activeAdminEmailDisplay');
+          if (emailDisplay) emailDisplay.textContent = cachedAdminEmail;
+        }
+
+        isCurrentUserManager = (cachedAdminRole === 'manager');
+        const badge = document.getElementById('activeRoleBadge');
+        const roleInd = document.getElementById('roleIndicatorBadge');
+        const btnAddAdmin = document.getElementById('btnOpenAddAdmin');
+        const mgrNotice = document.getElementById('managerRestrictedNotice');
+
+        if (isCurrentUserManager) {
+          if (badge) {
+            badge.className = 'admin-badge badge-mgr';
+            badge.innerHTML = '<i class="fa-solid fa-crown"></i> Master Manager';
+          }
+          if (roleInd) {
+            roleInd.textContent = 'MANAGER';
+            roleInd.style.background = '#7c3aed';
+          }
+          if (btnAddAdmin) {
+            btnAddAdmin.style.display = 'inline-flex';
+            btnAddAdmin.disabled = false;
+          }
+          if (mgrNotice) mgrNotice.style.display = 'none';
+        } else {
+          if (badge) {
+            badge.className = 'admin-badge badge-paid';
+            badge.innerHTML = '<i class="fa-solid fa-shield"></i> Support Admin';
+          }
+          if (roleInd) {
+            roleInd.textContent = 'ADMIN';
+            roleInd.style.background = '#1266e8';
+          }
+          if (btnAddAdmin) btnAddAdmin.style.display = 'none';
+          if (mgrNotice) mgrNotice.style.display = 'block';
+        }
+
+        if (cachedOrders) {
+          try {
+            const parsed = JSON.parse(cachedOrders);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              currentOrders = parsed;
+              renderOrdersTable(parsed);
+            }
+          } catch(e) {}
+        }
+      }
+    })();
+
+    // Global Tab Switching
+    window.switchAdminTab = function(tabName) {
+      document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+      const secOrders = document.getElementById('sectionOrders');
+      const secAdmins = document.getElementById('sectionAdmins');
+      const secInquiries = document.getElementById('sectionInquiries');
+      const secPayments = document.getElementById('sectionPayments');
+      const secCoupons = document.getElementById('sectionCoupons');
+
+      if (secOrders) secOrders.style.display = 'none';
+      if (secAdmins) secAdmins.style.display = 'none';
+      if (secInquiries) secInquiries.style.display = 'none';
+      if (secPayments) secPayments.style.display = 'none';
+      if (secCoupons) secCoupons.style.display = 'none';
+
+      if (tabName === 'orders') {
+        document.getElementById('tabBtnOrders')?.classList.add('active');
+        if (secOrders) secOrders.style.display = 'block';
+      } else if (tabName === 'admins') {
+        document.getElementById('tabBtnAdmins')?.classList.add('active');
+        if (secAdmins) secAdmins.style.display = 'block';
+      } else if (tabName === 'inquiries') {
+        document.getElementById('tabBtnInquiries')?.classList.add('active');
+        if (secInquiries) secInquiries.style.display = 'block';
+      } else if (tabName === 'payments') {
+        document.getElementById('tabBtnPayments')?.classList.add('active');
+        if (secPayments) secPayments.style.display = 'block';
+      } else if (tabName === 'coupons') {
+        document.getElementById('tabBtnCoupons')?.classList.add('active');
+        if (secCoupons) secCoupons.style.display = 'block';
+        if (typeof window.loadCouponsTable === 'function') window.loadCouponsTable();
+      }
+    };
+
+    let currentCoupons = [];
+
+    window.openCreateCouponModal = function() {
+      const modal = document.getElementById('createCouponModal');
+      if (modal) {
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('active'), 10);
+      }
+    };
+
+    window.closeCreateCouponModal = function() {
+      const modal = document.getElementById('createCouponModal');
+      if (modal) {
+        modal.classList.remove('active');
+        setTimeout(() => modal.style.display = 'none', 200);
+      }
+    };
+
+    window.handleCreateCouponSubmit = async function(e) {
+      if (e) e.preventDefault();
+      const code = document.getElementById('couponCodeInput').value.trim();
+      const type = document.getElementById('couponTypeInput').value;
+      const value = document.getElementById('couponValueInput').value;
+      const minOrder = document.getElementById('couponMinOrderInput').value;
+      const status = document.getElementById('couponStatusInput').value;
+      const btnSave = document.getElementById('btnSaveCoupon');
+
+      if (!code || !value) return;
+
+      if (btnSave) btnSave.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+      const res = await saveCouponToFirestore({
+        code,
+        type,
+        value: Number(value),
+        minOrder: Number(minOrder || 0),
+        status
+      });
+
+      if (btnSave) btnSave.innerHTML = 'Save Promo Code in Firestore';
+
+      if (res.success) {
+        window.closeCreateCouponModal();
+        document.getElementById('createCouponForm').reset();
+        await window.loadCouponsTable();
+        alert(`🎉 Promo Code '${res.code}' saved in Firestore successfully!`);
+      } else {
+        alert("Error saving coupon: " + res.error);
+      }
+    };
+
+    window.loadCouponsTable = async function() {
+      const tbody = document.getElementById('couponsTableBody');
+      if (!tbody) return;
+
+      currentCoupons = await getCouponsFromFirestore();
+
+      if (!currentCoupons || currentCoupons.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:var(--text-muted);">No promo codes created yet. Click 'Create New Promo Code' above to add one!</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = currentCoupons.map(coupon => {
+        const isPercent = coupon.type === 'percent';
+        const discText = isPercent ? `${coupon.value}% OFF` : `₹${Number(coupon.value).toLocaleString('en-IN')} OFF`;
+        const minOrderText = coupon.minOrder ? `₹${Number(coupon.minOrder).toLocaleString('en-IN')}` : '₹0 (None)';
+        const isActive = coupon.status === 'active';
+        const statusBadge = isActive
+          ? `<span class="admin-badge badge-paid"><i class="fa-solid fa-circle-check"></i> Active</span>`
+          : `<span class="admin-badge badge-pending"><i class="fa-solid fa-circle-pause"></i> Inactive</span>`;
+
+        return `
+          <tr>
+            <td><strong style="color:var(--primary); font-size:0.95rem;">${escapeHTML(coupon.code)}</strong></td>
+            <td><span style="font-weight:800; color:#10b981;">${discText}</span></td>
+            <td>${minOrderText}</td>
+            <td><strong>${coupon.usageCount || 0}</strong> uses</td>
+            <td>${statusBadge}</td>
+            <td>
+              <button onclick="window.toggleCouponStatus('${escapeHTML(coupon.id || coupon.code)}', '${coupon.status}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem;">
+                ${isActive ? 'Pause / Deactivate' : 'Activate'}
+              </button>
+              <button onclick="window.deleteCoupon('${escapeHTML(coupon.id || coupon.code)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:#ef4444; border-color:#fca5a5;">
+                Delete
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    };
+
+    window.toggleCouponStatus = async function(couponId, currentStatus) {
+      const res = await toggleCouponStatusInFirestore(couponId, currentStatus);
+      if (res.success) {
+        await window.loadCouponsTable();
+      } else {
+        alert("Failed to toggle coupon status.");
+      }
+    };
+
+    window.deleteCoupon = async function(couponId) {
+      if (!confirm("Are you sure you want to delete this promo code?")) return;
+      const res = await deleteCouponFromFirestore(couponId);
+      if (res.success) {
+        await window.loadCouponsTable();
+      } else {
+        alert("Failed to delete coupon.");
+      }
+    };
+
+    async function unlockAdminInterface(user, role) {
+      try {
+        if (skeletonLoader) skeletonLoader.style.display = 'none';
+        if (authGate) authGate.style.display = 'none';
+        if (dashboardContent) dashboardContent.style.display = 'block';
+        const logoutBtn = document.getElementById('btnAdminLogout');
+        if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+
+        const email = user.email || "Authorized User";
+        const emailDisplay = document.getElementById('activeAdminEmailDisplay');
+        if (emailDisplay) emailDisplay.textContent = email;
+
+        const isMgr = (role === 'manager') || (user.isManager === true) || (await isUserManager(user));
+        isCurrentUserManager = isMgr;
+
+        // Cache admin role & email for instant prehydration
+        const resolvedRole = isMgr ? 'manager' : 'admin';
+        localStorage.setItem('godoz_user_role', resolvedRole);
+        localStorage.setItem('godoz_admin_role', resolvedRole);
+        if (user.email) localStorage.setItem('godoz_admin_email', user.email);
+
+        const badge = document.getElementById('activeRoleBadge');
+        const roleInd = document.getElementById('roleIndicatorBadge');
+        const btnAddAdmin = document.getElementById('btnOpenAddAdmin');
+        const mgrNotice = document.getElementById('managerRestrictedNotice');
+
+        if (isCurrentUserManager) {
+          if (badge) {
+            badge.className = 'admin-badge badge-mgr';
+            badge.innerHTML = '<i class="fa-solid fa-crown"></i> Master Manager';
+          }
+          if (roleInd) {
+            roleInd.textContent = 'MANAGER';
+            roleInd.style.background = '#7c3aed';
+          }
+          if (btnAddAdmin) {
+            btnAddAdmin.style.display = 'inline-flex';
+            btnAddAdmin.disabled = false;
+          }
+          if (mgrNotice) mgrNotice.style.display = 'none';
+        } else {
+          if (badge) {
+            badge.className = 'admin-badge badge-paid';
+            badge.innerHTML = '<i class="fa-solid fa-shield"></i> Support Admin';
+          }
+          if (roleInd) {
+            roleInd.textContent = 'ADMIN';
+            roleInd.style.background = '#1266e8';
+          }
+          if (btnAddAdmin) btnAddAdmin.style.display = 'none';
+          if (mgrNotice) mgrNotice.style.display = 'block';
+        }
+
+        if (!listenersInitialized) {
+          listenersInitialized = true;
+          initFirestoreListeners();
+        }
+      } catch (err) {
+        console.error("Error unlocking admin interface:", err);
+      } finally {
+        if (skeletonLoader) skeletonLoader.style.display = 'none';
+      }
+    }
+
+    // Google Sign-In for Admin
+    document.getElementById('btnAdminGoogleLogin').addEventListener('click', async () => {
+      const res = await loginWithGoogle();
+      if (res.success) {
+        const isMgr = res.isManager || (await isUserManager(res.user));
+        const isAdm = res.isAdmin || (await isUserAdmin(res.user, true));
+        if (isMgr || isAdm) {
+          await unlockAdminInterface(res.user, isMgr ? 'manager' : 'admin');
+        } else {
+          if (skeletonLoader) skeletonLoader.style.display = 'none';
+          if (dashboardContent) dashboardContent.style.display = 'none';
+          if (authGate) authGate.style.display = 'block';
+          alert("⚠️ Access Denied: " + (res.user.email || 'This account') + " is not registered with Manager or Admin privileges.");
+        }
+      } else {
+        alert("Login failed: " + (res.error || "Unknown error"));
+      }
+    });
+
+    // Email/Password Form Login
+    document.getElementById('adminEmailLoginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('adminAuthEmail').value.trim();
+      const pass = document.getElementById('adminAuthPassword').value;
+      const err = document.getElementById('adminAuthError');
+
+      err.style.display = 'none';
+      const res = await loginWithEmail(email, pass);
+      if (res.success) {
+        const isMgr = res.isManager || (await isUserManager(res.user));
+        const isAdm = res.isAdmin || (await isUserAdmin(res.user, true));
+        if (isMgr || isAdm) {
+          await unlockAdminInterface(res.user, isMgr ? 'manager' : 'admin');
+        } else {
+          if (skeletonLoader) skeletonLoader.style.display = 'none';
+          if (dashboardContent) dashboardContent.style.display = 'none';
+          if (authGate) authGate.style.display = 'block';
+          err.innerHTML = `⚠️ Access Denied: <strong>${res.user.email || 'This account'}</strong> does not have Admin/Manager permissions.<br><a href="/profile.html" style="color:var(--primary); font-weight:700; text-decoration:underline; display:inline-block; margin-top:8px;">Switch to Client Dashboard</a>`;
+          err.style.display = 'block';
+        }
+      } else {
+        err.textContent = "❌ " + (res.error || "Invalid credentials.");
+        err.style.display = 'block';
+      }
+    });
+
+    document.getElementById('btnAdminLogout').addEventListener('click', async () => {
+      localStorage.removeItem('godoz_admin_role');
+      localStorage.removeItem('godoz_admin_email');
+      localStorage.removeItem('godoz_admin_orders');
+      localStorage.removeItem('godoz_user_role');
+      await logoutUser();
+      location.reload();
+    });
+
+    // Safety Fallback Timer: Ensure Skeleton Loader is hidden after 1.5 seconds under all conditions
+    setTimeout(() => {
+      if (skeletonLoader && skeletonLoader.style.display !== 'none') {
+        skeletonLoader.style.display = 'none';
+        if (!auth.currentUser && dashboardContent.style.display !== 'block') {
+          if (authGate) authGate.style.display = 'block';
+        }
+      }
+    }, 1500);
+
+    // Auth State Observer
+    subscribeToAuth(async (user) => {
+      try {
+        if (user) {
+          const isMgr = (user.isManager === true) || (await isUserManager(user));
+          const isAdm = (user.isAdmin === true) || isMgr || (await isUserAdmin(user, true));
+          if (isMgr || isAdm) {
+            await unlockAdminInterface(user, isMgr ? 'manager' : 'admin');
+          } else {
+            localStorage.removeItem('godoz_admin_role');
+            localStorage.removeItem('godoz_admin_orders');
+            localStorage.setItem('godoz_user_role', 'client');
+            if (skeletonLoader) skeletonLoader.style.display = 'none';
+            if (dashboardContent) dashboardContent.style.display = 'none';
+            if (authGate) {
+              authGate.style.display = 'block';
+              const err = document.getElementById('adminAuthError');
+              if (err) {
+                err.innerHTML = `⚠️ Logged in as Client: <strong>${user.email || 'Client User'}</strong>.<br><a href="/profile.html" class="btn btn-sm btn-primary" style="margin-top:10px; display:inline-block;">Open Client Dashboard</a>`;
+                err.style.display = 'block';
+              }
+            }
+          }
+        } else {
+          const cachedRole = localStorage.getItem('godoz_admin_role');
+          if (!cachedRole) {
+            localStorage.removeItem('godoz_admin_role');
+            localStorage.removeItem('godoz_admin_orders');
+            localStorage.removeItem('godoz_user_role');
+            if (skeletonLoader) skeletonLoader.style.display = 'none';
+            if (dashboardContent) dashboardContent.style.display = 'none';
+            if (authGate) authGate.style.display = 'block';
+          }
+        }
+      } catch (err) {
+        console.warn("Auth observer check error in admin.html:", err);
+      } finally {
+        if (skeletonLoader) skeletonLoader.style.display = 'none';
+      }
+    });
+
+    // Firestore Listeners Initializer
+    function initFirestoreListeners() {
+      // 1. Orders
+      try {
+        listenToAllOrders((orders) => {
+          currentOrders = orders;
+          try {
+            localStorage.setItem('godoz_admin_orders', JSON.stringify(orders));
+          } catch(e) {}
+          renderOrdersTable(orders);
+        });
+      } catch (e) {
+        console.warn("Orders listener init notice:", e);
+      }
+
+      // 2. Admins
+      try {
+        listenToAdmins((admins) => {
+          currentAdmins = admins;
+          renderAdminsTable();
+        });
+      } catch (e) {
+        console.warn("Admins listener init notice:", e);
+      }
+
+      // 3. Managers
+      try {
+        listenToManagers((managers) => {
+          currentManagers = managers;
+          renderAdminsTable();
+        });
+      } catch (e) {
+        console.warn("Managers listener init notice:", e);
+      }
+
+      // 4. Inquiries
+      try {
+        listenToInquiries((inquiries) => {
+          currentInquiries = inquiries;
+          renderInquiriesTable(inquiries);
+        });
+      } catch (e) {
+        console.warn("Inquiries listener init notice:", e);
+      }
+
+      // 5. Razorpay Payments & Receipts
+      try {
+        listenToPayments((payments) => {
+          currentPayments = payments;
+          renderPaymentsTable(payments);
+        });
+      } catch (e) {
+        console.warn("Payments listener init notice:", e);
+      }
+
+      // 6. Initialize Razorpay Key input
+      const keyInput = document.getElementById('inputLiveRazorpayKey');
+      if (keyInput) {
+        keyInput.value = RAZORPAY_CONFIG.keyId;
+      }
+    }
+
+    // Render Orders Table
+    function renderOrdersTable(orders) {
+      const tbody = document.getElementById('ordersTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      let totalRevenue = 0;
+      let pendingCOD = 0;
+      let activeSprints = 0;
+
+      if (!orders || orders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">No orders found. Click "+ Add New Client Order" to create one.</td></tr>';
+        document.getElementById('metricTotalOrders').textContent = '0';
+        document.getElementById('metricPendingCOD').textContent = '0';
+        document.getElementById('metricTotalRevenue').textContent = '₹0';
+        document.getElementById('metricActiveSprints').textContent = '0';
+        return;
+      }
+
+      orders.forEach(order => {
+        const fin = getOrderFinancials(order);
+        const totalPrice = fin.totalPrice;
+        const amountPaid = fin.amountPaid;
+        const remainingBalance = fin.remainingBalance;
+        const isFullyPaid = fin.isFullyPaid;
+        totalRevenue += amountPaid;
+
+        if (order.paymentStatus && order.paymentStatus.includes('Pending')) {
+          pendingCOD++;
+        }
+        if ((order.progress || 0) < 100) {
+          activeSprints++;
+        }
+
+        const isCOD = order.paymentMode && order.paymentMode.includes('COD');
+        const isCODVerified = order.paymentStatus && order.paymentStatus.includes('COD Accepted');
+        const txnCount = Array.isArray(order.paymentHistory) ? order.paymentHistory.length : (amountPaid > 0 ? 1 : 0);
+        const isOrderCancelled = order.status === 'Cancelled' || (order.stage && order.stage.toLowerCase().includes('cancel'));
+        const isOrderOnHold = order.status === 'On Hold' || (order.stage && order.stage.toLowerCase().includes('hold'));
+        const cleanPhoneDigits = (order.clientPhone || '').replace(/\D/g, '');
+
+        const statusAttr = isOrderCancelled ? 'cancelled' : (isOrderOnHold ? 'on hold' : (order.status || 'in progress').toLowerCase());
+
+        const tr = document.createElement('tr');
+        tr.setAttribute('data-order-status', statusAttr);
+        tr.setAttribute('data-is-cod', isCOD ? 'true' : 'false');
+
+        tr.innerHTML = `
+          <td>
+            <strong>#${escapeHTML(order.id)}</strong>
+            <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHTML(order.createdAtDate || 'Recent')}</div>
+          </td>
+          <td>
+            <div style="font-weight:700; color:var(--text-main);">${escapeHTML(order.projectName)}</div>
+            <select onchange="window.quickStageUpdate('${escapeHTML(order.id)}', this.value)" style="margin-top:4px; padding:3px 6px; font-size:0.75rem; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-surface-alt); color:var(--text-main); font-weight:600; outline:none; cursor:pointer;" title="Click to update sprint stage instantly" ${isOrderCancelled || isOrderOnHold ? 'disabled' : ''}>
+              <option value="Step 01: Order Placed (5%)" ${order.stage?.includes('Step 01') || order.stage?.includes('Placed') ? 'selected' : ''}>Step 01: Order Placed (5%)</option>
+              <option value="Step 02: Discussed with Agent (15%)" ${order.stage?.includes('Step 02') || order.stage?.includes('Agent') || order.stage?.includes('Discussed') ? 'selected' : ''}>Step 02: Discussed with Agent (15%)</option>
+              <option value="Step 03: Work Started & Sample Preview Shown (35%)" ${order.stage?.includes('Step 03') || order.stage?.includes('Preview') || order.stage?.includes('Sample') ? 'selected' : ''}>Step 03: Work Started & Sample Preview (35%)</option>
+              <option value="Step 04: Active Coding & Core Dev (65%)" ${order.stage?.includes('Step 04') || order.stage?.includes('Coding') ? 'selected' : ''}>Step 04: Active Coding (65%)</option>
+              <option value="Step 05: QA Testing & Beta APK Demo (85%)" ${order.stage?.includes('Step 05') || order.stage?.includes('Testing') || order.stage?.includes('Demo') ? 'selected' : ''}>Step 05: QA Testing & Beta Demo (85%)</option>
+              <option value="Step 06: Live Launch & 100% Handover (100%)" ${order.stage?.includes('Step 06') || order.stage?.includes('Launch') || order.stage?.includes('Handover') ? 'selected' : ''}>Step 06: Live Launch & Handover (100%)</option>
+              <option value="Order Cancelled & Closed (0%)" ${isOrderCancelled ? 'selected' : ''}>Order Cancelled</option>
+            </select>
+          </td>
+          <td>
+            <div style="font-weight:700;">${escapeHTML(order.clientName)}</div>
+            <div style="font-size:0.78rem; color:var(--text-muted);"><i class="fa-solid fa-phone"></i> ${escapeHTML(order.clientPhone)}</div>
+            <div style="font-size:0.72rem; color:var(--primary); word-break:break-all;"><i class="fa-solid fa-envelope"></i> ${escapeHTML(order.clientEmail || 'No Email')}</div>
+          </td>
+          <td>
+            <div style="font-weight:800; color:var(--text-main);">₹${totalPrice.toLocaleString('en-IN')}</div>
+            <div style="font-size:0.75rem; color:#16a34a; font-weight:700;">Paid: ₹${amountPaid.toLocaleString('en-IN')}</div>
+            ${!isFullyPaid ? `<div style="font-size:0.72rem; color:#ff6900; font-weight:700;">Due: ₹${remainingBalance.toLocaleString('en-IN')}</div>` : `<div style="font-size:0.72rem; color:#16a34a;">✅ 100% Paid</div>`}
+          </td>
+          <td>
+            <span class="admin-badge ${isOrderCancelled ? 'badge-pending' : (isOrderOnHold ? 'badge-mgr' : (isFullyPaid ? 'badge-paid' : (isCODVerified ? 'badge-paid' : (isCOD ? 'badge-cod' : (amountPaid > 0 ? 'badge-mgr' : 'badge-pending')))))}" style="${isOrderCancelled ? 'background:#fee2e2; color:#dc2626; border:1px solid #fca5a5;' : (isOrderOnHold ? 'background:#fef3c7; color:#d97706; border:1px solid #fcd34d;' : '')}">
+              ${escapeHTML(isOrderCancelled ? 'Cancelled' : (isOrderOnHold ? 'On Hold' : (order.status || order.paymentStatus || 'Pending')))}
+            </span>
+            ${txnCount > 0 ? `<div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;"><i class="fa-solid fa-receipt"></i> ${txnCount} Txns</div>` : ''}
+          </td>
+          <td>
+            <div style="background:var(--border-color); height:6px; border-radius:4px; overflow:hidden; width:120px;">
+              <div style="background:${isOrderCancelled ? '#ef4444' : (isOrderOnHold ? '#f59e0b' : 'var(--primary)')}; width:${order.progress !== undefined ? order.progress : 5}%; height:100%;"></div>
+            </div>
+            <span style="font-size:0.72rem; color:var(--text-muted);">${order.progress !== undefined ? order.progress : 5}% completed ${isOrderCancelled ? '(Cancelled)' : (isOrderOnHold ? '(On Hold)' : '')}</span>
+          </td>
+          <td>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+              ${isOrderCancelled ? `
+                <button onclick="window.quickReopenOrder('${escapeHTML(order.id)}')" class="btn btn-sm" style="background:#f0f9ff; color:#0369a1; border:1px solid #bae6fd; padding:4px 8px; font-size:0.75rem; font-weight:700;" title="Reopen Cancelled Order">
+                  <i class="fa-solid fa-rotate-left"></i> Reopen
+                </button>
+                <a href="tel:${escapeHTML(cleanPhoneDigits)}" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem;" title="Call Client"><i class="fa-solid fa-phone"></i> Call</a>
+                ${order.clientEmail ? `<a href="mailto:${escapeHTML(order.clientEmail)}" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem;" title="Email Client"><i class="fa-solid fa-envelope"></i> Email</a>` : ''}
+                <button onclick="window.sendWhatsAppCancelledNotice('${escapeHTML(order.id)}')" class="btn btn-sm btn-accent" style="padding:4px 8px; font-size:0.75rem;" title="Send WhatsApp Cancellation Notice">
+                  <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </button>
+              ` : (isOrderOnHold ? `
+                <button onclick="window.quickReopenOrder('${escapeHTML(order.id)}')" class="btn btn-sm" style="background:#f0f9ff; color:#0369a1; border:1px solid #bae6fd; padding:4px 8px; font-size:0.75rem; font-weight:700;" title="Resume Work / Reopen Order">
+                  <i class="fa-solid fa-play"></i> Resume Work
+                </button>
+                <a href="tel:${escapeHTML(cleanPhoneDigits)}" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem;" title="Call Client"><i class="fa-solid fa-phone"></i> Call</a>
+                ${order.clientEmail ? `<a href="mailto:${escapeHTML(order.clientEmail)}" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem;" title="Email Client"><i class="fa-solid fa-envelope"></i> Email</a>` : ''}
+                <button onclick="window.sendWhatsAppHoldNotice('${escapeHTML(order.id)}')" class="btn btn-sm btn-accent" style="padding:4px 8px; font-size:0.75rem;" title="Send WhatsApp Hold Notice">
+                  <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </button>
+              ` : `
+                ${isCOD && !isCODVerified ? `
+                  <button onclick="window.quickAcceptCOD('${escapeHTML(order.id)}')" class="btn btn-sm" style="background:#16a34a; color:#fff; padding:4px 8px; font-size:0.75rem;" title="Accept & Verify COD">
+                    <i class="fa-solid fa-check"></i> Accept COD
+                  </button>
+                ` : ''}
+
+                <button onclick="window.openEditModal('${escapeHTML(order.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem;" title="Edit Order Details">
+                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                </button>
+
+                <button onclick="window.quickHoldOrder('${escapeHTML(order.id)}')" class="btn btn-sm" style="background:#fffbeb; color:#b45309; border:1px solid #fde68a; padding:4px 8px; font-size:0.75rem;" title="Put Order On Hold">
+                  <i class="fa-solid fa-pause"></i> Hold
+                </button>
+
+                <button onclick="window.quickCancelOrder('${escapeHTML(order.id)}')" class="btn btn-sm" style="background:#fff1f2; color:#be123c; border:1px solid #fecdd3; padding:4px 8px; font-size:0.75rem;" title="Cancel Order">
+                  <i class="fa-solid fa-ban"></i> Cancel
+                </button>
+
+                ${order.status === 'Completed' ? '' : `
+                  <button onclick="window.quickCompleteOrder('${escapeHTML(order.id)}')" class="btn btn-sm" style="background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; padding:4px 8px; font-size:0.75rem;" title="Mark Done & Completed">
+                    <i class="fa-solid fa-circle-check"></i> Done
+                  </button>
+                `}
+
+                <button onclick="window.openUpdateClientModal('${escapeHTML(order.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem;" title="Update Client Email / Contact">
+                  <i class="fa-solid fa-envelope-pen"></i> Email/Contact
+                </button>
+
+                <button onclick="window.sendWhatsAppUpdate('${escapeHTML(order.id)}')" class="btn btn-sm btn-accent" style="padding:4px 8px; font-size:0.75rem;" title="Send WhatsApp Update">
+                  <i class="fa-brands fa-whatsapp"></i> Update
+                </button>
+              `)}
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('metricTotalOrders').textContent = orders.length;
+      document.getElementById('metricPendingCOD').textContent = pendingCOD;
+      document.getElementById('metricTotalRevenue').textContent = `₹${totalRevenue.toLocaleString('en-IN')}`;
+      document.getElementById('metricActiveSprints').textContent = activeSprints;
+    }
+
+    // Render Admins & Managers Table
+    function renderAdminsTable() {
+      const tbody = document.getElementById('adminsTableBody');
+      tbody.innerHTML = '';
+
+      if ((!currentManagers || currentManagers.length === 0) && (!currentAdmins || currentAdmins.length === 0)) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:24px; color:var(--text-muted);">No accounts registered yet.</td></tr>';
+        return;
+      }
+
+      // Render Master Managers
+      currentManagers.forEach(mgr => {
+        const mgrEmail = mgr.email || mgr.id;
+        const mgrName = mgr.name || mgr.Owner || mgr.owner || "Master Manager (Owner)";
+        const tr = document.createElement('tr');
+        tr.style.background = 'rgba(124, 58, 237, 0.04)';
+        tr.innerHTML = `
+          <td><strong>${escapeHTML(mgrEmail)}</strong></td>
+          <td><span style="color:#7c3aed; font-weight:700;"><i class="fa-solid fa-crown"></i> ${escapeHTML(mgrName)}</span></td>
+          <td><span class="admin-badge badge-mgr" style="font-size:0.7rem;">Founder / Owner</span></td>
+          <td><span class="admin-badge badge-mgr">Master Manager</span></td>
+          <td>
+            <span style="font-size:0.75rem; color:#7c3aed; font-weight:700;">Protected (Root)</span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Render Support Admins
+      currentAdmins.forEach(admin => {
+        const adminEmail = admin.email || admin.id;
+        const adminName = admin.name || admin['Admin New'] || admin.admin_name || "Customer Support Admin";
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${escapeHTML(adminEmail)}</strong></td>
+          <td>${escapeHTML(adminName)}</td>
+          <td>${escapeHTML(admin.addedBy || "Manager")}</td>
+          <td><span class="admin-badge badge-paid">Support Admin</span></td>
+          <td>
+            ${isCurrentUserManager ? `
+              <button onclick="window.removeAdmin('${escapeHTML(adminEmail)}')" class="btn btn-sm" style="background:#fee2e2; color:#b91c1c; border:none; padding:4px 8px; font-size:0.75rem;">
+                <i class="fa-solid fa-trash"></i> Revoke
+              </button>
+            ` : `<span style="font-size:0.75rem; color:var(--text-muted);">Manager Only</span>`}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Render Inquiries Table
+    function renderInquiriesTable(inquiries) {
+      const tbody = document.getElementById('inquiriesTableBody');
+      tbody.innerHTML = '';
+
+      if (!inquiries || inquiries.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--text-muted);">No client inquiries or feedback yet.</td></tr>';
+        return;
+      }
+
+      inquiries.forEach(inq => {
+        const tr = document.createElement('tr');
+        const cleanPhone = (inq.phone || '').replace(/\D/g, '');
+        const targetPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
+
+        tr.innerHTML = `
+          <td>
+            <strong>${escapeHTML(inq.source || 'Website Lead')}</strong>
+            <div style="font-size:0.72rem; color:var(--text-muted);">${escapeHTML(inq.createdAtDate ? inq.createdAtDate.split('T')[0] : 'Recent')}</div>
+          </td>
+          <td>
+            <div style="font-weight:700;">${escapeHTML(inq.name || 'Visitor')}</div>
+            <div style="font-size:0.78rem; color:var(--text-muted);">${escapeHTML(inq.phone || inq.email || 'No contact info')}</div>
+          </td>
+          <td>${escapeHTML(inq.service || inq.projectType || 'General')}</td>
+          <td><strong style="color:var(--primary);">${escapeHTML(inq.budget || 'Custom Quote')}</strong></td>
+          <td style="max-width:280px; font-size:0.82rem; color:var(--text-muted);">${escapeHTML(inq.message || inq.feedback || 'None')}</td>
+          <td>
+            ${cleanPhone ? `
+              <a href="https://wa.me/${targetPhone}?text=Hello%20${encodeURIComponent(inq.name || '')},%20we%20received%20your%20inquiry%20at%20GoDoz%20Technology!" target="_blank" class="btn btn-sm btn-accent" style="padding:4px 8px; font-size:0.75rem;">
+                <i class="fa-brands fa-whatsapp"></i> Chat Client
+              </a>
+            ` : (inq.email ? `
+              <a href="mailto:${encodeURIComponent(inq.email)}" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem;">
+                <i class="fa-solid fa-envelope"></i> Email
+              </a>
+            ` : '-')}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Render Razorpay Payments Table
+    function renderPaymentsTable(payments) {
+      const tbody = document.getElementById('paymentsTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      if (!payments || payments.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fa-solid fa-receipt"></i> No online payments logged yet.</td></tr>';
+        return;
+      }
+
+      payments.forEach(pay => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <strong style="color:var(--primary);">${escapeHTML(pay.paymentId || pay.id)}</strong>
+          </td>
+          <td>
+            <div style="font-weight:700;">${escapeHTML(pay.orderId ? ('#' + pay.orderId) : (pay.projectRef || 'Direct Advance'))}</div>
+            <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHTML(pay.projectRef || 'Project Milestone')}</div>
+          </td>
+          <td>
+            <div style="font-weight:700;">${escapeHTML(pay.clientName || 'Client')}</div>
+            <div style="font-size:0.78rem; color:var(--text-muted);">${escapeHTML(pay.clientPhone || pay.clientEmail || '-')}</div>
+          </td>
+          <td>
+            <strong style="color:#16a34a; font-size:1.05rem;">₹${Number(pay.amount || 0).toLocaleString('en-IN')}</strong>
+          </td>
+          <td>
+            <span class="admin-badge badge-paid">🟢 ${escapeHTML(pay.status || 'SUCCESS')}</span>
+            <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">${escapeHTML(pay.gateway || 'Razorpay Live')}</div>
+          </td>
+          <td>
+            <div style="font-size:0.82rem; color:var(--text-muted);">${escapeHTML(pay.createdAtDate ? pay.createdAtDate.replace('T', ' ').substring(0, 16) : 'Just Now')}</div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Save Razorpay Live Key
+    document.getElementById('formSaveRazorpayKey')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const keyVal = document.getElementById('inputLiveRazorpayKey').value.trim();
+      if (!keyVal) {
+        alert("Please enter a valid Razorpay Key ID (e.g. rzp_live_xxxxxxxxxxxx).");
+        return;
+      }
+
+      RAZORPAY_CONFIG.setKeyId(keyVal);
+      const alertBox = document.getElementById('keySaveAlert');
+      if (alertBox) {
+        alertBox.textContent = `✅ Razorpay Live Key '${keyVal.substring(0, 12)}...' successfully saved! All online payments on the website and client portal are now LIVE.`;
+        alertBox.style.display = 'block';
+        setTimeout(() => { alertBox.style.display = 'none'; }, 5000);
+      }
+      alert(`✅ Live Razorpay Key Saved Successfully!\n\nKey: ${keyVal}\n\nAll client checkout buttons and order advance booking modals are now connected to your live Razorpay account.`);
+    });
+
+    // Quick Accept COD Action
+    window.quickAcceptCOD = async function(id) {
+      await updateOrderInFirestore(id, {
+        paymentStatus: "COD Accepted (Advance Verified)",
+        stage: "Step 02: Core Frontend & Backend Dev"
+      });
+      alert(`✅ Cash on Delivery (COD) for order ${id} has been Accepted & Verified in Firestore!`);
+    };
+
+    // Open & Close Edit Modal
+    // Stage Preset Helper for Modals
+    window.applyStagePreset = function(selectEl, stageInputId, progressInputId, progressRangeId) {
+      const val = selectEl.value;
+      if (!val) return;
+
+      const stageInput = document.getElementById(stageInputId);
+      const progressInput = document.getElementById(progressInputId);
+      const progressRange = document.getElementById(progressRangeId);
+
+      let text = val;
+      let prog = 5;
+
+      if (val.includes('Step 01')) { text = 'Step 01: Order Placed'; prog = 5; }
+      else if (val.includes('Step 02')) { text = 'Step 02: Discussed with Agent'; prog = 15; }
+      else if (val.includes('Step 03')) { text = 'Step 03: Work Started & Sample Preview Shown'; prog = 35; }
+      else if (val.includes('Step 04')) { text = 'Step 04: Active Coding & Core Dev'; prog = 65; }
+      else if (val.includes('Step 05')) { text = 'Step 05: QA Testing & Beta APK Demo'; prog = 85; }
+      else if (val.includes('Step 06')) { text = 'Step 06: Live Launch & 100% Handover'; prog = 100; }
+
+      if (stageInput) stageInput.value = text;
+      if (progressInput) progressInput.value = prog;
+      if (progressRange) progressRange.value = prog;
+    };
+
+    // Open & Close Edit Modal
+    window.openEditModal = function(id) {
+      const order = currentOrders.find(o => o.id === id);
+      if (!order) return;
+
+      document.getElementById('editOrderId').value = order.id;
+      document.getElementById('editProjectName').value = order.projectName || '';
+      document.getElementById('editClientName').value = order.clientName || '';
+      document.getElementById('editClientPhone').value = order.clientPhone || '';
+      document.getElementById('editPrice').value = order.price || 0;
+      document.getElementById('editPaymentMode').value = order.paymentMode || 'Cash on Delivery (COD Milestone)';
+      document.getElementById('editPaymentStatus').value = order.paymentStatus || 'Pending';
+      document.getElementById('editStage').value = order.stage || 'Step 01: Order Placed';
+
+      const prog = Number(order.progress !== undefined ? order.progress : 5);
+      document.getElementById('editProgress').value = prog;
+      const rangeEl = document.getElementById('editProgressRange');
+      if (rangeEl) rangeEl.value = prog;
+
+      document.getElementById('editDeliverableUrl').value = order.deliverableUrl || '';
+
+      document.getElementById('editOrderModal').style.display = 'flex';
+    };
+
+    window.closeEditModal = function() {
+      document.getElementById('editOrderModal').style.display = 'none';
+    };
+
+    // Save Edit Form
+    document.getElementById('editOrderForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('editOrderId').value;
+      const updateData = {
+        projectName: document.getElementById('editProjectName').value.trim(),
+        clientName: document.getElementById('editClientName').value.trim(),
+        clientPhone: document.getElementById('editClientPhone').value.trim(),
+        price: Number(document.getElementById('editPrice').value),
+        paymentMode: document.getElementById('editPaymentMode').value,
+        paymentStatus: document.getElementById('editPaymentStatus').value,
+        stage: document.getElementById('editStage').value.trim(),
+        progress: Number(document.getElementById('editProgress').value),
+        deliverableUrl: document.getElementById('editDeliverableUrl').value.trim()
+      };
+
+      await updateOrderInFirestore(id, updateData);
+      closeEditModal();
+      if (typeof window.showGoDozToast === 'function') {
+        window.showGoDozToast(`Order #${id} updated successfully`, 'success');
+      }
+    });
+
+    // New Order Modal
+    window.openNewOrderModal = function() {
+      document.getElementById('newOrderModal').style.display = 'flex';
+    };
+    window.closeNewOrderModal = function() {
+      document.getElementById('newOrderModal').style.display = 'none';
+    };
+
+    document.getElementById('newOrderForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newObj = {
+        projectName: document.getElementById('newProjectName').value.trim(),
+        clientName: document.getElementById('newClientName').value.trim(),
+        clientPhone: document.getElementById('newClientPhone').value.trim(),
+        clientEmail: document.getElementById('newClientEmail').value.trim(),
+        price: Number(document.getElementById('newPrice').value),
+        paymentMode: document.getElementById('newPaymentMode').value,
+        paymentStatus: "COD Requested (Pending Verification)",
+        stage: "Step 01: Order Placed",
+        progress: 5,
+        deliverableUrl: ""
+      };
+
+      const res = await saveOrderToFirestore(newObj);
+      closeNewOrderModal();
+      alert(`✅ New Order ${res.id} created and synced to Firestore!`);
+    });
+
+    // Admin Users Modal (Managers Only)
+    window.openAddAdminModal = function() {
+      document.getElementById('addAdminModal').style.display = 'flex';
+    };
+    window.closeAddAdminModal = function() {
+      document.getElementById('addAdminModal').style.display = 'none';
+    };
+
+    document.getElementById('addAdminForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('adminNewEmail').value.trim();
+      const name = document.getElementById('adminNewName').value.trim() || "Customer Support Admin";
+      
+      const res = await addAdminByManager(auth.currentUser, email, name);
+      if (res.success) {
+        closeAddAdminModal();
+        alert(`✅ Admin access granted to ${email} in Firestore!`);
+      } else {
+        alert("Error: " + res.error);
+      }
+    });
+
+    window.removeAdmin = async function(email) {
+      if (confirm(`Revoke admin privileges for ${email}?`)) {
+        const res = await removeAdminByManager(auth.currentUser, email);
+        if (!res.success) {
+          alert("Error: " + res.error);
+        }
+      }
+    };
+
+    // Filter Chips Controller
+    window.currentOrderFilter = 'all';
+
+    window.setOrderFilter = function(filterType, chipEl) {
+      window.currentOrderFilter = filterType;
+      document.querySelectorAll('#orderFilterChips .status-chip').forEach(c => c.classList.remove('active'));
+      if (chipEl) chipEl.classList.add('active');
+      window.filterOrdersTable();
+    };
+
+    // Filter Table Function with Search + Material Filter Chips
+    window.filterOrdersTable = function() {
+      const query = (document.getElementById('orderSearchInput')?.value || '').toLowerCase().trim();
+      const rows = document.querySelectorAll('#ordersTableBody tr');
+
+      rows.forEach(r => {
+        const text = r.textContent.toLowerCase();
+        const statusAttr = (r.getAttribute('data-order-status') || '').toLowerCase();
+        const isCOD = r.getAttribute('data-is-cod') === 'true';
+
+        let matchesFilter = true;
+        if (window.currentOrderFilter === 'active') {
+          matchesFilter = statusAttr === 'in progress' || statusAttr === 'active';
+        } else if (window.currentOrderFilter === 'hold') {
+          matchesFilter = statusAttr === 'on hold';
+        } else if (window.currentOrderFilter === 'completed') {
+          matchesFilter = statusAttr === 'completed';
+        } else if (window.currentOrderFilter === 'cancelled') {
+          matchesFilter = statusAttr === 'cancelled';
+        } else if (window.currentOrderFilter === 'cod') {
+          matchesFilter = isCOD && !statusAttr.includes('accepted');
+        }
+
+        const matchesQuery = !query || text.includes(query);
+        r.style.display = (matchesFilter && matchesQuery) ? '' : 'none';
+      });
+    };
+
+    // Quick Hold Order (Preserves progress & paymentStatus for audit)
+    window.quickHoldOrder = async function(id) {
+      const order = currentOrders.find(o => o.id === id);
+      if (!order) return;
+
+      const reason = prompt(`Reason for putting Order #${id} on hold:`, "Waiting for client asset approval / response");
+      if (reason === null) return;
+
+      const updatedData = {
+        status: 'On Hold',
+        stage: `Project On Hold (${reason.trim() || 'Pending Client Input'})`,
+        holdReason: reason.trim()
+      };
+
+      const res = await saveOrderToFirestore({ id: id, ...order, ...updatedData });
+      if (res.success && typeof window.showGoDozToast === 'function') {
+        window.showGoDozToast(`Order #${id} put On Hold`, 'warning');
+      }
+    };
+
+    // Quick Cancel Order (Preserves progress & paymentStatus for audit)
+    window.quickCancelOrder = async function(id) {
+      const order = currentOrders.find(o => o.id === id);
+      if (!order) return;
+
+      if (confirm(`Are you sure you want to cancel order #${id}? (Payment status & progress records will be preserved for security/audit)`)) {
+        const updatedData = {
+          status: 'Cancelled',
+          stage: 'Order Cancelled & Closed'
+        };
+        const res = await saveOrderToFirestore({ id: id, ...order, ...updatedData });
+        if (res.success && typeof window.showGoDozToast === 'function') {
+          window.showGoDozToast(`Order #${id} marked as Cancelled`, 'info');
+        }
+      }
+    };
+
+    // Mark Done / Completed Order
+    window.quickCompleteOrder = async function(id) {
+      const order = currentOrders.find(o => o.id === id);
+      if (!order) return;
+      if (confirm(`Mark order #${id} as Completed & Handed Over (100%)?`)) {
+        const updatedData = {
+          status: 'Completed',
+          stage: 'Step 06: Live Launch & 100% Handover',
+          progress: 100
+        };
+        const res = await saveOrderToFirestore({ id: id, ...order, ...updatedData });
+        if (res.success && typeof window.showGoDozToast === 'function') {
+          window.showGoDozToast(`Order #${id} marked as Completed (100%)`, 'success');
+        }
+      }
+    };
+
+    // Reopen Order
+    window.quickReopenOrder = async function(id) {
+      const order = currentOrders.find(o => o.id === id);
+      if (!order) return;
+      if (confirm(`Reopen order #${id}?`)) {
+        const updatedData = {
+          status: 'In Progress',
+          stage: 'Step 01: Order Placed',
+          progress: order.progress || 5
+        };
+        const res = await saveOrderToFirestore({ id: id, ...order, ...updatedData });
+        if (res.success && typeof window.showGoDozToast === 'function') {
+          window.showGoDozToast(`Order #${id} reopened (In Progress)`, 'success');
+        }
+      }
+    };
+
+    // Update Client Email & Contact Details
+    window.openUpdateClientModal = async function(id) {
+      const order = currentOrders.find(o => o.id === id);
+      if (!order) return;
+
+      const currentEmail = order.clientEmail || '';
+      const currentPhone = order.clientPhone || '';
+
+      const newEmail = prompt(`Update Client Email for Order #${id}:`, currentEmail);
+      if (newEmail === null) return;
+
+      const newPhone = prompt(`Update Client Phone/WhatsApp for Order #${id}:`, currentPhone);
+      if (newPhone === null) return;
+
+      const updatedData = {
+        clientEmail: newEmail.trim().toLowerCase(),
+        clientPhone: newPhone.trim()
+      };
+
+      const res = await saveOrderToFirestore({ id: id, ...order, ...updatedData });
+      if (res.success && typeof window.showGoDozToast === 'function') {
+        window.showGoDozToast(`Client details updated for Order #${id}`, 'success');
+      }
+    };
+
+    // Quick Stage Updater
+    window.quickStageUpdate = async function(id, newStage) {
+      const order = currentOrders.find(o => o.id === id);
+      if (!order) return;
+
+      let newProgress = order.progress || 5;
+      let newStatus = order.status || 'In Progress';
+
+      if (newStage.includes('Step 01') || newStage.includes('Placed')) {
+        newProgress = 5;
+        if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
+      }
+      else if (newStage.includes('Step 02') || newStage.includes('Agent') || newStage.includes('Discussed')) {
+        newProgress = 15;
+        if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
+      }
+      else if (newStage.includes('Step 03') || newStage.includes('Preview') || newStage.includes('Sample')) {
+        newProgress = 35;
+        if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
+      }
+      else if (newStage.includes('Step 04') || newStage.includes('Coding') || newStage.includes('Dev')) {
+        newProgress = 65;
+        if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
+      }
+      else if (newStage.includes('Step 05') || newStage.includes('Testing') || newStage.includes('Demo')) {
+        newProgress = 85;
+        if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
+      }
+      else if (newStage.includes('Step 06') || newStage.includes('Launch') || newStage.includes('Handover')) {
+        newProgress = 100;
+        newStatus = 'Completed';
+      }
+      else if (newStage.includes('Cancel')) {
+        newStatus = 'Cancelled';
+      }
+
+      const updatedData = { stage: newStage, progress: newProgress, status: newStatus };
+      const res = await saveOrderToFirestore({ id: id, ...order, ...updatedData });
+      if (res.success && typeof window.showGoDozToast === 'function') {
+        window.showGoDozToast(`Order #${id} updated to ${newStage} (${newProgress}%)`, 'success');
+      }
+    };
+
+    // Send WhatsApp Progress Update
+    window.sendWhatsAppUpdate = function(id) {
+      const order = currentOrders.find(o => o.id === id);
+      if (!order) return;
+
+      const cleanPhone = (order.clientPhone || '').replace(/\D/g, '');
+      const targetPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
+
+      const msg = `*GoDoz Technology - Project Status Update*%0A%0AHello *${order.clientName}*,%0AHere is the latest progress on your project:%0A%0A📌 *Order ID:* ${order.id}%0A🚀 *Project:* ${order.projectName}%0A📊 *Stage:* ${order.stage}%0A📈 *Progress:* ${order.progress}%%0A💳 *Payment Status:* ${order.paymentStatus}%0A${order.deliverableUrl ? `%0A🔗 *Live Deliverable:* ${order.deliverableUrl}%0A` : ''}%0AFor any questions, reply directly to this message.%0A%0A_Founder & Lead Engineer: RS GULSHAN PRAJAPATI (GoDoz Technology)_`;
+
+      window.open(`https://wa.me/${targetPhone}?text=${msg}`, '_blank');
+    };
+
+    // Send WhatsApp Hold Notice
+    window.sendWhatsAppHoldNotice = function(id) {
+      const order = currentOrders.find(o => o.id === id);
+      if (!order) return;
+
+      const cleanPhone = (order.clientPhone || '').replace(/\D/g, '');
+      const targetPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
+      const reason = order.holdReason || 'Awaiting client requirements / approval';
+
+      const msg = `*GoDoz Technology - Project On Hold Notice*%0A%0AHello *${order.clientName}*,%0A%0AYour project *${order.projectName}* (Order ID: #${order.id}) has been temporarily put *On Hold*.%0A%0A📌 *Reason:* ${reason}%0A📊 *Completed Work:* ${order.progress || 5}%%0A💳 *Payment Record:* ${order.paymentStatus}%0A%0APlease contact us or reply to this message to resume work.%0A%0A_Founder & Lead Engineer: RS GULSHAN PRAJAPATI (GoDoz Technology)_`;
+
+      window.open(`https://wa.me/${targetPhone}?text=${msg}`, '_blank');
+    };
+
+    // Send WhatsApp Cancelled Notice
+    window.sendWhatsAppCancelledNotice = function(id) {
+      const order = currentOrders.find(o => o.id === id);
+      if (!order) return;
+
+      const cleanPhone = (order.clientPhone || '').replace(/\D/g, '');
+      const targetPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
+
+      const msg = `*GoDoz Technology - Project Cancellation Notice*%0A%0AHello *${order.clientName}*,%0A%0AYour project *${order.projectName}* (Order ID: #${order.id}) has been *Cancelled & Closed*.%0A%0A📊 *Recorded Work:* ${order.progress || 0}%%0A💳 *Payment Status Record:* ${order.paymentStatus}%0A%0AIf you wish to reopen or discuss this project, please reply directly to this message.%0A%0A_Founder & Lead Engineer: RS GULSHAN PRAJAPATI (GoDoz Technology)_`;
+
+      window.open(`https://wa.me/${targetPhone}?text=${msg}`, '_blank');
+    };
+
+    // Filter Table
+    window.filterOrdersTable = function() {
+      const query = document.getElementById('orderSearchInput').value.toLowerCase().trim();
+      const rows = document.querySelectorAll('#ordersTableBody tr');
+      rows.forEach(r => {
+        const text = r.textContent.toLowerCase();
+        r.style.display = text.includes(query) ? '' : 'none';
+      });
+    };
+
+    // Global Drawer Navigation Controls
+    window.openMobileDrawer = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.add('open');
+      if (backdrop) backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeMobileDrawer = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+  </script>
+
+  <!-- Master Interactive Script -->
+  <script src="./script.js"></script>
+
+  <!-- ========================================================================
+       Live Project Order Tracker Modal (Universal Across All Pages)
+       ======================================================================== -->
+  <div id="trackOrderModal" class="godoz-modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="trackModalTitle">
+    <div class="godoz-modal-box" style="max-width:560px;">
+      
+      <!-- Modal Header -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--border-color);">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:40px; height:40px; border-radius:10px; background:rgba(18,102,232,0.12); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:18px;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <div>
+            <h3 id="trackModalTitle" style="margin:0; font-size:1.2rem; color:var(--text-main);">Track Live Project Order</h3>
+            <div style="font-size:0.75rem; color:var(--text-muted);">Real-time engineering progress &amp; milestone status</div>
+          </div>
+        </div>
+        <button type="button" onclick="window.closeTrackOrderModal()" aria-label="Close modal" style="background:none; border:none; font-size:1.2rem; color:var(--text-muted); cursor:pointer; padding:4px;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Search Box -->
+      <div style="margin-bottom:18px;">
+        <label style="display:block; font-size:0.84rem; font-weight:700; margin-bottom:6px; color:var(--text-main);">
+          Enter Order ID or WhatsApp Phone:
+        </label>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="trackInputQuery" placeholder="e.g. GoDoz-2026-882194 or 9288521731" style="flex:1; padding:10px 14px; border-radius:10px; border:2px solid var(--border-color); background:var(--bg-surface-alt); color:var(--text-main); font-size:0.92rem; outline:none;">
+          <button type="button" onclick="window.trackOrderById()" class="btn btn-primary" style="padding:10px 18px; font-weight:700;">
+            <i class="fa-solid fa-bolt"></i> Track
+          </button>
+        </div>
+      </div>
+
+      <!-- Results Container -->
+      <div id="trackResultContainer" style="display:none;">
+        <div style="background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:14px; padding:16px; margin-bottom:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span id="trackResultId" style="font-weight:800; font-size:0.95rem; color:var(--primary);">#GoDoz-2026-881</span>
+            <span id="trackResultStatusBadge" style="background:rgba(34,197,94,0.15); color:#16a34a; font-weight:800; font-size:0.75rem; padding:3px 10px; border-radius:12px;">Active Development</span>
+          </div>
+          <div style="font-size:0.95rem; font-weight:800; color:var(--text-main); margin-bottom:4px;" id="trackResultProjectName">
+            Custom Android Application
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;" id="trackResultClient">
+            Client: Partner &bull; ₹9,999
+          </div>
+
+          <!-- Progress Bar Stepper -->
+          <div class="track-step-progress">
+            <div class="track-step-progress-bar" id="trackProgressBar" style="width:30%;"></div>
+            
+            <div class="track-step-item completed" id="trackStep1">
+              <div class="track-step-circle"><i class="fa-solid fa-check"></i></div>
+              <div class="track-step-label">Discovery &amp; NDA</div>
+            </div>
+            <div class="track-step-item active" id="trackStep2">
+              <div class="track-step-circle">2</div>
+              <div class="track-step-label">UI &amp; Architecture</div>
+            </div>
+            <div class="track-step-item" id="trackStep3">
+              <div class="track-step-circle">3</div>
+              <div class="track-step-label">Cloud &amp; DB Sync</div>
+            </div>
+            <div class="track-step-item" id="trackStep4">
+              <div class="track-step-circle">4</div>
+              <div class="track-step-label">Live Release</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+          <a id="trackWhatsappQueryBtn" href="https://wa.me/919288521731" target="_blank" class="btn btn-accent" style="flex:1; padding:10px; font-size:0.88rem; font-weight:700;">
+            <i class="fa-brands fa-whatsapp"></i> Chat with Lead Engineer
+          </a>
+          <button type="button" onclick="window.closeTrackOrderModal()" class="btn btn-outline" style="padding:10px 16px; font-size:0.88rem;">
+            Close
+          </button>
+        </div>
+      </div>
+
+      <!-- Not Found View -->
+      <div id="trackNotFoundView" style="display:none; text-align:center; padding:16px; background:rgba(239,68,68,0.06); border-radius:12px; border:1px dashed #ef4444; margin-top:12px;">
+        <i class="fa-solid fa-triangle-exclamation" style="font-size:24px; color:#ef4444; margin-bottom:6px;"></i>
+        <div style="font-weight:700; color:var(--text-main); font-size:0.9rem;">Order Not Found</div>
+        <p style="font-size:0.78rem; color:var(--text-muted); margin:4px 0 10px;">No active project order matched your query. Contact RS GULSHAN PRAJAPATI directly for manual lookup.</p>
+        <a href="https://wa.me/919288521731" target="_blank" class="btn btn-sm btn-accent" style="padding:6px 14px; font-size:0.8rem;">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Mobile App-Style Fixed Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav" aria-label="Mobile Bottom App Navigation">
+    <a href="/index.html" class="mobile-bottom-item">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </a>
+    <a href="/index.html#services" class="mobile-bottom-item">
+      <i class="fa-solid fa-laptop-code"></i>
+      <span>Services</span>
+    </a>
+    <a href="/profile.html" class="mobile-bottom-item">
+      <i class="fa-solid fa-box-open"></i>
+      <span>My Products</span>
+    </a>
+    <a href="/admin.html" class="mobile-bottom-item active">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>Admin</span>
+    </a>
+    <a href="/profile.html" class="mobile-bottom-item">
+      <i class="fa-solid fa-user"></i>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+</body>
+</html>
