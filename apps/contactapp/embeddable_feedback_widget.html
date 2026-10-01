@@ -1,0 +1,118 @@
+<!-- ================================================================= -->
+<!-- GoDoz Technology - Embeddable Contact & Feedback Widget           -->
+<!-- Copy and paste this single <div> block inside any <body> page!     -->
+<!-- ================================================================= -->
+<div id="godozFeedbackWidget" style="max-width: 480px; margin: 20px auto; padding: 24px; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 20px; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.1); color: #0F172A;">
+
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #E2E8F0; padding-bottom: 12px;">
+    <div style="display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; color: #4F46E5;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      Send Feedback / Inquiry
+    </div>
+    <span style="background: #EEF2FF; color: #4F46E5; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px;">GoDoz Support</span>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div>
+      <label for="godozWidgetName" style="display: block; font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 4px;">Your Name *</label>
+      <input type="text" id="godozWidgetName" placeholder="e.g. John Doe" style="width: 100%; padding: 10px 14px; border: 1.5px solid #CBD5E1; border-radius: 12px; font-size: 14px; outline: none; box-sizing: border-box; background: #F8FAFC;">
+    </div>
+
+    <div>
+      <label for="godozWidgetContact" style="display: block; font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 4px;">Email or Phone Number *</label>
+      <input type="text" id="godozWidgetContact" placeholder="e.g. name@gmail.com or 9288521731" style="width: 100%; padding: 10px 14px; border: 1.5px solid #CBD5E1; border-radius: 12px; font-size: 14px; outline: none; box-sizing: border-box; background: #F8FAFC;">
+    </div>
+
+    <div>
+      <label for="godozWidgetMsg" style="display: block; font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 4px;">Message / Feedback *</label>
+      <textarea id="godozWidgetMsg" placeholder="Write your feedback, question, or problem here..." style="width: 100%; min-height: 80px; padding: 10px 14px; border: 1.5px solid #CBD5E1; border-radius: 12px; font-size: 14px; outline: none; box-sizing: border-box; resize: vertical; background: #F8FAFC;"></textarea>
+    </div>
+
+    <button id="godozWidgetSubmitBtn" onclick="submitGodozFeedbackWidget()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #4F46E5, #4338CA); color: white; font-weight: 800; font-size: 14px; border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);">
+      Submit Feedback
+    </button>
+
+    <div id="godozWidgetStatus" style="font-size: 12px; font-weight: 700; text-align: center; display: none; padding: 8px; border-radius: 8px;"></div>
+  </div>
+
+  <div style="margin-top: 16px; padding-top: 12px; border-top: 1px dashed #CBD5E1; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+    <span style="color: #64748B;">Track replies & history:</span>
+    <a href="https://godoz.in/contactapp" target="_blank" style="color: #0EA5E9; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+      Login & Track Message..
+    </a>
+  </div>
+
+  <!-- Firebase Integration Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyABHJz_4ERnwrT_uB3BgBz-BD_3JZjlVNE",
+      authDomain: "godoz-official.firebaseapp.com",
+      projectId: "godoz-official",
+      storageBucket: "godoz-official.firebasestorage.app",
+      messagingSenderId: "977883022920",
+      appId: "1:977883022920:web:3cc3e9bce8c6324edb3a7d",
+      measurementId: "G-QKH3K4HV8P"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.submitGodozFeedbackWidget = async function() {
+      const name = document.getElementById('godozWidgetName').value.trim();
+      const contact = document.getElementById('godozWidgetContact').value.trim();
+      const msg = document.getElementById('godozWidgetMsg').value.trim();
+      const statusDiv = document.getElementById('godozWidgetStatus');
+      const btn = document.getElementById('godozWidgetSubmitBtn');
+
+      if (!name || !contact || !msg) {
+        statusDiv.style.display = 'block';
+        statusDiv.style.background = '#FFFBEB';
+        statusDiv.style.color = '#B45309';
+        statusDiv.innerText = '⚠️ Name, Contact, and Message are required!';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = 'Sending...';
+
+      try {
+        const isEmail = contact.includes('@');
+        const digits = contact.replace(/\D/g, '');
+        const targetUid = isEmail ? `user_${contact.replace(/[^a-zA-Z0-9]/g, '')}` : `phone_${digits.slice(-10)}`;
+
+        const newDocRef = doc(collection(db, "messages"));
+        await setDoc(newDocRef, {
+          id: newDocRef.id,
+          senderUid: targetUid,
+          senderName: name,
+          senderEmail: isEmail ? contact : `${digits}@phone.user`,
+          senderPhone: !isEmail ? contact : null,
+          messageText: `💬 [Website Feedback Widget]:\n${msg}`,
+          isLoggedIn: false,
+          timestamp: Date.now(),
+          replyText: null,
+          repliedAt: null,
+          status: "pending",
+          adminNotes: "Submitted via Embeddable Feedback Widget"
+        });
+
+        document.getElementById('godozWidgetMsg').value = '';
+        statusDiv.style.display = 'block';
+        statusDiv.style.background = '#ECFDF5';
+        statusDiv.style.color = '#047857';
+        statusDiv.innerHTML = '✅ Feedback submitted! <a href="https://godoz.in/contactapp" target="_blank" style="color:#047857; font-weight:800;">Track status on godoz.in/contactapp ↗</a>';
+      } catch (e) {
+        statusDiv.style.display = 'block';
+        statusDiv.style.background = '#FEF2F2';
+        statusDiv.style.color = '#B91C1C';
+        statusDiv.innerText = 'Error submitting: ' + e.message;
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Submit Feedback';
+      }
+    };
+  </script>
+</div>

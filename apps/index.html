@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="hi" data-theme="light">
+<head>
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-4514064358809691">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4514064358809691" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <script>
+    (function(){
+      const savedTheme = localStorage.getItem('godoz_theme') || 
+        (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+
+    // Universal Instant Drawer Navigation Handlers (0ms response)
+    window.openMobileDrawer = window.openLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.add('open');
+      if (backdrop) backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeMobileDrawer = window.closeLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    window.toggleMobileDrawer = window.toggleLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const isOpen = drawer && drawer.classList.contains('open');
+      if (isOpen) {
+        window.closeMobileDrawer();
+      } else {
+        window.openMobileDrawer();
+      }
+    };
+  </script>
+  <title>All Published Android Apps &amp; Products | RS GULSHAN PRAJAPATI – GoDoz Technology</title>
+  <meta name="description" content="Explore official Android mobile apps, productivity tools, document editors, and games published by RS GULSHAN PRAJAPATI / GoDoz Technology on Google Play Store and Indus Appstore.">
+  <meta name="keywords" content="RS GULSHAN PRAJAPATI Apps, GoDoz Technology Apps, LocalWork, MyNotepad GDZ, QR Scanner Setting Hub, Smart PDF Reader, Fruits Crush GDZ, Photo to PDF Lite, AI Gallery Pro, Bhulekh Bihar">
+  <meta name="author" content="RS GULSHAN PRAJAPATI">
+  <link rel="canonical" href="https://www.godoz.in/apps/">
+  <link rel="shortcut icon" href="../official logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .apps-hero { background: linear-gradient(180deg, #0b1b36 0%, #172554 100%); color: #ffffff !important; padding: 45px 0 35px; text-align: center; }
+    .apps-hero h1 { color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); }
+    .apps-hero p { color: #e2e8f0 !important; }
+    .apps-catalog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin: 30px 0; }
+    .app-card { background: var(--bg-surface, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 18px; padding: 24px; box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
+    .app-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--primary, #1266e8); }
+    .app-card-top { display: flex; gap: 16px; align-items: center; margin-bottom: 14px; }
+    .app-card-icon { width: 68px; height: 68px; border-radius: 16px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid var(--border-color); background:#fff; }
+    .app-badge-tag { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 0.72rem; font-weight: 700; background: rgba(18,102,232,0.1); color: var(--primary); margin-bottom: 4px; }
+    .filter-pills { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+    .filter-pill { padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: #fff; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: 0.2s; }
+    .filter-pill.active, .filter-pill:hover { background: var(--accent, #ff6900); border-color: var(--accent); }
+  </style>
+</head>
+<body id="top">
+
+  <!-- Left Navigation Drawer Backdrop -->
+  <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="window.closeMobileDrawer()"></div>
+
+  <!-- Slide-Out Left Drawer Navigation -->
+  <!-- Slide-Out Mobile Navigation Drawer -->
+  <aside id="mobileNavDrawer" class="mobile-nav-drawer" aria-label="Mobile Navigation">
+    <div class="drawer-header">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="app-sidebar-header-icon" style="width:34px; height:34px; border-radius:8px; background:rgba(18,102,232,0.12); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+          <i class="fa-solid fa-compass" style="font-size:1.1rem;"></i>
+        </div>
+        <div>
+          <div style="font-size:1.1rem; font-weight:900; line-height:1.1; color:var(--text-main);">
+            GoDoz Menu
+          </div>
+          <div style="font-size:0.65rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">
+            Quick Navigation
+          </div>
+        </div>
+      </div>
+      <button type="button" class="drawer-close-btn" onclick="window.closeMobileDrawer()" aria-label="Close Navigation Menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="drawer-body" style="flex:1; overflow-y:auto; padding:10px 14px 90px; -webkit-overflow-scrolling:touch; overscroll-behavior:contain;">
+      <!-- Menu Group 1: Services & Work -->
+      <div style="padding:4px 0;">
+        <div class="app-section-label">Services &amp; Work</div>
+        <ul class="app-menu-list">
+          <li>
+            <a href="../index.html#home-top" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-house app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Home Page</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="../index.html#services" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-laptop-code app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Services Offered</span>
+              </div>
+              <span class="app-menu-badge">6 Services</span>
+            </a>
+          </li>
+          <li>
+            <a href="../apps/index.html" class="app-menu-item active">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-mobile-screen app-menu-icon" style="color:var(--accent);"></i>
+                <span class="app-menu-text">Our Apps &amp; Work</span>
+              </div>
+              <span class="app-menu-badge">6+ Apps</span>
+            </a>
+          </li>
+          <li>
+            <a href="../index.html#cost-estimator" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-calculator app-menu-icon" style="color:#10b981;"></i>
+                <span class="app-menu-text">Project Cost Calculator</span>
+              </div>
+              <span class="app-menu-badge">Calculator</span>
+            </a>
+          </li>
+          <li>
+            <a href="../index.html#live-tools" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-toolbox app-menu-icon" style="color:#06b6d4;"></i>
+                <span class="app-menu-text">Live Web Tools</span>
+              </div>
+              <span class="app-menu-badge">Tools</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Menu Group 2: Company & Founder -->
+      <div style="padding:4px 0; border-top:1px solid var(--border-color);">
+        <div class="app-section-label">Company &amp; Founder</div>
+        <ul class="app-menu-list">
+          <li>
+            <a href="../About.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-tie app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">About Founder &amp; GoDoz</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="../index.html#why-hire-us" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-award app-menu-icon" style="color:#8b5cf6;"></i>
+                <span class="app-menu-text">Why Choose GoDoz</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="../index.html#tech-stack" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-microchip app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Tech Stack &amp; Cloud</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="../index.html#official-verification" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-shield-halved app-menu-icon" style="color:var(--accent);"></i>
+                <span class="app-menu-text">Official Publisher Info</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="../feedback.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-star app-menu-icon" style="color:#f59e0b;"></i>
+                <span class="app-menu-text">Client Reviews &amp; Feedback</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Menu Group 3: Portal & Orders -->
+      <div style="padding:4px 0; border-top:1px solid var(--border-color);">
+        <div class="app-section-label">Portal &amp; Orders</div>
+        <ul class="app-menu-list">
+          <li>
+            <a href="../profile.html#products" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-box-open app-menu-icon" style="color:#10b981;"></i>
+                <span class="app-menu-text">My Products</span>
+              </div>
+              <span class="app-menu-badge" style="background:rgba(16,185,129,0.15); color:#10b981; font-weight:700;">Active</span>
+            </a>
+          </li>
+          <li>
+            <a href="../profile.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-id-card app-menu-icon" style="color:#8b5cf6;"></i>
+                <span class="app-menu-text">My Profile / Dashboard</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" onclick="window.openTrackOrderModal(); window.closeMobileDrawer();" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-magnifying-glass app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Track Live Order</span>
+              </div>
+              <span class="app-menu-badge" style="background:rgba(18,102,232,0.12); color:var(--primary); font-weight:700;">LIVE</span>
+            </a>
+          </li>
+          <li>
+            <a href="../admin.html" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-shield app-menu-icon" style="color:#7c3aed;"></i>
+                <span class="app-menu-text">Admin Hub</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="../index.html#contact-section" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-paper-plane app-menu-icon" style="color:#ef4444;"></i>
+                <span class="app-menu-text">Contact &amp; Inquiry</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="../help/index.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-circle-question app-menu-icon" style="color:#f59e0b;"></i>
+                <span class="app-menu-text">Help &amp; Knowledgebase</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="../login.html" id="drawerAuthNavItem" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-circle app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Client Portal / Login</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="app-sidebar-footer" style="padding:14px 0 20px; border-top:1px solid var(--border-color); margin-top:8px;">
+        <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20want%20to%20discuss%20a%20project!" target="_blank" class="app-sidebar-wa-btn">
+          <i class="fa-brands fa-whatsapp"></i> Chat with Developer
+        </a>
+        <div style="font-size:0.7rem; color:var(--text-muted); text-align:center; margin-top:8px;">
+          GoDoz Technology &bull; Sheikhpura
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Global Sticky Navbar -->
+  <header class="navbar" role="banner">
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-4514064358809691">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4514064358809691" crossorigin="anonymous"></script>
+    <div class="container navbar-container">
+      
+      <!-- Left: Hamburger + Brand Logo -->
+      <div class="navbar-left">
+        <button id="mobileMenuToggle" class="mobile-menu-toggle" aria-label="Toggle navigation menu" title="Open Navigation Menu" onclick="window.toggleMobileDrawer()" style="display:inline-flex !important;">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <a href="../index.html" class="brand-logo-wrap" title="GoDoz Technology Home">
+          <img src="../official logo.png" alt="GoDoz Logo" class="brand-img" style="height:36px; width:auto; max-height:36px; max-width:40px; border-radius:8px; object-fit:contain;" onerror="this.src='../logo w bg.png'">
+          <span class="brand-text">
+            <span class="go">Go</span><span class="doz">Doz</span>
+          </span>
+        </a>
+      </div>
+
+      <!-- Center: Desktop Navigation Links -->
+      <nav class="desktop-nav-menu" aria-label="Main Navigation">
+        <a href="../index.html" class="desktop-nav-link"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="../index.html#services" class="desktop-nav-link"><i class="fa-solid fa-code"></i> Services</a>
+        <a href="./index.html" class="desktop-nav-link active"><i class="fa-solid fa-mobile-screen"></i> Apps Hub</a>
+        <a href="../index.html#cost-estimator" class="desktop-nav-link"><i class="fa-solid fa-calculator"></i> Calculator</a>
+        <a href="../help/index.html" class="desktop-nav-link"><i class="fa-solid fa-circle-question"></i> Help</a>
+        <a href="../feedback.html" class="desktop-nav-link"><i class="fa-solid fa-star"></i> Reviews</a>
+      </nav>
+
+      <!-- Right Header Actions -->
+      <div class="header-actions">
+        <!-- Track Order Modal Trigger Button -->
+        <button onclick="window.openTrackOrderModal()" class="btn btn-sm btn-outline track-order-nav-btn" title="Track Order Status by Order ID / Mobile" aria-label="Track Project Order">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span class="action-btn-label">Track Order</span>
+        </button>
+
+        <!-- Client Portal / Dashboard Link -->
+        <a href="../profile.html" class="btn btn-sm btn-outline header-portal-btn" title="Go to Client Profile / Portal">
+          <i class="fa-solid fa-user-circle"></i>
+          <span class="action-btn-label">Client Portal</span>
+        </a>
+
+        <!-- Dark/Light Theme Toggle Button -->
+        <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Color Theme" title="Toggle Light/Dark Theme" onclick="window.toggleGoDozTheme()">
+          <i id="themeIcon" class="fa-solid fa-moon"></i>
+        </button>
+
+        <!-- WhatsApp Live Chat Button -->
+        <a href="https://wa.me/919288521731?text=Hello%20GoDoz%20Team,%20I%20am%20exploring%20the%20Apps%20Hub%20and%20want%20to%20inquire." target="_blank" class="btn btn-sm btn-accent header-wa-btn" title="Chat on WhatsApp">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span class="action-btn-label">WhatsApp</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="apps-hero">
+    <div class="container" style="max-width:800px;">
+      <div style="display:inline-block; padding:4px 14px; border-radius:20px; background:rgba(34,197,94,0.2); color:#4ade80; font-size:0.82rem; font-weight:700; margin-bottom:12px;">
+        🟢 Official App Portfolio
+      </div>
+      <h1 style="font-size:clamp(1.8rem, 4vw, 2.6rem); font-weight:900; margin:0 0 10px;">
+        Published Android Apps &amp; Products
+      </h1>
+      <p style="color:#94a3b8; font-size:1rem; line-height:1.6; margin:0 auto 18px;">
+        Engineered, designed, and published by <strong>RS GULSHAN PRAJAPATI</strong> (GoDoz Technology). Built for performance, utility, and user privacy.
+      </p>
+
+      <div class="filter-pills" id="appFilterPills">
+        <button class="filter-pill active" data-filter="all">All Applications</button>
+        <button class="filter-pill" data-filter="productivity">Productivity</button>
+        <button class="filter-pill" data-filter="tools">Utilities &amp; Tools</button>
+        <button class="filter-pill" data-filter="jobs">Community &amp; Jobs</button>
+        <button class="filter-pill" data-filter="photo">Photography &amp; AI</button>
+        <button class="filter-pill" data-filter="games">Games</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Apps Grid -->
+  <main class="container" style="padding:40px 16px;">
+    
+    <div class="apps-catalog-grid">
+      
+      <!-- App 1: LocalWork -->
+      <div class="app-card" data-category="jobs">
+        <div>
+          <div class="app-card-top">
+            <img src="./localwork/localwork-logo.png" alt="LocalWork Icon" class="app-card-icon" onerror="this.src='../official logo.png'">
+            <div>
+              <span class="app-badge-tag" style="background:rgba(16,185,129,0.1); color:#10b981;">Flagship Community App</span>
+              <h3 style="margin:0 0 4px; font-size:1.2rem; color:var(--text-main);">LocalWork (काम करो)</h3>
+              <div style="font-size:0.78rem; color:var(--text-muted);">Package: <code>com.gdz.kamkaro</code></div>
+            </div>
+          </div>
+          <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55; margin-bottom:16px;">
+            Hyperlocal blue-collar employment network connecting local daily workers, technicians, electricians, plumbers, and laborers with employers without commission.
+          </p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; border-top:1px solid var(--border-color); padding-top:14px;">
+          <a href="./localwork/index.html" class="btn btn-sm btn-primary" style="flex:1;"><i class="fa-solid fa-circle-info"></i> Full Details &amp; Privacy</a>
+          <a href="https://play.google.com/store/apps/details?id=com.gdz.kamkaro" target="_blank" class="btn btn-sm btn-outline" style="color:#10b981;"><i class="fa-brands fa-google-play"></i> Play Store</a>
+        </div>
+      </div>
+
+      <!-- App 2: QR Scanner & Setting Hub -->
+      <div class="app-card" data-category="tools">
+        <div>
+          <div class="app-card-top">
+            <img src="./smart-tools-app/logo.png" alt="QR Scanner Icon" class="app-card-icon" onerror="this.src='../official logo.png'">
+            <div>
+              <span class="app-badge-tag" style="background:rgba(37,99,235,0.1); color:#2563eb;">All-in-One Utility</span>
+              <h3 style="margin:0 0 4px; font-size:1.2rem; color:var(--text-main);">QR Scanner &amp; Setting Hub</h3>
+              <div style="font-size:0.78rem; color:var(--text-muted);">Package: <code>com.gdz.GDZ_Smart_Tools</code></div>
+            </div>
+          </div>
+          <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55; margin-bottom:16px;">
+            Lightning-fast QR &amp; Barcode scanner, custom QR generator, multi-mode flashlight, and direct 1-tap shortcuts to Android system settings.
+          </p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; border-top:1px solid var(--border-color); padding-top:14px;">
+          <a href="./smart-tools-app/index.html" class="btn btn-sm btn-primary" style="flex:1;"><i class="fa-solid fa-circle-info"></i> Full Details &amp; Privacy</a>
+          <a href="https://play.google.com/store/apps/details?id=com.gdz.GDZ_Smart_Tools" target="_blank" class="btn btn-sm btn-outline" style="color:#2563eb;"><i class="fa-brands fa-google-play"></i> Play Store</a>
+        </div>
+      </div>
+
+      <!-- App 3: MyNotepad GDZ -->
+      <div class="app-card" data-category="productivity">
+        <div>
+          <div class="app-card-top">
+            <img src="./mynotepad/logo.png" alt="MyNotepad Icon" class="app-card-icon" onerror="this.src='../official logo.png'">
+            <div>
+              <span class="app-badge-tag" style="background:rgba(99,102,241,0.1); color:#6366f1;">Productivity &amp; Journal</span>
+              <h3 style="margin:0 0 4px; font-size:1.2rem; color:var(--text-main);">MyNotepad GDZ – Notes &amp; Diary</h3>
+              <div style="font-size:0.78rem; color:var(--text-muted);">Package: <code>com.gdz.MyNotepad</code></div>
+            </div>
+          </div>
+          <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55; margin-bottom:16px;">
+            Secure, private, offline-first personal notes and daily journal with voice speech-to-text typing, color tagging, checklists, and cloud sync.
+          </p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; border-top:1px solid var(--border-color); padding-top:14px;">
+          <a href="./mynotepad/index.html" class="btn btn-sm btn-primary" style="flex:1;"><i class="fa-solid fa-circle-info"></i> Full Details &amp; Privacy</a>
+          <a href="https://play.google.com/store/apps/details?id=com.gdz.MyNotepad" target="_blank" class="btn btn-sm btn-outline" style="color:#6366f1;"><i class="fa-brands fa-google-play"></i> Play Store</a>
+        </div>
+      </div>
+
+      <!-- App 4: Smart PDF Reader & Editor -->
+      <div class="app-card" data-category="productivity tools">
+        <div>
+          <div class="app-card-top">
+            <img src="./smart-pdf-viewer/logo.png" alt="PDF Reader Icon" class="app-card-icon" onerror="this.src='../official logo.png'">
+            <div>
+              <span class="app-badge-tag" style="background:rgba(220,38,38,0.1); color:#dc2626;">Document Master</span>
+              <h3 style="margin:0 0 4px; font-size:1.2rem; color:var(--text-main);">Smart PDF Reader &amp; Editor</h3>
+              <div style="font-size:0.78rem; color:var(--text-muted);">Package: <code>com.gdz.smartpdfviewer</code></div>
+            </div>
+          </div>
+          <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55; margin-bottom:16px;">
+            High-speed PDF viewer with image-to-PDF scanner, page reordering, rotation, password protection, bookmarking, and local rendering.
+          </p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; border-top:1px solid var(--border-color); padding-top:14px;">
+          <a href="./smart-pdf-viewer/index.html" class="btn btn-sm btn-primary" style="flex:1;"><i class="fa-solid fa-circle-info"></i> Full Details &amp; Privacy</a>
+          <a href="https://www.indusappstore.com/apps/productivity/smart-pdf-reader-and-editor/com.gdz.smartpdfviewer/?id=com.gdz.smartpdfviewer&page=details" target="_blank" class="btn btn-sm btn-outline" style="color:#dc2626;"><i class="fa-solid fa-download"></i> Indus Store</a>
+        </div>
+      </div>
+
+      <!-- App 5: Fruits Crush GDZ -->
+      <div class="app-card" data-category="games">
+        <div>
+          <div class="app-card-top">
+            <img src="./Fruits-crush/logo.png" alt="Fruits Crush Icon" class="app-card-icon" onerror="this.src='../official logo.png'">
+            <div>
+              <span class="app-badge-tag" style="background:rgba(236,72,153,0.1); color:#ec4899;">Casual &amp; Puzzle Game</span>
+              <h3 style="margin:0 0 4px; font-size:1.2rem; color:var(--text-main);">Fruits Crush GDZ – Puzzle Fruit</h3>
+              <div style="font-size:0.78rem; color:var(--text-muted);">Package: <code>com.gdz.fruitscrushgdz</code></div>
+            </div>
+          </div>
+          <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55; margin-bottom:16px;">
+            Colorful, relaxing match-3 arcade game with 100+ stages, power fruit boosters, daily lucky spins, sweet sound effects, and offline play.
+          </p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; border-top:1px solid var(--border-color); padding-top:14px;">
+          <a href="./Fruits-crush/index.html" class="btn btn-sm btn-primary" style="flex:1;"><i class="fa-solid fa-circle-info"></i> Full Details &amp; Privacy</a>
+          <a href="https://play.google.com/store/apps/details?id=com.gdz.fruitscrushgdz" target="_blank" class="btn btn-sm btn-outline" style="color:#ec4899;"><i class="fa-brands fa-google-play"></i> Play Store</a>
+        </div>
+      </div>
+
+      <!-- App 6: Photo to PDF Lite -->
+      <div class="app-card" data-category="productivity photo tools">
+        <div>
+          <div class="app-card-top">
+            <img src="./photo-to-pdf-lite/photo-to-pdf.png" alt="Photo to PDF Lite Icon" class="app-card-icon" onerror="this.src='../official logo.png'">
+            <div>
+              <span class="app-badge-tag" style="background:rgba(2,132,199,0.1); color:#0284c7;">Offline Document Scanner</span>
+              <h3 style="margin:0 0 4px; font-size:1.2rem; color:var(--text-main);">Photo to PDF Lite &amp; Scanner</h3>
+              <div style="font-size:0.78rem; color:var(--text-muted);">Package: <code>com.gdz.phototopdflite</code></div>
+            </div>
+          </div>
+          <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55; margin-bottom:16px;">
+            Lightweight document scanner app with ML edge cropping, automatic contrast enhancement, and zero-upload offline PDF creation.
+          </p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; border-top:1px solid var(--border-color); padding-top:14px;">
+          <a href="./photo-to-pdf-lite/index.html" class="btn btn-sm btn-primary" style="flex:1;"><i class="fa-solid fa-circle-info"></i> Full Details &amp; Privacy</a>
+          <a href="./photo-to-pdf-lite/privacy-policy.html" class="btn btn-sm btn-outline"><i class="fa-solid fa-shield-halved"></i> Policy</a>
+        </div>
+      </div>
+
+      <!-- App 7: AI Gallery Pro -->
+      <div class="app-card" data-category="photo tools">
+        <div>
+          <div class="app-card-top">
+            <div style="width:68px; height:68px; border-radius:16px; background:linear-gradient(135deg, #4f46e5, #4338ca); display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.8rem; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+              <i class="fa-solid fa-images"></i>
+            </div>
+            <div>
+              <span class="app-badge-tag" style="background:rgba(79,70,229,0.1); color:#4f46e5;">AI Smart Vault</span>
+              <h3 style="margin:0 0 4px; font-size:1.2rem; color:var(--text-main);">AI Gallery Pro &amp; Vault</h3>
+              <div style="font-size:0.78rem; color:var(--text-muted);">Offline Private Photo Vault</div>
+            </div>
+          </div>
+          <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55; margin-bottom:16px;">
+            Intelligent offline photo gallery with PIN/Biometric private vault, on-device AI face recognition, OCR text scanner, and pro photo editor.
+          </p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; border-top:1px solid var(--border-color); padding-top:14px;">
+          <a href="./gallery/index.html" class="btn btn-sm btn-primary" style="flex:1;"><i class="fa-solid fa-circle-info"></i> Full Details &amp; Privacy</a>
+          <a href="./gallery/privacy-policy.html" class="btn btn-sm btn-outline"><i class="fa-solid fa-shield-halved"></i> Policy</a>
+        </div>
+      </div>
+
+      <!-- App 8: Bhulekh Bihar Utility -->
+      <div class="app-card" data-category="tools">
+        <div>
+          <div class="app-card-top">
+            <img src="./Bhulekh/logo.png" alt="Bhulekh Icon" class="app-card-icon" onerror="this.src='../official logo.png'">
+            <div>
+              <span class="app-badge-tag" style="background:rgba(217,119,6,0.1); color:#d97706;">Land Records Utility</span>
+              <h3 style="margin:0 0 4px; font-size:1.2rem; color:var(--text-main);">Bhulekh Bihar Portal Tool</h3>
+              <div style="font-size:0.78rem; color:var(--text-muted);">Platform: Web &amp; Android Utility</div>
+            </div>
+          </div>
+          <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55; margin-bottom:16px;">
+            Citizen utility portal to search Bihar land records, Jamabandi, Khasra, Khatiyan, LPC status, and mutation applications easily.
+          </p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; border-top:1px solid var(--border-color); padding-top:14px;">
+          <a href="./Bhulekh/index.html" class="btn btn-sm btn-primary" style="flex:1;"><i class="fa-solid fa-circle-info"></i> Full Details &amp; Privacy</a>
+          <a href="http://biharbhumi.bihar.gov.in/" target="_blank" class="btn btn-sm btn-outline"><i class="fa-solid fa-globe"></i> Open Portal</a>
+        </div>
+      </div>
+
+      <!-- App 9: Next Gen Edu (NGE) -->
+      <div class="app-card" data-category="jobs productivity">
+        <div>
+          <div class="app-card-top">
+            <div style="width:68px; height:68px; border-radius:16px; background:linear-gradient(135deg, #059669, #047857); display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.8rem; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+              <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div>
+              <span class="app-badge-tag" style="background:rgba(16,185,129,0.1); color:#10b981;">Education &amp; Career</span>
+              <h3 style="margin:0 0 4px; font-size:1.2rem; color:var(--text-main);">Next Gen Edu (NGE)</h3>
+              <div style="font-size:0.78rem; color:var(--text-muted);">Exam Alerts &amp; Study Notes</div>
+            </div>
+          </div>
+          <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55; margin-bottom:16px;">
+            Digital education companion offering structured study resources, exam notifications, and career roadmaps for students and job aspirants.
+          </p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; border-top:1px solid var(--border-color); padding-top:14px;">
+          <a href="./NGE/index.html" class="btn btn-sm btn-primary" style="flex:1;"><i class="fa-solid fa-circle-info"></i> Full Details &amp; Privacy</a>
+          <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20want%20info%20about%20NGE%20platform." target="_blank" class="btn btn-sm btn-outline"><i class="fa-brands fa-whatsapp"></i> Support</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Hire Developer CTA Box -->
+    <div style="background:linear-gradient(135deg, var(--bg-surface-alt), var(--bg-surface)); border:2px solid var(--border-color); border-radius:20px; padding:30px; text-align:center; margin-top:40px; box-shadow:var(--shadow-md);">
+      <h2 style="font-size:1.6rem; margin-bottom:8px;">Want a Custom Android App Built for Your Business?</h2>
+      <p style="color:var(--text-muted); max-width:600px; margin:0 auto 20px; font-size:0.95rem;">
+        Hire <strong>RS GULSHAN PRAJAPATI</strong> to architect, design, code, and publish your custom Android app directly to the Google Play Store with full source code ownership.
+      </p>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir!%20I%20want%20to%20build%20a%20Custom%20Android%20App." target="_blank" class="btn btn-accent" style="padding:12px 24px;">
+          <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp (+91 92885 21731)
+        </a>
+        <a href="../index.html#cost-estimator" class="btn btn-outline" style="padding:12px 20px;">
+          <i class="fa-solid fa-calculator"></i> Calculate App Cost
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer style="background:#0b1b36; color:#94a3b8; padding:35px 0 20px; text-align:center; font-size:0.86rem; border-top:3px solid var(--primary);">
+    <div class="container">
+      <div style="font-size:1.3rem; font-weight:800; color:#fff; margin-bottom:8px;"><span style="color:#2788ff;">Go</span><span style="color:#ff6900;">Doz</span> Technology</div>
+      <p style="margin:0 0 12px;">Official Website: <a href="https://www.godoz.in" style="color:#38bdf8;">www.godoz.in</a> | Support: <a href="mailto:godoz.info@gmail.com" style="color:#38bdf8;">godoz.info@gmail.com</a></p>
+      <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:12px;">
+        &copy; 2026 GoDoz Technology. All Published Apps &amp; Products Architected by <strong>RS GULSHAN PRAJAPATI</strong>.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive Apps Filter Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const pills = document.querySelectorAll('#appFilterPills .filter-pill');
+      const cards = document.querySelectorAll('.app-card');
+
+      pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          pills.forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+
+          const filter = pill.dataset.filter;
+          cards.forEach(card => {
+            const cardCat = card.dataset.category || '';
+            if (filter === 'all' || cardCat.includes(filter)) {
+              card.style.display = 'flex';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
+    });
+
+    // Global Drawer Navigation Controls
+    window.openMobileDrawer = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.add('open');
+      if (backdrop) backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeMobileDrawer = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+  </script>
+
+  <!-- Public Live Order Tracker Modal -->
+  <div id="trackOrderModal" class="track-order-modal-backdrop" onclick="if(event.target===this) window.closeTrackOrderModal()">
+    <div class="track-order-modal-box">
+      <div class="track-order-modal-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:36px; height:36px; border-radius:10px; background:rgba(18,102,232,0.1); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:1.1rem;">
+            <i class="fa-solid fa-magnifying-glass-location"></i>
+          </div>
+          <div>
+            <h3 style="margin:0; font-size:1.1rem; font-weight:800; color:var(--text-main);">Track Project Order</h3>
+            <p style="margin:0; font-size:0.75rem; color:var(--text-muted);">Real-time development &amp; payment status</p>
+          </div>
+        </div>
+        <button class="track-order-modal-close" onclick="window.closeTrackOrderModal()" aria-label="Close Order Tracker">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="track-order-modal-body">
+        <p style="font-size:0.85rem; color:var(--text-muted); margin:0 0 14px;">
+          Enter your <strong>Order ID</strong> (e.g. <code>ORD-1700000000</code>) or registered <strong>Mobile Number</strong> / <strong>Email</strong>:
+        </p>
+
+        <form id="publicTrackOrderForm" onsubmit="window.handlePublicTrackOrder(event)">
+          <div style="display:flex; gap:8px; margin-bottom:12px;">
+            <input 
+              type="text" 
+              id="publicTrackOrderInput" 
+              placeholder="Order ID / Mobile (e.g. 9288521731)" 
+              required
+              style="flex:1; padding:10px 14px; border:1.5px solid var(--border-color); border-radius:10px; background:var(--bg-surface-alt); color:var(--text-main); font-size:0.9rem;"
+            />
+            <button type="submit" id="publicTrackOrderSubmitBtn" class="btn btn-primary" style="padding:10px 18px; font-weight:700;">
+              <i class="fa-solid fa-search"></i> Track
+            </button>
+          </div>
+        </form>
+
+        <div id="publicTrackOrderResult" style="display:none; margin-top:14px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile App-Style Fixed Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav" aria-label="Mobile Bottom App Navigation">
+    <a href="../index.html" class="mobile-bottom-item">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </a>
+    <a href="../index.html#services" class="mobile-bottom-item">
+      <i class="fa-solid fa-laptop-code"></i>
+      <span>Services</span>
+    </a>
+    <a href="../profile.html" class="mobile-bottom-item">
+      <i class="fa-solid fa-box-open"></i>
+      <span>My Products</span>
+    </a>
+    <a href="../profile.html" class="mobile-bottom-item">
+      <i class="fa-solid fa-user"></i>
+      <span>Profile</span>
+    </a>
+    <a href="../help/index.html" class="mobile-bottom-item">
+      <i class="fa-solid fa-circle-question"></i>
+      <span>Help</span>
+    </a>
+  </nav>
+
+  <script src="../script.js"></script>
+</body>
+</html>

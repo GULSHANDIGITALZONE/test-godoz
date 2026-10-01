@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - AI Gallery Pro</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        h2 { color: #34495e; margin-top: 30px; }
+        p { margin-bottom: 15px; }
+        ul { margin-bottom: 15px; }
+        .footer { margin-top: 50px; font-size: 0.8em; color: #777; border-top: 1px solid #eee; padding-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Privacy Policy</h1>
+    <p>Last updated: August 15, 2026</p>
+
+    <p>Welcome to <strong>AI Gallery Pro</strong>. Your privacy is critically important to us. This Privacy Policy explains how we handle your information when you use our mobile application.</p>
+
+    <h2>1. Data Collection and Usage</h2>
+    <p>AI Gallery Pro is designed to be a privacy-first application. Most of the processing happens locally on your device.</p>
+    <ul>
+        <li><strong>Media Files:</strong> We access your photos and videos only to display them within the app and provide editing/organization features. We do not upload your media to any cloud servers.</li>
+        <li><strong>AI Processing:</strong> Features like Image Labeling, Face Detection, and OCR (Text Recognition) are performed <strong>locally on your device</strong> using on-device machine learning models. No image data is sent to our servers for this processing.</li>
+        <li><strong>Usage Statistics:</strong> We may collect anonymous usage statistics to improve the app's performance, but this does not include any personal information or access to your media content.</li>
+    </ul>
+
+    <h2>2. Permissions Requested</h2>
+    <p>To provide a full experience, the app requires the following permissions:</p>
+    <ul>
+        <li><strong>Storage/Media Access:</strong> To read and manage your photos and videos.</li>
+        <li><strong>Biometrics/Fingerprint:</strong> To secure your Private Vault (we do not store your actual biometric data; we use system-level authentication).</li>
+        <li><strong>Camera:</strong> Only used if you choose to scan physical documents or take photos through integrated tools.</li>
+        <li><strong>Internet:</strong> Used only for basic app updates, sharing features (when initiated by you), and anonymous analytics.</li>
+    </ul>
+
+    <h2>3. Private Vault</h2>
+    <p>Items moved to the Private Vault are encrypted and stored locally on your device's internal storage. We do not have access to your vault PIN or the media stored within it. If you uninstall the app or clear its data without backing up your vault, the data may be lost.</p>
+
+    <h2>4. Third-Party Services</h2>
+    <p>The app uses standard Google Play Services for core functionality. These services may collect information used to identify you in accordance with their own privacy policies.</p>
+
+    <h2>5. Data Security</h2>
+    <p>We implement industry-standard security measures to protect your data. Since your media stays on your device, the security of your photos also depends on your device's overall security settings.</p>
+
+    <h2>6. Changes to This Policy</h2>
+    <p>We may update our Privacy Policy from time to time. You are advised to review this page periodically for any changes.</p>
+
+    <h2>7. Contact Us</h2>
+    <p>If you have any questions about this Privacy Policy, please contact us at: <strong>godoz.info@gmail.com</strong></p>
+
+    <div class="footer">
+        &copy; 2026 AI Gallery Pro - Developed by Godoz.
+    </div>
+</body>
+</html>

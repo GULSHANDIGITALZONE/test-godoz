@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-4514064358809691">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4514064358809691" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyNotepad GDZ - Home</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #2c3e50; margin: 0; padding: 20px; background-color: #f9f9f9; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #6200EE; text-align: center; font-size: 2.5em; }
+        .brand { color: #ff5722; font-weight: bold; }
+        .feature-box { border-left: 4px solid #6200EE; padding-left: 15px; margin: 20px 0; background: #f0f0ff; padding: 10px; }
+        p { font-size: 1.1em; }
+        footer { text-align: center; margin-top: 40px; font-size: 0.9em; color: #7f8c8d; }
+    </style>
+</head>
+<body>
+      <div id="site-header"></div>
+
+    <div class="container">
+        <h1>MyNotepad <span class="brand">GDZ</span></h1>
+        <p style="text-align:center; font-style: italic;"> capture everything, anywhere.</p>
+
+        <p>Welcome to <b>MyNotepad GDZ</b>! A modern, secure note-taking &amp; daily diary app created by <b>RS GULSHAN PRAJAPATI</b> to simplify your digital productivity.</p>
+
+        <div class="feature-box">
+            <h3>Key Features:</h3>
+            <ul>
+                <li><b>Multimedia Notes:</b> Attach photos, videos, audio recordings, and rich formatting.</li>
+                <li><b>Secure Backup:</b> Backup and sync your data safely with Google Drive integration.</li>
+                <li><b>Smart Instant Search:</b> Search and organize your notes by tags and categories in seconds.</li>
+                <li><b>Voice Typing:</b> Dictate notes hands-free with high-accuracy speech-to-text.</li>
+            </ul>
+        </div>
+
+        <p>Our mission is to provide you a clean, reliable workspace where you can capture thoughts and memories effortlessly.</p>
+
+        <footer>
+            &copy; 2026 GULSHAN DIGITAL ZONE | Developed by RS GULSHAN PRAJAPATI
+        </footer>
+    </div>
+
+    <h2>Contact Us</h2>
+    <p>If you have any questions about this Privacy Policy, You can contact us:</p>
+    <ul>
+        <li>By email: godoz.info@gmail.com</li>
+    </ul>
+
+    <script>
+  async function loadFragment(url, targetId) {
+    try {
+      const res = await fetch(url, { mode: 'cors' });
+      if (!res.ok) throw new Error(`HTTP ${res.status} - ${res.statusText}`);
+      const html = await res.text();
+      const el = document.getElementById(targetId);
+      if (!el) throw new Error(`Target element #${targetId} not found`);
+      el.innerHTML = html;
+      console.log(`Loaded ${url} → #${targetId}`);
+    } catch (err) {
+      console.error(`Error loading ${url}:`, err);
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.innerHTML = `<div style="padding:12px; background:#fff4f4; color:#900; border:1px solid #f5c2c2;">
+          Error loading content. Check console (Ctrl+Shift+J).
+        </div>`;
+      }
+    }
+  }
+
+  // use correct paths — change if filenames अलग हैं
+  // अगर Header.html और footer.html same site पर हैं तो relative path बेहतर है
+  loadFragment('/Header.html', 'site-header');
+  loadFragment('/footer.html', 'site-footer');
+</script>
+  
+<div id="site-footer"></div>
+</body>
+</html>

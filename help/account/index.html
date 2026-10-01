@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="hi" data-theme="light">
+<head>
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-4514064358809691">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4514064358809691" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <script>
+    (function(){
+      const savedTheme = localStorage.getItem('godoz_theme') || 
+        (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+
+    // Universal Instant Drawer Navigation Handlers (0ms response)
+    window.openMobileDrawer = window.openLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.add('open');
+      if (backdrop) backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeMobileDrawer = window.closeLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    window.toggleMobileDrawer = window.toggleLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const isOpen = drawer && drawer.classList.contains('open');
+      if (isOpen) {
+        window.closeMobileDrawer();
+      } else {
+        window.openMobileDrawer();
+      }
+    };
+  </script>
+  
+  <title>Account &amp; Profile Help Guide | GoDoz Technology</title>
+  <meta name="description" content="Step-by-step help guide for GoDoz Technology account login, Google Sign-In, Email/User ID authentication, guest access, editing profile details, and password reset.">
+  <meta name="keywords" content="GoDoz Account Help, Login Guide GoDoz, Reset Password GoDoz, Guest Account GoDoz, Profile Management Help">
+  <meta name="author" content="RS GULSHAN PRAJAPATI">
+  <link rel="canonical" href="https://www.godoz.in/help/account/">
+  <link rel="shortcut icon" href="../../official logo.png" type="image/x-icon">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../../style.css">
+
+  <style>
+    .help-article-hero {
+      background: var(--bg-surface-alt, #f8fafc) !important;
+      color: var(--text-main, #0f172a) !important;
+      padding: 30px 20px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color, #e2e8f0);
+      margin-bottom: 24px;
+    }
+    .help-article-hero h1 {
+      color: var(--text-main, #0f172a) !important;
+      text-shadow: none !important;
+    }
+    .help-article-hero p {
+      color: var(--text-muted, #64748b) !important;
+    }
+    .article-box {
+      background: var(--bg-surface, #ffffff);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--primary, #1266e8);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body id="top">
+
+  <!-- Mobile Drawer Backdrop -->
+  <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="window.closeMobileDrawer()"></div>
+
+    <!-- Slide-Out Mobile Navigation Drawer -->
+  <!-- Slide-Out Mobile Navigation Drawer -->
+  <aside id="mobileNavDrawer" class="mobile-nav-drawer" aria-label="Mobile Navigation">
+    <div class="drawer-header">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="app-sidebar-header-icon" style="width:34px; height:34px; border-radius:8px; background:rgba(18,102,232,0.12); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+          <i class="fa-solid fa-compass" style="font-size:1.1rem;"></i>
+        </div>
+        <div>
+          <div style="font-size:1.1rem; font-weight:900; line-height:1.1; color:var(--text-main);">
+            GoDoz Menu
+          </div>
+          <div style="font-size:0.65rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">
+            Quick Navigation
+          </div>
+        </div>
+      </div>
+      <button type="button" class="drawer-close-btn" onclick="window.closeMobileDrawer()" aria-label="Close Navigation Menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="drawer-body" style="flex:1; overflow-y:auto; padding:10px 14px 90px; -webkit-overflow-scrolling:touch; overscroll-behavior:contain;">
+      <!-- Menu Group 1: Services & Work -->
+      <div style="padding:4px 0;">
+        <div class="app-section-label">Services &amp; Work</div>
+        <ul class="app-menu-list">
+          <li>
+            <a href="../../index.html#home-top" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-house app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Home Page</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="../../index.html#services" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-laptop-code app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Services Offered</span>
+              </div>
+              <span class="app-menu-badge">6 Services</span>
+            </a>
+          </li>
+          <li>
+            <a href="../../apps/index.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-mobile-screen app-menu-icon" style="color:var(--accent);"></i>
+                <span class="app-menu-text">Our Apps &amp; Work</span>
+              </div>
+              <span class="app-menu-badge">6+ Apps</span>
+            </a>
+          </li>
+          <li>
+            <a href="../../index.html#cost-estimator" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-calculator app-menu-icon" style="color:#10b981;"></i>
+                <span class="app-menu-text">Project Cost Calculator</span>
+              </div>
+              <span class="app-menu-badge">Calculator</span>
+            </a>
+          </li>
+          <li>
+            <a href="../../index.html#live-tools" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-toolbox app-menu-icon" style="color:#06b6d4;"></i>
+                <span class="app-menu-text">Live Web Tools</span>
+              </div>
+              <span class="app-menu-badge">Tools</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Menu Group 2: Company & Founder -->
+      <div style="padding:4px 0; border-top:1px solid var(--border-color);">
+        <div class="app-section-label">Company &amp; Founder</div>
+        <ul class="app-menu-list">
+          <li>
+            <a href="../../About.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-tie app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">About Founder &amp; GoDoz</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="../../index.html#why-hire-us" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-award app-menu-icon" style="color:#8b5cf6;"></i>
+                <span class="app-menu-text">Why Choose GoDoz</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="../../index.html#tech-stack" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-microchip app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Tech Stack &amp; Cloud</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="../../index.html#official-verification" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-shield-halved app-menu-icon" style="color:var(--accent);"></i>
+                <span class="app-menu-text">Official Publisher Info</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="../../feedback.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-star app-menu-icon" style="color:#f59e0b;"></i>
+                <span class="app-menu-text">Client Reviews &amp; Feedback</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Menu Group 3: Portal & Orders -->
+      <div style="padding:4px 0; border-top:1px solid var(--border-color);">
+        <div class="app-section-label">Portal &amp; Orders</div>
+        <ul class="app-menu-list">
+          <li>
+            <a href="../../profile.html#products" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-box-open app-menu-icon" style="color:#10b981;"></i>
+                <span class="app-menu-text">My Products</span>
+              </div>
+              <span class="app-menu-badge" style="background:rgba(16,185,129,0.15); color:#10b981; font-weight:700;">Active</span>
+            </a>
+          </li>
+          <li>
+            <a href="../../profile.html" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-id-card app-menu-icon" style="color:#8b5cf6;"></i>
+                <span class="app-menu-text">My Profile / Dashboard</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" onclick="window.openTrackOrderModal(); window.closeMobileDrawer();" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-magnifying-glass app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Track Live Order</span>
+              </div>
+              <span class="app-menu-badge" style="background:rgba(18,102,232,0.12); color:var(--primary); font-weight:700;">LIVE</span>
+            </a>
+          </li>
+          <li>
+            <a href="../../admin.html" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-shield app-menu-icon" style="color:#7c3aed;"></i>
+                <span class="app-menu-text">Admin Hub</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="../../index.html#contact-section" class="app-menu-item">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-paper-plane app-menu-icon" style="color:#ef4444;"></i>
+                <span class="app-menu-text">Contact &amp; Inquiry</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="../../help/index.html" class="app-menu-item active">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-circle-question app-menu-icon" style="color:#f59e0b;"></i>
+                <span class="app-menu-text">Help &amp; Knowledgebase</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="../../login.html" id="drawerAuthNavItem" class="app-menu-item ">
+              <div class="app-menu-left">
+                <i class="fa-solid fa-user-circle app-menu-icon" style="color:var(--primary);"></i>
+                <span class="app-menu-text">Client Portal / Login</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="app-sidebar-footer" style="padding:14px 0 20px; border-top:1px solid var(--border-color); margin-top:8px;">
+        <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20want%20to%20discuss%20a%20project!" target="_blank" class="app-sidebar-wa-btn">
+          <i class="fa-brands fa-whatsapp"></i> Chat with Developer
+        </a>
+        <div style="font-size:0.7rem; color:var(--text-muted); text-align:center; margin-top:8px;">
+          GoDoz Technology &bull; Sheikhpura
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Global Sticky Navbar -->
+  <header class="navbar" role="banner">
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-4514064358809691">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4514064358809691" crossorigin="anonymous"></script>
+    <div class="container navbar-container">
+      
+      <!-- Left: Hamburger + Brand Logo -->
+      <div class="navbar-left">
+        <button id="mobileMenuToggle" class="mobile-menu-toggle" aria-label="Toggle navigation menu" title="Open Navigation Menu" onclick="window.toggleMobileDrawer()" style="display:inline-flex !important;">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <a href="../../index.html" class="brand-logo-wrap" title="GoDoz Technology Home">
+          <img src="../../official logo.png" alt="GoDoz Logo" class="brand-img" style="height:36px; width:auto; max-height:36px; max-width:40px; border-radius:8px; object-fit:contain;" onerror="this.src='../../logo w bg.png'">
+          <span class="brand-text">
+            <span class="go">Go</span><span class="doz">Doz</span>
+          </span>
+        </a>
+      </div>
+
+      <!-- Center: Desktop Navigation Links -->
+      <nav class="desktop-nav-menu" aria-label="Main Navigation">
+        <a href="../../index.html" class="desktop-nav-link"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="../../index.html#services" class="desktop-nav-link"><i class="fa-solid fa-code"></i> Services</a>
+        <a href="../../apps/index.html" class="desktop-nav-link"><i class="fa-solid fa-mobile-screen"></i> Apps Hub</a>
+        <a href="../../index.html#cost-estimator" class="desktop-nav-link"><i class="fa-solid fa-calculator"></i> Calculator</a>
+        <a href="../index.html" class="desktop-nav-link active"><i class="fa-solid fa-circle-question"></i> Help</a>
+        <a href="../../feedback.html" class="desktop-nav-link"><i class="fa-solid fa-star"></i> Reviews</a>
+      </nav>
+
+      <!-- Right Header Actions -->
+      <div class="header-actions">
+        <!-- Track Order Modal Trigger Button -->
+        <button onclick="window.openTrackOrderModal()" class="btn btn-sm btn-outline track-order-nav-btn" title="Track Order Status by Order ID / Mobile" aria-label="Track Project Order">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span class="action-btn-label">Track Order</span>
+        </button>
+
+        <!-- Client Portal / Dashboard Link -->
+        <a href="../../profile.html" class="btn btn-sm btn-outline header-portal-btn" title="Go to Client Profile / Portal">
+          <i class="fa-solid fa-user-circle"></i>
+          <span class="action-btn-label">Client Portal</span>
+        </a>
+
+        <!-- Dark/Light Theme Toggle Button -->
+        <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Color Theme" title="Toggle Light/Dark Theme" onclick="window.toggleGoDozTheme()">
+          <i id="themeIcon" class="fa-solid fa-moon"></i>
+        </button>
+
+        <!-- WhatsApp Live Chat Button -->
+        <a href="https://wa.me/919288521731?text=Hello%20GoDoz%20Team,%20I%20have%20an%20account%20query." target="_blank" class="btn btn-sm btn-accent header-wa-btn" title="Chat on WhatsApp">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span class="action-btn-label">WhatsApp</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="help-article-hero">
+    <div class="container" style="max-width:850px;">
+      <div style="font-size:0.82rem; color:#94a3b8; margin-bottom:8px;">
+        <a href="../../index.html" style="color:#38bdf8; text-decoration:none;">Home</a> / <a href="../index.html" style="color:#38bdf8; text-decoration:none;">Help Center</a> / <span style="color:#fff;">Account &amp; Profile</span>
+      </div>
+      <h1 style="font-size:clamp(1.7rem, 3.5vw, 2.3rem); font-weight:900; margin:0 0 8px;">
+        Account &amp; Profile Management Guide
+      </h1>
+      <p style="color:#cbd5e1; font-size:0.95rem; margin:0;">
+        Everything you need to know about creating an account, signing in with Google or Email/User ID, managing profile data, and resetting passwords.
+      </p>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <main class="container" style="max-width:850px; padding:40px 16px;">
+    
+    <!-- Topic 1: Login Options -->
+    <div class="article-box">
+      <h2 style="font-size:1.35rem; color:var(--text-main); margin-top:0; border-left:4px solid var(--primary); padding-left:12px;">
+        1. How to Sign In or Create an Account
+      </h2>
+      <p style="color:var(--text-muted); line-height:1.7;">
+        GoDoz Technology provides three flexible authentication methods powered by enterprise Firebase Authentication:
+      </p>
+      
+      <div style="margin:16px 0;">
+        <h4 style="margin:0 0 4px;"><span class="step-badge">A</span> One-Click Google Sign-In (Recommended)</h4>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-left:36px; line-height:1.6;">
+          Click <strong>"Continue with Google"</strong> on <a href="../../login.html" style="color:var(--primary); font-weight:600;">login.html</a>. Your Google avatar, verified email, and full name will be instantly linked with zero manual forms required.
+        </p>
+      </div>
+
+      <div style="margin:16px 0;">
+        <h4 style="margin:0 0 4px;"><span class="step-badge">B</span> Email or User ID &amp; Password</h4>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-left:36px; line-height:1.6;">
+          You can enter either your full work email address or your customized User ID. Enter your password and click <strong>"Sign In to Account"</strong>.
+        </p>
+      </div>
+
+      <div style="margin:16px 0;">
+        <h4 style="margin:0 0 4px;"><span class="step-badge">C</span> Continue as Guest (Anonymous Access)</h4>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-left:36px; line-height:1.6;">
+          If you are exploring services or calculating project costs, click <strong>"Continue as Guest / Anonymous"</strong>. You will be assigned a temporary session UID without giving your email.
+        </p>
+      </div>
+    </div>
+
+    <!-- Topic 2: Profile Editing -->
+    <div class="article-box">
+      <h2 style="font-size:1.35rem; color:var(--text-main); margin-top:0; border-left:4px solid var(--accent); padding-left:12px;">
+        2. Managing &amp; Editing Your Profile
+      </h2>
+      <p style="color:var(--text-muted); line-height:1.7;">
+        Once signed in, visit the <a href="../../profile.html" style="color:var(--primary); font-weight:600;">Profile Dashboard (profile.html)</a>. Click on the <strong>"Edit Profile"</strong> tab to update:
+      </p>
+      <ul style="color:var(--text-muted); font-size:0.9rem; line-height:1.7; padding-left:20px;">
+        <li><strong>Full Name / Display Name:</strong> Used for official software licenses and invoices.</li>
+        <li><strong>WhatsApp &amp; Phone Number:</strong> Enables priority direct communication for project updates.</li>
+        <li><strong>Company &amp; Business Name:</strong> Appears on customized invoices and Play Store app ownership documents.</li>
+        <li><strong>Profile Avatar Photo:</strong> Custom URL or Google profile photo.</li>
+        <li><strong>Billing Address:</strong> Used to generate GST compliant invoices for app orders.</li>
+      </ul>
+    </div>
+
+    <!-- Topic 3: Password Recovery -->
+    <div class="article-box">
+      <h2 style="font-size:1.35rem; color:var(--text-main); margin-top:0; border-left:4px solid #10b981; padding-left:12px;">
+        3. Forgot Password &amp; Account Recovery
+      </h2>
+      <p style="color:var(--text-muted); line-height:1.7;">
+        If you forget your password, click the <strong>"Forgot?"</strong> link on the login page or use the <strong>"Send Password Reset Link"</strong> button inside your profile settings. Firebase will immediately dispatch a secure password reset link to your registered email address.
+      </p>
+    </div>
+
+    <!-- Direct Help Box -->
+    <div style="background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:16px; padding:24px; text-align:center; margin-bottom:30px;">
+      <h3 style="margin:0 0 6px;">Need Personal Assistance?</h3>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">
+        Contact <strong>RS GULSHAN PRAJAPATI</strong> on WhatsApp for quick account recovery or technical assistance.
+      </p>
+      <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20need%20help%20with%20my%20GoDoz%20Account." target="_blank" class="btn btn-accent">
+        <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp (+91 92885 21731)
+      </a>
+    </div>
+
+    <!-- Embeddable Account Support & Feedback Widget -->
+    <div style="margin-top:20px;">
+      <div id="godozFeedbackWidget" style="max-width: 580px; margin: 0 auto; padding: 26px; background: var(--bg-surface, #ffffff); border: 2px solid var(--border-color, #e2e8f0); border-radius: 20px; box-shadow: var(--shadow-md); color: var(--text-main, #0f172a);">
+
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--border-color, #e2e8f0); padding-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; color: var(--primary, #1266e8);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            Account Support &amp; Recovery Desk
+          </div>
+          <span style="background: rgba(18,102,232,0.1); color: var(--primary, #1266e8); font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px;">Firebase Auth Help</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div>
+            <label for="godozWidgetName" style="display: block; font-size: 12px; font-weight: 700; color: var(--text-muted, #64748b); margin-bottom: 4px;">Your Full Name *</label>
+            <input type="text" id="godozWidgetName" placeholder="e.g. John Doe" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-color, #cbd5e1); border-radius: 12px; font-size: 14px; outline: none; box-sizing: border-box; background: var(--bg-surface-alt, #f8fafc); color:var(--text-main);">
+          </div>
+
+          <div>
+            <label for="godozWidgetContact" style="display: block; font-size: 12px; font-weight: 700; color: var(--text-muted, #64748b); margin-bottom: 4px;">Registered Email or Phone *</label>
+            <input type="text" id="godozWidgetContact" placeholder="e.g. your_email@gmail.com or 9288521731" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-color, #cbd5e1); border-radius: 12px; font-size: 14px; outline: none; box-sizing: border-box; background: var(--bg-surface-alt, #f8fafc); color:var(--text-main);">
+          </div>
+
+          <div>
+            <label for="godozWidgetMsg" style="display: block; font-size: 12px; font-weight: 700; color: var(--text-muted, #64748b); margin-bottom: 4px;">Account Issue / Password Reset Request *</label>
+            <textarea id="godozWidgetMsg" placeholder="Describe what help you need with your account login, password reset, or profile..." style="width: 100%; min-height: 90px; padding: 11px 14px; border: 1.5px solid var(--border-color, #cbd5e1); border-radius: 12px; font-size: 14px; outline: none; box-sizing: border-box; resize: vertical; background: var(--bg-surface-alt, #f8fafc); color:var(--text-main); font-family:inherit;"></textarea>
+          </div>
+
+          <button id="godozWidgetSubmitBtn" onclick="submitGodozFeedbackWidget()" style="width: 100%; padding: 13px; background: linear-gradient(135deg, var(--primary, #1266e8), #1e40af); color: white; font-weight: 800; font-size: 14px; border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 14px rgba(18, 102, 232, 0.3);">
+            <i class="fa-solid fa-paper-plane"></i> Send Account Support Request
+          </button>
+
+          <div id="godozWidgetStatus" style="font-size: 12px; font-weight: 700; text-align: center; display: none; padding: 10px; border-radius: 8px;"></div>
+        </div>
+
+        <div style="margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--border-color, #cbd5e1); display: flex; justify-content: space-between; align-items: center; font-size: 12px; flex-wrap:wrap; gap:8px;">
+          <span style="color: var(--text-muted, #64748b);"><i class="fa-solid fa-shield-halved" style="color:#10b981;"></i> Secure Firebase Sync</span>
+          <a href="https://godoz.in/contactapp" target="_blank" style="color: #0284c7; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+            Login &amp; Track Message Replies &rarr;
+          </a>
+        </div>
+
+        <script type="module">
+          import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+          import { getFirestore, collection, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+          const firebaseConfig = {
+            apiKey: "AIzaSyABHJz_4ERnwrT_uB3BgBz-BD_3JZjlVNE",
+            authDomain: "godoz-official.firebaseapp.com",
+            projectId: "godoz-official",
+            storageBucket: "godoz-official.firebasestorage.app",
+            messagingSenderId: "977883022920",
+            appId: "1:977883022920:web:3cc3e9bce8c6324edb3a7d",
+            measurementId: "G-QKH3K4HV8P"
+          };
+
+          const app = initializeApp(firebaseConfig, "accountFeedbackApp");
+          const db = getFirestore(app);
+
+          window.submitGodozFeedbackWidget = async function() {
+            const name = document.getElementById('godozWidgetName').value.trim();
+            const contact = document.getElementById('godozWidgetContact').value.trim();
+            const msg = document.getElementById('godozWidgetMsg').value.trim();
+            const statusDiv = document.getElementById('godozWidgetStatus');
+            const btn = document.getElementById('godozWidgetSubmitBtn');
+
+            if (!name || !contact || !msg) {
+              statusDiv.style.display = 'block';
+              statusDiv.style.background = '#FFFBEB';
+              statusDiv.style.color = '#B45309';
+              statusDiv.innerText = '⚠️ Name, Contact, and Message are required!';
+              return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+
+            try {
+              const isEmail = contact.includes('@');
+              const digits = contact.replace(/\D/g, '');
+              const targetUid = isEmail ? `user_${contact.replace(/[^a-zA-Z0-9]/g, '')}` : `phone_${digits.slice(-10)}`;
+
+              const newDocRef = doc(collection(db, "messages"));
+              await setDoc(newDocRef, {
+                id: newDocRef.id,
+                senderUid: targetUid,
+                senderName: name,
+                senderEmail: isEmail ? contact : `${digits}@phone.user`,
+                senderPhone: !isEmail ? contact : null,
+                messageText: `💬 [GoDoz Account Help Request]:\n${msg}`,
+                isLoggedIn: false,
+                timestamp: Date.now(),
+                replyText: null,
+                repliedAt: null,
+                status: "pending",
+                adminNotes: "Submitted via Account Help Guide"
+              });
+
+              document.getElementById('godozWidgetMsg').value = '';
+              statusDiv.style.display = 'block';
+              statusDiv.style.background = '#ECFDF5';
+              statusDiv.style.color = '#047857';
+              statusDiv.innerHTML = '✅ Request submitted! <a href="https://godoz.in/contactapp" target="_blank" style="color:#047857; font-weight:800; text-decoration:underline;">Track reply on godoz.in/contactapp ↗</a>';
+            } catch (e) {
+              statusDiv.style.display = 'block';
+              statusDiv.style.background = '#FEF2F2';
+              statusDiv.style.color = '#B91C1C';
+              statusDiv.innerText = 'Error submitting: ' + e.message;
+            } finally {
+              btn.disabled = false;
+              btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Account Support Request';
+            }
+          };
+        </script>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer style="background:#0b1b36; color:#94a3b8; padding:30px 0; text-align:center; font-size:0.86rem; border-top:3px solid var(--primary);">
+    <div class="container">
+      <div style="font-size:1.2rem; font-weight:800; color:#fff; margin-bottom:6px;"><span style="color:#2788ff;">Go</span><span style="color:#ff6900;">Doz</span> Technology</div>
+      <p style="margin:0 0 10px;">Official Website: <a href="https://www.godoz.in" style="color:#38bdf8;">www.godoz.in</a></p>
+      <div>&copy; 2026 GoDoz Technology. All Rights Reserved.</div>
+    </div>
+  </footer>
+
+  <!-- Public Live Order Tracker Modal -->
+  <div id="trackOrderModal" class="track-order-modal-backdrop" onclick="if(event.target===this) window.closeTrackOrderModal()">
+    <div class="track-order-modal-box">
+      <div class="track-order-modal-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:36px; height:36px; border-radius:10px; background:rgba(18,102,232,0.1); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:1.1rem;">
+            <i class="fa-solid fa-magnifying-glass-location"></i>
+          </div>
+          <div>
+            <h3 style="margin:0; font-size:1.1rem; font-weight:800; color:var(--text-main);">Track Project Order</h3>
+            <p style="margin:0; font-size:0.75rem; color:var(--text-muted);">Real-time development &amp; payment status</p>
+          </div>
+        </div>
+        <button class="track-order-modal-close" onclick="window.closeTrackOrderModal()" aria-label="Close Order Tracker">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="track-order-modal-body">
+        <p style="font-size:0.85rem; color:var(--text-muted); margin:0 0 14px;">
+          Enter your <strong>Order ID</strong> (e.g. <code>ORD-1700000000</code>) or registered <strong>Mobile Number</strong> / <strong>Email</strong>:
+        </p>
+
+        <form id="publicTrackOrderForm" onsubmit="window.handlePublicTrackOrder(event)">
+          <div style="display:flex; gap:8px; margin-bottom:12px;">
+            <input 
+              type="text" 
+              id="publicTrackOrderInput" 
+              placeholder="Order ID / Mobile (e.g. 9288521731)" 
+              required
+              style="flex:1; padding:10px 14px; border:1.5px solid var(--border-color); border-radius:10px; background:var(--bg-surface-alt); color:var(--text-main); font-size:0.9rem;"
+            />
+            <button type="submit" id="publicTrackOrderSubmitBtn" class="btn btn-primary" style="padding:10px 18px; font-weight:700;">
+              <i class="fa-solid fa-search"></i> Track
+            </button>
+          </div>
+        </form>
+
+        <div id="publicTrackOrderResult" style="display:none; margin-top:14px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile App-Style Fixed Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav" aria-label="Mobile Bottom App Navigation">
+    <a href="../../index.html" class="mobile-bottom-item">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </a>
+    <a href="../../index.html#services" class="mobile-bottom-item">
+      <i class="fa-solid fa-laptop-code"></i>
+      <span>Services</span>
+    </a>
+    <a href="../../profile.html" class="mobile-bottom-item">
+      <i class="fa-solid fa-box-open"></i>
+      <span>My Products</span>
+    </a>
+    <a href="../../profile.html" class="mobile-bottom-item">
+      <i class="fa-solid fa-user"></i>
+      <span>Profile</span>
+    </a>
+    <a href="../index.html" class="mobile-bottom-item active">
+      <i class="fa-solid fa-circle-question"></i>
+      <span>Help</span>
+    </a>
+  </nav>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

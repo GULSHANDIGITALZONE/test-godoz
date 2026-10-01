@@ -1,0 +1,140 @@
+/* ==========================================================================
+   GoDoz Technology - Modals & Overlays Stylesheet
+   ========================================================================== */
+
+/* 1. Global Modal Backdrop Overlay */
+.godoz-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.godoz-modal-backdrop.active,
+.godoz-modal-backdrop.open {
+  display: flex !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+}
+
+.godoz-modal-box,
+.godoz-modal-card {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 20px;
+  max-width: 580px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  transform: translateY(20px) scale(0.98);
+  transition: transform 0.25s ease;
+  position: relative;
+}
+
+.godoz-modal-backdrop.active .godoz-modal-box,
+.godoz-modal-backdrop.open .godoz-modal-box,
+.godoz-modal-backdrop.active .godoz-modal-card,
+.godoz-modal-backdrop.open .godoz-modal-card {
+  transform: translateY(0) scale(1) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* 2. Public Live Order Tracker Modal (.track-order-modal-backdrop) */
+.track-order-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.track-order-modal-backdrop.active {
+  display: flex !important;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.track-order-modal-box {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 20px;
+  max-width: 580px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  transform: translateY(20px) scale(0.98);
+  transition: transform 0.25s ease;
+  position: relative;
+}
+
+.track-order-modal-backdrop.active .track-order-modal-box {
+  transform: translateY(0) scale(1);
+}
+
+.track-order-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  background: var(--bg-surface, #ffffff);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.track-order-modal-close {
+  background: var(--bg-surface-alt, #f1f5f9);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 10px;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: var(--text-muted, #64748b);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.track-order-modal-close:hover {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.track-order-modal-body {
+  padding: 20px;
+}
