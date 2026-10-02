@@ -552,8 +552,10 @@ export async function saveOrderToFirestore(orderData) {
 
     // Server-enforced price & coupon validation (Prevents client-side price tampering via DevTools)
     const categoryName = orderData.projectName || "";
-    let basePrice = MASTER_PRICE_MAP[categoryName] !== undefined ? MASTER_PRICE_MAP[categoryName] : Number(orderData.price || 4999);
-    if (basePrice < 0) basePrice = 0;
+    const isCustomCat = categoryName.toLowerCase().includes('custom requirement') || categoryName.toLowerCase().includes('unique idea') || categoryName.toLowerCase().includes('custom app');
+    let basePrice = isCustomCat
+      ? (orderData.price !== undefined ? Math.max(0, Number(orderData.price)) : 0)
+      : (MASTER_PRICE_MAP[categoryName] !== undefined ? MASTER_PRICE_MAP[categoryName] : Math.max(0, Number(orderData.price || 4999)));
 
     // Apply Coupon Discount if valid coupon object attached
     let appliedDiscount = 0;
