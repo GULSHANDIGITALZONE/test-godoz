@@ -2022,19 +2022,30 @@
       tbody.innerHTML = '';
 
       let totalRevenue = 0;
-      let pendingCOD = 0;
-      let activeSprints = 0;
+      let countAll = 0;
+      let countActive = 0;
+      let countHold = 0;
+      let countCompleted = 0;
+      let countCancelled = 0;
+      let countCOD = 0;
 
       if (!orders || orders.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">No orders found. Click "+ Add New Client Order" to create one.</td></tr>';
-        document.getElementById('metricTotalOrders').textContent = '0';
-        document.getElementById('metricPendingCOD').textContent = '0';
-        document.getElementById('metricTotalRevenue').textContent = '₹0';
-        document.getElementById('metricActiveSprints').textContent = '0';
+        if (document.getElementById('metricTotalOrders')) document.getElementById('metricTotalOrders').textContent = '0';
+        if (document.getElementById('metricPendingCOD')) document.getElementById('metricPendingCOD').textContent = '0';
+        if (document.getElementById('metricTotalRevenue')) document.getElementById('metricTotalRevenue').textContent = '₹0';
+        if (document.getElementById('metricActiveSprints')) document.getElementById('metricActiveSprints').textContent = '0';
+        if (document.getElementById('chipCountAll')) document.getElementById('chipCountAll').textContent = '0';
+        if (document.getElementById('chipCountActive')) document.getElementById('chipCountActive').textContent = '0';
+        if (document.getElementById('chipCountHold')) document.getElementById('chipCountHold').textContent = '0';
+        if (document.getElementById('chipCountCompleted')) document.getElementById('chipCountCompleted').textContent = '0';
+        if (document.getElementById('chipCountCancelled')) document.getElementById('chipCountCancelled').textContent = '0';
+        if (document.getElementById('chipCountCOD')) document.getElementById('chipCountCOD').textContent = '0';
         return;
       }
 
       orders.forEach(order => {
+        countAll++;
         const fin = getOrderFinancials(order);
         const totalPrice = fin.totalPrice;
         const amountPaid = fin.amountPaid;
@@ -2042,25 +2053,35 @@
         const isFullyPaid = fin.isFullyPaid;
         totalRevenue += amountPaid;
 
-        if (order.paymentStatus && order.paymentStatus.includes('Pending')) {
-          pendingCOD++;
-        }
-        if ((order.progress || 0) < 100) {
-          activeSprints++;
-        }
-
-        const isCOD = order.paymentMode && order.paymentMode.includes('COD');
+        const isCOD = (order.paymentMode && order.paymentMode.includes('COD')) || (order.paymentStatus && order.paymentStatus.includes('COD'));
         const isCODVerified = order.paymentStatus && order.paymentStatus.includes('COD Accepted');
         const txnCount = Array.isArray(order.paymentHistory) ? order.paymentHistory.length : (amountPaid > 0 ? 1 : 0);
+        
         const isOrderCancelled = order.status === 'Cancelled' || (order.stage && order.stage.toLowerCase().includes('cancel'));
         const isOrderOnHold = order.status === 'On Hold' || (order.stage && order.stage.toLowerCase().includes('hold'));
-        const cleanPhoneDigits = (order.clientPhone || '').replace(/\D/g, '');
+        const isCompleted = order.status === 'Completed' || (order.stage && order.stage.toLowerCase().includes('100%')) || (order.progress === 100);
 
-        const statusAttr = isOrderCancelled ? 'cancelled' : (isOrderOnHold ? 'on hold' : (order.status || 'in progress').toLowerCase());
+        if (isOrderCancelled) {
+          countCancelled++;
+        } else if (isOrderOnHold) {
+          countHold++;
+        } else if (isCompleted) {
+          countCompleted++;
+        } else {
+          countActive++;
+        }
+
+        if (isCOD && !isCODVerified && !isOrderCancelled) {
+          countCOD++;
+        }
+
+        const cleanPhoneDigits = (order.clientPhone || '').replace(/\D/g, '');
+        const statusAttr = isOrderCancelled ? 'cancelled' : (isOrderOnHold ? 'on hold' : (isCompleted ? 'completed' : 'in progress'));
 
         const tr = document.createElement('tr');
         tr.setAttribute('data-order-status', statusAttr);
         tr.setAttribute('data-is-cod', isCOD ? 'true' : 'false');
+        tr.setAttribute('data-is-cod-verified', isCODVerified ? 'true' : 'false');
 
         tr.innerHTML = `
           <td>
@@ -2160,10 +2181,21 @@
         tbody.appendChild(tr);
       });
 
-      document.getElementById('metricTotalOrders').textContent = orders.length;
-      document.getElementById('metricPendingCOD').textContent = pendingCOD;
-      document.getElementById('metricTotalRevenue').textContent = `₹${totalRevenue.toLocaleString('en-IN')}`;
-      document.getElementById('metricActiveSprints').textContent = activeSprints;
+      if (document.getElementById('metricTotalOrders')) document.getElementById('metricTotalOrders').textContent = countAll;
+      if (document.getElementById('metricPendingCOD')) document.getElementById('metricPendingCOD').textContent = countCOD;
+      if (document.getElementById('metricTotalRevenue')) document.getElementById('metricTotalRevenue').textContent = `₹${totalRevenue.toLocaleString('en-IN')}`;
+      if (document.getElementById('metricActiveSprints')) document.getElementById('metricActiveSprints').textContent = countActive;
+
+      if (document.getElementById('chipCountAll')) document.getElementById('chipCountAll').textContent = countAll;
+      if (document.getElementById('chipCountActive')) document.getElementById('chipCountActive').textContent = countActive;
+      if (document.getElementById('chipCountHold')) document.getElementById('chipCountHold').textContent = countHold;
+      if (document.getElementById('chipCountCompleted')) document.getElementById('chipCountCompleted').textContent = countCompleted;
+      if (document.getElementById('chipCountCancelled')) document.getElementById('chipCountCancelled').textContent = countCancelled;
+      if (document.getElementById('chipCountCOD')) document.getElementById('chipCountCOD').textContent = countCOD;
+
+      if (typeof window.filterOrdersTable === 'function') {
+        window.filterOrdersTable();
+      }
     }
 
     // Render Admins & Managers Table
@@ -2481,6 +2513,7 @@
         const text = r.textContent.toLowerCase();
         const statusAttr = (r.getAttribute('data-order-status') || '').toLowerCase();
         const isCOD = r.getAttribute('data-is-cod') === 'true';
+        const isCODVerified = r.getAttribute('data-is-cod-verified') === 'true';
 
         let matchesFilter = true;
         if (window.currentOrderFilter === 'active') {
@@ -2492,7 +2525,7 @@
         } else if (window.currentOrderFilter === 'cancelled') {
           matchesFilter = statusAttr === 'cancelled';
         } else if (window.currentOrderFilter === 'cod') {
-          matchesFilter = isCOD && !statusAttr.includes('accepted');
+          matchesFilter = isCOD && !isCODVerified && statusAttr !== 'cancelled';
         }
 
         const matchesQuery = !query || text.includes(query);
