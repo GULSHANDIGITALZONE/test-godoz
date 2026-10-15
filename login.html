@@ -1053,8 +1053,11 @@
             <div style="display:flex; justify-content:space-between; font-size:0.88rem; margin-bottom:4px;">
               <span>Authentication:</span> <strong style="color:#16a34a;"><i class="fa-solid fa-shield-check"></i> Verified (Firestore)</strong>
             </div>
-            <div style="display:flex; justify-content:space-between; font-size:0.88rem;">
+            <div style="display:flex; justify-content:space-between; font-size:0.88rem; margin-bottom:4px;">
               <span>Developer Contact:</span> <a href="https://wa.me/919288521731" target="_blank" style="color:var(--primary); font-weight:700;">+91 92885 21731</a>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.84rem;">
+              <span>Support Hours:</span> <strong style="color:var(--text-main);">9:00 AM – 4:00 PM (Mon–Sat)</strong>
             </div>
           </div>
 
@@ -1120,6 +1123,15 @@
                 <i class="fa-solid fa-lock icon-prefix"></i>
                 <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required autocomplete="current-password">
               </div>
+
+              <!-- Dedicated Email Verification Alert & Resend Link directly below password box -->
+              <div id="emailVerifyNotice" style="display:none; margin-top:10px; padding:10px 12px; background:#fef2f2; border:1px solid #fecaca; border-radius:10px; font-size:0.84rem; color:#b91c1c;">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+                  <span><i class="fa-solid fa-circle-exclamation" style="color:#ef4444;"></i> Please verify email to activate account.</span>
+                  <a href="javascript:void(0)" id="btnResendVerification" style="color:#1d4ed8; font-weight:700; text-decoration:underline;">Resend link</a>
+                </div>
+                <div id="resendStatusText" style="margin-top:6px; font-size:0.8rem; color:#15803d; display:none; line-height:1.4;"></div>
+              </div>
             </div>
 
             <button type="submit" id="btnSubmitLogin" class="btn btn-primary" style="width:100%; padding:12px; font-size:1rem;">
@@ -1138,10 +1150,10 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label" for="regEmail">Email Address or Desired User ID</label>
+              <label class="form-label" for="regEmail">Email Address (For Verification Link)</label>
               <div class="form-input-wrap">
                 <i class="fa-solid fa-envelope icon-prefix"></i>
-                <input type="text" id="regEmail" class="form-input" placeholder="name@company.com or username" required autocomplete="username">
+                <input type="email" id="regEmail" class="form-input" placeholder="name@company.com or name@gmail.com" required autocomplete="email">
               </div>
             </div>
 
@@ -1230,7 +1242,7 @@
             <span style="color:#2788ff;">Go</span><span style="color:#ff6900;">Doz</span> Technology
           </div>
           <p style="margin:0 0 12px;">
-            Official Website: <a href="https://www.godoz.in" style="color:#38bdf8;">www.godoz.in</a> | Support: <a href="mailto:godoz.info@gmail.com" style="color:#38bdf8;">godoz.info@gmail.com</a> | WhatsApp: <a href="tel:+919288521731" style="color:#38bdf8;">+91 92885 21731</a>
+            Official Website: <a href="https://www.godoz.in" style="color:#38bdf8;">www.godoz.in</a> | Support: <a href="mailto:godoz.info@gmail.com" style="color:#38bdf8;">godoz.info@gmail.com</a> | WhatsApp: <a href="tel:+919288521731" style="color:#38bdf8;">+91 92885 21731</a> | Support Hours: <strong style="color:#fff;">9:00 AM – 4:00 PM (Mon – Sat)</strong>
           </p>
           <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:12px;">
             &copy; 2026 GoDoz Technology. Founded &amp; Architected by <strong>RS GULSHAN PRAJAPATI</strong>. All Rights Reserved.
@@ -1270,6 +1282,7 @@
       loginWithGoogle, 
       loginWithEmail, 
       registerWithEmail, 
+      resendVerificationLink,
       loginAsGuest,
       resetPassword, 
       logoutUser, 
@@ -1283,6 +1296,9 @@
     const userProfileView = document.getElementById('userProfileView');
     const authAlertError = document.getElementById('authAlertError');
     const authAlertSuccess = document.getElementById('authAlertSuccess');
+    const emailVerifyNotice = document.getElementById('emailVerifyNotice');
+    const btnResendVerification = document.getElementById('btnResendVerification');
+    const resendStatusText = document.getElementById('resendStatusText');
 
     // Left Drawer Navigation Handlers
     window.openMobileDrawer = function() {
@@ -1331,6 +1347,24 @@
       authAlertSuccess.style.display = 'none';
     }
 
+    function hideEmailVerifyNotice() {
+      if (emailVerifyNotice) emailVerifyNotice.style.display = 'none';
+      if (resendStatusText) resendStatusText.style.display = 'none';
+    }
+
+    function showEmailVerifyNotice(customStatusHtml = '') {
+      if (emailVerifyNotice) emailVerifyNotice.style.display = 'block';
+      if (resendStatusText) {
+        if (customStatusHtml) {
+          resendStatusText.style.display = 'block';
+          resendStatusText.style.color = '#15803d';
+          resendStatusText.innerHTML = customStatusHtml;
+        } else {
+          resendStatusText.style.display = 'none';
+        }
+      }
+    }
+
     async function handlePostLoginRedirect(user, preResolvedRole = null) {
       if (!user) return;
       let role = preResolvedRole;
@@ -1376,6 +1410,7 @@
     // Tabs switching
     tabSignInBtn.addEventListener('click', () => {
       clearAlerts();
+      hideEmailVerifyNotice();
       tabSignInBtn.classList.add('active');
       tabRegisterBtn.classList.remove('active');
       signInForm.style.display = 'block';
@@ -1384,6 +1419,7 @@
 
     tabRegisterBtn.addEventListener('click', () => {
       clearAlerts();
+      hideEmailVerifyNotice();
       tabRegisterBtn.classList.add('active');
       tabSignInBtn.classList.remove('active');
       registerForm.style.display = 'block';
@@ -1408,6 +1444,7 @@
     // Guest / Anonymous Sign-In
     btnGuestSignIn.addEventListener('click', async () => {
       clearAlerts();
+      hideEmailVerifyNotice();
       btnGuestSignIn.disabled = true;
       btnGuestSignIn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="color:var(--accent);"></i> <strong>Initializing Guest Session...</strong>';
       showAuthOverlay("Initializing Guest Access...", "Creating secure temporary guest session for client inquiries & quotes...");
@@ -1434,6 +1471,7 @@
     // Google Sign-In (High Visibility & Feedback on Mobile & Slow Networks)
     btnGoogleSignIn.addEventListener('click', async () => {
       clearAlerts();
+      hideEmailVerifyNotice();
       btnGoogleSignIn.disabled = true;
       btnGoogleSignIn.innerHTML = `
         <i class="fa-solid fa-spinner fa-spin" style="font-size:1.15rem; color:var(--primary);"></i>
@@ -1480,6 +1518,7 @@
     signInForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       clearAlerts();
+      hideEmailVerifyNotice();
       const email = document.getElementById('loginEmail').value.trim();
       const pass = document.getElementById('loginPassword').value;
       const btn = document.getElementById('btnSubmitLogin');
@@ -1490,11 +1529,17 @@
       
       try {
         const res = await loginWithEmail(email, pass);
+        hideAuthOverlay();
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In to Account';
+
         if (!res.success) {
-          hideAuthOverlay();
-          btn.disabled = false;
-          btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In to Account';
-          showError(res.error || "Invalid email or password.");
+          if (res.emailNotVerified) {
+            showEmailVerifyNotice();
+            showError("⚠️ Please verify your email before logging in. Check your inbox or click 'Resend link' below.");
+          } else {
+            showError(res.error || "Invalid email or password.");
+          }
         } else {
           showAuthOverlay("Sign-In Successful!", "Opening client portal...");
           await handlePostLoginRedirect(res.user, res.role);
@@ -1507,26 +1552,103 @@
       }
     });
 
+    // Resend Email Verification Link Handler
+    if (btnResendVerification) {
+      btnResendVerification.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim();
+        const pass = document.getElementById('loginPassword').value;
+
+        if (!email) {
+          showError("⚠️ Please enter your registered email address in the box above.");
+          return;
+        }
+
+        btnResendVerification.textContent = "Sending...";
+        btnResendVerification.style.pointerEvents = "none";
+        if (resendStatusText) {
+          resendStatusText.style.display = "block";
+          resendStatusText.style.color = "var(--text-muted)";
+          resendStatusText.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending fresh verification link...';
+        }
+
+        try {
+          const res = await resendVerificationLink(email, pass);
+          if (res.success) {
+            if (resendStatusText) {
+              resendStatusText.style.display = "block";
+              resendStatusText.style.color = "#15803d";
+              resendStatusText.innerHTML = `<i class="fa-solid fa-circle-check"></i> ✅ Verification link resent to <strong>${email}</strong>! Please check your inbox or spam folder.`;
+            }
+            btnResendVerification.textContent = "Sent!";
+            setTimeout(() => {
+              btnResendVerification.textContent = "Resend link";
+              btnResendVerification.style.pointerEvents = "auto";
+            }, 6000);
+          } else {
+            if (resendStatusText) {
+              resendStatusText.style.display = "block";
+              resendStatusText.style.color = "#dc2626";
+              resendStatusText.innerHTML = `⚠️ ${res.error || "Failed to resend. Please enter your password above."}`;
+            }
+            btnResendVerification.textContent = "Resend link";
+            btnResendVerification.style.pointerEvents = "auto";
+          }
+        } catch (err) {
+          if (resendStatusText) {
+            resendStatusText.style.display = "block";
+            resendStatusText.style.color = "#dc2626";
+            resendStatusText.textContent = `⚠️ Error: ${err.message || "Could not resend link."}`;
+          }
+          btnResendVerification.textContent = "Resend link";
+          btnResendVerification.style.pointerEvents = "auto";
+        }
+      });
+    }
+
     // Email Register
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       clearAlerts();
+      hideEmailVerifyNotice();
       const name = document.getElementById('regName').value.trim();
       const email = document.getElementById('regEmail').value.trim();
       const pass = document.getElementById('regPassword').value;
       const btn = document.getElementById('btnSubmitRegister');
+
+      if (!email || !email.includes('@')) {
+        showError("⚠️ Please provide a valid email address (e.g. name@gmail.com) so we can send your verification link.");
+        return;
+      }
       
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating Account on Firestore...';
-      showAuthOverlay("Creating Account...", "Registering client profile and configuring security rules on Cloud Firestore...");
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending verification link...';
+      showAuthOverlay("Creating Account...", "Sending official verification link to your registered email...");
       
       try {
         const res = await registerWithEmail(name, email, pass);
+        hideAuthOverlay();
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Free Account';
+
         if (!res.success) {
-          hideAuthOverlay();
-          btn.disabled = false;
-          btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Free Account';
           showError(res.error || "Failed to register account.");
+        } else if (res.needsEmailVerification) {
+          // Switch to sign in tab smoothly
+          tabSignInBtn.classList.add('active');
+          tabRegisterBtn.classList.remove('active');
+          signInForm.style.display = 'block';
+          registerForm.style.display = 'none';
+
+          // Pre-fill email and clear password
+          const loginEmailEl = document.getElementById('loginEmail');
+          if (loginEmailEl) loginEmailEl.value = email;
+          const loginPassEl = document.getElementById('loginPassword');
+          if (loginPassEl) loginPassEl.value = '';
+
+          // Display notice box directly below password field
+          showEmailVerifyNotice('<i class="fa-solid fa-paper-plane"></i> Verification link sent to <strong>' + email + '</strong>! Please check your inbox or spam folder.');
+          showSuccess(`🎉 Account created for <strong>${email}</strong>!<br>📧 An activation link has been sent to your email. Please click the link to activate your account before logging in.`);
         } else {
           showAuthOverlay("Account Created Successfully!", "Welcome to GoDoz! Redirecting to your dashboard...");
           await handlePostLoginRedirect(res.user, res.role);

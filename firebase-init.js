@@ -12,6 +12,7 @@ import {
   createUserWithEmailAndPassword, 
   signInAnonymously,
   sendPasswordResetEmail,
+  sendEmailVerification,
   updateProfile,
   signOut 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -802,6 +803,9 @@ export async function loginWithGoogle() {
   }
 }
 
+// Reference to recently created/unverified user instance for immediate verification resends
+let lastUnverifiedUser = null;
+
 export async function loginWithEmail(emailOrUser, password) {
   try {
     let email = emailOrUser.trim();
@@ -809,11 +813,28 @@ export async function loginWithEmail(emailOrUser, password) {
       email = email.toLowerCase().replace(/\s+/g, '') + '@godoz.in';
     }
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    await syncUserProfile(userCredential.user);
-    const role = await getUserRole(userCredential.user);
+    const user = userCredential.user;
+    const isMgr = await isUserManager(user);
+    const isAdm = isMgr || (await isUserAdmin(user, true));
+
+    // If client email is not verified, do NOT activate login session (Managers & Admins exempt)
+    if (!user.emailVerified && !isAdm) {
+      lastUnverifiedUser = user;
+      await signOut(auth); // Sign out so unverified user cannot access dashboard
+      return { 
+        success: false, 
+        emailNotVerified: true, 
+        email: user.email, 
+        error: "Please verify your email address before logging in." 
+      };
+    }
+
+    lastUnverifiedUser = null;
+    await syncUserProfile(user);
+    const role = await getUserRole(user);
     return { 
       success: true, 
-      user: userCredential.user, 
+      user: user, 
       role: role, 
       isAdmin: (role === 'admin' || role === 'manager'), 
       isManager: (role === 'manager') 
@@ -831,34 +852,88 @@ export async function registerWithEmail(name, emailOrUser, password) {
       'info', 'service', 'developer', 'rsgulshan', 'gulshan'
     ];
     let email = emailOrUser.trim();
-    let checkPrefix = '';
     
     if (!email.includes('@')) {
-      checkPrefix = email.toLowerCase().replace(/\s+/g, '');
-      email = checkPrefix + '@godoz.in';
-    } else if (email.toLowerCase().endsWith('@godoz.in')) {
+      return { 
+        success: false, 
+        error: 'Please enter a valid email address (e.g. name@gmail.com) so we can send your verification link.' 
+      };
+    }
+
+    let checkPrefix = '';
+    if (email.toLowerCase().endsWith('@godoz.in')) {
       checkPrefix = email.toLowerCase().split('@')[0];
     }
     
     if (checkPrefix && reservedUsernames.includes(checkPrefix)) {
       return { 
         success: false, 
-        error: 'This username / official prefix is reserved. Please use your personal email address or select another username.' 
+        error: 'This username / official prefix is reserved. Please use your personal email address.' 
       };
     }
 
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
     if (name && auth.currentUser) {
       await updateProfile(auth.currentUser, { displayName: name });
     }
-    await syncUserProfile(userCredential.user, { name });
-    const role = await getUserRole(userCredential.user);
+    await syncUserProfile(user, { name });
+
+    // Send Firebase Email Verification link
+    await sendEmailVerification(user);
+    lastUnverifiedUser = user;
+
+    // Sign out user immediately so account remains inactive until the link is clicked
+    await signOut(auth);
+
+    const role = await getUserRole(user);
     return { 
       success: true, 
-      user: userCredential.user, 
-      role: role, 
-      isAdmin: (role === 'admin' || role === 'manager'), 
-      isManager: (role === 'manager') 
+      user: user,
+      role: role,
+      isAdmin: (role === 'admin' || role === 'manager'),
+      isManager: (role === 'manager'),
+      needsEmailVerification: true,
+      email: email,
+      message: 'Account created! A verification link has been sent to your email. Please click the link to activate your account.' 
+    };
+  } catch (error) {
+    return { success: false, error: error.message, code: error.code };
+  }
+}
+
+export async function resendVerificationLink(emailOrUser = '', password = '') {
+  try {
+    let cleanEmail = (emailOrUser || '').trim();
+    let targetUser = auth.currentUser || lastUnverifiedUser;
+
+    // Case 1: Active in-memory session or cached unverified user matches email
+    if (targetUser && (!cleanEmail || (targetUser.email && targetUser.email.toLowerCase() === cleanEmail.toLowerCase()))) {
+      await sendEmailVerification(targetUser);
+      if (!targetUser.emailVerified) {
+        await signOut(auth);
+      }
+      return { success: true };
+    }
+
+    // Case 2: User provided email and password in the login form
+    if (cleanEmail && password) {
+      if (!cleanEmail.includes('@')) {
+        cleanEmail = cleanEmail.toLowerCase().replace(/\s+/g, '') + '@godoz.in';
+      }
+      const cred = await signInWithEmailAndPassword(auth, cleanEmail, password);
+      lastUnverifiedUser = cred.user;
+      await sendEmailVerification(cred.user);
+      if (!cred.user.emailVerified) {
+        await signOut(auth);
+      }
+      return { success: true };
+    }
+
+    return { 
+      success: false, 
+      error: "Please enter your password above and click 'Resend link' again." 
     };
   } catch (error) {
     return { success: false, error: error.message, code: error.code };
@@ -910,6 +985,14 @@ export async function logoutUser() {
 export function subscribeToAuth(callback) {
   return onAuthStateChanged(auth, async (user) => {
     if (user) {
+      const isMgr = await isUserManager(user);
+      const isAdm = isMgr || (await isUserAdmin(user, true));
+      // Require email verification unless anonymous guest or verified admin/manager
+      if (!user.emailVerified && !user.isAnonymous && !isAdm) {
+        callback(null);
+        return;
+      }
+
       const role = await getUserRole(user);
       user.role = role;
       user.isAdmin = (role === 'admin' || role === 'manager');
@@ -922,13 +1005,14 @@ export function subscribeToAuth(callback) {
           localStorage.removeItem('godoz_admin_role');
         }
       } catch(e) {}
+      callback(user);
     } else {
       try {
         localStorage.removeItem('godoz_user_role');
         localStorage.removeItem('godoz_admin_role');
       } catch(e) {}
+      callback(null);
     }
-    callback(user);
   });
 }
 
@@ -1422,15 +1506,25 @@ if (typeof window !== 'undefined') {
     db,
     logoutUser,
     subscribeToAuth,
+    resendVerificationLink,
     isUserAdmin,
     isUserManager,
     getUserRole
   };
   window.logoutUser = logoutUser;
+  window.resendVerificationLink = resendVerificationLink;
 
   // Global Auth State Observer to keep Navbar and Drawer menus dynamically in sync
   onAuthStateChanged(auth, async (user) => {
+    let isValidSession = false;
+    let isAdm = false;
     if (user) {
+      const isMgr = await isUserManager(user);
+      isAdm = isMgr || (await isUserAdmin(user, true));
+      isValidSession = user.emailVerified || user.isAnonymous || isAdm;
+    }
+
+    if (user && isValidSession) {
       let userRole = 'client';
       try {
         userRole = await getUserRole(user);
