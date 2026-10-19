@@ -1,119 +1,168 @@
 <!DOCTYPE html>
-<html lang="hi" data-theme="light">
+<html lang="en" data-theme="light">
 <head>
   <!-- Google AdSense -->
   <meta name="google-adsense-account" content="ca-pub-4514064358809691">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4514064358809691" crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact Us &amp; Live Support Hub | GoDoz Technology</title>
-  <meta name="description" content="Contact GoDoz Technology (RS GULSHAN PRAJAPATI) for custom Android apps, modern web development, or technical support. Send real-time messages or track live admin replies.">
-  <link rel="shortcut icon" href="./official logo.png" type="image/x-icon">
+  <title>Contact App - Modern Web Dashboard &amp; GoDoz Support</title>
 
-  <!-- Fonts & FontAwesome Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="shortcut icon" href="./contact_godoz.png" type="image/x-icon">
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
 
-  <!-- Main Stylesheet -->
+  <!-- GoDoz Website Stylesheet -->
   <link rel="stylesheet" href="./style.css">
 
   <style>
-    .contact-spa-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 24px 16px 80px;
+    :root {
+      --primary: #4F46E5;
+      --primary-hover: #4338CA;
+      --primary-light: #EEF2FF;
+      --secondary: #0EA5E9;
+      --secondary-light: #E0F2FE;
+      --tertiary: #F43F5E;
+      --card-bg: var(--bg-surface, #FFFFFF);
+      --border: var(--border-color, #E2E8F0);
+      --success: #10B981;
+      --success-bg: #ECFDF5;
+      --warning: #F59E0B;
+      --warning-bg: #FFFBEB;
+      --danger: #EF4444;
+      --shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.08), 0 4px 10px -2px rgba(0,0,0,0.03);
+      --radius: 20px;
     }
-    .contact-card {
-      background: var(--bg-surface, #ffffff);
-      border: 1.5px solid var(--border-color, #e2e8f0);
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: var(--shadow-sm);
-      margin-bottom: 24px;
-      transition: all 0.25s ease;
+
+    /* User Profile Badge */
+    .user-badge {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--primary-light); padding: 6px 14px; border-radius: 30px;
+      font-size: 14px; font-weight: 700; color: var(--primary);
     }
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
+    .user-badge img { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--primary); }
+
+    /* Container & Layout */
+    .contact-app-container { max-width: 1040px; margin: 24px auto 80px; padding: 0 16px; }
+    .nav-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    .tab-btn {
+      background: var(--bg-surface-alt, #F1F5F9); border: 1px solid var(--border); font-size: 15px; font-weight: 700;
+      color: var(--text-muted); padding: 10px 18px; cursor: pointer; border-radius: 12px; transition: all 0.2s;
     }
-    @media (max-width: 868px) {
-      .contact-grid {
-        grid-template-columns: 1fr;
-      }
+    .tab-btn.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+
+    /* Status Banner */
+    .banner {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px 24px; margin-bottom: 24px;
+      box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between;
     }
-    .nav-tabs-spa {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 24px;
-      overflow-x: auto;
-      padding-bottom: 6px;
+    .banner-info { display: flex; align-items: center; gap: 16px; }
+    .banner-icon {
+      width: 48px; height: 48px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
     }
-    .tab-btn-spa {
-      padding: 12px 20px;
-      border-radius: 12px;
-      border: 1.5px solid var(--border-color, #cbd5e1);
-      background: var(--bg-surface, #ffffff);
-      color: var(--text-main, #0f172a);
-      font-weight: 700;
-      font-size: 0.92rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-      font-family: inherit;
+    .banner-icon.logged-in { background: #DCFCE7; color: var(--success); }
+    .banner-icon.logged-out { background: #E0F2FE; color: var(--secondary); }
+
+    /* Cards & Forms */
+    .card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 26px; margin-bottom: 24px;
+      box-shadow: var(--shadow);
     }
-    .tab-btn-spa:hover {
-      background: var(--bg-surface-alt, #f8fafc);
-      border-color: var(--primary, #1266e8);
-      color: var(--primary, #1266e8);
+    .card-title { font-size: 18px; font-weight: 800; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; color: var(--text-main); }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; }
+    .form-control {
+      width: 100%; padding: 13px 18px; border: 1.5px solid var(--border);
+      border-radius: 14px; font-size: 14px; outline: none; transition: border-color 0.2s; background: var(--bg-surface-alt, #FAFAFC); color: var(--text-main);
     }
-    .tab-btn-spa.active {
-      background: var(--primary, #1266e8) !important;
-      color: #ffffff !important;
-      border-color: var(--primary, #1266e8) !important;
-      box-shadow: 0 4px 14px rgba(18, 102, 232, 0.3);
+    .form-control:focus { border-color: var(--primary); background: var(--bg-surface, #FFFFFF); }
+    textarea.form-control { resize: vertical; min-height: 110px; }
+
+    /* Message Item Card */
+    .msg-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 16px; padding: 22px; margin-bottom: 18px;
+      box-shadow: 0 4px 10px -2px rgba(0,0,0,0.03); transition: transform 0.2s, box-shadow 0.2s;
     }
+    .msg-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .msg-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+    .msg-author { font-weight: 800; font-size: 16px; color: var(--text-main); }
+    .msg-email { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+    .msg-date { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+    /* Status Pills */
+    .pill { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; }
+    .pill-logged { background: #E0E7FF; color: var(--primary); }
+    .pill-guest { background: #F1F5F9; color: var(--text-muted); }
+    .pill-replied { background: var(--success-bg); color: var(--success); }
+    .pill-pending { background: var(--warning-bg); color: var(--warning); }
+
+    /* Reply Box & Action Box */
+    .reply-box {
+      background: var(--primary-light); border-radius: 14px; padding: 16px; margin-top: 16px;
+      border-left: 4px solid var(--primary);
+    }
+    .reply-title { font-size: 12px; font-weight: 800; color: var(--primary); margin-bottom: 6px; }
+    .action-box {
+      background: #FEF3C7; border-radius: 14px; padding: 16px; margin-top: 16px;
+      border-left: 4px solid var(--warning);
+    }
+
+    /* Expandable Text & Copy */
+    .text-expandable {
+      max-height: 25em; line-height: 1.5; overflow: hidden; position: relative; transition: max-height 0.3s ease;
+    }
+    .text-expandable.expanded {
+      max-height: none !important;
+    }
+    .btn-toggle-expand {
+      background: none; border: none; color: var(--primary); font-size: 12px; font-weight: 800; cursor: pointer; padding: 4px 0; margin-top: 4px; display: inline-flex; align-items: center; gap: 4px;
+    }
+
+    /* Stats Overview Row */
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px;
+      padding: 18px 22px; text-align: center; box-shadow: var(--shadow);
+    }
+    .stat-val { font-size: 24px; font-weight: 800; color: var(--primary); }
+    .stat-lbl { font-size: 12px; font-weight: 700; color: var(--text-muted); margin-top: 2px; }
+
+    /* WhatsApp Chat Bubbles */
     .chat-bubble-user {
-      background: rgba(18, 102, 232, 0.08);
-      border: 1px solid rgba(18, 102, 232, 0.2);
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 12px;
+      align-self: flex-start; background: var(--bg-surface, #FFFFFF); border: 1px solid var(--border);
+      border-radius: 16px 16px 16px 4px; padding: 14px; max-width: 80%; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
     .chat-bubble-admin {
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-top: 10px;
+      align-self: flex-end; background: var(--primary-light); border: 1px solid #C7D2FE;
+      border-radius: 16px 16px 4px 16px; padding: 14px; max-width: 80%; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
-    .msg-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 800;
-      text-transform: uppercase;
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(6px);
+      display: none; align-items: center; justify-content: center; z-index: 1000;
     }
-    .msg-badge-pending {
-      background: rgba(245, 158, 11, 0.15);
-      color: #d97706;
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--bg-surface, #ffffff); border-radius: var(--radius); padding: 28px;
+      width: 100%; max-width: 520px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     }
-    .msg-badge-replied {
-      background: rgba(16, 185, 129, 0.15);
-      color: #059669;
+
+    /* Toast Notification */
+    #toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background: #0F172A; color: white; padding: 14px 24px; border-radius: 14px;
+      font-size: 14px; font-weight: 700; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 2000;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
     }
-    .msg-badge-guest {
-      background: rgba(100, 116, 139, 0.15);
-      color: #475569;
-    }
+    #toast.show { opacity: 1; }
   </style>
 </head>
 <body id="top">
@@ -126,22 +175,27 @@
 
       <!-- Left: Hamburger Toggle + Brand Logo -->
       <div class="navbar-left">
-        <button id="mobileMenuToggle" class="mobile-menu-toggle" aria-label="Toggle navigation menu" title="Open Navigation Menu" onclick="window.openLeftNav()">
+        <button id="mobileMenuToggle" class="mobile-menu-toggle" aria-label="Toggle Navigation Sidebar" title="Toggle Sidebar Navigation" onclick="window.toggleMobileDrawer()" style="display:inline-flex !important;">
           <i class="fa-solid fa-bars"></i>
         </button>
 
         <a href="./index.html" class="brand-logo-wrap" title="GoDoz Technology Home">
-          <img src="./official logo.png" alt="GoDoz Logo" class="brand-img" style="height:36px; width:auto; border-radius:8px; object-fit:contain;" onerror="this.src='./logo w bg.png'">
-          <span class="brand-text">
-            <span class="go">Go</span><span class="doz">Doz</span>
-          </span>
+          <img src="./official logo.png" alt="GoDoz Logo" class="brand-logo-img" style="height:36px; width:auto; max-height:36px; max-width:40px; border-radius:8px; object-fit:contain;" onerror="this.src='./logo w bg.png'">
+          <div>
+            <div style="font-size:1.35rem; font-weight:900; line-height:1; letter-spacing:-0.5px;">
+              <span style="color:var(--primary, #1266e8);">Go</span><span style="color:var(--accent, #ff6900);">Doz</span>
+            </div>
+            <div style="font-size:0.65rem; font-weight:700; color:var(--text-muted, #64748b); letter-spacing:0.8px; text-transform:uppercase;">
+              Technology
+            </div>
+          </div>
         </a>
       </div>
 
       <!-- Center: Desktop Navigation Links -->
       <nav class="desktop-nav-menu" aria-label="Main Navigation">
         <a href="./index.html" class="desktop-nav-link"><i class="fa-solid fa-house"></i> Home</a>
-        <a href="./index.html#services" class="desktop-nav-link"><i class="fa-solid fa-code"></i> Services</a>
+        <a href="./index.html#services" class="desktop-nav-link"><i class="fa-solid fa-laptop-code"></i> Services</a>
         <a href="./apps/index.html" class="desktop-nav-link"><i class="fa-solid fa-mobile-screen"></i> Apps Hub</a>
         <a href="./contact.html" class="desktop-nav-link active"><i class="fa-solid fa-comments"></i> Contact SPA</a>
         <a href="./help/index.html" class="desktop-nav-link"><i class="fa-solid fa-circle-question"></i> Help</a>
@@ -149,7 +203,7 @@
 
       <!-- Right Header Actions -->
       <div class="header-actions">
-        <button onclick="window.openTrackOrderModal()" class="btn btn-sm btn-outline header-btn-track" title="Track Order Status">
+        <button type="button" onclick="window.openTrackOrderModal()" class="btn btn-sm btn-outline header-btn-track" title="Track Order Status">
           <i class="fa-solid fa-magnifying-glass"></i> <span class="btn-text">Track Order</span>
         </button>
 
@@ -165,8 +219,8 @@
     </div>
   </header>
 
-  <!-- Backdrop for Mobile Drawer -->
-  <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="window.closeLeftNav()"></div>
+  <!-- Mobile Navigation Backdrop -->
+  <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="window.closeMobileDrawer()"></div>
 
   <!-- ========================================================================
        2. Layout Container (Sidebar + Main Content Area)
@@ -242,200 +296,154 @@
     <!-- Main Content Area -->
     <main class="app-main-content">
 
-      <!-- Page Banner -->
-      <section style="background: linear-gradient(135deg, var(--primary, #1266e8), #2563eb); color:#ffffff; padding: 36px 16px; text-align:center;">
-        <div style="max-width:800px; margin:0 auto;">
-          <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.15); padding:6px 14px; border-radius:30px; font-size:0.8rem; font-weight:800; text-transform:uppercase; margin-bottom:12px;">
-            <i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> Real-Time Contact &amp; Support SPA
+      <!-- Main Container (User's Exact Contact App Content) -->
+      <div class="contact-app-container">
+
+        <!-- View Navigation Tabs & Official Support Badges -->
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 24px; flex-wrap: wrap; gap: 14px;">
+          <div class="nav-tabs" style="border: none; padding: 0; margin: 0;">
+            <button type="button" class="tab-btn active" id="tabHome" onclick="switchMainTab('user')">
+              <i class="fa-solid fa-headset"></i> Contact Us
+            </button>
+            <button type="button" class="tab-btn" id="tabAdmin" style="display:none;" onclick="switchMainTab('admin')">
+              <i class="fa-solid fa-user-shield"></i> Admin Panel
+            </button>
           </div>
-          <h1 style="font-size:2rem; font-weight:800; margin-bottom:8px; color:#ffffff;">Connect with Developer &amp; Live Support</h1>
-          <p style="font-size:0.95rem; opacity:0.9; margin:0;">Send direct project inquiries, technical complaints, or chat in real-time with GoDoz Founder RS GULSHAN PRAJAPATI.</p>
-        </div>
-      </section>
 
-      <!-- Main SPA Container -->
-      <div class="contact-spa-container">
-
-        <!-- Navigation Sub-Tabs -->
-        <div class="nav-tabs-spa">
-          <button type="button" class="tab-btn-spa active" id="tabUserMessaging" onclick="switchSpaTab('messaging')">
-            <i class="fa-solid fa-paper-plane"></i> Send Message / Support
-          </button>
-          <button type="button" class="tab-btn-spa" id="tabUserHistory" onclick="switchSpaTab('history')">
-            <i class="fa-solid fa-clock-rotate-left"></i> My Messages &amp; Admin Replies <span id="myMsgBadge" class="msg-badge msg-badge-replied" style="display:none;">0</span>
-          </button>
-          <button type="button" class="tab-btn-spa" id="tabAdminPanel" style="display:none; background:#7c3aed; color:#fff;" onclick="switchSpaTab('admin')">
-            <i class="fa-solid fa-user-shield"></i> Admin Management Hub
-          </button>
+          <!-- Sleek Support Contact Badges -->
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;" id="navActions">
+            <a href="tel:+919288521731" style="display: inline-flex; align-items: center; gap: 8px; background: var(--primary-light); color: var(--primary); padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: 13px; text-decoration: none; border: 1px solid #C7D2FE; transition: transform 0.2s;">
+              <i class="fa-solid fa-phone"></i> Call +91 9288521731
+            </a>
+            <a href="mailto:godoz.info@gmail.com" style="display: inline-flex; align-items: center; gap: 8px; background: #E0F2FE; color: #0369A1; padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: 13px; text-decoration: none; border: 1px solid #BAE6FD; transition: transform 0.2s;">
+              <i class="fa-solid fa-envelope"></i> Email godoz.info@gmail.com
+            </a>
+          </div>
         </div>
 
-        <!-- SECTION 1: USER MESSAGE FORM -->
-        <div id="sectionMessaging" class="contact-grid">
+        <!-- USER SECTION -->
+        <div id="sectionUser">
+          <!-- Login Status Banner -->
+          <div class="banner">
+            <div class="banner-info">
+              <div class="banner-icon logged-out" id="statusIcon">
+                <i class="fa-solid fa-circle-info"></i>
+              </div>
+              <div>
+                <h4 id="statusTitle" style="font-weight: 800;">Guest Mode (Not Logged In)</h4>
+                <p id="statusDesc" style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+                  Messages are sent to GoDoz Support for review. Sign in with Google to receive real-time replies here.
+                </p>
+              </div>
+            </div>
+          </div>
 
-          <!-- Direct Inquiry Form Card -->
-          <div class="contact-card">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-              <h2 style="font-size:1.2rem; font-weight:800; margin:0; color:var(--text-main);">
-                <i class="fa-solid fa-envelope-open-text" style="color:var(--primary); margin-right:8px;"></i> Send Inquiry / Message
-              </h2>
-              <span id="authStatusPill" class="msg-badge msg-badge-guest">Guest Mode</span>
+          <!-- Message Form Card -->
+          <div class="card">
+            <div class="card-title">
+              <i class="fa-solid fa-pen-to-square" style="color: var(--primary);"></i> Send Message to GoDoz Support
             </div>
 
-            <form id="contactForm" onsubmit="handleSendContactMsg(event)">
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
-                <div>
-                  <label for="contactName" style="font-size:0.8rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Your Full Name *</label>
-                  <input type="text" id="contactName" required placeholder="e.g. Rahul Sharma" style="width:100%; padding:10px 12px; border:1.5px solid var(--border-color); border-radius:10px; background:var(--bg-surface-alt); color:var(--text-main); font-size:0.9rem; outline:none;">
-                </div>
-                <div>
-                  <label for="contactPhone" style="font-size:0.8rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Mobile / WhatsApp *</label>
-                  <input type="tel" id="contactPhone" required placeholder="e.g. 9288521731" style="width:100%; padding:10px 12px; border:1.5px solid var(--border-color); border-radius:10px; background:var(--bg-surface-alt); color:var(--text-main); font-size:0.9rem; outline:none;">
-                </div>
+            <div id="guestFields">
+              <div class="form-group">
+                <label for="guestName">Your Name * (Required)</label>
+                <input type="text" id="guestName" class="form-control" placeholder="e.g. Rahul Sharma">
               </div>
-
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
-                <div>
-                  <label for="contactEmail" style="font-size:0.8rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Email Address</label>
-                  <input type="email" id="contactEmail" placeholder="e.g. rahul@gmail.com" style="width:100%; padding:10px 12px; border:1.5px solid var(--border-color); border-radius:10px; background:var(--bg-surface-alt); color:var(--text-main); font-size:0.9rem; outline:none;">
-                </div>
-                <div>
-                  <label for="contactCategory" style="font-size:0.8rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Inquiry Category</label>
-                  <select id="contactCategory" style="width:100%; padding:10px 12px; border:1.5px solid var(--border-color); border-radius:10px; background:var(--bg-surface-alt); color:var(--text-main); font-size:0.9rem; outline:none;">
-                    <option value="Android App Development">Android App Development</option>
-                    <option value="Website / Web App Build">Website / Web App Build</option>
-                    <option value="Cost Estimation Inquiry">Cost Estimation Inquiry</option>
-                    <option value="Existing Project Support">Existing Project Support</option>
-                    <option value="Other Technical Query">Other Technical Query</option>
-                  </select>
-                </div>
+              <div class="form-group">
+                <label for="guestEmail">Email / Contact Info (Optional)</label>
+                <input type="text" id="guestEmail" class="form-control" placeholder="e.g. rahul@domain.com or 9288521731">
               </div>
+            </div>
 
-              <div style="margin-bottom:12px;">
-                <label for="contactSubject" style="font-size:0.8rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Subject</label>
-                <input type="text" id="contactSubject" placeholder="Brief subject of your message..." style="width:100%; padding:10px 12px; border:1.5px solid var(--border-color); border-radius:10px; background:var(--bg-surface-alt); color:var(--text-main); font-size:0.9rem; outline:none;">
+            <div class="form-group">
+              <label for="msgContent">Message Content *</label>
+              <textarea id="msgContent" class="form-control" placeholder="Write your message or inquiry here..."></textarea>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="submitMessage()" id="btnSubmitMsg">
+              <i class="fa-solid fa-paper-plane"></i> Send Message
+            </button>
+          </div>
+
+          <!-- My Sent Messages & Replies List -->
+          <div id="userRepliesContainer" style="display: none;">
+            <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 16px; color: var(--text-main);">
+              <i class="fa-solid fa-comments" style="color: var(--primary);"></i> My Messages &amp; Live Replies
+            </h3>
+            <div id="userMsgList">
+              <p style="color: var(--text-muted); font-size: 14px;">No messages sent yet.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADMIN SECTION -->
+        <div id="sectionAdmin" style="display: none;">
+          <div class="card" style="background: linear-gradient(135deg, #EEF2FF, #E0E7FF); border-color: #C7D2FE;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h3 style="color: var(--primary); font-size: 22px; font-weight: 800;">
+                  <i class="fa-solid fa-shield-halved"></i> Admin Management Dashboard
+                </h3>
+                <p style="font-size: 13px; color: #4338CA; margin-top: 4px; font-weight: 600;">
+                  WhatsApp-style customer chat management hub &amp; Phone Call Complaint logger.
+                </p>
               </div>
-
-              <div style="margin-bottom:16px;">
-                <label for="contactMessage" style="font-size:0.8rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Your Detailed Message *</label>
-                <textarea id="contactMessage" rows="4" required placeholder="Describe your project requirement or issue in detail..." style="width:100%; padding:10px 12px; border:1.5px solid var(--border-color); border-radius:10px; background:var(--bg-surface-alt); color:var(--text-main); font-size:0.9rem; outline:none; resize:vertical;"></textarea>
-              </div>
-
-              <button type="submit" id="btnSubmitContact" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px; font-weight:800; font-size:0.95rem;">
-                <i class="fa-solid fa-paper-plane"></i> Send Direct Message
+              <button type="button" class="btn btn-primary" onclick="openLogCallComplaintModal()">
+                <i class="fa-solid fa-phone-volume"></i> + Log Call Complaint
               </button>
-            </form>
-          </div>
-
-          <!-- Quick Contacts & Google Sign-In Banner Card -->
-          <div>
-            <div class="contact-card" style="background: linear-gradient(135deg, rgba(18,102,232,0.06), rgba(255,105,0,0.06));">
-              <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
-                <div style="width:42px; height:42px; border-radius:10px; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
-                  <i class="fa-solid fa-user-shield"></i>
-                </div>
-                <div>
-                  <h3 style="margin:0; font-size:1.05rem; font-weight:800; color:var(--text-main);">Live Reply Tracking</h3>
-                  <p style="margin:0; font-size:0.8rem; color:var(--text-muted);">Sign in with Google to receive live admin replies &amp; track message history.</p>
-                </div>
-              </div>
-
-              <div id="googleAuthSection">
-                <button type="button" onclick="handleGoogleSignInSPA()" class="btn btn-outline" style="width:100%; justify-content:center; border-color:var(--primary); color:var(--primary); font-weight:700; padding:10px;">
-                  <i class="fa-brands fa-google" style="color:#ea4335;"></i> Sign in with Google for Live Tracking
-                </button>
-              </div>
-
-              <div id="userLoggedInSection" style="display:none; padding:10px; background:var(--bg-surface); border-radius:10px; border:1px solid var(--border-color);">
-                <div style="display:flex; align-items:center; justify-content:space-between;">
-                  <div style="display:flex; align-items:center; gap:10px;">
-                    <img id="userAvatarImg" src="./official logo.png" alt="User Avatar" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
-                    <div>
-                      <div id="userDisplayName" style="font-weight:800; font-size:0.9rem; color:var(--text-main);">User</div>
-                      <div id="userEmailText" style="font-size:0.75rem; color:var(--text-muted);">user@gmail.com</div>
-                    </div>
-                  </div>
-                  <button type="button" onclick="handleSignOutSPA()" class="btn btn-sm btn-outline" style="color:#ef4444; border-color:#ef4444;">
-                    <i class="fa-solid fa-right-from-bracket"></i> Logout
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Direct Contact Channels -->
-            <div class="contact-card">
-              <h3 style="font-size:1.05rem; font-weight:800; margin:0 0 16px; color:var(--text-main);">
-                <i class="fa-solid fa-address-card" style="color:var(--primary); margin-right:8px;"></i> Direct Contact Channels
-              </h3>
-
-              <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20need%20assistance." target="_blank" style="display:flex; align-items:center; gap:12px; text-decoration:none; padding:12px; border-radius:10px; background:rgba(37,211,102,0.1); border:1px solid rgba(37,211,102,0.3); margin-bottom:10px; color:#15803d;">
-                <i class="fa-brands fa-whatsapp" style="font-size:1.4rem;"></i>
-                <div>
-                  <div style="font-weight:800; font-size:0.9rem;">WhatsApp Chat</div>
-                  <div style="font-size:0.78rem;">+91 9288521731 (Instant Reply)</div>
-                </div>
-              </a>
-
-              <a href="mailto:godoz.info@gmail.com" style="display:flex; align-items:center; gap:12px; text-decoration:none; padding:12px; border-radius:10px; background:rgba(18,102,232,0.08); border:1px solid rgba(18,102,232,0.2); margin-bottom:10px; color:var(--primary);">
-                <i class="fa-solid fa-envelope" style="font-size:1.3rem;"></i>
-                <div>
-                  <div style="font-weight:800; font-size:0.9rem;">Official Email</div>
-                  <div style="font-size:0.78rem;">godoz.info@gmail.com</div>
-                </div>
-              </a>
-
-              <div style="display:flex; align-items:center; gap:12px; padding:12px; border-radius:10px; background:var(--bg-surface-alt); border:1px solid var(--border-color); color:var(--text-main);">
-                <i class="fa-solid fa-location-dot" style="font-size:1.3rem; color:var(--accent);"></i>
-                <div>
-                  <div style="font-weight:800; font-size:0.9rem;">GoDoz Headquarters</div>
-                  <div style="font-size:0.78rem; color:var(--text-muted);">Sheikhpura, Bihar, India</div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-        <!-- SECTION 2: MY MESSAGES & ADMIN REPLIES HISTORY -->
-        <div id="sectionHistory" style="display:none;" class="contact-card">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-            <h2 style="font-size:1.2rem; font-weight:800; margin:0; color:var(--text-main);">
-              <i class="fa-solid fa-comments" style="color:var(--primary); margin-right:8px;"></i> Message History &amp; Live Replies
-            </h2>
-            <button type="button" onclick="refreshUserMessages()" class="btn btn-sm btn-outline"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
-          </div>
-
-          <div id="userMsgFeed">
-            <p style="text-align:center; color:var(--text-muted); padding:30px;">Loading your message history...</p>
-          </div>
-        </div>
-
-        <!-- SECTION 3: ADMIN MANAGEMENT PANEL (AUTOLOCKED FOR ADMINS) -->
-        <div id="sectionAdmin" style="display:none;" class="contact-card">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
-            <h2 style="font-size:1.2rem; font-weight:800; margin:0; color:#7c3aed;">
-              <i class="fa-solid fa-shield-halved"></i> GoDoz Support Admin Control Panel
-            </h2>
-            <div style="display:flex; gap:8px;">
-              <button type="button" onclick="filterAdminView('all')" id="adminSubAll" class="btn btn-sm btn-primary">All Messages</button>
-              <button type="button" onclick="filterAdminView('pending')" id="adminSubPending" class="btn btn-sm btn-outline">Pending</button>
-              <button type="button" onclick="filterAdminView('admins')" id="adminSubAdmins" class="btn btn-sm btn-outline">Manage Admins</button>
             </div>
           </div>
 
-          <!-- Admin Messages Stream -->
-          <div id="adminMsgContainer">
-            <p style="text-align:center; color:var(--text-muted); padding:30px;">Loading live admin messages stream...</p>
+          <!-- Stats Row -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-val" id="statTotal">0</div>
+              <div class="stat-lbl">User Chats</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val" style="color: var(--primary);" id="statLogged">0</div>
+              <div class="stat-lbl">Logged-In Users</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val" style="color: var(--secondary);" id="statGuest">0</div>
+              <div class="stat-lbl">Guest Users</div>
+            </div>
           </div>
 
-          <!-- Manage Admins Section -->
-          <div id="adminManageSection" style="display:none; margin-top:20px; border-top:1px solid var(--border-color); padding-top:16px;">
-            <h3 style="font-size:1rem; font-weight:800; margin-bottom:12px; color:var(--text-main);">Authorized Firestore Admin Emails</h3>
-            <div style="display:flex; gap:10px; margin-bottom:16px;">
-              <input type="email" id="newAdminEmail" placeholder="e.g. admin@gmail.com" style="flex:1; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--bg-surface-alt); outline:none;">
-              <button type="button" onclick="addAdminEmailSPA()" class="btn btn-sm btn-primary"><i class="fa-solid fa-plus"></i> Add Admin</button>
+          <!-- Admin Sub Tabs & Search -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+            <div class="nav-tabs" style="border: none; padding: 0; margin: 0;">
+              <button type="button" class="tab-btn active" id="adminSubAll" onclick="filterAdminView('all')">All Chats</button>
+              <button type="button" class="tab-btn" id="adminSubLogged" onclick="filterAdminView('logged')">Logged In</button>
+              <button type="button" class="tab-btn" id="adminSubGuest" onclick="filterAdminView('guest')">Guests</button>
+              <button type="button" class="tab-btn" id="adminSubAdmins" onclick="filterAdminView('admins')">Manage Admins</button>
             </div>
-            <div id="adminListContainer">Loading admin emails...</div>
+
+            <input type="text" id="adminSearch" class="form-control" style="max-width: 280px;" placeholder="Search user name or email..." oninput="renderAdminMessages()">
+          </div>
+
+          <!-- Messages Stream for Admin -->
+          <div id="adminMsgList">
+            <p style="color: var(--text-muted);">Loading user chats...</p>
+          </div>
+
+          <!-- Manage Admins Panel -->
+          <div id="adminEmailsPanel" style="display: none;">
+            <div class="card">
+              <div class="card-title"><i class="fa-solid fa-user-plus" style="color: var(--primary);"></i> Add Authorized Admin Email</div>
+              <div class="form-group">
+                <label for="newAdminEmail">Admin Email Address</label>
+                <input type="email" id="newAdminEmail" class="form-control" placeholder="e.g. admin@gmail.com">
+              </div>
+              <button type="button" class="btn btn-primary" onclick="addNewAdminEmail()">
+                <i class="fa-solid fa-plus"></i> Add Admin Email
+              </button>
+            </div>
+
+            <div class="card">
+              <div class="card-title"><i class="fa-solid fa-users-gear"></i> Current Authorized Admins in Firestore</div>
+              <div id="adminList">Loading admins...</div>
+            </div>
           </div>
         </div>
 
@@ -452,320 +460,863 @@
     </main>
   </div>
 
-  <!-- Toast Container -->
-  <div id="toastContainer" style="position:fixed; bottom:80px; right:20px; z-index:10000;"></div>
+  <!-- LOG CALL COMPLAINT MODAL FOR ADMIN -->
+  <div class="modal-overlay" id="logComplaintModal">
+    <div class="modal" style="max-width: 520px; width: 95%; max-height: 88vh; overflow-y: auto;">
+      <h3 style="margin-bottom: 12px; font-weight: 800; color: var(--primary);">
+        <i class="fa-solid fa-phone-volume"></i> Log Phone Call Complaint
+      </h3>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+        Record a phone call complaint and automatically link it to the user's account for future login.
+      </p>
 
-  <!-- Master Script -->
+      <div class="form-group">
+        <label for="logName">User Name *</label>
+        <input type="text" id="logName" class="form-control" placeholder="e.g. Rahul Kumar">
+      </div>
+
+      <div class="form-group">
+        <label for="logEmail">User Email Address (At least 1 contact required)</label>
+        <input type="email" id="logEmail" class="form-control" placeholder="e.g. rahul@gmail.com">
+      </div>
+
+      <div class="form-group">
+        <label for="logPhone">User Phone Number (At least 1 contact required)</label>
+        <input type="text" id="logPhone" class="form-control" placeholder="e.g. 9876543210">
+      </div>
+
+      <div class="form-group">
+        <label for="logComplaint">Call Complaint / Inquiry Details *</label>
+        <textarea id="logComplaint" class="form-control" placeholder="Type complaint details..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="logReply">Admin Resolution / Reply (Optional)</label>
+        <textarea id="logReply" class="form-control" style="min-height: 70px;" placeholder="Type resolution or reply..."></textarea>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button type="button" class="btn btn-outline" onclick="closeModal('logComplaintModal')">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="confirmSaveCallComplaint()"><i class="fa-solid fa-floppy-disk"></i> Save &amp; Link Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHATSAPP CHAT DETAIL MODAL FOR ADMIN -->
+  <div class="modal-overlay" id="chatModal">
+    <div class="modal" style="max-width: 680px; width: 95%; max-height: 88vh; display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 12px; cursor: pointer;" onclick="openAdminUserProfileModal()">
+          <button type="button" class="btn btn-outline btn-sm" onclick="event.stopPropagation(); closeModal('chatModal')"><i class="fa-solid fa-arrow-left"></i> Back</button>
+          <div>
+            <h3 id="chatModalUserName" style="font-weight: 800; font-size: 16px; margin: 0;">User Chat</h3>
+            <p id="chatModalUserEmail" style="font-size: 12px; color: var(--text-muted); margin: 0;"></p>
+          </div>
+        </div>
+        <span id="chatModalUserBadge" class="pill pill-logged">LOGGED IN</span>
+      </div>
+
+      <div id="chatFeed" style="flex: 1; overflow-y: auto; padding: 14px; background: #F1F5F9; border-radius: 16px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 14px;">
+        <!-- Chat bubbles rendered dynamically -->
+      </div>
+
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <textarea id="chatReplyInput" class="form-control" style="min-height: 48px; height: 48px; padding: 10px 14px;" placeholder="Type reply to user..."></textarea>
+        <button type="button" class="btn btn-primary" onclick="sendChatModalReply()" style="height: 48px; padding: 0 20px;">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- USER CONTACT PROFILE MODAL IN WEB ADMIN -->
+  <div class="modal-overlay" id="userProfileModal">
+    <div class="modal" style="max-width: 480px; width: 95%;">
+      <div style="text-align: center; margin-bottom: 18px;">
+        <div style="width: 70px; height: 70px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 12px; border: 2px solid var(--primary);">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <h3 id="profileModalName" style="font-weight: 800; font-size: 18px;">User Profile</h3>
+        <p id="profileModalEmail" style="font-size: 13px; color: var(--text-muted); margin-top: 2px;"></p>
+        <p id="profileModalPhone" style="font-size: 13px; font-weight: 700; color: var(--primary); margin-top: 4px;"></p>
+      </div>
+
+      <div id="profileModalActions" style="display: flex; flex-direction: column; gap: 10px;">
+        <!-- Dynamic Call & WhatsApp buttons -->
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 18px;">
+        <button type="button" class="btn btn-outline" onclick="closeModal('userProfileModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast"></div>
+
+  <!-- GoDoz Master Script -->
   <script src="./script.js"></script>
 
-  <!-- Firebase Auth & Firestore Direct Module -->
+  <!-- Firebase v10 SDK Scripts (User's Exact Firebase Logic & Firestore System) -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import {
+      getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import {
+      getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, deleteDoc,
+      onSnapshot, query, where, orderBy, getDocs
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Firebase Config (godoz-official)
+    // Firebase Config (Matches user's Firebase Web project config)
     const firebaseConfig = {
-      apiKey: "AIzaSyD-godoz-official-key-live",
+      apiKey: "AIzaSyABHJz_4ERnwrT_uB3BgBz-BD_3JZjlVNE",
       authDomain: "godoz-official.firebaseapp.com",
       projectId: "godoz-official",
-      storageBucket: "godoz-official.appspot.com",
-      messagingSenderId: "103984029384",
-      appId: "1:103984029384:web:98f1234abc567"
+      storageBucket: "godoz-official.firebasestorage.app",
+      messagingSenderId: "977883022920",
+      appId: "1:977883022920:web:3cc3e9bce8c6324edb3a7d",
+      measurementId: "G-QKH3K4HV8P"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Global State Variables
     window.currentUser = null;
-    window.isAdmin = false;
-    let userMsgUnsub = null;
-    let adminMsgUnsub = null;
+    window.isAdminUser = false;
+    window.allMessagesData = [];
+    window.activeChatThreadMessages = [];
+    window.activeChatTargetMsgId = null;
+    window.activeChatThreadObject = null;
 
-    // Toast Alert Helper
-    function showToast(msg, isError = false) {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      toast.style.cssText = `background:${isError ? '#ef4444' : '#10b981'}; color:#fff; padding:12px 18px; border-radius:10px; font-weight:700; font-size:0.88rem; box-shadow:0 10px 25px rgba(0,0,0,0.2); margin-top:8px; display:flex; align-items:center; gap:8px;`;
-      toast.innerHTML = `<i class="fa-solid ${isError ? 'fa-triangle-exclamation' : 'fa-circle-check'}"></i> ${msg}`;
-      container.appendChild(toast);
-      setTimeout(() => toast.remove(), 4000);
-    }
+    let userMessagesUnsub = null;
+    let allMessagesUnsub = null;
+    let adminEmailsUnsub = null;
 
-    // Check Admin Status in Firestore
-    async function checkIsAdmin(email) {
+    // Initialize Auth Listener (Automatic Global Sync with Header & Sidebar)
+    onAuthStateChanged(auth, async (user) => {
+      window.currentUser = user;
+      updateHeaderUI();
+      updateUserBannerUI();
+
+      if (user) {
+        try {
+          localStorage.setItem('godoz_auth_logged_in', 'true');
+          localStorage.setItem('godoz_auth_uid', user.uid);
+          localStorage.setItem('godoz_auth_email', user.email || '');
+          localStorage.setItem('godoz_auth_name', user.displayName || '');
+          if (user.photoURL) localStorage.setItem('godoz_user_avatar', user.photoURL);
+        } catch(e) {}
+
+        if (typeof window.updateNavAuthStatus === 'function') {
+          window.updateNavAuthStatus(true, user);
+        }
+
+        window.isAdminUser = await checkIfAdmin(user.email);
+        document.getElementById('tabAdmin').style.display = window.isAdminUser ? 'inline-block' : 'none';
+
+        listenUserMessages(user.uid);
+
+        if (window.isAdminUser) {
+          listenAllMessagesForAdmin();
+          listenAdminEmails();
+        }
+      } else {
+        try {
+          localStorage.setItem('godoz_auth_logged_in', 'false');
+        } catch(e) {}
+
+        if (typeof window.updateNavAuthStatus === 'function') {
+          window.updateNavAuthStatus(false);
+        }
+
+        window.isAdminUser = false;
+        document.getElementById('tabAdmin').style.display = 'none';
+        document.getElementById('userRepliesContainer').style.display = 'none';
+        if (userMessagesUnsub) userMessagesUnsub();
+      }
+    });
+
+    async function checkIfAdmin(email) {
       if (!email) return false;
       const cleanEmail = email.toLowerCase().trim();
-      if (cleanEmail === 'godoz.app@gmail.com' || cleanEmail === 'godoz.info@gmail.com') return true;
+
       try {
-        const snap = await getDoc(doc(db, "admins", cleanEmail));
-        return snap.exists();
+        const docRef = doc(db, "admins", cleanEmail);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) return true;
+
+        const q = query(collection(db, "admins"), where("email", "==", cleanEmail));
+        const snap = await getDocs(q);
+        return !snap.empty;
       } catch (e) {
+        console.error("Error checking admin status", e);
         return false;
       }
     }
 
-    // Auth State Changed Listener
-    onAuthStateChanged(auth, async (user) => {
-      window.currentUser = user;
-      const googleSection = document.getElementById('googleAuthSection');
-      const userLoggedInSection = document.getElementById('userLoggedInSection');
-      const authStatusPill = document.getElementById('authStatusPill');
-
-      if (user) {
-        googleSection.style.display = 'none';
-        userLoggedInSection.style.display = 'block';
-        document.getElementById('userDisplayName').innerText = user.displayName || 'User';
-        document.getElementById('userEmailText').innerText = user.email || '';
-        document.getElementById('userAvatarImg').src = user.photoURL || './official logo.png';
-
-        authStatusPill.className = 'msg-badge msg-badge-replied';
-        authStatusPill.innerText = 'Logged In Mode';
-
-        // Pre-fill form
-        if (user.displayName) document.getElementById('contactName').value = user.displayName;
-        if (user.email) document.getElementById('contactEmail').value = user.email;
-
-        // Check if Admin
-        window.isAdmin = await checkIsAdmin(user.email);
-        document.getElementById('tabAdminPanel').style.display = window.isAdmin ? 'inline-flex' : 'none';
-
-        if (window.isAdmin) {
-          listenAdminMessages();
-          listenAdminList();
-        }
-
-        listenUserMessages(user);
-      } else {
-        googleSection.style.display = 'block';
-        userLoggedInSection.style.display = 'none';
-        authStatusPill.className = 'msg-badge msg-badge-guest';
-        authStatusPill.innerText = 'Guest Mode';
-        document.getElementById('tabAdminPanel').style.display = 'none';
-        if (userMsgUnsub) userMsgUnsub();
+    // Check redirect sign in result
+    getRedirectResult(auth).then((res) => {
+      if (res && res.user) {
+        showToast(`Welcome ${res.user.displayName || 'User'}!`);
       }
+    }).catch((e) => {
+      console.error("Redirect sign in error", e);
     });
 
-    // Google Sign-In SPA
-    window.handleGoogleSignInSPA = async function() {
-      try {
-        const provider = new GoogleAuthProvider();
-        await signInWithPopup(auth, provider);
-        showToast("Signed in with Google successfully!");
-      } catch (err) {
-        showToast("Sign in failed: " + err.message, true);
+    window.handleGoogleAuth = async function() {
+      if (window.currentUser) {
+        await signOut(auth);
+        showToast("Logged out successfully");
+      } else {
+        const btn = document.getElementById('btnGoogleAuth');
+        if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Signing in...';
+        showToast("Signing in with Google...");
+        try {
+          const provider = new GoogleAuthProvider();
+          provider.setCustomParameters({ prompt: 'select_account' });
+          const res = await signInWithPopup(auth, provider);
+          showToast(`Welcome ${res.user.displayName || 'User'}!`);
+        } catch (e) {
+          if (e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user') {
+            try {
+              const provider = new GoogleAuthProvider();
+              await signInWithRedirect(auth, provider);
+            } catch (err) {
+              showToast(`Sign in error: ${err.message}`);
+            }
+          } else {
+            showToast(`Sign in error: ${e.message}`);
+          }
+        } finally {
+          updateHeaderUI();
+        }
       }
     };
 
-    window.handleSignOutSPA = async function() {
-      await signOut(auth);
-      showToast("Signed out.");
+    function updateHeaderUI() {
+      const navActions = document.getElementById('navActions');
+      if (!navActions) return;
+      if (window.currentUser) {
+        navActions.innerHTML = `
+          <div class="user-badge">
+            <img src="${window.currentUser.photoURL || 'https://via.placeholder.com/30'}" alt="User">
+            <span>${window.currentUser.displayName || window.currentUser.email}</span>
+          </div>
+        `;
+      } else {
+        navActions.innerHTML = `
+          <a href="tel:+919288521731" style="display: inline-flex; align-items: center; gap: 8px; background: var(--primary-light); color: var(--primary); padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: 13px; text-decoration: none; border: 1px solid #C7D2FE; transition: transform 0.2s;">
+            <i class="fa-solid fa-phone"></i> Call +91 9288521731
+          </a>
+          <a href="mailto:godoz.info@gmail.com" style="display: inline-flex; align-items: center; gap: 8px; background: #E0F2FE; color: #0369A1; padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: 13px; text-decoration: none; border: 1px solid #BAE6FD; transition: transform 0.2s;">
+            <i class="fa-solid fa-envelope"></i> Email godoz.info@gmail.com
+          </a>
+        `;
+      }
+    }
+
+    function updateUserBannerUI() {
+      const guestNameInput = document.getElementById('guestName');
+      const guestEmailInput = document.getElementById('guestEmail');
+      const statusIcon = document.getElementById('statusIcon');
+      const statusTitle = document.getElementById('statusTitle');
+      const statusDesc = document.getElementById('statusDesc');
+
+      if (!guestNameInput || !statusTitle) return;
+
+      if (window.currentUser) {
+        guestNameInput.value = window.currentUser.displayName || 'Google User';
+        guestNameInput.disabled = true;
+        guestEmailInput.value = window.currentUser.email || '';
+        guestEmailInput.disabled = true;
+
+        statusIcon.className = 'banner-icon logged-in';
+        statusIcon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+        statusTitle.innerText = `Logged in as ${window.currentUser.displayName || window.currentUser.email}`;
+        statusDesc.innerText = '✅ You will receive replies from GoDoz Support in real-time below.';
+      } else {
+        guestNameInput.value = '';
+        guestNameInput.disabled = false;
+        guestEmailInput.value = '';
+        guestEmailInput.disabled = false;
+
+        statusIcon.className = 'banner-icon logged-out';
+        statusIcon.innerHTML = '<i class="fa-solid fa-circle-info"></i>';
+        statusTitle.innerText = 'Guest Mode (Not Logged In)';
+        statusDesc.innerText = 'Messages are sent to GoDoz Support for review. Sign in with Google to receive real-time replies here.';
+      }
+    }
+
+    window.submitMessage = async function() {
+      const content = document.getElementById('msgContent').value.trim();
+      if (!content) { showToast("Message cannot be empty!"); return; }
+
+      const isLoggedIn = !!window.currentUser;
+      const guestName = document.getElementById('guestName').value.trim();
+      const guestEmail = document.getElementById('guestEmail').value.trim();
+
+      if (!isLoggedIn && !guestName) {
+        showToast("Your Name is required!");
+        document.getElementById('guestName').focus();
+        return;
+      }
+
+      const newMsg = {
+        senderUid: isLoggedIn ? window.currentUser.uid : null,
+        senderName: isLoggedIn ? (window.currentUser.displayName || "User") : guestName,
+        senderEmail: isLoggedIn ? window.currentUser.email : (guestEmail || null),
+        senderPhone: guestEmail && guestEmail.match(/\d{10}/) ? guestEmail : null,
+        senderPhotoUrl: isLoggedIn ? window.currentUser.photoURL : null,
+        messageText: content,
+        isLoggedIn: isLoggedIn,
+        timestamp: Date.now(),
+        replyText: null,
+        repliedAt: null,
+        status: "pending",
+        adminNotes: null
+      };
+
+      try {
+        const newDocRef = doc(collection(db, "messages"));
+        newMsg.id = newDocRef.id;
+        await setDoc(newDocRef, newMsg);
+
+        document.getElementById('msgContent').value = '';
+        if (!isLoggedIn) {
+          document.getElementById('guestName').value = '';
+          document.getElementById('guestEmail').value = '';
+        }
+
+        showToast(isLoggedIn ? "Message sent! GoDoz Support will reply here." : "Message sent as Guest! Admin will review your message.");
+      } catch (e) {
+        showToast(`Failed to send: ${e.message}`);
+      }
     };
 
-    // Tab Switcher
-    window.switchSpaTab = function(tab) {
-      document.querySelectorAll('.tab-btn-spa').forEach(btn => btn.classList.remove('active'));
-      document.getElementById('sectionMessaging').style.display = 'none';
-      document.getElementById('sectionHistory').style.display = 'none';
-      document.getElementById('sectionAdmin').style.display = 'none';
+    window.openLogCallComplaintModal = function() {
+      document.getElementById('logName').value = '';
+      document.getElementById('logEmail').value = '';
+      document.getElementById('logPhone').value = '';
+      document.getElementById('logComplaint').value = '';
+      document.getElementById('logReply').value = '';
+      document.getElementById('logComplaintModal').classList.add('active');
+    };
 
-      if (tab === 'messaging') {
-        document.getElementById('tabUserMessaging').classList.add('active');
-        document.getElementById('sectionMessaging').style.display = 'grid';
-      } else if (tab === 'history') {
-        document.getElementById('tabUserHistory').classList.add('active');
-        document.getElementById('sectionHistory').style.display = 'block';
-      } else if (tab === 'admin') {
-        document.getElementById('tabAdminPanel').classList.add('active');
+    window.confirmSaveCallComplaint = async function() {
+      const name = document.getElementById('logName').value.trim();
+      const email = document.getElementById('logEmail').value.trim().toLowerCase();
+      const phone = document.getElementById('logPhone').value.trim();
+      const complaint = document.getElementById('logComplaint').value.trim();
+      const reply = document.getElementById('logReply').value.trim();
+
+      const contact = email || phone;
+
+      if (!name || !contact || !complaint) {
+        showToast("Fill Name, Complaint, and at least Email OR Phone!");
+        return;
+      }
+
+      const digits = phone.replace(/\D/g, '');
+      const isPhone = digits.length >= 10 || !email;
+
+      try {
+        let targetUid = isPhone ? `phone_${digits.slice(-10)}` : `user_${email.replace(/[^a-zA-Z0-9]/g, '')}`;
+        let targetEmail = email || `${digits}@phone.user`;
+        let targetPhone = phone || null;
+
+        await setDoc(doc(db, "registered_users", targetUid), {
+          uid: targetUid,
+          email: targetEmail,
+          displayName: name,
+          phoneNumber: targetPhone || "",
+          phoneDigits: digits.length >= 10 ? digits.slice(-10) : "",
+          createdAt: Date.now()
+        }, { merge: true });
+
+        const newDocRef = doc(collection(db, "messages"));
+        await setDoc(newDocRef, {
+          id: newDocRef.id,
+          senderUid: targetUid,
+          senderName: name,
+          senderEmail: targetEmail,
+          senderPhone: targetPhone,
+          messageText: `📞 [Call Complaint Logged by Admin]:\n${complaint}`,
+          isLoggedIn: true,
+          timestamp: Date.now(),
+          replyText: reply || null,
+          repliedAt: reply ? Date.now() : null,
+          status: reply ? "replied" : "pending",
+          adminNotes: "Logged via Web Admin Support"
+        });
+
+        closeModal('logComplaintModal');
+        showToast(`Call complaint logged & linked for ${name}!`);
+
+        if (email && email.includes('@')) {
+          const subject = encodeURIComponent("[Contact App] Your Phone Call Complaint Has Been Logged");
+          const body = encodeURIComponent(`Hello ${name},\n\nYour call complaint has been logged by Admin.\n\nComplaint: ${complaint}\nResolution/Reply: ${reply || 'Under Review'}\n\nLogin to Contact App to track live updates.`);
+          window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank');
+        }
+      } catch (e) {
+        showToast(`Error saving complaint: ${e.message}`);
+      }
+    };
+
+    function requestWebNotificationPermission() {
+      if ("Notification" in window && Notification.permission === "default") {
+        Notification.requestPermission();
+      }
+    }
+
+    function sendWebNotification(title, body) {
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification(title, { body: body, icon: "https://cdn-icons-png.flaticon.com/512/732/732200.png" });
+      }
+    }
+
+    window.copyToClipboard = function(text) {
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Copied to clipboard!");
+      }).catch(() => {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        showToast("Copied to clipboard!");
+      });
+    };
+
+    window.toggleExpandText = function(btn) {
+      const container = btn.previousElementSibling;
+      if (container.classList.contains('expanded')) {
+        container.classList.remove('expanded');
+        btn.innerHTML = 'Show More... <i class="fa-solid fa-chevron-down"></i>';
+      } else {
+        container.classList.add('expanded');
+        btn.innerHTML = 'Show Less <i class="fa-solid fa-chevron-up"></i>';
+      }
+    };
+
+    let prevRepliedCountWeb = -1;
+    function listenUserMessages(uid) {
+      requestWebNotificationPermission();
+      document.getElementById('userRepliesContainer').style.display = 'block';
+      const q = query(collection(db, "messages"), where("senderUid", "==", uid));
+
+      userMessagesUnsub = onSnapshot(q, (snapshot) => {
+        const msgs = snapshot.docs.map(doc => doc.data()).sort((a,b) => b.timestamp - a.timestamp);
+
+        const currentReplied = msgs.filter(m => m.replyText && m.replyText.trim() !== "").length;
+        if (prevRepliedCountWeb !== -1 && currentReplied > prevRepliedCountWeb) {
+          sendWebNotification("💬 Admin Replied!", "Admin has replied to your message. Click to view.");
+        }
+        prevRepliedCountWeb = currentReplied;
+
+        renderUserMessages(msgs);
+      });
+    }
+
+    function renderUserMessages(msgs) {
+      const container = document.getElementById('userMsgList');
+
+      const welcomeHtml = `
+        <div class="msg-card" style="background: var(--primary-light); border-color: #C7D2FE;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; color: var(--primary); font-weight: 800;">
+            <i class="fa-solid fa-shield-halved"></i> Godoz Official Support (godoz.info@gmail.com | +91 928852 1731)
+          </div>
+          <p style="font-size: 14px; font-weight: 600; color: #312E81;">
+            👋 Welcome to Godoz Support (godoz.info@gmail.com | +91 92885 21731)!<br>How can we help you today? Send a message below and our official team will reply in real-time.
+          </p>
+        </div>
+      `;
+
+      if (msgs.length === 0) {
+        container.innerHTML = welcomeHtml + '<p style="color: var(--text-muted); font-size: 13px;">No messages sent yet. Type your message below to start chatting!</p>';
+        return;
+      }
+
+      container.innerHTML = welcomeHtml + msgs.map(m => {
+        const dateStr = new Date(m.timestamp).toLocaleString();
+        const isReplied = m.replyText && m.replyText.trim() !== "";
+        const lineCount = (m.messageText || '').split('\n').length;
+        const isLongMsg = lineCount > 25 || (m.messageText || '').length > 1000;
+
+        return `
+          <div class="msg-card">
+            <div class="msg-header">
+              <span class="msg-date"><i class="fa-regular fa-clock"></i> ${dateStr}</span>
+              <span class="pill ${isReplied ? 'pill-replied' : 'pill-pending'}">
+                <i class="fa-solid ${isReplied ? 'fa-check-circle' : 'fa-hourglass-half'}"></i>
+                ${isReplied ? 'Replied by Godoz Support' : 'Pending Reply'}
+              </span>
+            </div>
+
+            <div class="text-expandable">
+              <p style="font-weight: 700; font-size: 15px; white-space: pre-wrap;">${escapeHtml(m.messageText)}</p>
+            </div>
+            ${isLongMsg ? `
+              <button type="button" class="btn-toggle-expand" onclick="toggleExpandText(this)">
+                Show More... <i class="fa-solid fa-chevron-down"></i>
+              </button>
+            ` : ''}
+
+            <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+              <button type="button" class="btn btn-outline btn-sm" onclick="copyToClipboard(\`${escapeJsString(m.messageText)}\`)">
+                <i class="fa-regular fa-copy"></i> Copy Message
+              </button>
+            </div>
+
+            ${isReplied ? `
+              <div class="reply-box">
+                <div class="reply-title"><i class="fa-solid fa-shield-halved"></i> Godoz Support (godoz.info@gmail.com) • ${new Date(m.repliedAt).toLocaleTimeString()}</div>
+                <div class="text-expandable">
+                  <p style="font-size: 14px; color: var(--text-main); font-weight: 600; white-space: pre-wrap;">${escapeHtml(m.replyText)}</p>
+                </div>
+                ${(m.replyText || '').split('\n').length > 25 || (m.replyText || '').length > 1000 ? `
+                  <button type="button" class="btn-toggle-expand" onclick="toggleExpandText(this)">
+                    Show More... <i class="fa-solid fa-chevron-down"></i>
+                  </button>
+                ` : ''}
+                <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+                  <button type="button" class="btn btn-outline btn-sm" onclick="copyToClipboard(\`${escapeJsString(m.replyText)}\`)">
+                    <i class="fa-regular fa-copy"></i> Copy Reply
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    let prevAllMsgsCountWeb = -1;
+    function listenAllMessagesForAdmin() {
+      requestWebNotificationPermission();
+      const q = query(collection(db, "messages"), orderBy("timestamp", "desc"));
+      allMessagesUnsub = onSnapshot(q, (snapshot) => {
+        window.allMessagesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        if (prevAllMsgsCountWeb !== -1 && window.allMessagesData.length > prevAllMsgsCountWeb) {
+          const latest = window.allMessagesData[0];
+          sendWebNotification("📩 New Message Received!", `From ${latest.senderName || 'Guest'}: ${latest.messageText || ''}`);
+        }
+        prevAllMsgsCountWeb = window.allMessagesData.length;
+
+        updateStats();
+        renderAdminMessages();
+      });
+    }
+
+    function groupMessagesByThread() {
+      const groups = {};
+      window.allMessagesData.forEach(m => {
+        const key = m.senderUid || (m.senderEmail ? m.senderEmail.toLowerCase().trim() : (m.senderName ? m.senderName.toLowerCase().trim() : 'guest'));
+        if (!groups[key]) {
+          groups[key] = {
+            threadKey: key,
+            senderName: m.senderName || 'Guest',
+            senderEmail: m.senderEmail || null,
+            senderPhone: m.senderPhone || null,
+            senderPhotoUrl: m.senderPhotoUrl || null,
+            isLoggedIn: m.isLoggedIn,
+            messages: []
+          };
+        }
+        if (!groups[key].senderPhone && m.senderPhone) {
+          groups[key].senderPhone = m.senderPhone;
+        }
+        groups[key].messages.push(m);
+      });
+
+      return Object.values(groups).map(g => {
+        g.messages.sort((a,b) => a.timestamp - b.timestamp);
+        g.latestMessage = g.messages[g.messages.length - 1];
+        g.pendingCount = g.messages.filter(m => !m.replyText && !m.adminNotes).length;
+        if (!g.senderPhone) {
+          const msgWithPhone = g.messages.find(m => m.senderPhone);
+          if (msgWithPhone) g.senderPhone = msgWithPhone.senderPhone;
+        }
+        return g;
+      }).sort((a,b) => b.latestMessage.timestamp - a.latestMessage.timestamp);
+    }
+
+    function updateStats() {
+      const threads = groupMessagesByThread();
+      const total = threads.length;
+      const logged = threads.filter(t => t.isLoggedIn).length;
+      const guest = total - logged;
+
+      document.getElementById('statTotal').innerText = total;
+      document.getElementById('statLogged').innerText = logged;
+      document.getElementById('statGuest').innerText = guest;
+    }
+
+    window.filterAdminSubTab = 'all';
+    window.filterAdminView = function(tab) {
+      window.filterAdminSubTab = tab;
+      document.querySelectorAll('#sectionAdmin .nav-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+
+      if (tab === 'all') document.getElementById('adminSubAll').classList.add('active');
+      if (tab === 'logged') document.getElementById('adminSubLogged').classList.add('active');
+      if (tab === 'guest') document.getElementById('adminSubGuest').classList.add('active');
+      if (tab === 'admins') document.getElementById('adminSubAdmins').classList.add('active');
+
+      if (tab === 'admins') {
+        document.getElementById('adminMsgList').style.display = 'none';
+        document.getElementById('adminEmailsPanel').style.display = 'block';
+      } else {
+        document.getElementById('adminMsgList').style.display = 'block';
+        document.getElementById('adminEmailsPanel').style.display = 'none';
+        renderAdminMessages();
+      }
+    };
+
+    window.renderAdminMessages = function() {
+      const search = (document.getElementById('adminSearch').value || '').toLowerCase();
+      const container = document.getElementById('adminMsgList');
+      const threads = groupMessagesByThread();
+
+      let filtered = threads.filter(t => {
+        if (window.filterAdminSubTab === 'logged') return t.isLoggedIn;
+        if (window.filterAdminSubTab === 'guest') return !t.isLoggedIn;
+        return true;
+      });
+
+      if (search) {
+        filtered = filtered.filter(t =>
+          (t.senderName && t.senderName.toLowerCase().includes(search)) ||
+          (t.senderEmail && t.senderEmail.toLowerCase().includes(search)) ||
+          t.messages.some(m => m.messageText && m.messageText.toLowerCase().includes(search))
+        );
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="card"><p style="color: var(--text-muted); text-align: center; font-weight: 600;">No chat conversations found.</p></div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(t => {
+        const dateStr = new Date(t.latestMessage.timestamp).toLocaleString();
+        return `
+          <div class="msg-card" onclick="openWhatsAppChatModal('${t.threadKey}')" style="cursor: pointer;">
+            <div class="msg-header">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="${t.senderPhotoUrl || 'https://via.placeholder.com/40'}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
+                <div>
+                  <div class="msg-author">${escapeHtml(t.senderName)}</div>
+                  ${t.senderEmail ? `<div class="msg-email">${escapeHtml(t.senderEmail)}</div>` : ''}
+                </div>
+              </div>
+              <span class="pill ${t.isLoggedIn ? 'pill-logged' : 'pill-guest'}">
+                ${t.isLoggedIn ? '<i class="fa-solid fa-user-check"></i> LOGGED IN' : '<i class="fa-solid fa-user-secret"></i> GUEST'}
+              </span>
+            </div>
+
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;"><i class="fa-regular fa-clock"></i> ${dateStr}</p>
+            <p style="font-size: 14px; font-weight: 600; color: var(--text-main); text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+              ${escapeHtml(t.latestMessage.messageText)}
+            </p>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+              ${t.pendingCount > 0 ? `
+                <span class="pill pill-pending"><i class="fa-solid fa-envelope"></i> ${t.pendingCount} New Messages</span>
+              ` : `
+                <span class="pill pill-replied"><i class="fa-solid fa-check-double"></i> Replied</span>
+              `}
+              <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-comments"></i> Open Chat (${t.messages.length})</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    window.openWhatsAppChatModal = function(threadKey) {
+      const threads = groupMessagesByThread();
+      const thread = threads.find(t => t.threadKey === threadKey);
+      if (!thread) return;
+
+      window.activeChatThreadMessages = thread.messages;
+      window.activeChatTargetMsgId = thread.latestMessage.id;
+      window.activeChatThreadObject = thread;
+
+      document.getElementById('chatModalUserName').innerText = thread.senderName;
+      document.getElementById('chatModalUserEmail').innerText = thread.senderEmail || (thread.isLoggedIn ? 'Logged In User' : 'Guest User');
+      document.getElementById('chatModalUserBadge').className = thread.isLoggedIn ? 'pill pill-logged' : 'pill pill-guest';
+      document.getElementById('chatModalUserBadge').innerText = thread.isLoggedIn ? 'LOGGED IN' : 'GUEST';
+
+      const feed = document.getElementById('chatFeed');
+      feed.innerHTML = thread.messages.map(m => {
+        const timeStr = new Date(m.timestamp).toLocaleString();
+        return `
+          <div class="chat-bubble-user">
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 700;">
+              ${escapeHtml(m.senderName)} • ${timeStr}
+            </div>
+            <p style="font-size: 14px; font-weight: 600; white-space: pre-wrap;">${escapeHtml(m.messageText)}</p>
+            <div style="margin-top: 6px; text-align: right;">
+              <button type="button" class="btn btn-outline btn-sm" style="padding: 2px 8px; font-size: 10px;" onclick="copyToClipboard(\`${escapeJsString(m.messageText)}\`)"><i class="fa-regular fa-copy"></i> Copy</button>
+            </div>
+          </div>
+
+          ${m.replyText ? `
+            <div class="chat-bubble-admin">
+              <div style="font-size: 11px; color: var(--primary); margin-bottom: 4px; font-weight: 800;">
+                <i class="fa-solid fa-reply"></i> Admin Reply • ${m.repliedAt ? new Date(m.repliedAt).toLocaleTimeString() : ''}
+              </div>
+              <p style="font-size: 14px; font-weight: 600; white-space: pre-wrap;">${escapeHtml(m.replyText)}</p>
+              <div style="margin-top: 6px; text-align: right;">
+                <button type="button" class="btn btn-outline btn-sm" style="padding: 2px 8px; font-size: 10px;" onclick="copyToClipboard(\`${escapeJsString(m.replyText)}\`)"><i class="fa-regular fa-copy"></i> Copy</button>
+              </div>
+            </div>
+          ` : ''}
+
+          ${m.adminNotes ? `
+            <div class="chat-bubble-admin" style="background: #FEF3C7; border-color: #FCD34D;">
+              <div style="font-size: 11px; color: #B45309; margin-bottom: 4px; font-weight: 800;">
+                <i class="fa-solid fa-clipboard-check"></i> Action Notes
+              </div>
+              <p style="font-size: 13px; font-weight: 600; white-space: pre-wrap;">${escapeHtml(m.adminNotes)}</p>
+            </div>
+          ` : ''}
+        `;
+      }).join('');
+
+      document.getElementById('chatReplyInput').value = '';
+      document.getElementById('chatModal').classList.add('active');
+      feed.scrollTop = feed.scrollHeight;
+    };
+
+    window.openAdminUserProfileModal = function() {
+      const t = window.activeChatThreadObject;
+      if (!t) return;
+
+      document.getElementById('profileModalName').innerText = t.senderName;
+      document.getElementById('profileModalEmail').innerText = t.senderEmail ? `Email: ${t.senderEmail}` : 'Email: Not Provided';
+
+      const phone = t.senderPhone || (t.senderEmail && t.senderEmail.match(/\d{10}/) ? t.senderEmail : null);
+      document.getElementById('profileModalPhone').innerText = phone ? `Phone: ${phone}` : 'Phone: Not Provided';
+
+      const actionsDiv = document.getElementById('profileModalActions');
+      if (phone) {
+        const cleanDigits = phone.replace(/\D/g, '');
+        actionsDiv.innerHTML = `
+          <a href="tel:${phone}" class="btn btn-primary" style="justify-content: center; text-decoration: none;">
+            <i class="fa-solid fa-phone"></i> Call User Direct
+          </a>
+          <a href="https://api.whatsapp.com/send?phone=${cleanDigits}" target="_blank" class="btn btn-outline" style="justify-content: center; text-decoration: none;">
+            <i class="fa-brands fa-whatsapp"></i> Open in WhatsApp
+          </a>
+        `;
+      } else {
+        actionsDiv.innerHTML = `
+          <p style="color: var(--text-muted); font-size: 13px; text-align: center; font-weight: 600;">Phone Number: Not Provided by User</p>
+        `;
+      }
+
+      document.getElementById('userProfileModal').classList.add('active');
+    };
+
+    window.sendChatModalReply = async function() {
+      const reply = document.getElementById('chatReplyInput').value.trim();
+      if (!reply) { showToast("Type a reply first!"); return; }
+
+      try {
+        await updateDoc(doc(db, "messages", window.activeChatTargetMsgId), {
+          replyText: reply,
+          repliedAt: Date.now(),
+          status: "replied"
+        });
+        document.getElementById('chatReplyInput').value = '';
+        closeModal('chatModal');
+        showToast("Reply sent to user!");
+      } catch (e) {
+        showToast(`Failed: ${e.message}`);
+      }
+    };
+
+    window.closeModal = function(id) {
+      document.getElementById(id).classList.remove('active');
+    };
+
+    function listenAdminEmails() {
+      adminEmailsUnsub = onSnapshot(collection(db, "admins"), (snapshot) => {
+        const list = snapshot.docs.map(d => d.data());
+        renderAdminEmailList(list);
+      });
+    }
+
+    function renderAdminEmailList(admins) {
+      const container = document.getElementById('adminList');
+      if (admins.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-muted); font-size: 13px; font-weight: 600;">No custom admins in Firestore yet.</p>';
+        return;
+      }
+      container.innerHTML = admins.map(a => `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border);">
+          <div>
+            <strong style="font-size: 15px;">${escapeHtml(a.email)}</strong>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Added by ${escapeHtml(a.addedBy || 'system')}</div>
+          </div>
+          <span class="pill pill-replied"><i class="fa-solid fa-user-shield"></i> Active Admin</span>
+        </div>
+      `).join('');
+    }
+
+    window.addNewAdminEmail = async function() {
+      const email = document.getElementById('newAdminEmail').value.trim().toLowerCase();
+      if (!email) { showToast("Enter a valid email"); return; }
+
+      try {
+        await setDoc(doc(db, "admins", email), {
+          email: email,
+          addedAt: Date.now(),
+          addedBy: window.currentUser ? window.currentUser.email : "system"
+        });
+        document.getElementById('newAdminEmail').value = '';
+        showToast(`${email} added as Admin!`);
+      } catch (e) {
+        showToast(`Error adding admin: ${e.message}`);
+      }
+    };
+
+    window.switchMainTab = function(tab) {
+      document.getElementById('tabHome').classList.remove('active');
+      document.getElementById('tabAdmin').classList.remove('active');
+
+      if (tab === 'user') {
+        document.getElementById('tabHome').classList.add('active');
+        document.getElementById('sectionUser').style.display = 'block';
+        document.getElementById('sectionAdmin').style.display = 'none';
+      } else {
+        document.getElementById('tabAdmin').classList.add('active');
+        document.getElementById('sectionUser').style.display = 'none';
         document.getElementById('sectionAdmin').style.display = 'block';
       }
     };
 
-    // Send Message
-    window.handleSendContactMsg = async function(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnSubmitContact');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
-
-      const name = document.getElementById('contactName').value.trim();
-      const phone = document.getElementById('contactPhone').value.trim();
-      const email = document.getElementById('contactEmail').value.trim();
-      const category = document.getElementById('contactCategory').value;
-      const subject = document.getElementById('contactSubject').value.trim();
-      const message = document.getElementById('contactMessage').value.trim();
-
-      try {
-        await addDoc(collection(db, "messages"), {
-          senderName: name,
-          senderPhone: phone,
-          senderEmail: email,
-          category: category,
-          subject: subject,
-          message: message,
-          isLoggedIn: !!window.currentUser,
-          senderUid: window.currentUser ? window.currentUser.uid : null,
-          createdAt: Date.now(),
-          timestamp: new Date().toISOString(),
-          replyText: null,
-          repliedAt: null,
-          adminNotes: null
-        });
-
-        showToast("Message sent successfully! Developer will review shortly.");
-        document.getElementById('contactSubject').value = '';
-        document.getElementById('contactMessage').value = '';
-        if (window.currentUser) window.switchSpaTab('history');
-      } catch (err) {
-        showToast("Error sending message: " + err.message, true);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Direct Message';
-      }
-    };
-
-    // Listen to User's Messages
-    function listenUserMessages(user) {
-      const q = query(collection(db, "messages"), where("senderEmail", "==", user.email));
-      userMsgUnsub = onSnapshot(q, (snapshot) => {
-        const msgs = [];
-        snapshot.forEach(doc => msgs.push({ id: doc.id, ...doc.data() }));
-        msgs.sort((a,b) => b.createdAt - a.createdAt);
-        renderUserFeed(msgs);
-      });
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    function renderUserFeed(msgs) {
-      const feed = document.getElementById('userMsgFeed');
-      const badge = document.getElementById('myMsgBadge');
-      badge.style.display = 'inline-flex';
-      badge.innerText = msgs.length;
-
-      if (msgs.length === 0) {
-        feed.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">No messages sent yet. Send an inquiry above!</p>';
-        return;
-      }
-
-      feed.innerHTML = msgs.map(m => `
-        <div class="chat-bubble-user">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <div style="font-weight:800; font-size:0.95rem; color:var(--text-main);">${m.subject || m.category}</div>
-            <span class="msg-badge ${m.replyText ? 'msg-badge-replied' : 'msg-badge-pending'}">
-              ${m.replyText ? '<i class="fa-solid fa-check-double"></i> Replied' : '<i class="fa-solid fa-clock"></i> Pending'}
-            </span>
-          </div>
-          <p style="font-size:0.88rem; margin:0 0 8px; color:var(--text-main);">${m.message}</p>
-          <div style="font-size:0.75rem; color:var(--text-muted);">${new Date(m.createdAt).toLocaleString()}</div>
-
-          ${m.replyText ? `
-            <div class="chat-bubble-admin">
-              <div style="font-weight:800; font-size:0.85rem; color:#059669; margin-bottom:4px;">
-                <i class="fa-solid fa-reply"></i> Admin Reply:
-              </div>
-              <p style="font-size:0.88rem; margin:0; color:var(--text-main);">${m.replyText}</p>
-            </div>
-          ` : ''}
-        </div>
-      `).join('');
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
 
-    // Admin Listeners
-    function listenAdminMessages() {
-      const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
-      adminMsgUnsub = onSnapshot(q, (snapshot) => {
-        const msgs = [];
-        snapshot.forEach(doc => msgs.push({ id: doc.id, ...doc.data() }));
-        renderAdminFeed(msgs);
-      });
+    function escapeJsString(str) {
+      if (!str) return '';
+      return str.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\${/g, '\\${');
     }
-
-    function renderAdminFeed(msgs) {
-      const container = document.getElementById('adminMsgContainer');
-      if (msgs.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:var(--text-muted);">No messages in system.</p>';
-        return;
-      }
-
-      container.innerHTML = msgs.map(m => `
-        <div style="border:1px solid var(--border-color); padding:14px; border-radius:12px; margin-bottom:12px; background:var(--bg-surface-alt);">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <div>
-              <strong style="font-size:0.95rem; color:var(--text-main);">${m.senderName}</strong>
-              <span style="font-size:0.8rem; color:var(--text-muted);">(${m.senderPhone || m.senderEmail})</span>
-            </div>
-            <span class="msg-badge ${m.replyText ? 'msg-badge-replied' : 'msg-badge-pending'}">${m.replyText ? 'Replied' : 'Pending'}</span>
-          </div>
-          <div style="font-size:0.85rem; font-weight:700; color:var(--primary); margin-bottom:4px;">${m.category} - ${m.subject || 'No Subject'}</div>
-          <p style="font-size:0.88rem; margin:0 0 10px; color:var(--text-main);">${m.message}</p>
-
-          <div style="display:flex; gap:8px;">
-            <input type="text" id="replyInput_${m.id}" placeholder="Type Admin Reply..." value="${m.replyText || ''}" style="flex:1; padding:8px 10px; border-radius:8px; border:1px solid var(--border-color); outline:none;">
-            <button type="button" onclick="sendAdminReplySPA('${m.id}')" class="btn btn-sm btn-primary">Save Reply</button>
-            <button type="button" onclick="deleteMsgSPA('${m.id}')" class="btn btn-sm btn-outline" style="color:#ef4444;"><i class="fa-solid fa-trash"></i></button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    window.sendAdminReplySPA = async function(id) {
-      const val = document.getElementById(`replyInput_${id}`).value.trim();
-      if (!val) return;
-      try {
-        await updateDoc(doc(db, "messages", id), {
-          replyText: val,
-          repliedAt: Date.now()
-        });
-        showToast("Reply saved!");
-      } catch (err) {
-        showToast("Error: " + err.message, true);
-      }
-    };
-
-    window.deleteMsgSPA = async function(id) {
-      if (!confirm("Delete message permanently?")) return;
-      try {
-        await deleteDoc(doc(db, "messages", id));
-        showToast("Message deleted.");
-      } catch (err) {
-        showToast("Error: " + err.message, true);
-      }
-    };
-
-    function listenAdminList() {
-      onSnapshot(collection(db, "admins"), (snapshot) => {
-        const list = [];
-        snapshot.forEach(doc => list.push(doc.id));
-        document.getElementById('adminListContainer').innerHTML = list.map(a => `
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 10px; background:var(--bg-surface); border-radius:6px; margin-bottom:6px;">
-            <span><i class="fa-solid fa-user-shield" style="color:#7c3aed;"></i> ${a}</span>
-          </div>
-        `).join('');
-      });
-    }
-
-    window.addAdminEmailSPA = async function() {
-      const email = document.getElementById('newAdminEmail').value.trim().toLowerCase();
-      if (!email) return;
-      try {
-        await setDoc(doc(db, "admins", email), { addedAt: Date.now() });
-        document.getElementById('newAdminEmail').value = '';
-        showToast(`Added ${email} as Admin!`);
-      } catch (err) {
-        showToast("Error: " + err.message, true);
-      }
-    };
-
-    window.filterAdminView = function(view) {
-      if (view === 'admins') {
-        document.getElementById('adminMsgContainer').style.display = 'none';
-        document.getElementById('adminManageSection').style.display = 'block';
-      } else {
-        document.getElementById('adminMsgContainer').style.display = 'block';
-        document.getElementById('adminManageSection').style.display = 'none';
-      }
-    };
-
   </script>
+
 </body>
 </html>
