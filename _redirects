@@ -17,7 +17,10 @@
 /help/account   /help/account/index.html 200
 /help/faq       /help/faq/index.html     200
 /help/payment   /help/payment/index.html 200
-/connect        /index.html#contact-section 302
+/contact        /contact.html        200
+/contactapp     /contact.html        301
+/apps/contactapp /contact.html       301
+/connect        /contact.html        200
 /godoz-about    /GoDoz_About.html    200
 /founder        /RS_GULSHAN_PRAJAPATI_About.html 200
 /payment-success /payment-success.html 200
