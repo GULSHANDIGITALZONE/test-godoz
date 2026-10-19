@@ -1861,7 +1861,7 @@ function resolveGoDozUrl(rawHref) {
 
   // Top level known pages
   const rootPages = [
-    'About.html', 'feedback.html', 'login.html', 'profile.html', 
+    'contact.html', 'About.html', 'feedback.html', 'login.html', 'profile.html', 
     'admin.html', 'terms.html', 'privacy-policy.html', 'GoDoz_About.html', 
     'RS_GULSHAN_PRAJAPATI_About.html', 'payment-success.html', '404.html'
   ];
@@ -1943,11 +1943,11 @@ function initSeamlessNavigation() {
       return;
     }
 
-    // Special bypass for standalone interactive modules (Profile, Admin, Login, Payment-Success)
+    // Special bypass for standalone interactive modules (Profile, Admin, Login, Payment-Success, Contact)
     // These modules require dedicated Firebase Auth & Firestore lifecycle initialization
     const targetPath = targetUrl.pathname.toLowerCase();
     const currentPath = currentUrl.pathname.toLowerCase();
-    const standaloneModules = ['admin', 'profile', 'login', 'payment-success', '/apps/localwork', '/apps/smart-tools-app', '/apps/mynotepad', '/apps/smart-pdf-viewer', '/apps/fruits-crush', '/apps/photo-to-pdf-lite', '/apps/bhulekh'];
+    const standaloneModules = ['admin', 'profile', 'login', 'payment-success', 'contact', '/apps/localwork', '/apps/smart-tools-app', '/apps/mynotepad', '/apps/smart-pdf-viewer', '/apps/fruits-crush', '/apps/photo-to-pdf-lite', '/apps/bhulekh'];
 
     const isTargetStandalone = standaloneModules.some(m => targetPath.includes(m));
     const isCurrentStandalone = standaloneModules.some(m => currentPath.includes(m));
@@ -2151,6 +2151,20 @@ window.loadPageSeamless = async function(url, pushState = true) {
     if (doc.title) {
       document.title = doc.title;
     }
+
+    // 1.5 Inject any new inline style elements from target document head
+    try {
+      const targetStyles = doc.querySelectorAll('head style');
+      targetStyles.forEach((st, idx) => {
+        const styleId = st.id || ('pjax_style_' + Math.abs(st.textContent.length + idx));
+        if (!document.getElementById(styleId)) {
+          const newStyle = document.createElement('style');
+          newStyle.id = styleId;
+          newStyle.textContent = st.textContent;
+          document.head.appendChild(newStyle);
+        }
+      });
+    } catch(e) {}
 
     // 2. Locate Target Main Content
     let newMain = doc.querySelector('.app-main-content') || doc.querySelector('main');

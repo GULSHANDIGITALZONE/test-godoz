@@ -3,34 +3,34 @@
 // Domain: https://www.godoz.in | Contact: +91 92885 21731
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { 
-  getAuth, 
-  onAuthStateChanged, 
-  signInWithPopup, 
-  GoogleAuthProvider, 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, 
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signInAnonymously,
   sendPasswordResetEmail,
   sendEmailVerification,
   updateProfile,
-  signOut 
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { 
-  getFirestore, 
-  collection, 
-  doc, 
-  getDoc, 
-  setDoc, 
-  addDoc, 
-  getDocs, 
-  updateDoc, 
-  deleteDoc, 
-  query, 
-  where, 
-  orderBy, 
-  onSnapshot, 
-  serverTimestamp 
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
 
@@ -107,18 +107,18 @@ export async function isUserManager(userOrEmail) {
     for (const d of snap.docs) {
       const docId = d.id.toLowerCase().trim();
       const data = d.data() || {};
-      
+
       // Match Doc ID
       if (email && docId === email && data.active !== false) return true;
       if (uid && docId === uid && data.active !== false) return true;
-      
+
       // Match email fields
       const docEmail = (data.email || data.Email || data.userEmail || data.user_email || "").toLowerCase().trim();
       const docUid = data.uid || data.userId || data.user_id || "";
-      
+
       if (email && docEmail === email && data.active !== false) return true;
       if (uid && docUid === uid && data.active !== false) return true;
-      
+
       // Value scan in document fields
       for (const val of Object.values(data)) {
         if (typeof val === 'string' && val.toLowerCase().trim() === email && data.active !== false) {
@@ -139,7 +139,7 @@ export async function isUserManager(userOrEmail) {
  */
 export async function isUserAdmin(userOrEmail, skipManagerCheck = false) {
   if (!userOrEmail) return false;
-  
+
   // 1. Managers automatically have full Admin rights
   if (!skipManagerCheck) {
     const isMgr = await isUserManager(userOrEmail);
@@ -180,13 +180,13 @@ export async function isUserAdmin(userOrEmail, skipManagerCheck = false) {
     for (const d of snap.docs) {
       const docId = d.id.toLowerCase().trim();
       const data = d.data() || {};
-      
+
       if (email && docId === email && data.active !== false) return true;
       if (uid && docId === uid && data.active !== false) return true;
-      
+
       const docEmail = (data.email || data.Email || data.userEmail || data.user_email || "").toLowerCase().trim();
       const docUid = data.uid || data.userId || data.user_id || "";
-      
+
       if (email && docEmail === email && data.active !== false) return true;
       if (uid && docUid === uid && data.active !== false) return true;
 
@@ -571,7 +571,7 @@ export async function saveOrderToFirestore(orderData) {
     const fin = getOrderFinancials({ ...orderData, price: totalPrice });
     const initialPaid = fin.amountPaid;
     const remaining = fin.remainingBalance;
-    
+
     let derivedStatus = orderData.paymentStatus;
     if (!derivedStatus) {
       if (fin.isFullyPaid) {
@@ -582,7 +582,7 @@ export async function saveOrderToFirestore(orderData) {
         derivedStatus = "COD Requested (Pending Verification)";
       }
     }
-    
+
     const payload = {
       id: orderId,
       orderId: orderId,
@@ -791,12 +791,12 @@ export async function loginWithGoogle() {
     const result = await signInWithPopup(auth, googleProvider);
     await syncUserProfile(result.user);
     const role = await getUserRole(result.user);
-    return { 
-      success: true, 
-      user: result.user, 
-      role: role, 
-      isAdmin: (role === 'admin' || role === 'manager'), 
-      isManager: (role === 'manager') 
+    return {
+      success: true,
+      user: result.user,
+      role: role,
+      isAdmin: (role === 'admin' || role === 'manager'),
+      isManager: (role === 'manager')
     };
   } catch (error) {
     return { success: false, error: error.message, code: error.code };
@@ -821,23 +821,23 @@ export async function loginWithEmail(emailOrUser, password) {
     if (!user.emailVerified && !isAdm) {
       lastUnverifiedUser = user;
       await signOut(auth); // Sign out so unverified user cannot access dashboard
-      return { 
-        success: false, 
-        emailNotVerified: true, 
-        email: user.email, 
-        error: "Please verify your email address before logging in." 
+      return {
+        success: false,
+        emailNotVerified: true,
+        email: user.email,
+        error: "Please verify your email address before logging in."
       };
     }
 
     lastUnverifiedUser = null;
     await syncUserProfile(user);
     const role = await getUserRole(user);
-    return { 
-      success: true, 
-      user: user, 
-      role: role, 
-      isAdmin: (role === 'admin' || role === 'manager'), 
-      isManager: (role === 'manager') 
+    return {
+      success: true,
+      user: user,
+      role: role,
+      isAdmin: (role === 'admin' || role === 'manager'),
+      isManager: (role === 'manager')
     };
   } catch (error) {
     return { success: false, error: error.message, code: error.code };
@@ -847,16 +847,16 @@ export async function loginWithEmail(emailOrUser, password) {
 export async function registerWithEmail(name, emailOrUser, password) {
   try {
     const reservedUsernames = [
-      'admin', 'administrator', 'root', 'support', 'help', 'manager', 
-      'owner', 'godoz', 'official', 'billing', 'security', 'contact', 
+      'admin', 'administrator', 'root', 'support', 'help', 'manager',
+      'owner', 'godoz', 'official', 'billing', 'security', 'contact',
       'info', 'service', 'developer', 'rsgulshan', 'gulshan'
     ];
     let email = emailOrUser.trim();
-    
+
     if (!email.includes('@')) {
-      return { 
-        success: false, 
-        error: 'Please enter a valid email address (e.g. name@gmail.com) so we can send your verification link.' 
+      return {
+        success: false,
+        error: 'Please enter a valid email address (e.g. name@gmail.com) so we can send your verification link.'
       };
     }
 
@@ -864,11 +864,11 @@ export async function registerWithEmail(name, emailOrUser, password) {
     if (email.toLowerCase().endsWith('@godoz.in')) {
       checkPrefix = email.toLowerCase().split('@')[0];
     }
-    
+
     if (checkPrefix && reservedUsernames.includes(checkPrefix)) {
-      return { 
-        success: false, 
-        error: 'This username / official prefix is reserved. Please use your personal email address.' 
+      return {
+        success: false,
+        error: 'This username / official prefix is reserved. Please use your personal email address.'
       };
     }
 
@@ -888,15 +888,15 @@ export async function registerWithEmail(name, emailOrUser, password) {
     await signOut(auth);
 
     const role = await getUserRole(user);
-    return { 
-      success: true, 
+    return {
+      success: true,
       user: user,
       role: role,
       isAdmin: (role === 'admin' || role === 'manager'),
       isManager: (role === 'manager'),
       needsEmailVerification: true,
       email: email,
-      message: 'Account created! A verification link has been sent to your email. Please click the link to activate your account.' 
+      message: 'Account created! A verification link has been sent to your email. Please click the link to activate your account.'
     };
   } catch (error) {
     return { success: false, error: error.message, code: error.code };
@@ -931,9 +931,9 @@ export async function resendVerificationLink(emailOrUser = '', password = '') {
       return { success: true };
     }
 
-    return { 
-      success: false, 
-      error: "Please enter your password above and click 'Resend link' again." 
+    return {
+      success: false,
+      error: "Please enter your password above and click 'Resend link' again."
     };
   } catch (error) {
     return { success: false, error: error.message, code: error.code };
@@ -1188,9 +1188,9 @@ export async function recordRazorpayPayment(paymentData) {
         // Prevent duplicate payment addition if this paymentId was already logged
         const isAlreadyLogged = existingHistory.some(h => h.paymentId === payId);
         if (isAlreadyLogged) {
-          return { 
-            success: true, 
-            paymentId: payId, 
+          return {
+            success: true,
+            paymentId: payId,
             alreadyRecorded: true,
             createdAtFormatted: createdAtFormatted,
             createdAtDate: createdAtDate
@@ -1233,9 +1233,9 @@ export async function recordRazorpayPayment(paymentData) {
       }
     }
 
-    return { 
-      success: true, 
-      paymentId: payId, 
+    return {
+      success: true,
+      paymentId: payId,
       docId: payId,
       createdAtFormatted: createdAtFormatted,
       createdAtDate: createdAtDate
@@ -1571,5 +1571,4 @@ if (typeof window !== 'undefined') {
     }
   });
 }
-
 
