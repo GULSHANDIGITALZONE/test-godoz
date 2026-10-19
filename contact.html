@@ -699,54 +699,54 @@
     function updateHeaderUI() {
       const navActions = document.getElementById('navActions');
       if (!navActions) return;
+
+      const contactBadges = `
+        <a href="tel:+919288521731" style="display: inline-flex; align-items: center; gap: 8px; background: var(--primary-light); color: var(--primary); padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: 13px; text-decoration: none; border: 1px solid #C7D2FE; transition: transform 0.2s;">
+          <i class="fa-solid fa-phone"></i> Call +91 9288521731
+        </a>
+        <a href="mailto:godoz.info@gmail.com" style="display: inline-flex; align-items: center; gap: 8px; background: #E0F2FE; color: #0369A1; padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: 13px; text-decoration: none; border: 1px solid #BAE6FD; transition: transform 0.2s;">
+          <i class="fa-solid fa-envelope"></i> Email godoz.info@gmail.com
+        </a>
+      `;
+
       if (window.currentUser) {
         navActions.innerHTML = `
           <div class="user-badge">
             <img src="${window.currentUser.photoURL || 'https://via.placeholder.com/30'}" alt="User">
             <span>${window.currentUser.displayName || window.currentUser.email}</span>
           </div>
+          ${contactBadges}
         `;
       } else {
-        navActions.innerHTML = `
-          <a href="tel:+919288521731" style="display: inline-flex; align-items: center; gap: 8px; background: var(--primary-light); color: var(--primary); padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: 13px; text-decoration: none; border: 1px solid #C7D2FE; transition: transform 0.2s;">
-            <i class="fa-solid fa-phone"></i> Call +91 9288521731
-          </a>
-          <a href="mailto:godoz.info@gmail.com" style="display: inline-flex; align-items: center; gap: 8px; background: #E0F2FE; color: #0369A1; padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: 13px; text-decoration: none; border: 1px solid #BAE6FD; transition: transform 0.2s;">
-            <i class="fa-solid fa-envelope"></i> Email godoz.info@gmail.com
-          </a>
-        `;
+        navActions.innerHTML = contactBadges;
       }
     }
 
     function updateUserBannerUI() {
+      const banner = document.querySelector('.banner');
       const guestNameInput = document.getElementById('guestName');
       const guestEmailInput = document.getElementById('guestEmail');
-      const statusIcon = document.getElementById('statusIcon');
-      const statusTitle = document.getElementById('statusTitle');
-      const statusDesc = document.getElementById('statusDesc');
-
-      if (!guestNameInput || !statusTitle) return;
 
       if (window.currentUser) {
-        guestNameInput.value = window.currentUser.displayName || 'Google User';
-        guestNameInput.disabled = true;
-        guestEmailInput.value = window.currentUser.email || '';
-        guestEmailInput.disabled = true;
-
-        statusIcon.className = 'banner-icon logged-in';
-        statusIcon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
-        statusTitle.innerText = `Logged in as ${window.currentUser.displayName || window.currentUser.email}`;
-        statusDesc.innerText = '✅ You will receive replies from GoDoz Support in real-time below.';
+        if (banner) banner.style.display = 'none'; // LOGGED IN: HIDE GUEST MODE BANNER
+        if (guestNameInput) {
+          guestNameInput.value = window.currentUser.displayName || 'Google User';
+          guestNameInput.disabled = true;
+        }
+        if (guestEmailInput) {
+          guestEmailInput.value = window.currentUser.email || '';
+          guestEmailInput.disabled = true;
+        }
       } else {
-        guestNameInput.value = '';
-        guestNameInput.disabled = false;
-        guestEmailInput.value = '';
-        guestEmailInput.disabled = false;
-
-        statusIcon.className = 'banner-icon logged-out';
-        statusIcon.innerHTML = '<i class="fa-solid fa-circle-info"></i>';
-        statusTitle.innerText = 'Guest Mode (Not Logged In)';
-        statusDesc.innerText = 'Messages are sent to GoDoz Support for review. Sign in with Google to receive real-time replies here.';
+        if (banner) banner.style.display = 'flex'; // LOGGED OUT: SHOW GUEST MODE BANNER
+        if (guestNameInput) {
+          guestNameInput.value = '';
+          guestNameInput.disabled = false;
+        }
+        if (guestEmailInput) {
+          guestEmailInput.value = '';
+          guestEmailInput.disabled = false;
+        }
       }
     }
 
