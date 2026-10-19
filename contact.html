@@ -301,12 +301,15 @@
 
         <!-- View Navigation Tabs & Official Support Badges -->
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 24px; flex-wrap: wrap; gap: 14px;">
-          <div class="nav-tabs" style="border: none; padding: 0; margin: 0;">
+          <div class="nav-tabs" style="border: none; padding: 0; margin: 0; display: flex; gap: 8px; flex-wrap: wrap;">
             <button type="button" class="tab-btn active" id="tabHome" onclick="switchMainTab('user')">
               <i class="fa-solid fa-headset"></i> Contact Us
             </button>
             <button type="button" class="tab-btn" id="tabAdmin" style="display:none;" onclick="switchMainTab('admin')">
               <i class="fa-solid fa-user-shield"></i> Admin Panel
+            </button>
+            <button type="button" class="tab-btn" id="tabFeedback" style="display:none;" onclick="switchMainTab('feedback')">
+              <i class="fa-solid fa-star" style="color: #f59e0b;"></i> Client Feedbacks (<span id="fbCountBadge">0</span>)
             </button>
           </div>
 
@@ -444,6 +447,59 @@
               <div class="card-title"><i class="fa-solid fa-users-gear"></i> Current Authorized Admins in Firestore</div>
               <div id="adminList">Loading admins...</div>
             </div>
+          </div>
+        </div>
+
+        <!-- FEEDBACK SECTION (ADMIN ONLY) -->
+        <div id="sectionFeedback" style="display: none;">
+          <div class="card" style="background: linear-gradient(135deg, #FEF3C7, #FDE68A); border-color: #FCD34D;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h3 style="color: #92400E; font-size: 22px; font-weight: 800;">
+                  <i class="fa-solid fa-star" style="color: #D97706;"></i> Client Reviews &amp; Feedback Hub
+                </h3>
+                <p style="font-size: 13px; color: #B45309; margin-top: 4px; font-weight: 600;">
+                  Confidential client reviews submitted via feedback form. Visible only to authorized GoDoz Admins.
+                </p>
+              </div>
+              <a href="/feedback.html" target="_blank" class="btn btn-outline" style="background: #ffffff; border-color: #D97706; color: #92400E; font-weight: 700;">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Feedback Form
+              </a>
+            </div>
+          </div>
+
+          <!-- Feedback Stats Row -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-val" id="statFbTotal" style="color: #D97706;">0</div>
+              <div class="stat-lbl">Total Reviews</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val" id="statFbAvg" style="color: #16A34A;">5.0 ★</div>
+              <div class="stat-lbl">Average Rating</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val" id="statFb5Star" style="color: #D97706;">0</div>
+              <div class="stat-lbl">5-Star Ratings</div>
+            </div>
+          </div>
+
+          <!-- Feedback Sub Filter & Search -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+            <div class="nav-tabs" style="border: none; padding: 0; margin: 0; display: flex; gap: 6px; flex-wrap: wrap;">
+              <button type="button" class="tab-btn active" id="fbSubAll" onclick="filterFeedbackRating('all')">All (<span id="fbCountAll">0</span>)</button>
+              <button type="button" class="tab-btn" id="fbSub5" onclick="filterFeedbackRating(5)">5 ⭐</button>
+              <button type="button" class="tab-btn" id="fbSub4" onclick="filterFeedbackRating(4)">4 ⭐</button>
+              <button type="button" class="tab-btn" id="fbSub3" onclick="filterFeedbackRating(3)">3 ⭐</button>
+              <button type="button" class="tab-btn" id="fbSubLow" onclick="filterFeedbackRating('low')">1-2 ⭐</button>
+            </div>
+
+            <input type="text" id="feedbackSearch" class="form-control" style="max-width: 280px;" placeholder="Search name, phone, project..." oninput="renderAdminFeedbacks()">
+          </div>
+
+          <!-- Feedbacks List Container -->
+          <div id="adminFeedbackList">
+            <p style="color: var(--text-muted); text-align: center; padding: 20px;">Loading client feedbacks...</p>
           </div>
         </div>
 
@@ -587,6 +643,8 @@
     window.currentUser = null;
     window.isAdminUser = false;
     window.allMessagesData = [];
+    window.allFeedbacksData = [];
+    window.filterFbRating = 'all';
     window.activeChatThreadMessages = [];
     window.activeChatTargetMsgId = null;
     window.activeChatThreadObject = null;
@@ -594,6 +652,7 @@
     let userMessagesUnsub = null;
     let allMessagesUnsub = null;
     let adminEmailsUnsub = null;
+    let feedbacksUnsub = null;
 
     // Initialize Auth Listener (Automatic Global Sync with Header & Sidebar)
     onAuthStateChanged(auth, async (user) => {
@@ -616,12 +675,15 @@
 
         window.isAdminUser = await checkIfAdmin(user.email);
         document.getElementById('tabAdmin').style.display = window.isAdminUser ? 'inline-block' : 'none';
+        const tabFb = document.getElementById('tabFeedback');
+        if (tabFb) tabFb.style.display = window.isAdminUser ? 'inline-block' : 'none';
 
         listenUserMessages(user.uid);
 
         if (window.isAdminUser) {
           listenAllMessagesForAdmin();
           listenAdminEmails();
+          listenAllFeedbacksForAdmin();
         }
       } else {
         try {
@@ -634,8 +696,11 @@
 
         window.isAdminUser = false;
         document.getElementById('tabAdmin').style.display = 'none';
+        const tabFb = document.getElementById('tabFeedback');
+        if (tabFb) tabFb.style.display = 'none';
         document.getElementById('userRepliesContainer').style.display = 'none';
         if (userMessagesUnsub) userMessagesUnsub();
+        if (feedbacksUnsub) feedbacksUnsub();
       }
     });
 
@@ -1288,15 +1353,225 @@
     window.switchMainTab = function(tab) {
       document.getElementById('tabHome').classList.remove('active');
       document.getElementById('tabAdmin').classList.remove('active');
+      const tabFb = document.getElementById('tabFeedback');
+      if (tabFb) tabFb.classList.remove('active');
+
+      const secUser = document.getElementById('sectionUser');
+      const secAdmin = document.getElementById('sectionAdmin');
+      const secFb = document.getElementById('sectionFeedback');
 
       if (tab === 'user') {
         document.getElementById('tabHome').classList.add('active');
-        document.getElementById('sectionUser').style.display = 'block';
-        document.getElementById('sectionAdmin').style.display = 'none';
-      } else {
+        if (secUser) secUser.style.display = 'block';
+        if (secAdmin) secAdmin.style.display = 'none';
+        if (secFb) secFb.style.display = 'none';
+      } else if (tab === 'admin') {
         document.getElementById('tabAdmin').classList.add('active');
-        document.getElementById('sectionUser').style.display = 'none';
-        document.getElementById('sectionAdmin').style.display = 'block';
+        if (secUser) secUser.style.display = 'none';
+        if (secAdmin) secAdmin.style.display = 'block';
+        if (secFb) secFb.style.display = 'none';
+      } else if (tab === 'feedback') {
+        if (tabFb) tabFb.classList.add('active');
+        if (secUser) secUser.style.display = 'none';
+        if (secAdmin) secAdmin.style.display = 'none';
+        if (secFb) secFb.style.display = 'block';
+        renderAdminFeedbacks();
+      }
+    };
+
+    function listenAllFeedbacksForAdmin() {
+      const q = query(collection(db, "reviews"));
+      feedbacksUnsub = onSnapshot(q, (snapshot) => {
+        window.allFeedbacksData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        window.allFeedbacksData.sort((a, b) => {
+          const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0);
+          const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0);
+          return timeB - timeA;
+        });
+
+        updateFeedbackStats();
+        renderAdminFeedbacks();
+      }, (err) => {
+        console.warn("Feedback listener notice:", err);
+      });
+    }
+
+    function updateFeedbackStats() {
+      const total = window.allFeedbacksData.length;
+      const countBadge = document.getElementById('fbCountBadge');
+      const countAll = document.getElementById('fbCountAll');
+      if (countBadge) countBadge.innerText = total;
+      if (countAll) countAll.innerText = total;
+
+      const statTotal = document.getElementById('statFbTotal');
+      if (statTotal) statTotal.innerText = total;
+
+      const fiveStar = window.allFeedbacksData.filter(f => Number(f.rating) === 5).length;
+      const stat5Star = document.getElementById('statFb5Star');
+      if (stat5Star) stat5Star.innerText = fiveStar;
+
+      let avg = "5.0";
+      if (total > 0) {
+        const sum = window.allFeedbacksData.reduce((acc, f) => acc + (Number(f.rating) || 5), 0);
+        avg = (sum / total).toFixed(1);
+      }
+      const statAvg = document.getElementById('statFbAvg');
+      if (statAvg) statAvg.innerText = `${avg} ★`;
+    }
+
+    window.filterFeedbackRating = function(rating) {
+      window.filterFbRating = rating;
+      document.querySelectorAll('#sectionFeedback .nav-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+
+      if (rating === 'all') document.getElementById('fbSubAll')?.classList.add('active');
+      else if (rating === 5) document.getElementById('fbSub5')?.classList.add('active');
+      else if (rating === 4) document.getElementById('fbSub4')?.classList.add('active');
+      else if (rating === 3) document.getElementById('fbSub3')?.classList.add('active');
+      else if (rating === 'low') document.getElementById('fbSubLow')?.classList.add('active');
+
+      renderAdminFeedbacks();
+    };
+
+    window.renderAdminFeedbacks = function() {
+      const container = document.getElementById('adminFeedbackList');
+      if (!container) return;
+
+      const search = (document.getElementById('feedbackSearch')?.value || '').toLowerCase().trim();
+      let list = [...(window.allFeedbacksData || [])];
+
+      if (window.filterFbRating !== 'all') {
+        if (window.filterFbRating === 'low') {
+          list = list.filter(f => (Number(f.rating) || 5) <= 2);
+        } else {
+          list = list.filter(f => Number(f.rating) === Number(window.filterFbRating));
+        }
+      }
+
+      if (search) {
+        list = list.filter(f =>
+          (f.name && f.name.toLowerCase().includes(search)) ||
+          (f.contact && f.contact.toLowerCase().includes(search)) ||
+          (f.project && f.project.toLowerCase().includes(search)) ||
+          (f.message && f.message.toLowerCase().includes(search))
+        );
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="card" style="text-align: center; padding: 36px 20px;">
+            <i class="fa-solid fa-star-half-stroke" style="font-size: 40px; color: #cbd5e1; margin-bottom: 12px;"></i>
+            <h4 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">No Feedback Found</h4>
+            <p style="font-size: 13px; color: var(--text-muted); margin: 0;">No client reviews match your search or filter criteria.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = list.map(f => {
+        const ratingNum = Number(f.rating) || 5;
+        const starsHtml = Array.from({length: 5}, (_, i) =>
+          `<i class="fa-solid fa-star" style="color: ${i < ratingNum ? '#f59e0b' : '#cbd5e1'}; font-size: 14px;"></i>`
+        ).join(' ');
+
+        let dateDisplay = f.dateStr || '';
+        if (f.createdAt && typeof f.createdAt.toDate === 'function') {
+          dateDisplay = f.createdAt.toDate().toLocaleString('en-IN');
+        } else if (f.createdAt && f.createdAt.seconds) {
+          dateDisplay = new Date(f.createdAt.seconds * 1000).toLocaleString('en-IN');
+        } else if (!dateDisplay) {
+          dateDisplay = 'Recent';
+        }
+
+        const contactStr = (f.contact || '').trim();
+        const isEmail = contactStr.includes('@');
+        const digits = contactStr.replace(/\D/g, '');
+        const isPhone = digits.length >= 10;
+
+        let contactActionButtons = '';
+        if (isPhone) {
+          const waPhone = digits.length === 10 ? '91' + digits : digits;
+          contactActionButtons += `
+            <a href="https://wa.me/${waPhone}?text=Hello%20${encodeURIComponent(f.name || 'Client')},%20thank%20you%20for%20your%20feedback%20on%20GoDoz!" target="_blank" class="btn btn-outline btn-sm" style="color: #16a34a; border-color: #86efac; text-decoration: none;">
+              <i class="fa-brands fa-whatsapp"></i> WhatsApp
+            </a>
+            <a href="tel:${digits}" class="btn btn-outline btn-sm" style="color: #0284c7; border-color: #7dd3fc; text-decoration: none;">
+              <i class="fa-solid fa-phone"></i> Call
+            </a>
+          `;
+        }
+        if (isEmail) {
+          contactActionButtons += `
+            <a href="mailto:${contactStr}?subject=${encodeURIComponent('Thank you for your feedback - GoDoz')}&body=${encodeURIComponent('Hello ' + (f.name || 'Client') + ',\n\nThank you for sharing your feedback with GoDoz Technology regarding ' + (f.project || 'our project') + '.\n\nWarm regards,\nGoDoz Team')}" target="_blank" class="btn btn-outline btn-sm" style="color: #7c3aed; border-color: #c4b5fd; text-decoration: none;">
+              <i class="fa-solid fa-envelope"></i> Email
+            </a>
+          `;
+        }
+
+        const firstLetter = (f.name || 'C').charAt(0).toUpperCase();
+
+        return `
+          <div class="msg-card" style="border-left: 4px solid #f59e0b;">
+            <div class="msg-header">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 44px; height: 44px; border-radius: 50%; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; border: 2px solid #FCD34D; flex-shrink: 0;">
+                  ${firstLetter}
+                </div>
+                <div>
+                  <div class="msg-author">${escapeHtml(f.name || 'Anonymous Client')}</div>
+                  <div style="font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; margin-top: 2px; flex-wrap: wrap;">
+                    <span><i class="fa-regular fa-clock"></i> ${dateDisplay}</span>
+                    ${f.contact ? `<span style="font-weight: 600; color: var(--text-main);"><i class="fa-solid fa-id-badge"></i> ${escapeHtml(f.contact)}</span>` : ''}
+                  </div>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div style="margin-bottom: 4px;">${starsHtml}</div>
+                <span class="pill" style="background: #FEF3C7; color: #B45309; font-weight: 800;">
+                  ${ratingNum}.0 / 5.0
+                </span>
+              </div>
+            </div>
+
+            ${f.project ? `
+              <div style="margin-bottom: 12px;">
+                <span class="pill" style="background: var(--primary-light); color: var(--primary); font-size: 12px; font-weight: 700;">
+                  <i class="fa-solid fa-laptop-code"></i> Project: ${escapeHtml(f.project)}
+                </span>
+              </div>
+            ` : ''}
+
+            <div style="background: var(--bg-surface-alt, #FAFAFC); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin: 12px 0;">
+              <p style="font-size: 14px; font-weight: 600; color: var(--text-main); line-height: 1.6; white-space: pre-wrap; margin: 0;">
+                ${escapeHtml(f.message || 'No feedback message text.')}
+              </p>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--border);">
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                ${contactActionButtons}
+                <button type="button" class="btn btn-outline btn-sm" onclick="copyToClipboard(\`${escapeJsString(f.message || '')}\`)">
+                  <i class="fa-regular fa-copy"></i> Copy Text
+                </button>
+              </div>
+              <button type="button" class="btn btn-sm" style="background: rgba(239, 68, 68, 0.1); color: #dc2626; border: 1px solid #fecaca; font-weight: 700;" onclick="deleteFeedbackDoc('${f.id}', \`${escapeJsString(f.name || 'this review')}\`)">
+                <i class="fa-solid fa-trash-can"></i> Delete
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    window.deleteFeedbackDoc = async function(id, clientName) {
+      if (!id) return;
+      if (!confirm(`Are you sure you want to permanently delete review from "${clientName}"?`)) return;
+
+      try {
+        await deleteDoc(doc(db, "reviews", id));
+        showToast("Feedback review deleted successfully!");
+      } catch (err) {
+        showToast(`Error deleting review: ${err.message}`);
       }
     };
 
