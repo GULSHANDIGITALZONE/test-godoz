@@ -1947,7 +1947,7 @@ function initSeamlessNavigation() {
     // These modules require dedicated Firebase Auth & Firestore lifecycle initialization
     const targetPath = targetUrl.pathname.toLowerCase();
     const currentPath = currentUrl.pathname.toLowerCase();
-    const standaloneModules = ['admin', 'profile', 'login', 'payment-success', 'contact', '/apps/localwork', '/apps/smart-tools-app', '/apps/mynotepad', '/apps/smart-pdf-viewer', '/apps/fruits-crush', '/apps/photo-to-pdf-lite', '/apps/bhulekh'];
+    const standaloneModules = ['admin', 'profile', 'login', 'payment-success', 'contact', 'about', 'feedback', '/apps/localwork', '/apps/smart-tools-app', '/apps/mynotepad', '/apps/smart-pdf-viewer', '/apps/fruits-crush', '/apps/photo-to-pdf-lite', '/apps/bhulekh'];
 
     const isTargetStandalone = standaloneModules.some(m => targetPath.includes(m));
     const isCurrentStandalone = standaloneModules.some(m => currentPath.includes(m));
@@ -2192,6 +2192,17 @@ window.loadPageSeamless = async function(url, pushState = true) {
       oldScript.parentNode.replaceChild(newScript, oldScript);
     });
 
+    // Also run any custom scripts found in target document body outside main
+    try {
+      const docBodyScripts = doc.querySelectorAll('body > script:not([src*="script.js"])');
+      docBodyScripts.forEach(s => {
+        const newScript = document.createElement('script');
+        Array.from(s.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+        newScript.textContent = s.textContent;
+        currentMain.appendChild(newScript);
+      });
+    } catch(e) {}
+
     // 4. Update URL in Browser Address Bar
     if (pushState) {
       history.pushState({ path: resolvedUrl }, '', resolvedUrl);
@@ -2219,6 +2230,8 @@ window.loadPageSeamless = async function(url, pushState = true) {
     if (typeof initBackToTop === 'function') initBackToTop();
     if (typeof initAuthNavSync === 'function') initAuthNavSync();
     if (typeof window.autoFillUserInputs === 'function') window.autoFillUserInputs();
+    if (typeof window.initAboutPage === 'function') window.initAboutPage();
+    currentMain.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
     updateNavActiveStates(resolvedUrl);
 
   } catch (err) {

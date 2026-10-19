@@ -3986,6 +3986,31 @@ select option {
   border-radius: 16px 16px 4px 16px; padding: 14px; max-width: 80%; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
+/* ==========================================================================
+   Global Safe Reveal on Scroll Styles (Prevents Blank Screen on Transition)
+   ========================================================================== */
+.reveal {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.is-visible {
+  animation: globalRise 0.7s ease forwards;
+}
+
+@keyframes globalRise {
+  from {
+    opacity: 0.2;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
 
 
 
