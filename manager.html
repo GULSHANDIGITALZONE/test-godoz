@@ -3123,8 +3123,10 @@
     const offerPrice = Math.max(0, parseInt(document.getElementById('productOfferPriceInput').value || '0', 10));
 
     const finalId = docId || ('prod_' + Date.now());
+    const existingProd = currentProductsCatalog.find(p => p.id === finalId);
     const newProd = {
       id: finalId,
+      slNo: existingProd?.slNo !== undefined ? existingProd.slNo : (currentProductsCatalog.length + 1),
       category: category,
       title: title,
       details: details,

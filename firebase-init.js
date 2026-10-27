@@ -910,28 +910,28 @@ export async function deleteProductFromFirestore(productId) {
 
 export function listenToProductsCatalog(callback) {
   try {
-    const q = query(collection(db, "products"), orderBy("slNo", "asc"));
-    return onSnapshot(q, (snap) => {
+    const colRef = collection(db, "products");
+    return onSnapshot(colRef, (snap) => {
       const list = [];
       snap.forEach(docSnap => {
         list.push({ id: docSnap.id, ...docSnap.data() });
       });
+      // Safe client-side sort without omitting documents lacking slNo
+      list.sort((a, b) => {
+        const numA = (a.slNo !== undefined && a.slNo !== null) ? Number(a.slNo) : 999999;
+        const numB = (b.slNo !== undefined && b.slNo !== null) ? Number(b.slNo) : 999999;
+        if (numA !== numB) return numA - numB;
+        const timeA = new Date(a.updatedAt || a.createdAt || 0).getTime();
+        const timeB = new Date(b.updatedAt || b.createdAt || 0).getTime();
+        return timeA - timeB;
+      });
       if (typeof callback === 'function') callback(list);
     }, (err) => {
-      // Fallback query if slNo index missing
-      try {
-        onSnapshot(collection(db, "products"), (snap2) => {
-          const list2 = [];
-          snap2.forEach(docSnap2 => {
-            list2.push({ id: docSnap2.id, ...docSnap2.data() });
-          });
-          if (typeof callback === 'function') callback(list2);
-        });
-      } catch(e) {
-        if (typeof callback === 'function') callback([]);
-      }
+      console.error("listenToProductsCatalog snapshot error:", err);
+      if (typeof callback === 'function') callback([]);
     });
   } catch(e) {
+    console.error("listenToProductsCatalog exception:", e);
     if (typeof callback === 'function') callback([]);
     return () => {};
   }

@@ -153,20 +153,12 @@ function setupGridScrollIndicators(containerId, prevBtnId, nextBtnId) {
 
 /* Render Live Estimator Addon Checkboxes & Timeline Radios from Firestore /estimator_features/addons_and_timelines */
 window.applyEstimatorAddonsUI = function(data) {
-  const featContainer = document.getElementById('estimatorFeaturesContainer');
-  if (!data) {
-    if (featContainer && !featContainer.querySelector('.estimator-feature-tile')) {
-      featContainer.innerHTML = `
-        <div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.85rem; grid-column:1 / -1;">
-          <i class="fa-solid fa-spinner fa-spin"></i> Loading Features from Firestore...
-        </div>
-      `;
-    }
-    return;
-  }
+  if (!data) return;
 
-  // 1. Feature Checkboxes (2x2 Grid populated from Firestore addons data)
-  if (featContainer) {
+  const featContainer = document.getElementById('estimatorFeaturesContainer');
+
+  // Only render default fallback features if no custom key_features were loaded from /products/
+  if (featContainer && !window._hasCustomCatalogFeatures) {
     featContainer.innerHTML = '';
     const items = [
       { name: 'User Login / OTP Auth', price: data.loginPrice !== undefined ? data.loginPrice : 2000, key: 'User Login/Auth', icon: 'fa-user-lock' },
@@ -350,12 +342,13 @@ window.renderEstimatorProjectTypes = function(products) {
   }
 };
 
-/* Render Live Products, Estimator Project Types, Hero Showcases & Booking Options directly from Firestore /products/ */
+/* Render Live Products, Estimator Project Types, Key Features, Hero Showcases & Booking Options directly from Firestore /products/ */
 window.applyProductsCatalogUI = function(products) {
   if (!Array.isArray(products)) products = [];
 
   const professionalServices = products.filter(p => !p.category || p.category === 'professional_service');
   const projectTypes = products.filter(p => p.category === 'project_type');
+  const keyFeatures = products.filter(p => p.category === 'key_feature');
   const otherServices = products.filter(p => p.category === 'other_service');
 
   // 1. Render Professional Services ("What We Can Build For Your Business")
@@ -364,11 +357,96 @@ window.applyProductsCatalogUI = function(products) {
   // 2. Render Project Types ("Choose your project type" - 2x2 horizontal scroll)
   window.renderEstimatorProjectTypes(projectTypes);
 
-  // 3. Render Other Services / Hero Showcases ("Android App View & Web Portal View")
+  // 3. Render Key Features ("Add the features you need" - 2x2 horizontal scroll)
+  window.renderEstimatorKeyFeatures(keyFeatures);
+
+  // 4. Render Other Services / Hero Showcases ("Android App View & Web Portal View")
   window.renderOtherServicesShowcases(otherServices);
 
-  // 4. Populate Live Booking Modal with ALL options (Professional, Project Types, Showcases)
-  window.populateOrderModalCategories(professionalServices, projectTypes, otherServices);
+  // 5. Populate Live Booking Modal with ALL 4 options
+  window.populateOrderModalCategories(professionalServices, projectTypes, keyFeatures, otherServices);
+};
+
+/* Render Live Key Features (Calculator Step 2) directly from Firestore /products/ */
+window.renderEstimatorKeyFeatures = function(keyFeatures) {
+  const featContainer = document.getElementById('estimatorFeaturesContainer');
+  if (!featContainer) return;
+
+  const list = Array.isArray(keyFeatures) ? keyFeatures : [];
+  if (list.length === 0) {
+    featContainer.innerHTML = `
+      <div style="padding:16px; text-align:center; color:var(--text-muted); font-size:0.84rem; grid-column:1 / -1;">
+        <i class="fa-solid fa-circle-info" style="color:#eab308; margin-bottom:4px; display:block; font-size:1.1rem;"></i>
+        No key features found in Firestore. Add them under <strong>'Cost Estimator: Key Features &amp; Add-ons Manager'</strong> in Manager Dashboard.
+      </div>
+    `;
+    return;
+  }
+
+  window._hasCustomCatalogFeatures = true;
+
+  const iconsMap = {
+    'login': 'fa-user-lock',
+    'auth': 'fa-user-lock',
+    'otp': 'fa-user-lock',
+    'db': 'fa-database',
+    'database': 'fa-database',
+    'sql': 'fa-database',
+    'mongo': 'fa-database',
+    'firebase': 'fa-fire',
+    'pay': 'fa-credit-card',
+    'gateway': 'fa-credit-card',
+    'razorpay': 'fa-credit-card',
+    'upi': 'fa-qrcode',
+    'push': 'fa-bell',
+    'notification': 'fa-bell',
+    'bell': 'fa-bell',
+    'cms': 'fa-chart-pie',
+    'admin': 'fa-chart-pie',
+    'dashboard': 'fa-chart-pie',
+    'ai': 'fa-robot',
+    'bot': 'fa-robot',
+    'chatbot': 'fa-robot',
+    'gemini': 'fa-robot',
+    'gpt': 'fa-robot',
+    'sms': 'fa-comment-sms',
+    'email': 'fa-envelope',
+    'map': 'fa-map-location-dot',
+    'gps': 'fa-location-crosshairs',
+    'security': 'fa-shield-halved',
+    'api': 'fa-network-wired'
+  };
+
+  featContainer.innerHTML = '';
+  list.forEach(item => {
+    const lowerTitle = (item.title || '').toLowerCase();
+    let icon = 'fa-puzzle-piece';
+    for (const key in iconsMap) {
+      if (lowerTitle.includes(key)) {
+        icon = iconsMap[key];
+        break;
+      }
+    }
+
+    const price = Number(item.offerPrice || 0);
+    const label = document.createElement('label');
+    label.className = 'estimator-feature-tile';
+    label.innerHTML = `
+      <input type="checkbox" name="feature_addon" value="${price}" data-name="${escapeHTML(item.title || '')}" onchange="if(typeof window.calculateQuote === 'function') window.calculateQuote();">
+      <div class="est-feature-icon"><i class="fa-solid ${icon}"></i></div>
+      <div style="flex:1; min-width:0;">
+        <div style="font-size:0.82rem; font-weight:800; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHTML(item.title || '')}">${escapeHTML(item.title || '')}</div>
+        <div style="font-size:0.75rem; font-weight:800; color:#10b981; margin-top:2px;">+₹${price.toLocaleString('en-IN')}</div>
+      </div>
+    `;
+    featContainer.appendChild(label);
+  });
+
+  setupGridScrollIndicators('estimatorFeaturesContainer', 'btnScrollFeatPrev', 'btnScrollFeatNext');
+
+  if (typeof window.calculateQuote === 'function') {
+    window.calculateQuote();
+  }
 };
 
 /* Render Other Services & Hero Showcase Views from Firestore /products/ */
@@ -420,8 +498,8 @@ window.renderOtherServicesShowcases = function(otherServices) {
   }
 };
 
-/* Populate Live Booking Modal Category Select Dropdown with ALL items grouped */
-window.populateOrderModalCategories = function(proServices, projTypes, otherServ) {
+/* Populate Live Booking Modal Category Select Dropdown with ALL 4 categories grouped */
+window.populateOrderModalCategories = function(proServices, projTypes, keyFeatures, otherServ) {
   const orderSelect = document.getElementById('modalOrderCategory');
   if (!orderSelect) return;
 
@@ -431,7 +509,7 @@ window.populateOrderModalCategories = function(proServices, projTypes, otherServ
   // 1. Professional Services Optgroup
   if (Array.isArray(proServices) && proServices.length > 0) {
     const grp = document.createElement('optgroup');
-    grp.label = "💼 Professional Services (Full-Stack Solutions)";
+    grp.label = "💼 1. Professional Services (Full-Stack Solutions)";
     proServices.forEach(prod => {
       const opt = document.createElement('option');
       opt.value = prod.title;
@@ -447,10 +525,10 @@ window.populateOrderModalCategories = function(proServices, projTypes, otherServ
     orderSelect.appendChild(grp);
   }
 
-  // 2. Project Types Optgroup (Cost Estimator)
+  // 2. Project Types Optgroup (Cost Estimator Step 1)
   if (Array.isArray(projTypes) && projTypes.length > 0) {
     const grp = document.createElement('optgroup');
-    grp.label = "🚀 Project Types (Cost Estimator)";
+    grp.label = "🚀 2. Project Types (Cost Estimator Base Packages)";
     projTypes.forEach(prod => {
       const opt = document.createElement('option');
       opt.value = prod.title;
@@ -466,10 +544,29 @@ window.populateOrderModalCategories = function(proServices, projTypes, otherServ
     orderSelect.appendChild(grp);
   }
 
-  // 3. Other Services & Showcases Optgroup
+  // 3. Key Features / Standalone Add-ons Optgroup (Cost Estimator Step 2)
+  if (Array.isArray(keyFeatures) && keyFeatures.length > 0) {
+    const grp = document.createElement('optgroup');
+    grp.label = "⚡ 3. Key Features & Add-ons (Standalone Modules)";
+    keyFeatures.forEach(prod => {
+      const opt = document.createElement('option');
+      opt.value = prod.title;
+      opt.setAttribute('data-price', prod.offerPrice || 0);
+      opt.setAttribute('data-original', prod.originalPrice || 0);
+      const discPct = prod.originalPrice > 0 ? Math.round(((prod.originalPrice - prod.offerPrice) / prod.originalPrice) * 100) : 0;
+      opt.setAttribute('data-discount', Math.max(0, discPct));
+      const discText = discPct > 0 ? ` (${discPct}% OFF)` : '';
+      opt.textContent = `${prod.title} — ₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}${discText}`;
+      if (prod.title === selectedVal) opt.selected = true;
+      grp.appendChild(opt);
+    });
+    orderSelect.appendChild(grp);
+  }
+
+  // 4. Other Services & Showcases Optgroup
   if (Array.isArray(otherServ) && otherServ.length > 0) {
     const grp = document.createElement('optgroup');
-    grp.label = "⭐ Featured Showcases & Other Solutions";
+    grp.label = "⭐ 4. Other Showcases & Specialized Solutions";
     otherServ.forEach(prod => {
       const opt = document.createElement('option');
       opt.value = prod.title;
@@ -485,14 +582,14 @@ window.populateOrderModalCategories = function(proServices, projTypes, otherServ
     orderSelect.appendChild(grp);
   }
 
-  // 4. Custom Consultation Fallback Option
+  // 5. Custom Consultation Fallback Option
   const customOpt = document.createElement('option');
   customOpt.value = "Custom Requirement / Unique Idea";
   customOpt.setAttribute('data-price', "0");
   customOpt.setAttribute('data-original', "0");
   customOpt.setAttribute('data-discount', "100");
-  customOpt.textContent = "💡 Custom Requirement / Unique Idea — ₹0 (Free Consultation & Quote)";
-  if (selectedVal === "Custom Requirement / Unique Idea") customOpt.selected = true;
+  customOpt.textContent = "💡 5. Custom Requirement / Unique Idea — ₹0 (Free Consultation & Quote)";
+  if (selectedVal === "Custom Requirement / Unique Idea" || orderSelect.children.length === 0) customOpt.selected = true;
   orderSelect.appendChild(customOpt);
 
   if (typeof window.updateOrderModalPricing === 'function') {
@@ -695,6 +792,7 @@ window.toggleGoDozTheme = function() {
   if (now - lastThemeToggleTime < 300) {
     return;
   }
+
   lastThemeToggleTime = now;
   const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
