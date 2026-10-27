@@ -220,14 +220,7 @@ window.renderEstimatorProjectTypes = function(products) {
   const container = document.getElementById('estimatorProjectTypesContainer');
   if (!container) return;
 
-  if (!Array.isArray(products) || products.length === 0) {
-    container.innerHTML = `
-      <div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.85rem; grid-column:1 / -1;">
-        <i class="fa-solid fa-spinner fa-spin"></i> Loading Project Types from Firestore...
-      </div>
-    `;
-    return;
-  }
+  const list = Array.isArray(products) ? products : [];
 
   const iconsMap = {
     'school': 'fa-graduation-cap',
@@ -248,36 +241,45 @@ window.renderEstimatorProjectTypes = function(products) {
   };
 
   container.innerHTML = '';
-  products.forEach((prod, idx) => {
-    const isChecked = idx === 0 ? 'checked' : '';
-    const lowerTitle = (prod.title || '').toLowerCase();
-
-    let icon = 'fa-laptop-code';
-    for (const key in iconsMap) {
-      if (lowerTitle.includes(key)) {
-        icon = iconsMap[key];
-        break;
-      }
-    }
-
-    const label = document.createElement('label');
-    label.className = `estimator-type-tile ${isChecked ? 'selected' : ''}`;
-    label.innerHTML = `
-      <input type="radio" name="project_type" value="${prod.offerPrice || 0}" data-name="${escapeHTML(prod.title || '')}" ${isChecked} style="accent-color:var(--primary); width:18px; height:18px; cursor:pointer; flex-shrink:0;">
-      <div class="est-tile-badge">
-        <i class="fa-solid ${icon}"></i>
-      </div>
-      <div style="flex:1; min-width:0;">
-        <div style="font-size:0.86rem; font-weight:800; color:var(--text-main); line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word;" title="${escapeHTML(prod.title || '')}">
-          ${escapeHTML(prod.title || '')}
-        </div>
-        <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-top:3px;">
-          Base: <span style="color:#10b981; font-weight:900; font-size:0.82rem;">₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}</span>
-        </div>
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div style="padding:16px; text-align:center; color:var(--text-muted); font-size:0.84rem; grid-column:1 / -1;">
+        <i class="fa-solid fa-circle-info" style="color:var(--primary); margin-bottom:4px; display:block; font-size:1.1rem;"></i>
+        No base project types found in Firestore. Add them under <strong>'Cost Estimator: Project Types Manager'</strong> in Manager Dashboard.
       </div>
     `;
-    container.appendChild(label);
-  });
+  } else {
+    list.forEach((prod, idx) => {
+      const isChecked = idx === 0 ? 'checked' : '';
+      const lowerTitle = (prod.title || '').toLowerCase();
+
+      let icon = 'fa-laptop-code';
+      for (const key in iconsMap) {
+        if (lowerTitle.includes(key)) {
+          icon = iconsMap[key];
+          break;
+        }
+      }
+
+      const label = document.createElement('label');
+      label.className = `estimator-type-tile ${isChecked ? 'selected' : ''}`;
+      label.innerHTML = `
+        <input type="radio" name="project_type" value="${prod.offerPrice || 0}" data-name="${escapeHTML(prod.title || '')}" ${isChecked} style="accent-color:var(--primary); width:18px; height:18px; cursor:pointer; flex-shrink:0;">
+        <div class="est-tile-badge">
+          <i class="fa-solid ${icon}"></i>
+        </div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-size:0.86rem; font-weight:800; color:var(--text-main); line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word;" title="${escapeHTML(prod.title || '')}">
+            ${escapeHTML(prod.title || '')}
+          </div>
+          <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-top:3px;">
+            Base: <span style="color:#10b981; font-weight:900; font-size:0.82rem;">₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}</span>
+          </div>
+        </div>
+      `;
+      container.appendChild(label);
+    });
+  }
 
   // Custom Consultation Tile (Appended to dedicated wrapper so it doesn't break 2x2 grid)
   let customWrap = document.getElementById('customProjectTypeTileWrap');
@@ -348,44 +350,153 @@ window.renderEstimatorProjectTypes = function(products) {
   }
 };
 
-/* Render Live Booking Modal Select Options & Project Types from Firestore /products/ */
+/* Render Live Products, Estimator Project Types, Hero Showcases & Booking Options directly from Firestore /products/ */
 window.applyProductsCatalogUI = function(products) {
-  // Always render Services Cards & Estimator Radios
-  window.renderLiveServicesGrid(products);
-  window.renderEstimatorProjectTypes(products);
+  if (!Array.isArray(products)) products = [];
 
+  const professionalServices = products.filter(p => !p.category || p.category === 'professional_service');
+  const projectTypes = products.filter(p => p.category === 'project_type');
+  const otherServices = products.filter(p => p.category === 'other_service');
+
+  // 1. Render Professional Services ("What We Can Build For Your Business")
+  window.renderLiveServicesGrid(professionalServices);
+
+  // 2. Render Project Types ("Choose your project type" - 2x2 horizontal scroll)
+  window.renderEstimatorProjectTypes(projectTypes);
+
+  // 3. Render Other Services / Hero Showcases ("Android App View & Web Portal View")
+  window.renderOtherServicesShowcases(otherServices);
+
+  // 4. Populate Live Booking Modal with ALL options (Professional, Project Types, Showcases)
+  window.populateOrderModalCategories(professionalServices, projectTypes, otherServices);
+};
+
+/* Render Other Services & Hero Showcase Views from Firestore /products/ */
+window.renderOtherServicesShowcases = function(otherServices) {
+  if (!Array.isArray(otherServices) || otherServices.length === 0) return;
+
+  // 1. Android App Showcase View
+  const appProd = otherServices.find(p => (p.title || '').toLowerCase().includes('android') || (p.title || '').toLowerCase().includes('app')) || otherServices[0];
+  if (appProd) {
+    const titleEl = document.getElementById('heroAppTitle');
+    const subtitleEl = document.getElementById('heroAppSubtitle');
+    const descEl = document.getElementById('heroAppDesc');
+    const priceEl = document.getElementById('heroAppPrice');
+    const orderBtn = document.getElementById('heroAppOrderBtn');
+
+    if (titleEl) titleEl.textContent = appProd.title;
+    if (priceEl) priceEl.textContent = `Starting ₹${Number(appProd.offerPrice || 0).toLocaleString('en-IN')}`;
+    if (descEl && appProd.details) {
+      const lines = appProd.details.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      descEl.textContent = lines[0] || appProd.details;
+    }
+    if (orderBtn) {
+      orderBtn.onclick = function() {
+        window.openOrderModal(appProd.title, appProd.offerPrice || 0, appProd.details || 'Google Play Ready, Offline DB');
+      };
+    }
+  }
+
+  // 2. Web Portal Showcase View
+  const webProd = otherServices.find(p => p !== appProd && ((p.title || '').toLowerCase().includes('web') || (p.title || '').toLowerCase().includes('portal') || (p.title || '').toLowerCase().includes('site'))) || otherServices[1];
+  if (webProd) {
+    const titleEl = document.getElementById('heroWebTitle');
+    const subtitleEl = document.getElementById('heroWebSubtitle');
+    const descEl = document.getElementById('heroWebDesc');
+    const priceEl = document.getElementById('heroWebPrice');
+    const orderBtn = document.getElementById('heroWebOrderBtn');
+
+    if (titleEl) titleEl.textContent = webProd.title;
+    if (priceEl) priceEl.textContent = `Starting ₹${Number(webProd.offerPrice || 0).toLocaleString('en-IN')}`;
+    if (descEl && webProd.details) {
+      const lines = webProd.details.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      descEl.textContent = lines[0] || webProd.details;
+    }
+    if (orderBtn) {
+      orderBtn.onclick = function() {
+        window.openOrderModal(webProd.title, webProd.offerPrice || 0, webProd.details || 'Responsive Web Portal & DB');
+      };
+    }
+  }
+};
+
+/* Populate Live Booking Modal Category Select Dropdown with ALL items grouped */
+window.populateOrderModalCategories = function(proServices, projTypes, otherServ) {
   const orderSelect = document.getElementById('modalOrderCategory');
-  if (orderSelect && Array.isArray(products) && products.length > 0) {
-    const selectedVal = orderSelect.value;
-    orderSelect.innerHTML = '';
+  if (!orderSelect) return;
 
-    products.forEach(prod => {
+  const selectedVal = orderSelect.value;
+  orderSelect.innerHTML = '';
+
+  // 1. Professional Services Optgroup
+  if (Array.isArray(proServices) && proServices.length > 0) {
+    const grp = document.createElement('optgroup');
+    grp.label = "💼 Professional Services (Full-Stack Solutions)";
+    proServices.forEach(prod => {
       const opt = document.createElement('option');
       opt.value = prod.title;
       opt.setAttribute('data-price', prod.offerPrice || 0);
       opt.setAttribute('data-original', prod.originalPrice || 0);
       const discPct = prod.originalPrice > 0 ? Math.round(((prod.originalPrice - prod.offerPrice) / prod.originalPrice) * 100) : 0;
       opt.setAttribute('data-discount', Math.max(0, discPct));
-
       const discText = discPct > 0 ? ` (${discPct}% OFF)` : '';
       opt.textContent = `${prod.title} — ₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}${discText}`;
-
       if (prod.title === selectedVal) opt.selected = true;
-      orderSelect.appendChild(opt);
+      grp.appendChild(opt);
     });
+    orderSelect.appendChild(grp);
+  }
 
-    // Custom Consultation Fallback Option
-    const customOpt = document.createElement('option');
-    customOpt.value = "Custom Requirement / Unique Idea";
-    customOpt.setAttribute('data-price', "0");
-    customOpt.setAttribute('data-original', "0");
-    customOpt.setAttribute('data-discount', "100");
-    customOpt.textContent = "💡 Custom Requirement / Unique Idea — ₹0 (Free Consultation & Quote)";
-    orderSelect.appendChild(customOpt);
+  // 2. Project Types Optgroup (Cost Estimator)
+  if (Array.isArray(projTypes) && projTypes.length > 0) {
+    const grp = document.createElement('optgroup');
+    grp.label = "🚀 Project Types (Cost Estimator)";
+    projTypes.forEach(prod => {
+      const opt = document.createElement('option');
+      opt.value = prod.title;
+      opt.setAttribute('data-price', prod.offerPrice || 0);
+      opt.setAttribute('data-original', prod.originalPrice || 0);
+      const discPct = prod.originalPrice > 0 ? Math.round(((prod.originalPrice - prod.offerPrice) / prod.originalPrice) * 100) : 0;
+      opt.setAttribute('data-discount', Math.max(0, discPct));
+      const discText = discPct > 0 ? ` (${discPct}% OFF)` : '';
+      opt.textContent = `${prod.title} — ₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}${discText}`;
+      if (prod.title === selectedVal) opt.selected = true;
+      grp.appendChild(opt);
+    });
+    orderSelect.appendChild(grp);
+  }
 
-    if (typeof window.updateOrderModalPricing === 'function') {
-      window.updateOrderModalPricing();
-    }
+  // 3. Other Services & Showcases Optgroup
+  if (Array.isArray(otherServ) && otherServ.length > 0) {
+    const grp = document.createElement('optgroup');
+    grp.label = "⭐ Featured Showcases & Other Solutions";
+    otherServ.forEach(prod => {
+      const opt = document.createElement('option');
+      opt.value = prod.title;
+      opt.setAttribute('data-price', prod.offerPrice || 0);
+      opt.setAttribute('data-original', prod.originalPrice || 0);
+      const discPct = prod.originalPrice > 0 ? Math.round(((prod.originalPrice - prod.offerPrice) / prod.originalPrice) * 100) : 0;
+      opt.setAttribute('data-discount', Math.max(0, discPct));
+      const discText = discPct > 0 ? ` (${discPct}% OFF)` : '';
+      opt.textContent = `${prod.title} — ₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}${discText}`;
+      if (prod.title === selectedVal) opt.selected = true;
+      grp.appendChild(opt);
+    });
+    orderSelect.appendChild(grp);
+  }
+
+  // 4. Custom Consultation Fallback Option
+  const customOpt = document.createElement('option');
+  customOpt.value = "Custom Requirement / Unique Idea";
+  customOpt.setAttribute('data-price', "0");
+  customOpt.setAttribute('data-original', "0");
+  customOpt.setAttribute('data-discount', "100");
+  customOpt.textContent = "💡 Custom Requirement / Unique Idea — ₹0 (Free Consultation & Quote)";
+  if (selectedVal === "Custom Requirement / Unique Idea") customOpt.selected = true;
+  orderSelect.appendChild(customOpt);
+
+  if (typeof window.updateOrderModalPricing === 'function') {
+    window.updateOrderModalPricing();
   }
 };
 

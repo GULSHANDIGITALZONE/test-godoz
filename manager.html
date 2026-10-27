@@ -1318,11 +1318,73 @@
             </div>
 
             <!-- Green Add Product Button -->
-            <button class="btn btn-accent" onclick="window.openAddProductModal()" style="padding:9px 20px; font-weight:800; background:#16a34a; border-color:#16a34a; color:#ffffff;">
+            <button class="btn btn-accent" onclick="window.openAddProductModal('professional_service')" style="padding:9px 20px; font-weight:800; background:#16a34a; border-color:#16a34a; color:#ffffff;">
               <i class="fa-solid fa-plus"></i> Add Product
             </button>
           </div>
 
+        </div>
+
+        <!-- 2. Cost Estimator: Project Types Manager ("Choose your project type") -->
+        <div class="admin-card" style="margin-top:24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);"><i class="fa-solid fa-shapes" style="color:#6366f1;"></i> Cost Estimator: Project Types Manager</h3>
+              <p style="margin:0; font-size:0.84rem; color:var(--text-muted);">Manage base project types displayed in Step 1 ("Choose your project type" 2&times;2 grid) on index.html. Storage: <code>/products/{productId}</code></p>
+            </div>
+            <button class="btn btn-accent" onclick="window.openAddProjectTypeModal()" style="padding:8px 16px; font-weight:800; background:#6366f1; border-color:#6366f1; color:#ffffff;">
+              <i class="fa-solid fa-plus"></i> Add Project Type
+            </button>
+          </div>
+
+          <div class="order-table-wrap">
+            <table class="admin-table" style="width:100%; border-collapse:collapse; text-align:left;">
+              <thead>
+                <tr style="background:var(--bg-surface-alt); border-bottom:2px solid var(--border-color);">
+                  <th style="padding:10px; width:60px; text-align:center; font-weight:800;">S.L no</th>
+                  <th style="padding:10px; width:220px; font-weight:800;">Project Type Title</th>
+                  <th style="padding:10px; font-weight:800;">Scope / details</th>
+                  <th style="padding:10px; width:120px; text-align:center; font-weight:800;">Dusre jagah</th>
+                  <th style="padding:10px; width:110px; text-align:center; font-weight:800;">Base Rate (Yaha)</th>
+                  <th style="padding:10px; width:110px; text-align:center; font-weight:800;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="projectTypesTableBody">
+                <!-- Dynamic Project Types Rows Rendered Here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 3. Other Services & Hero Showcase Manager ("Android App & Web Portal Views") -->
+        <div class="admin-card" style="margin-top:24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);"><i class="fa-solid fa-star" style="color:#f59e0b;"></i> Other Services &amp; Hero Showcase Manager</h3>
+              <p style="margin:0; font-size:0.84rem; color:var(--text-muted);">Manage interactive showcases across index.html such as Hero "Android App View" &amp; "Web Portal View". Storage: <code>/products/{productId}</code></p>
+            </div>
+            <button class="btn btn-accent" onclick="window.openAddOtherServiceModal()" style="padding:8px 16px; font-weight:800; background:#f59e0b; border-color:#f59e0b; color:#ffffff;">
+              <i class="fa-solid fa-plus"></i> Add Other Service
+            </button>
+          </div>
+
+          <div class="order-table-wrap">
+            <table class="admin-table" style="width:100%; border-collapse:collapse; text-align:left;">
+              <thead>
+                <tr style="background:var(--bg-surface-alt); border-bottom:2px solid var(--border-color);">
+                  <th style="padding:10px; width:60px; text-align:center; font-weight:800;">S.L no</th>
+                  <th style="padding:10px; width:220px; font-weight:800;">Service / Showcase Title</th>
+                  <th style="padding:10px; font-weight:800;">details &amp; features</th>
+                  <th style="padding:10px; width:120px; text-align:center; font-weight:800;">Dusre jagah</th>
+                  <th style="padding:10px; width:110px; text-align:center; font-weight:800;">Starting Rate (Yaha)</th>
+                  <th style="padding:10px; width:110px; text-align:center; font-weight:800;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="otherServicesTableBody">
+                <!-- Dynamic Other Services Rows Rendered Here -->
+              </tbody>
+            </table>
+          </div>
         </div>
 
       </section>
@@ -1668,6 +1730,16 @@
 
     <form id="formAddProduct" style="display:flex; flex-direction:column; gap:12px;">
       <input type="hidden" id="productEditIndex" value="-1">
+      <input type="hidden" id="productEditDocId" value="">
+
+      <div>
+        <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Offering Category *</label>
+        <select id="productCategorySelect" required style="width:100%; padding:9px 12px; border:1.5px solid var(--border-color); border-radius:8px; font-weight:700; font-size:0.9rem; background:var(--bg-surface); color:var(--text-main);">
+          <option value="professional_service">💼 Professional Services ("What We Can Build For Your Business")</option>
+          <option value="project_type">🚀 Project Types ("Choose your project type" - Cost Estimator Step 1)</option>
+          <option value="other_service">⭐ Other Services / Hero Showcases ("Android App & Web Portal Views")</option>
+        </select>
+      </div>
 
       <div>
         <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Product / Service Title *</label>
@@ -2696,88 +2768,184 @@
     window.renderProductsCatalogTable(currentProductsCatalog);
   };
 
-  // Render Product Catalog Table from Live Firestore Data
+  // Render All Product Catalog Tables from Live Firestore Data
   window.renderProductsCatalogTable = function(products) {
-    const tbody = document.getElementById('pricingProductsTableBody');
-    if (!tbody) return;
-
     const list = Array.isArray(products) ? products : [];
     currentProductsCatalog = [...list];
 
-    if (list.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:35px 20px; color:var(--text-muted);"><i class="fa-solid fa-box-open" style="font-size:1.8rem; margin-bottom:8px; color:var(--primary); display:block;"></i> No products found in Firestore catalog. Click <strong>'+ Add Product'</strong> to create your first live package!</td></tr>`;
+    const proServices = currentProductsCatalog.filter(p => !p.category || p.category === 'professional_service');
+    const projectTypes = currentProductsCatalog.filter(p => p.category === 'project_type');
+    const otherServices = currentProductsCatalog.filter(p => p.category === 'other_service');
 
-      const infoElem = document.getElementById('catalogPaginationInfo');
-      if (infoElem) infoElem.textContent = 'Showing 0 items';
-      const indicatorElem = document.getElementById('catalogPageIndicator');
-      if (indicatorElem) indicatorElem.textContent = 'Page 1 of 1';
-      const btnPrev = document.getElementById('btnPrevCatalogPage');
-      if (btnPrev) btnPrev.disabled = true;
-      const btnNext = document.getElementById('btnNextCatalogPage');
-      if (btnNext) btnNext.disabled = true;
-      return;
+    // 1. Table 1: Professional Services
+    const proTbody = document.getElementById('pricingProductsTableBody');
+    if (proTbody) {
+      if (proServices.length === 0) {
+        proTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:35px 20px; color:var(--text-muted);"><i class="fa-solid fa-box-open" style="font-size:1.8rem; margin-bottom:8px; color:var(--primary); display:block;"></i> No professional services in Firestore. Click <strong>\'+ Add Product\'</strong> above to create one!</td></tr>';
+        const infoElem = document.getElementById('catalogPaginationInfo');
+        if (infoElem) infoElem.textContent = 'Showing 0 items';
+        const indicatorElem = document.getElementById('catalogPageIndicator');
+        if (indicatorElem) indicatorElem.textContent = 'Page 1 of 1';
+        const btnPrev = document.getElementById('btnPrevCatalogPage');
+        if (btnPrev) btnPrev.disabled = true;
+        const btnNext = document.getElementById('btnNextCatalogPage');
+        if (btnNext) btnNext.disabled = true;
+      } else {
+        const totalItems = proServices.length;
+        const totalPages = Math.max(1, Math.ceil(totalItems / catalogRowsPerPage));
+        if (catalogCurrentPage < 1) catalogCurrentPage = 1;
+        if (catalogCurrentPage > totalPages) catalogCurrentPage = totalPages;
+
+        const startIndex = (catalogCurrentPage - 1) * catalogRowsPerPage;
+        const endIndex = Math.min(totalItems, startIndex + catalogRowsPerPage);
+        const pageList = proServices.slice(startIndex, endIndex);
+
+        proTbody.innerHTML = '';
+        pageList.forEach((prod, pageIdx) => {
+          const globalIndex = startIndex + pageIdx;
+          const tr = document.createElement('tr');
+          tr.style.borderBottom = '1px solid var(--border-color)';
+          tr.innerHTML = `
+            <td style="padding:12px; text-align:center; font-weight:800; color:var(--text-muted);">${globalIndex + 1}</td>
+            <td style="padding:12px; font-weight:800; color:var(--text-main); font-size:0.92rem;">
+              ${escapeHTML(prod.title || 'Untitled Service')}
+            </td>
+            <td style="padding:12px; font-size:0.83rem; color:var(--text-main); line-height:1.5; white-space:pre-wrap; max-width:320px;">
+              ${escapeHTML(prod.details || 'No details provided.')}
+            </td>
+            <td style="padding:12px; text-align:center; font-weight:800; color:#ef4444; font-size:0.95rem; text-decoration:line-through;">
+              ₹${Number(prod.originalPrice || 0).toLocaleString('en-IN')}
+            </td>
+            <td style="padding:12px; text-align:center; font-weight:800; color:#16a34a; font-size:1.05rem;">
+              ₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}
+            </td>
+            <td style="padding:12px; text-align:center;">
+              <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                <button onclick="window.editProductById('${escapeHTML(prod.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:var(--primary); border-color:var(--primary);" title="Edit Product">
+                  <i class="fa-solid fa-pen"></i> Edit
+                </button>
+                <button onclick="window.deleteProductById('${escapeHTML(prod.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:#ef4444; border-color:#ef4444;" title="Delete Product">
+                  <i class="fa-solid fa-trash"></i> Delete
+                </button>
+              </div>
+            </td>
+          `;
+          proTbody.appendChild(tr);
+        });
+
+        const infoElem = document.getElementById('catalogPaginationInfo');
+        if (infoElem) infoElem.textContent = `Showing ${startIndex + 1} - ${endIndex} of ${totalItems} items`;
+        const indicatorElem = document.getElementById('catalogPageIndicator');
+        if (indicatorElem) indicatorElem.textContent = `Page ${catalogCurrentPage} of ${totalPages}`;
+        const btnPrev = document.getElementById('btnPrevCatalogPage');
+        if (btnPrev) btnPrev.disabled = catalogCurrentPage <= 1;
+        const btnNext = document.getElementById('btnNextCatalogPage');
+        if (btnNext) btnNext.disabled = catalogCurrentPage >= totalPages;
+      }
     }
 
-    const totalItems = list.length;
-    const totalPages = Math.max(1, Math.ceil(totalItems / catalogRowsPerPage));
-    if (catalogCurrentPage < 1) catalogCurrentPage = 1;
-    if (catalogCurrentPage > totalPages) catalogCurrentPage = totalPages;
+    // 2. Table 2: Project Types (Step 1 Cost Estimator)
+    const typeTbody = document.getElementById('projectTypesTableBody');
+    if (typeTbody) {
+      if (projectTypes.length === 0) {
+        typeTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px 20px; color:var(--text-muted);"><i class="fa-solid fa-shapes" style="font-size:1.8rem; margin-bottom:8px; color:#6366f1; display:block;"></i> No project types found in Firestore. Click <strong>\'+ Add Project Type\'</strong> above to create base options for Cost Estimator Step 1!</td></tr>';
+      } else {
+        typeTbody.innerHTML = '';
+        projectTypes.forEach((prod, idx) => {
+          const tr = document.createElement('tr');
+          tr.style.borderBottom = '1px solid var(--border-color)';
+          tr.innerHTML = `
+            <td style="padding:12px; text-align:center; font-weight:800; color:var(--text-muted);">${idx + 1}</td>
+            <td style="padding:12px; font-weight:800; color:var(--text-main); font-size:0.92rem;">
+              <span style="display:inline-flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-cube" style="color:#6366f1; font-size:0.85rem;"></i>
+                ${escapeHTML(prod.title || 'Untitled Project Type')}
+              </span>
+            </td>
+            <td style="padding:12px; font-size:0.83rem; color:var(--text-main); line-height:1.5; white-space:pre-wrap; max-width:320px;">
+              ${escapeHTML(prod.details || 'Standard architecture and base development scope.')}
+            </td>
+            <td style="padding:12px; text-align:center; font-weight:800; color:#ef4444; font-size:0.95rem; text-decoration:line-through;">
+              ₹${Number(prod.originalPrice || 0).toLocaleString('en-IN')}
+            </td>
+            <td style="padding:12px; text-align:center; font-weight:800; color:#16a34a; font-size:1.05rem;">
+              ₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}
+            </td>
+            <td style="padding:12px; text-align:center;">
+              <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                <button onclick="window.editProductById('${escapeHTML(prod.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:#6366f1; border-color:#6366f1;" title="Edit Project Type">
+                  <i class="fa-solid fa-pen"></i> Edit
+                </button>
+                <button onclick="window.deleteProductById('${escapeHTML(prod.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:#ef4444; border-color:#ef4444;" title="Delete Project Type">
+                  <i class="fa-solid fa-trash"></i> Delete
+                </button>
+              </div>
+            </td>
+          `;
+          typeTbody.appendChild(tr);
+        });
+      }
+    }
 
-    const startIndex = (catalogCurrentPage - 1) * catalogRowsPerPage;
-    const endIndex = Math.min(totalItems, startIndex + catalogRowsPerPage);
-    const pageList = list.slice(startIndex, endIndex);
-
-    tbody.innerHTML = '';
-    pageList.forEach((prod, pageIdx) => {
-      const globalIndex = startIndex + pageIdx;
-      const tr = document.createElement('tr');
-      tr.style.borderBottom = '1px solid var(--border-color)';
-
-      tr.innerHTML = `
-        <td style="padding:12px; text-align:center; font-weight:800; color:var(--text-muted);">${globalIndex + 1}</td>
-        <td style="padding:12px; font-weight:800; color:var(--text-main); font-size:0.92rem;">
-          ${escapeHTML(prod.title || 'Untitled Package')}
-        </td>
-        <td style="padding:12px; font-size:0.83rem; color:var(--text-main); line-height:1.5; white-space:pre-wrap; max-width:320px;">
-          ${escapeHTML(prod.details || 'No details provided.')}
-        </td>
-        <td style="padding:12px; text-align:center; font-weight:800; color:#ef4444; font-size:0.95rem; text-decoration:line-through;">
-          ₹${Number(prod.originalPrice || 0).toLocaleString('en-IN')}
-        </td>
-        <td style="padding:12px; text-align:center; font-weight:800; color:#16a34a; font-size:1.05rem;">
-          ₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}
-        </td>
-        <td style="padding:12px; text-align:center;">
-          <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
-            <button onclick="window.editProduct(${globalIndex})" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:var(--primary); border-color:var(--primary);" title="Edit Product">
-              <i class="fa-solid fa-pen"></i> Edit
-            </button>
-            <button onclick="window.deleteProduct(${globalIndex})" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:#ef4444; border-color:#ef4444;" title="Delete Product">
-              <i class="fa-solid fa-trash"></i> Delete
-            </button>
-          </div>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
-
-    // Update Pagination Controls
-    const infoElem = document.getElementById('catalogPaginationInfo');
-    if (infoElem) infoElem.textContent = `Showing ${startIndex + 1} - ${endIndex} of ${totalItems} items`;
-
-    const indicatorElem = document.getElementById('catalogPageIndicator');
-    if (indicatorElem) indicatorElem.textContent = `Page ${catalogCurrentPage} of ${totalPages}`;
-
-    const btnPrev = document.getElementById('btnPrevCatalogPage');
-    if (btnPrev) btnPrev.disabled = catalogCurrentPage <= 1;
-
-    const btnNext = document.getElementById('btnNextCatalogPage');
-    if (btnNext) btnNext.disabled = catalogCurrentPage >= totalPages;
+    // 3. Table 3: Other Services & Hero Showcases
+    const otherTbody = document.getElementById('otherServicesTableBody');
+    if (otherTbody) {
+      if (otherServices.length === 0) {
+        otherTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px 20px; color:var(--text-muted);"><i class="fa-solid fa-star" style="font-size:1.8rem; margin-bottom:8px; color:#f59e0b; display:block;"></i> No other services/showcases in Firestore. Click <strong>\'+ Add Other Service\'</strong> above to create showcase items (e.g. Android App View & Web Portal View)!</td></tr>';
+      } else {
+        otherTbody.innerHTML = '';
+        otherServices.forEach((prod, idx) => {
+          const tr = document.createElement('tr');
+          tr.style.borderBottom = '1px solid var(--border-color)';
+          tr.innerHTML = `
+            <td style="padding:12px; text-align:center; font-weight:800; color:var(--text-muted);">${idx + 1}</td>
+            <td style="padding:12px; font-weight:800; color:var(--text-main); font-size:0.92rem;">
+              <span style="display:inline-flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-star" style="color:#f59e0b; font-size:0.85rem;"></i>
+                ${escapeHTML(prod.title || 'Untitled Showcase')}
+              </span>
+            </td>
+            <td style="padding:12px; font-size:0.83rem; color:var(--text-main); line-height:1.5; white-space:pre-wrap; max-width:320px;">
+              ${escapeHTML(prod.details || 'Showcase highlights & features.')}
+            </td>
+            <td style="padding:12px; text-align:center; font-weight:800; color:#ef4444; font-size:0.95rem; text-decoration:line-through;">
+              ₹${Number(prod.originalPrice || 0).toLocaleString('en-IN')}
+            </td>
+            <td style="padding:12px; text-align:center; font-weight:800; color:#16a34a; font-size:1.05rem;">
+              ₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}
+            </td>
+            <td style="padding:12px; text-align:center;">
+              <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                <button onclick="window.editProductById('${escapeHTML(prod.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:#f59e0b; border-color:#f59e0b;" title="Edit Service">
+                  <i class="fa-solid fa-pen"></i> Edit
+                </button>
+                <button onclick="window.deleteProductById('${escapeHTML(prod.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:#ef4444; border-color:#ef4444;" title="Delete Service">
+                  <i class="fa-solid fa-trash"></i> Delete
+                </button>
+              </div>
+            </td>
+          `;
+          otherTbody.appendChild(tr);
+        });
+      }
+    }
   };
 
-  window.openAddProductModal = function() {
-    document.getElementById('productEditIndex').value = "-1";
-    document.getElementById('addProductModalTitle').textContent = "Add New Product / Package";
+  window.openAddProductModal = function(cat = 'professional_service') {
+    const editIndexEl = document.getElementById('productEditIndex');
+    if (editIndexEl) editIndexEl.value = "-1";
+    const editDocIdEl = document.getElementById('productEditDocId');
+    if (editDocIdEl) editDocIdEl.value = "";
+    const catSelect = document.getElementById('productCategorySelect');
+    if (catSelect) catSelect.value = cat;
+
+    const titleEl = document.getElementById('addProductModalTitle');
+    if (titleEl) {
+      titleEl.textContent = cat === 'project_type' 
+        ? "Add New Project Type" 
+        : (cat === 'other_service' ? "Add Other Service / Showcase" : "Add New Professional Service");
+    }
+
     document.getElementById('productTitleInput').value = "";
     document.getElementById('productDetailsInput').value = "";
     document.getElementById('productOriginalPriceInput').value = "";
@@ -2785,16 +2953,29 @@
     document.getElementById('addProductModal').style.display = 'flex';
   };
 
+  window.openAddProjectTypeModal = function() {
+    window.openAddProductModal('project_type');
+  };
+
+  window.openAddOtherServiceModal = function() {
+    window.openAddProductModal('other_service');
+  };
+
   window.closeAddProductModal = function() {
     document.getElementById('addProductModal').style.display = 'none';
   };
 
-  window.editProduct = function(index) {
-    const prod = currentProductsCatalog[index];
+  window.editProductById = function(docId) {
+    const prod = currentProductsCatalog.find(p => p.id === docId);
     if (!prod) return;
 
-    document.getElementById('productEditIndex').value = index;
-    document.getElementById('addProductModalTitle').textContent = `Edit Product: ${prod.title}`;
+    const editDocIdEl = document.getElementById('productEditDocId');
+    if (editDocIdEl) editDocIdEl.value = docId;
+    const cat = prod.category || 'professional_service';
+    const catSelect = document.getElementById('productCategorySelect');
+    if (catSelect) catSelect.value = cat;
+
+    document.getElementById('addProductModalTitle').textContent = `Edit: ${prod.title}`;
     document.getElementById('productTitleInput').value = prod.title || "";
     document.getElementById('productDetailsInput').value = prod.details || "";
     document.getElementById('productOriginalPriceInput').value = prod.originalPrice || "";
@@ -2802,73 +2983,77 @@
     document.getElementById('addProductModal').style.display = 'flex';
   };
 
-  window.deleteProduct = async function(index) {
+  window.editProduct = function(index) {
     const prod = currentProductsCatalog[index];
+    if (prod && prod.id) window.editProductById(prod.id);
+  };
+
+  window.deleteProductById = async function(docId) {
+    const prod = currentProductsCatalog.find(p => p.id === docId);
     if (!prod) return;
 
-    if (confirm(`Are you sure you want to delete '${prod.title}' from the products collection?`)) {
-      if (prod.id) {
-        await deleteProductFromFirestore(prod.id);
+    if (confirm(`Are you sure you want to delete '${prod.title}' from Firestore (/products/)?`)) {
+      const res = await deleteProductFromFirestore(docId);
+      if (res && res.success) {
+        currentProductsCatalog = currentProductsCatalog.filter(p => p.id !== docId);
+        window.renderProductsCatalogTable(currentProductsCatalog);
+      } else {
+        alert("❌ Error deleting product: " + (res?.error || 'Unknown error'));
       }
-      currentProductsCatalog.splice(index, 1);
-      window.renderProductsCatalogTable(currentProductsCatalog);
     }
   };
 
-  window.resetDefaultProductsCatalog = async function() {
-    if (confirm("Publish/Seed standard 10 packages as separate documents into '/products/' collection in Firestore?")) {
-      for (let i = 0; i < DEFAULT_CATALOG_PRODUCTS.length; i++) {
-        const prod = DEFAULT_CATALOG_PRODUCTS[i];
-        prod.slNo = i + 1;
-        await saveProductToFirestore(prod);
-      }
-      currentProductsCatalog = [...DEFAULT_CATALOG_PRODUCTS];
-      window.renderProductsCatalogTable(currentProductsCatalog);
-      await window.publishProductsCatalogToFirestore();
-      alert("✅ All 10 standard products created as separate documents in '/products/' collection!");
-    }
+  window.deleteProduct = async function(index) {
+    const prod = currentProductsCatalog[index];
+    if (prod && prod.id) await window.deleteProductById(prod.id);
   };
 
-  window.publishProductsCatalogToFirestore = async function() {
-    let count = 0;
-    for (let idx = 0; idx < currentProductsCatalog.length; idx++) {
-      const p = currentProductsCatalog[idx];
-      p.slNo = idx + 1;
-      const res = await saveProductToFirestore(p);
-      if (res.success) count++;
-    }
-    alert(`✅ SUCCESS: Published ${count} products directly to '/products/' collection in Firestore!`);
-  };
-
-  // Add Product Form submit
+  // Add / Edit Product Form submit (100% Firestore Document Storage)
   document.getElementById('formAddProduct')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const index = parseInt(document.getElementById('productEditIndex').value || "-1", 10);
+    const docId = (document.getElementById('productEditDocId')?.value || '').trim();
+    const category = document.getElementById('productCategorySelect')?.value || 'professional_service';
     const title = document.getElementById('productTitleInput').value.trim();
     const details = document.getElementById('productDetailsInput').value.trim();
     const originalPrice = Math.max(0, parseInt(document.getElementById('productOriginalPriceInput').value || '0', 10));
     const offerPrice = Math.max(0, parseInt(document.getElementById('productOfferPriceInput').value || '0', 10));
 
-    const prodId = index >= 0 ? currentProductsCatalog[index].id : ('prod_' + Date.now());
+    const finalId = docId || ('prod_' + Date.now());
     const newProd = {
-      id: prodId,
-      slNo: index >= 0 ? (index + 1) : (currentProductsCatalog.length + 1),
+      id: finalId,
+      category: category,
       title: title,
       details: details,
       originalPrice: originalPrice,
-      offerPrice: offerPrice
+      offerPrice: offerPrice,
+      updatedAt: new Date().toISOString()
     };
 
-    if (index >= 0) {
-      currentProductsCatalog[index] = newProd;
-    } else {
-      currentProductsCatalog.push(newProd);
+    const saveBtn = document.getElementById('btnSaveProduct');
+    const originalBtnHtml = saveBtn ? saveBtn.innerHTML : '';
+    if (saveBtn) {
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
     }
 
-    await saveProductToFirestore(newProd);
-    window.closeAddProductModal();
-    window.renderProductsCatalogTable(currentProductsCatalog);
-    await window.publishProductsCatalogToFirestore();
+    const res = await saveProductToFirestore(newProd);
+    if (saveBtn) {
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = originalBtnHtml;
+    }
+
+    if (res && res.success) {
+      window.closeAddProductModal();
+      const existingIdx = currentProductsCatalog.findIndex(p => p.id === finalId);
+      if (existingIdx >= 0) {
+        currentProductsCatalog[existingIdx] = newProd;
+      } else {
+        currentProductsCatalog.push(newProd);
+      }
+      window.renderProductsCatalogTable(currentProductsCatalog);
+    } else {
+      alert("❌ Error saving product: " + (res?.error || 'Unknown error'));
+    }
   });
 
   // Save Estimator Addons Form Submit
@@ -2912,9 +3097,7 @@
 
   // Listen to /products/ collection in real-time
   listenToProductsCatalog((productsList) => {
-    if (Array.isArray(productsList) && productsList.length > 0) {
-      window.renderProductsCatalogTable(productsList);
-    }
+    window.renderProductsCatalogTable(Array.isArray(productsList) ? productsList : []);
   });
 
   // Render Razorpay Payments Table
