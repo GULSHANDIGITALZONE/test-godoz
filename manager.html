@@ -1211,65 +1211,17 @@
       <!-- ==================== TAB 5: PRODUCT & PRICING CATALOG (EXACT TABLE FORMAT) ==================== -->
       <section id="sectionPricing" style="display:none;">
 
-        <!-- Estimator Add-on Features & Timeline Config Card -->
-        <div class="admin-card" style="margin-bottom:20px;">
-          <div style="margin-bottom:12px;">
-            <h3 style="margin:0 0 4px; font-size:1.15rem; color:var(--text-main);"><i class="fa-solid fa-calculator" style="color:var(--primary);"></i> Cost Estimator Add-on Features &amp; Timeline Rates</h3>
-            <p style="margin:0; font-size:0.82rem; color:var(--text-muted);">Manage optional feature add-on rates (₹) and express delivery timeline settings displayed on index.html.</p>
-          </div>
-
-          <form id="formSaveEstimatorAddons" style="display:flex; flex-direction:column; gap:12px;">
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap:12px;">
-
-              <div>
-                <label style="display:block; font-size:0.78rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Feature 1: User Login / OTP Auth (₹)</label>
-                <input type="number" id="addon_login" min="0" value="2000" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; font-size:0.88rem; background:var(--bg-surface-alt); color:var(--text-main); font-weight:700;">
-              </div>
-
-              <div>
-                <label style="display:block; font-size:0.78rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Feature 2: Razorpay / UPI Gateway (₹)</label>
-                <input type="number" id="addon_gateway" min="0" value="3000" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; font-size:0.88rem; background:var(--bg-surface-alt); color:var(--text-main); font-weight:700;">
-              </div>
-
-              <div>
-                <label style="display:block; font-size:0.78rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Feature 3: Push Notifications (₹)</label>
-                <input type="number" id="addon_push" min="0" value="2500" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; font-size:0.88rem; background:var(--bg-surface-alt); color:var(--text-main); font-weight:700;">
-              </div>
-
-              <div>
-                <label style="display:block; font-size:0.78rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Feature 4: Dedicated Admin CMS (₹)</label>
-                <input type="number" id="addon_cms" min="0" value="3500" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; font-size:0.88rem; background:var(--bg-surface-alt); color:var(--text-main); font-weight:700;">
-              </div>
-
-              <div>
-                <label style="display:block; font-size:0.78rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Feature 5: Gemini AI / Chatbot (₹)</label>
-                <input type="number" id="addon_ai" min="0" value="4000" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; font-size:0.88rem; background:var(--bg-surface-alt); color:var(--text-main); font-weight:700;">
-              </div>
-
-              <div>
-                <label style="display:block; font-size:0.78rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">⚡ Express Delivery Extra Price (%)</label>
-                <input type="number" id="addon_express_pct" min="0" max="50" value="5" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; font-size:0.88rem; background:var(--bg-surface-alt); color:var(--text-main); font-weight:700;">
-              </div>
-
-            </div>
-
-            <div style="display:flex; justify-content:flex-end;">
-              <button type="submit" class="btn btn-sm btn-primary" style="padding:8px 18px; font-weight:700;">
-                <i class="fa-solid fa-floppy-disk"></i> Save Estimator Config
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Interactive Products & Packages Catalog Table Card (Exact User Screenshot Design) -->
-        <div class="admin-card">
+        <!-- ============================================================================ -->
+        <!-- 1. PROFESSIONAL SERVICES CATALOG ("What We Can Build For Your Business") -->
+        <!-- ============================================================================ -->
+        <div class="admin-card" style="margin-bottom:24px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
             <div>
-              <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);"><i class="fa-solid fa-tags" style="color:var(--primary);"></i> GoDoz Product &amp; Package Pricing Catalog</h3>
-              <p style="margin:0; font-size:0.84rem; color:var(--text-muted);">Manage all products, services, market rates (Dusre Jagah), and special GoDoz prices (Yaha).</p>
+              <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);"><i class="fa-solid fa-briefcase" style="color:var(--primary);"></i> 1. Professional Services Catalog ("What We Can Build")</h3>
+              <p style="margin:0; font-size:0.84rem; color:var(--text-muted);">Manage all full-stack business solutions &amp; packages displayed in Section 5 on index.html. Storage: <code>/products/{productId}</code></p>
             </div>
-            <button class="btn btn-accent" onclick="window.openAddProductModal()" style="padding:8px 16px; font-weight:800; background:#16a34a; border-color:#16a34a; color:#ffffff;">
-              <i class="fa-solid fa-plus"></i> Add Product
+            <button class="btn btn-accent" onclick="window.openAddServiceModal()" style="padding:8px 16px; font-weight:800; background:#16a34a; border-color:#16a34a; color:#ffffff;">
+              <i class="fa-solid fa-plus"></i> Add Service
             </button>
           </div>
 
@@ -1278,21 +1230,20 @@
               <thead>
                 <tr style="background:var(--bg-surface-alt); border-bottom:2px solid var(--border-color);">
                   <th style="padding:10px; width:60px; text-align:center; font-weight:800;">S.L no</th>
-                  <th style="padding:10px; width:220px; font-weight:800;">Title</th>
-                  <th style="padding:10px; font-weight:800;">details</th>
+                  <th style="padding:10px; width:220px; font-weight:800;">Service Title</th>
+                  <th style="padding:10px; font-weight:800;">Details &amp; Features</th>
                   <th style="padding:10px; width:120px; text-align:center; font-weight:800;">Dusre jagah</th>
-                  <th style="padding:10px; width:110px; text-align:center; font-weight:800;">yaha</th>
+                  <th style="padding:10px; width:110px; text-align:center; font-weight:800;">Yaha Rate</th>
                   <th style="padding:10px; width:110px; text-align:center; font-weight:800;">Action</th>
                 </tr>
               </thead>
               <tbody id="pricingProductsTableBody">
-                <!-- Dynamic Product Rows Rendered Here -->
+                <!-- Dynamic Professional Services Rows Rendered Here -->
               </tbody>
             </table>
           </div>
 
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; flex-wrap:wrap; gap:12px;">
-            <!-- Rows Per Page & Pagination Selector -->
             <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
               <label for="catalogRowsPerPageSelect" style="font-size:0.84rem; font-weight:700; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
                 Show Items:
@@ -1301,7 +1252,6 @@
                   <option value="20">20 per page</option>
                   <option value="50">50 per page</option>
                   <option value="100">100 per page</option>
-                  <option value="500">500 per page</option>
                   <option value="all">Show All</option>
                 </select>
               </label>
@@ -1317,20 +1267,20 @@
               </div>
             </div>
 
-            <!-- Green Add Product Button -->
-            <button class="btn btn-accent" onclick="window.openAddProductModal('professional_service')" style="padding:9px 20px; font-weight:800; background:#16a34a; border-color:#16a34a; color:#ffffff;">
-              <i class="fa-solid fa-plus"></i> Add Product
+            <button class="btn btn-accent" onclick="window.openAddServiceModal()" style="padding:9px 20px; font-weight:800; background:#16a34a; border-color:#16a34a; color:#ffffff;">
+              <i class="fa-solid fa-plus"></i> Add Service
             </button>
           </div>
-
         </div>
 
-        <!-- 2. Cost Estimator: Project Types Manager ("Choose your project type") -->
-        <div class="admin-card" style="margin-top:24px;">
+        <!-- ============================================================================ -->
+        <!-- 2. COST ESTIMATOR: PROJECT TYPES MANAGER ("Choose your project type") -->
+        <!-- ============================================================================ -->
+        <div class="admin-card" style="margin-bottom:24px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
             <div>
-              <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);"><i class="fa-solid fa-shapes" style="color:#6366f1;"></i> Cost Estimator: Project Types Manager</h3>
-              <p style="margin:0; font-size:0.84rem; color:var(--text-muted);">Manage base project types displayed in Step 1 ("Choose your project type" 2&times;2 grid) on index.html. Storage: <code>/products/{productId}</code></p>
+              <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);"><i class="fa-solid fa-shapes" style="color:#6366f1;"></i> 2. Cost Estimator: Project Types Manager ("Choose your project type")</h3>
+              <p style="margin:0; font-size:0.84rem; color:var(--text-muted);">Manage base project options displayed in Step 1 of Cost Estimator (2&times;2 grid) on index.html. Storage: <code>/products/{productId}</code></p>
             </div>
             <button class="btn btn-accent" onclick="window.openAddProjectTypeModal()" style="padding:8px 16px; font-weight:800; background:#6366f1; border-color:#6366f1; color:#ffffff;">
               <i class="fa-solid fa-plus"></i> Add Project Type
@@ -1343,7 +1293,7 @@
                 <tr style="background:var(--bg-surface-alt); border-bottom:2px solid var(--border-color);">
                   <th style="padding:10px; width:60px; text-align:center; font-weight:800;">S.L no</th>
                   <th style="padding:10px; width:220px; font-weight:800;">Project Type Title</th>
-                  <th style="padding:10px; font-weight:800;">Scope / details</th>
+                  <th style="padding:10px; font-weight:800;">Scope / Details</th>
                   <th style="padding:10px; width:120px; text-align:center; font-weight:800;">Dusre jagah</th>
                   <th style="padding:10px; width:110px; text-align:center; font-weight:800;">Base Rate (Yaha)</th>
                   <th style="padding:10px; width:110px; text-align:center; font-weight:800;">Action</th>
@@ -1356,11 +1306,58 @@
           </div>
         </div>
 
-        <!-- 3. Other Services & Hero Showcase Manager ("Android App & Web Portal Views") -->
-        <div class="admin-card" style="margin-top:24px;">
+        <!-- ============================================================================ -->
+        <!-- 3. COST ESTIMATOR: KEY FEATURES & ADD-ONS MANAGER ("Add the features you need") -->
+        <!-- ============================================================================ -->
+        <div class="admin-card" style="margin-bottom:24px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
             <div>
-              <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);"><i class="fa-solid fa-star" style="color:#f59e0b;"></i> Other Services &amp; Hero Showcase Manager</h3>
+              <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);"><i class="fa-solid fa-bolt" style="color:#eab308;"></i> 3. Cost Estimator: Key Features &amp; Add-ons Manager ("Add the features you need")</h3>
+              <p style="margin:0; font-size:0.84rem; color:var(--text-muted);">Manage selectable add-on features (User Login, DB, Payment Gateway, Push Notifications, CMS, AI Chatbot, etc.) in Step 2 of Cost Estimator. Storage: <code>/products/{productId}</code></p>
+            </div>
+            <button class="btn btn-accent" onclick="window.openAddKeyFeatureModal()" style="padding:8px 16px; font-weight:800; background:#eab308; border-color:#eab308; color:#000000;">
+              <i class="fa-solid fa-plus"></i> Add Key Feature
+            </button>
+          </div>
+
+          <div class="order-table-wrap">
+            <table class="admin-table" style="width:100%; border-collapse:collapse; text-align:left;">
+              <thead>
+                <tr style="background:var(--bg-surface-alt); border-bottom:2px solid var(--border-color);">
+                  <th style="padding:10px; width:60px; text-align:center; font-weight:800;">S.L no</th>
+                  <th style="padding:10px; width:220px; font-weight:800;">Key Feature Title</th>
+                  <th style="padding:10px; font-weight:800;">Feature Details &amp; Specs</th>
+                  <th style="padding:10px; width:120px; text-align:center; font-weight:800;">Dusre jagah</th>
+                  <th style="padding:10px; width:110px; text-align:center; font-weight:800;">Extra Rate (+₹)</th>
+                  <th style="padding:10px; width:110px; text-align:center; font-weight:800;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="keyFeaturesTableBody">
+                <!-- Dynamic Key Features Rows Rendered Here -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Express Delivery Timeline Extra % Config -->
+          <form id="formSaveEstimatorAddons" style="display:flex; align-items:center; gap:12px; margin-top:16px; padding:12px 16px; background:var(--bg-surface-alt); border-radius:10px; border:1px solid var(--border-color); flex-wrap:wrap;">
+            <div style="font-weight:800; font-size:0.86rem; color:var(--text-main); display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-truck-fast" style="color:var(--primary);"></i> ⚡ Express Delivery Extra Price (%):
+            </div>
+            <input type="number" id="addon_express_pct" min="0" max="50" value="5" style="width:85px; padding:6px 10px; border:1.5px solid var(--border-color); border-radius:8px; font-size:0.88rem; background:var(--bg-surface); color:var(--text-main); font-weight:800;">
+            <button type="submit" class="btn btn-sm btn-primary" style="padding:6px 16px; font-weight:700;">
+              <i class="fa-solid fa-floppy-disk"></i> Save Express Rate
+            </button>
+            <span style="font-size:0.75rem; color:var(--text-muted);">(Calculates fast 10-day delivery surcharge in Step 3 of Cost Estimator)</span>
+          </form>
+        </div>
+
+        <!-- ============================================================================ -->
+        <!-- 4. OTHER SERVICES & HERO SHOWCASE MANAGER ("Android App & Web Portal Views") -->
+        <!-- ============================================================================ -->
+        <div class="admin-card" style="margin-bottom:24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);"><i class="fa-solid fa-star" style="color:#f59e0b;"></i> 4. Other Services &amp; Hero Showcase Manager ("Android App &amp; Web Portal Views")</h3>
               <p style="margin:0; font-size:0.84rem; color:var(--text-muted);">Manage interactive showcases across index.html such as Hero "Android App View" &amp; "Web Portal View". Storage: <code>/products/{productId}</code></p>
             </div>
             <button class="btn btn-accent" onclick="window.openAddOtherServiceModal()" style="padding:8px 16px; font-weight:800; background:#f59e0b; border-color:#f59e0b; color:#ffffff;">
@@ -1374,7 +1371,7 @@
                 <tr style="background:var(--bg-surface-alt); border-bottom:2px solid var(--border-color);">
                   <th style="padding:10px; width:60px; text-align:center; font-weight:800;">S.L no</th>
                   <th style="padding:10px; width:220px; font-weight:800;">Service / Showcase Title</th>
-                  <th style="padding:10px; font-weight:800;">details &amp; features</th>
+                  <th style="padding:10px; font-weight:800;">Details &amp; Features</th>
                   <th style="padding:10px; width:120px; text-align:center; font-weight:800;">Dusre jagah</th>
                   <th style="padding:10px; width:110px; text-align:center; font-weight:800;">Starting Rate (Yaha)</th>
                   <th style="padding:10px; width:110px; text-align:center; font-weight:800;">Action</th>
@@ -1724,7 +1721,10 @@
 <div id="addProductModal" class="modal-overlay" style="display:none;">
   <div class="modal-content" style="max-width:550px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
-      <h3 style="margin:0; font-size:1.2rem; color:var(--text-main);"><i class="fa-solid fa-box-open" style="color:var(--primary);"></i> <span id="addProductModalTitle">Add New Product / Package</span></h3>
+      <h3 style="margin:0; font-size:1.2rem; color:var(--text-main); display:flex; align-items:center; gap:8px;">
+        <span id="addProductModalIcon"><i class="fa-solid fa-briefcase" style="color:var(--primary);"></i></span>
+        <span id="addProductModalTitle">Add New Offering</span>
+      </h3>
       <button onclick="window.closeAddProductModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-muted);">&times;</button>
     </div>
 
@@ -1734,36 +1734,37 @@
 
       <div>
         <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Offering Category *</label>
-        <select id="productCategorySelect" required style="width:100%; padding:9px 12px; border:1.5px solid var(--border-color); border-radius:8px; font-weight:700; font-size:0.9rem; background:var(--bg-surface); color:var(--text-main);">
-          <option value="professional_service">💼 Professional Services ("What We Can Build For Your Business")</option>
-          <option value="project_type">🚀 Project Types ("Choose your project type" - Cost Estimator Step 1)</option>
-          <option value="other_service">⭐ Other Services / Hero Showcases ("Android App & Web Portal Views")</option>
+        <select id="productCategorySelect" onchange="window.handleProductCategoryChange(this.value)" required style="width:100%; padding:9px 12px; border:1.5px solid var(--border-color); border-radius:8px; font-weight:700; font-size:0.9rem; background:var(--bg-surface); color:var(--text-main);">
+          <option value="professional_service">💼 1. Service (Professional Services - "What We Can Build")</option>
+          <option value="project_type">🚀 2. Project Type (Cost Estimator Step 1 - "Choose your project type")</option>
+          <option value="key_feature">⚡ 3. Key Feature (Cost Estimator Step 2 - "Add features you need", e.g. Login, DB, Payment)</option>
+          <option value="other_service">⭐ 4. Other Service / Showcase (Hero Section - "Android App &amp; Web Portal Views")</option>
         </select>
       </div>
 
       <div>
-        <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Product / Service Title *</label>
+        <label id="labelProductTitle" style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Service Title *</label>
         <input type="text" id="productTitleInput" placeholder="e.g. Retail & Wholesale Shop App" required style="width:100%; padding:9px 12px; border:1px solid var(--border-color); border-radius:8px; font-weight:700; font-size:0.9rem; background:var(--bg-surface); color:var(--text-main);">
       </div>
 
       <div>
-        <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Product Details &amp; Key Features</label>
+        <label id="labelProductDetails" style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Product Details &amp; Key Features</label>
         <textarea id="productDetailsInput" rows="4" placeholder="Easy Billing & Stock Management App for Kirana Stores, Hardware, Garment. Barcode Scanning, Udhar Khata Ledger, GST Invoices..." style="width:100%; padding:9px 12px; border:1px solid var(--border-color); border-radius:8px; font-size:0.85rem; background:var(--bg-surface); color:var(--text-main); resize:vertical;"></textarea>
       </div>
 
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
         <div>
-          <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Dusre Jagah Rate (Original ₹)</label>
+          <label id="labelOriginalPrice" style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Dusre Jagah Rate (Original ₹)</label>
           <input type="number" id="productOriginalPriceInput" placeholder="9999" min="0" style="width:100%; padding:9px 12px; border:1px solid var(--border-color); border-radius:8px; font-weight:700; font-size:0.88rem; background:var(--bg-surface); color:var(--text-main);">
         </div>
         <div>
-          <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Yaha Rate (GoDoz Price ₹) *</label>
+          <label id="labelOfferPrice" style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Yaha Rate (GoDoz Price ₹) *</label>
           <input type="number" id="productOfferPriceInput" placeholder="3999" required min="0" style="width:100%; padding:9px 12px; border:1.5px solid var(--primary); border-radius:8px; font-weight:800; font-size:0.9rem; background:var(--bg-surface); color:var(--text-main);">
         </div>
       </div>
 
       <button type="submit" id="btnSaveProduct" class="btn btn-primary" style="width:100%; padding:11px; font-weight:800; margin-top:6px; background:#16a34a; border-color:#16a34a;">
-        <i class="fa-solid fa-cloud-arrow-up"></i> Save Product in Catalog
+        <i class="fa-solid fa-cloud-arrow-up"></i> Save Offering in Catalog
       </button>
     </form>
   </div>
@@ -2751,7 +2752,7 @@
   }
 
   // ============================================================================
-  // PRODUCT & PRICING CATALOG MANAGEMENT (100% LIVE FIRESTORE DATA)
+  // PRODUCT & PRICING CATALOG MANAGEMENT (100% LIVE FIRESTORE DATA ACROSS 4 OFFERINGS)
   // ============================================================================
   let currentProductsCatalog = [];
   let catalogRowsPerPage = 10;
@@ -2768,20 +2769,157 @@
     window.renderProductsCatalogTable(currentProductsCatalog);
   };
 
-  // Render All Product Catalog Tables from Live Firestore Data
+  // Dynamically update Modal UI (Title, Labels, Placeholders) when Offering Category changes
+  window.handleProductCategoryChange = function(cat) {
+    const isEdit = (document.getElementById('productEditDocId')?.value || '').trim().length > 0;
+    const titleEl = document.getElementById('addProductModalTitle');
+    const iconEl = document.getElementById('addProductModalIcon');
+    const titleInput = document.getElementById('productTitleInput');
+    const detailsInput = document.getElementById('productDetailsInput');
+    const labelTitle = document.getElementById('labelProductTitle');
+    const labelDetails = document.getElementById('labelProductDetails');
+    const labelOrig = document.getElementById('labelOriginalPrice');
+    const labelOffer = document.getElementById('labelOfferPrice');
+
+    if (cat === 'project_type') {
+      if (iconEl) iconEl.innerHTML = '<i class="fa-solid fa-shapes" style="color:#6366f1;"></i>';
+      if (titleEl) titleEl.textContent = isEdit ? 'Edit Project Type' : 'Add New Project Type (Calculator Step 1)';
+      if (labelTitle) labelTitle.textContent = "Project Type Title *";
+      if (titleInput) titleInput.placeholder = "e.g. Android Mobile Application or Web Portal";
+      if (labelDetails) labelDetails.textContent = "Scope & Architecture Details";
+      if (detailsInput) detailsInput.placeholder = "Base architecture, UI components, local/remote DB, release build...";
+      if (labelOrig) labelOrig.textContent = "Market Rate (Original ₹)";
+      if (labelOffer) labelOffer.textContent = "Base Starting Rate (Yaha ₹) *";
+    } else if (cat === 'key_feature') {
+      if (iconEl) iconEl.innerHTML = '<i class="fa-solid fa-bolt" style="color:#eab308;"></i>';
+      if (titleEl) titleEl.textContent = isEdit ? 'Edit Key Feature' : 'Add New Key Feature / Add-on (Calculator Step 2)';
+      if (labelTitle) labelTitle.textContent = "Key Feature / Module Title *";
+      if (titleInput) titleInput.placeholder = "e.g. User Login / OTP Auth or MongoDB Database";
+      if (labelDetails) labelDetails.textContent = "Feature Details & Specs";
+      if (detailsInput) detailsInput.placeholder = "Secure phone OTP authentication, session management, cloud database...";
+      if (labelOrig) labelOrig.textContent = "Market Add-on Rate (₹)";
+      if (labelOffer) labelOffer.textContent = "Add-on Price (+₹) *";
+    } else if (cat === 'other_service') {
+      if (iconEl) iconEl.innerHTML = '<i class="fa-solid fa-star" style="color:#f59e0b;"></i>';
+      if (titleEl) titleEl.textContent = isEdit ? 'Edit Other Service' : 'Add Other Service / Hero Showcase';
+      if (labelTitle) labelTitle.textContent = "Service / Showcase Title *";
+      if (titleInput) titleInput.placeholder = "e.g. Android App View or Web Portal View";
+      if (labelDetails) labelDetails.textContent = "Showcase Highlights & Details";
+      if (detailsInput) detailsInput.placeholder = "Google Play Ready, Offline DB, Fast Loading, Responsive UI...";
+      if (labelOrig) labelOrig.textContent = "Dusre Jagah Rate (Original ₹)";
+      if (labelOffer) labelOffer.textContent = "Starting Rate (Yaha ₹) *";
+    } else {
+      // professional_service
+      if (iconEl) iconEl.innerHTML = '<i class="fa-solid fa-briefcase" style="color:var(--primary);"></i>';
+      if (titleEl) titleEl.textContent = isEdit ? 'Edit Professional Service' : 'Add New Professional Service';
+      if (labelTitle) labelTitle.textContent = "Product / Service Title *";
+      if (titleInput) titleInput.placeholder = "e.g. Retail & Wholesale Shop App";
+      if (labelDetails) labelDetails.textContent = "Product Details & Key Features";
+      if (detailsInput) detailsInput.placeholder = "Easy Billing & Stock Management App for Kirana Stores, Hardware, Garment...";
+      if (labelOrig) labelOrig.textContent = "Dusre Jagah Rate (Original ₹)";
+      if (labelOffer) labelOffer.textContent = "Yaha Rate (GoDoz Price ₹) *";
+    }
+  };
+
+  // Button actions for specific categories
+  window.openAddServiceModal = function() {
+    window.openAddProductModal('professional_service');
+  };
+
+  window.openAddProjectTypeModal = function() {
+    window.openAddProductModal('project_type');
+  };
+
+  window.openAddKeyFeatureModal = function() {
+    window.openAddProductModal('key_feature');
+  };
+
+  window.openAddOtherServiceModal = function() {
+    window.openAddProductModal('other_service');
+  };
+
+  window.openAddProductModal = function(cat = 'professional_service') {
+    const editIndexEl = document.getElementById('productEditIndex');
+    if (editIndexEl) editIndexEl.value = "-1";
+    const editDocIdEl = document.getElementById('productEditDocId');
+    if (editDocIdEl) editDocIdEl.value = "";
+    const catSelect = document.getElementById('productCategorySelect');
+    if (catSelect) catSelect.value = cat;
+
+    window.handleProductCategoryChange(cat);
+
+    document.getElementById('productTitleInput').value = "";
+    document.getElementById('productDetailsInput').value = "";
+    document.getElementById('productOriginalPriceInput').value = "";
+    document.getElementById('productOfferPriceInput').value = "";
+    document.getElementById('addProductModal').style.display = 'flex';
+  };
+
+  window.closeAddProductModal = function() {
+    document.getElementById('addProductModal').style.display = 'none';
+  };
+
+  window.editProductById = function(docId) {
+    const prod = currentProductsCatalog.find(p => p.id === docId);
+    if (!prod) return;
+
+    const editDocIdEl = document.getElementById('productEditDocId');
+    if (editDocIdEl) editDocIdEl.value = docId;
+    const cat = prod.category || 'professional_service';
+    const catSelect = document.getElementById('productCategorySelect');
+    if (catSelect) catSelect.value = cat;
+
+    window.handleProductCategoryChange(cat);
+    const titleEl = document.getElementById('addProductModalTitle');
+    if (titleEl) titleEl.textContent = `Edit: ${prod.title}`;
+
+    document.getElementById('productTitleInput').value = prod.title || "";
+    document.getElementById('productDetailsInput').value = prod.details || "";
+    document.getElementById('productOriginalPriceInput').value = prod.originalPrice || "";
+    document.getElementById('productOfferPriceInput').value = prod.offerPrice || "";
+    document.getElementById('addProductModal').style.display = 'flex';
+  };
+
+  window.editProduct = function(index) {
+    const prod = currentProductsCatalog[index];
+    if (prod && prod.id) window.editProductById(prod.id);
+  };
+
+  window.deleteProductById = async function(docId) {
+    const prod = currentProductsCatalog.find(p => p.id === docId);
+    if (!prod) return;
+
+    if (confirm(`Are you sure you want to delete '${prod.title}' from Firestore (/products/)?`)) {
+      const res = await deleteProductFromFirestore(docId);
+      if (res && res.success) {
+        currentProductsCatalog = currentProductsCatalog.filter(p => p.id !== docId);
+        window.renderProductsCatalogTable(currentProductsCatalog);
+      } else {
+        alert("❌ Error deleting product: " + (res?.error || 'Unknown error'));
+      }
+    }
+  };
+
+  window.deleteProduct = async function(index) {
+    const prod = currentProductsCatalog[index];
+    if (prod && prod.id) await window.deleteProductById(prod.id);
+  };
+
+  // Render All 4 Tables from Live Firestore Data
   window.renderProductsCatalogTable = function(products) {
     const list = Array.isArray(products) ? products : [];
     currentProductsCatalog = [...list];
 
     const proServices = currentProductsCatalog.filter(p => !p.category || p.category === 'professional_service');
     const projectTypes = currentProductsCatalog.filter(p => p.category === 'project_type');
+    const keyFeatures = currentProductsCatalog.filter(p => p.category === 'key_feature');
     const otherServices = currentProductsCatalog.filter(p => p.category === 'other_service');
 
     // 1. Table 1: Professional Services
     const proTbody = document.getElementById('pricingProductsTableBody');
     if (proTbody) {
       if (proServices.length === 0) {
-        proTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:35px 20px; color:var(--text-muted);"><i class="fa-solid fa-box-open" style="font-size:1.8rem; margin-bottom:8px; color:var(--primary); display:block;"></i> No professional services in Firestore. Click <strong>\'+ Add Product\'</strong> above to create one!</td></tr>';
+        proTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:35px 20px; color:var(--text-muted);"><i class="fa-solid fa-briefcase" style="font-size:1.8rem; margin-bottom:8px; color:var(--primary); display:block;"></i> No professional services in Firestore. Click <strong>\'+ Add Service\'</strong> to create one!</td></tr>';
         const infoElem = document.getElementById('catalogPaginationInfo');
         if (infoElem) infoElem.textContent = 'Showing 0 items';
         const indicatorElem = document.getElementById('catalogPageIndicator');
@@ -2821,10 +2959,10 @@
             </td>
             <td style="padding:12px; text-align:center;">
               <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
-                <button onclick="window.editProductById('${escapeHTML(prod.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:var(--primary); border-color:var(--primary);" title="Edit Product">
+                <button onclick="window.editProductById('${escapeHTML(prod.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:var(--primary); border-color:var(--primary);" title="Edit Service">
                   <i class="fa-solid fa-pen"></i> Edit
                 </button>
-                <button onclick="window.deleteProductById('${escapeHTML(prod.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:#ef4444; border-color:#ef4444;" title="Delete Product">
+                <button onclick="window.deleteProductById('${escapeHTML(prod.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:#ef4444; border-color:#ef4444;" title="Delete Service">
                   <i class="fa-solid fa-trash"></i> Delete
                 </button>
               </div>
@@ -2848,7 +2986,7 @@
     const typeTbody = document.getElementById('projectTypesTableBody');
     if (typeTbody) {
       if (projectTypes.length === 0) {
-        typeTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px 20px; color:var(--text-muted);"><i class="fa-solid fa-shapes" style="font-size:1.8rem; margin-bottom:8px; color:#6366f1; display:block;"></i> No project types found in Firestore. Click <strong>\'+ Add Project Type\'</strong> above to create base options for Cost Estimator Step 1!</td></tr>';
+        typeTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px 20px; color:var(--text-muted);"><i class="fa-solid fa-shapes" style="font-size:1.8rem; margin-bottom:8px; color:#6366f1; display:block;"></i> No project types in Firestore. Click <strong>\'+ Add Project Type\'</strong> to create base options for Cost Estimator Step 1!</td></tr>';
       } else {
         typeTbody.innerHTML = '';
         projectTypes.forEach((prod, idx) => {
@@ -2858,7 +2996,7 @@
             <td style="padding:12px; text-align:center; font-weight:800; color:var(--text-muted);">${idx + 1}</td>
             <td style="padding:12px; font-weight:800; color:var(--text-main); font-size:0.92rem;">
               <span style="display:inline-flex; align-items:center; gap:6px;">
-                <i class="fa-solid fa-cube" style="color:#6366f1; font-size:0.85rem;"></i>
+                <i class="fa-solid fa-shapes" style="color:#6366f1; font-size:0.85rem;"></i>
                 ${escapeHTML(prod.title || 'Untitled Project Type')}
               </span>
             </td>
@@ -2887,11 +3025,54 @@
       }
     }
 
-    // 3. Table 3: Other Services & Hero Showcases
+    // 3. Table 3: Key Features & Add-ons (Step 2 Cost Estimator)
+    const keyTbody = document.getElementById('keyFeaturesTableBody');
+    if (keyTbody) {
+      if (keyFeatures.length === 0) {
+        keyTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px 20px; color:var(--text-muted);"><i class="fa-solid fa-bolt" style="font-size:1.8rem; margin-bottom:8px; color:#eab308; display:block;"></i> No key features in Firestore. Click <strong>\'+ Add Key Feature\'</strong> to create selectable add-ons (User Login, DB, Payment Gateway, Push Notifications, etc.)!</td></tr>';
+      } else {
+        keyTbody.innerHTML = '';
+        keyFeatures.forEach((prod, idx) => {
+          const tr = document.createElement('tr');
+          tr.style.borderBottom = '1px solid var(--border-color)';
+          tr.innerHTML = `
+            <td style="padding:12px; text-align:center; font-weight:800; color:var(--text-muted);">${idx + 1}</td>
+            <td style="padding:12px; font-weight:800; color:var(--text-main); font-size:0.92rem;">
+              <span style="display:inline-flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-bolt" style="color:#eab308; font-size:0.85rem;"></i>
+                ${escapeHTML(prod.title || 'Untitled Feature')}
+              </span>
+            </td>
+            <td style="padding:12px; font-size:0.83rem; color:var(--text-main); line-height:1.5; white-space:pre-wrap; max-width:320px;">
+              ${escapeHTML(prod.details || 'Add-on module integration')}
+            </td>
+            <td style="padding:12px; text-align:center; font-weight:800; color:#ef4444; font-size:0.95rem; text-decoration:line-through;">
+              ₹${Number(prod.originalPrice || 0).toLocaleString('en-IN')}
+            </td>
+            <td style="padding:12px; text-align:center; font-weight:800; color:#10b981; font-size:1.05rem;">
+              +₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}
+            </td>
+            <td style="padding:12px; text-align:center;">
+              <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                <button onclick="window.editProductById('${escapeHTML(prod.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:#eab308; border-color:#eab308;" title="Edit Feature">
+                  <i class="fa-solid fa-pen"></i> Edit
+                </button>
+                <button onclick="window.deleteProductById('${escapeHTML(prod.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:#ef4444; border-color:#ef4444;" title="Delete Feature">
+                  <i class="fa-solid fa-trash"></i> Delete
+                </button>
+              </div>
+            </td>
+          `;
+          keyTbody.appendChild(tr);
+        });
+      }
+    }
+
+    // 4. Table 4: Other Services & Hero Showcases
     const otherTbody = document.getElementById('otherServicesTableBody');
     if (otherTbody) {
       if (otherServices.length === 0) {
-        otherTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px 20px; color:var(--text-muted);"><i class="fa-solid fa-star" style="font-size:1.8rem; margin-bottom:8px; color:#f59e0b; display:block;"></i> No other services/showcases in Firestore. Click <strong>\'+ Add Other Service\'</strong> above to create showcase items (e.g. Android App View & Web Portal View)!</td></tr>';
+        otherTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px 20px; color:var(--text-muted);"><i class="fa-solid fa-star" style="font-size:1.8rem; margin-bottom:8px; color:#f59e0b; display:block;"></i> No other services/showcases in Firestore. Click <strong>\'+ Add Other Service\'</strong> to create showcase items (Android App View &amp; Web Portal View)!</td></tr>';
       } else {
         otherTbody.innerHTML = '';
         otherServices.forEach((prod, idx) => {
@@ -2929,83 +3110,6 @@
         });
       }
     }
-  };
-
-  window.openAddProductModal = function(cat = 'professional_service') {
-    const editIndexEl = document.getElementById('productEditIndex');
-    if (editIndexEl) editIndexEl.value = "-1";
-    const editDocIdEl = document.getElementById('productEditDocId');
-    if (editDocIdEl) editDocIdEl.value = "";
-    const catSelect = document.getElementById('productCategorySelect');
-    if (catSelect) catSelect.value = cat;
-
-    const titleEl = document.getElementById('addProductModalTitle');
-    if (titleEl) {
-      titleEl.textContent = cat === 'project_type' 
-        ? "Add New Project Type" 
-        : (cat === 'other_service' ? "Add Other Service / Showcase" : "Add New Professional Service");
-    }
-
-    document.getElementById('productTitleInput').value = "";
-    document.getElementById('productDetailsInput').value = "";
-    document.getElementById('productOriginalPriceInput').value = "";
-    document.getElementById('productOfferPriceInput').value = "";
-    document.getElementById('addProductModal').style.display = 'flex';
-  };
-
-  window.openAddProjectTypeModal = function() {
-    window.openAddProductModal('project_type');
-  };
-
-  window.openAddOtherServiceModal = function() {
-    window.openAddProductModal('other_service');
-  };
-
-  window.closeAddProductModal = function() {
-    document.getElementById('addProductModal').style.display = 'none';
-  };
-
-  window.editProductById = function(docId) {
-    const prod = currentProductsCatalog.find(p => p.id === docId);
-    if (!prod) return;
-
-    const editDocIdEl = document.getElementById('productEditDocId');
-    if (editDocIdEl) editDocIdEl.value = docId;
-    const cat = prod.category || 'professional_service';
-    const catSelect = document.getElementById('productCategorySelect');
-    if (catSelect) catSelect.value = cat;
-
-    document.getElementById('addProductModalTitle').textContent = `Edit: ${prod.title}`;
-    document.getElementById('productTitleInput').value = prod.title || "";
-    document.getElementById('productDetailsInput').value = prod.details || "";
-    document.getElementById('productOriginalPriceInput').value = prod.originalPrice || "";
-    document.getElementById('productOfferPriceInput').value = prod.offerPrice || "";
-    document.getElementById('addProductModal').style.display = 'flex';
-  };
-
-  window.editProduct = function(index) {
-    const prod = currentProductsCatalog[index];
-    if (prod && prod.id) window.editProductById(prod.id);
-  };
-
-  window.deleteProductById = async function(docId) {
-    const prod = currentProductsCatalog.find(p => p.id === docId);
-    if (!prod) return;
-
-    if (confirm(`Are you sure you want to delete '${prod.title}' from Firestore (/products/)?`)) {
-      const res = await deleteProductFromFirestore(docId);
-      if (res && res.success) {
-        currentProductsCatalog = currentProductsCatalog.filter(p => p.id !== docId);
-        window.renderProductsCatalogTable(currentProductsCatalog);
-      } else {
-        alert("❌ Error deleting product: " + (res?.error || 'Unknown error'));
-      }
-    }
-  };
-
-  window.deleteProduct = async function(index) {
-    const prod = currentProductsCatalog[index];
-    if (prod && prod.id) await window.deleteProductById(prod.id);
   };
 
   // Add / Edit Product Form submit (100% Firestore Document Storage)
@@ -3056,30 +3160,19 @@
     }
   });
 
-  // Save Estimator Addons Form Submit
+  // Save Estimator Timeline Express Extra Rate
   document.getElementById('formSaveEstimatorAddons')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const loginVal = parseInt(document.getElementById('addon_login')?.value || '2000', 10);
-    const gatewayVal = parseInt(document.getElementById('addon_gateway')?.value || '3000', 10);
-    const pushVal = parseInt(document.getElementById('addon_push')?.value || '2500', 10);
-    const cmsVal = parseInt(document.getElementById('addon_cms')?.value || '3500', 10);
-    const aiVal = parseInt(document.getElementById('addon_ai')?.value || '4000', 10);
     const expressPct = parseInt(document.getElementById('addon_express_pct')?.value || '5', 10);
-
     const addonsData = {
-      loginPrice: loginVal,
-      gatewayPrice: gatewayVal,
-      pushPrice: pushVal,
-      cmsPrice: cmsVal,
-      aiPrice: aiVal,
       expressExtraPct: expressPct
     };
 
     const res = await saveEstimatorAddonsToFirestore(addonsData);
-    if (res.success) {
-      alert("✅ Cost Estimator Add-ons & Express Delivery rates updated and published live across index.html!");
+    if (res && res.success) {
+      alert("✅ Express Delivery timeline rate saved & published live!");
     } else {
-      alert("❌ Error saving Estimator Config: " + res.error);
+      alert("❌ Error saving express rate: " + (res?.error || 'Unknown error'));
     }
   });
 
