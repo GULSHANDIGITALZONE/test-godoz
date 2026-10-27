@@ -577,16 +577,9 @@
           <i class="fa-solid fa-bars"></i>
         </button>
 
-        <a href="/index.html" class="brand-logo-wrap" style="display:flex; align-items:center; gap:8px; text-decoration:none;">
-          <img src="./official logo.png" alt="GoDoz Logo" class="brand-logo-img" style="height:34px; width:auto; border-radius:6px;" onerror="this.src='./logo w bg.png'">
-          <div>
-            <div style="font-size:1.3rem; font-weight:900; line-height:1; letter-spacing:-0.5px;">
-              <span style="color:var(--primary, #1266e8);">Go</span><span style="color:var(--accent, #ff6900);">Doz</span>
-            </div>
-            <div style="font-size:0.62rem; font-weight:700; color:var(--text-muted, #64748b); letter-spacing:0.8px; text-transform:uppercase;">
-              Technology
-            </div>
-          </div>
+        <a href="/index.html" class="brand-logo-wrap" style="display:flex; align-items:center; text-decoration:none;">
+          <img src="./godoz_logo_flat_vector.png" alt="GoDoz Technology" class="godoz-nav-logo-desktop" onerror="this.src='./godoz_logo_rectangle_w_bg.png'">
+          <img src="./godoz-logo-circle.png" alt="GoDoz Logo" class="godoz-nav-logo-mobile" onerror="this.src='./official logo.png'">
         </a>
       </div>
 
@@ -1406,33 +1399,35 @@
         role = isMgr ? 'manager' : (isAdm ? 'admin' : 'client');
       }
 
+      const cleanName = user.displayName || (user.email ? user.email.split('@')[0] : 'GoDoz User');
+
       localStorage.setItem('godoz_auth_logged_in', 'true');
       localStorage.setItem('godoz_auth_uid', user.uid || '');
       localStorage.setItem('godoz_auth_email', user.email || '');
       localStorage.setItem('godoz_user_email', user.email || '');
-      localStorage.setItem('godoz_auth_name', user.displayName || (user.isAnonymous ? 'Guest' : (role === 'manager' ? 'RS GULSHAN PRAJAPATI' : 'GoDoz Client')));
-      localStorage.setItem('godoz_user_name', user.displayName || (user.isAnonymous ? 'Guest' : (role === 'manager' ? 'RS GULSHAN PRAJAPATI' : 'GoDoz Client')));
+      localStorage.setItem('godoz_auth_name', cleanName);
+      localStorage.setItem('godoz_user_name', cleanName);
       if (user.phoneNumber) localStorage.setItem('godoz_user_phone', user.phoneNumber);
       if (user.photoURL) localStorage.setItem('godoz_user_avatar', user.photoURL);
 
       if (role === 'manager') {
         localStorage.setItem('godoz_user_role', 'manager');
         localStorage.setItem('godoz_admin_role', 'manager');
-        showSuccess(`Welcome Master Manager ${user.displayName || 'RS GULSHAN PRAJAPATI'}! Opening Management Hub...`);
+        showSuccess(`Welcome Master Manager ${cleanName}! Opening Manager Hub...`);
         setTimeout(() => {
-          window.location.href = "./admin.html";
+          window.location.href = "./manager.html";
         }, 400);
       } else if (role === 'admin') {
         localStorage.setItem('godoz_user_role', 'admin');
         localStorage.setItem('godoz_admin_role', 'admin');
-        showSuccess(`Welcome Administrator ${user.displayName || ''}! Opening Admin Hub...`);
+        showSuccess(`Welcome Administrator ${cleanName}! Opening Admin Hub...`);
         setTimeout(() => {
           window.location.href = "./admin.html";
         }, 400);
       } else {
         localStorage.setItem('godoz_user_role', 'client');
         localStorage.removeItem('godoz_admin_role');
-        showSuccess(`Welcome ${user.displayName || 'Client'}! Opening Your Dashboard...`);
+        showSuccess(`Welcome ${cleanName}! Opening Your Dashboard...`);
         setTimeout(() => {
           window.location.href = "./profile.html";
         }, 400);

@@ -6,6 +6,7 @@
 
 # Clean Route Aliases (No .html needed in URL bar)
 /admin          /admin.html          200
+/manager        /manager.html        200
 /login          /login.html          200
 /profile        /profile.html        200
 /about          /About.html          200

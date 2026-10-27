@@ -914,7 +914,6 @@ h1, h2, h3, h4, h5, h6 {
   flex-shrink: 0 !important;
 }
 
-.brand-logo-wrap img,
 .brand-img,
 .brand-logo-img {
   height: 36px !important;
@@ -926,6 +925,36 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-block !important;
   vertical-align: middle !important;
   flex-shrink: 0 !important;
+}
+
+/* Dual Responsive Nav Logos: Flat Vector for Laptop/Desktop, Circle Logo for Phone */
+a.brand-logo-wrap img.godoz-nav-logo-desktop {
+  display: inline-block !important;
+  height: 38px !important;
+  max-height: 42px !important;
+  width: auto !important;
+  max-width: 220px !important;
+  object-fit: contain !important;
+  border-radius: 0 !important;
+}
+
+a.brand-logo-wrap img.godoz-nav-logo-mobile {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  a.brand-logo-wrap img.godoz-nav-logo-desktop {
+    display: none !important;
+  }
+  a.brand-logo-wrap img.godoz-nav-logo-mobile {
+    display: inline-block !important;
+    height: 34px !important;
+    max-height: 36px !important;
+    width: 34px !important;
+    max-width: 36px !important;
+    border-radius: 50% !important;
+    object-fit: contain !important;
+  }
 }
 
 .drawer-header img {
@@ -1027,20 +1056,21 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0;
 }
 
-/* Language Switcher Toggle Button Dedicated Styling */
+/* Language Switcher Toggle Button Dedicated Styling (Compact Icon Button) */
 .lang-toggle-btn,
 .header-btn-lang,
 #langToggleBtn {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 6px;
-  padding: 6px 12px;
+  width: 38px !important;
+  height: 38px !important;
+  padding: 0 !important;
   border-radius: 10px;
   background: var(--bg-surface-alt, #f1f5f9);
   border: 1px solid var(--border-color, #cbd5e1);
   color: var(--primary, #1266e8);
-  font-size: 0.85rem;
+  font-size: 1.15rem !important;
   font-weight: 800;
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -1203,10 +1233,11 @@ body {
   .brand-logo-img {
     height: 32px !important;
   }
-  .header-btn-track {
+  .header-btn-track,
+  .header-btn-auth,
+  #headerAuthBtn {
     display: none !important;
   }
-  .header-btn-auth,
   .header-btn-theme,
   .mobile-menu-toggle {
     width: 34px !important;
@@ -2631,19 +2662,27 @@ mark.search-highlight.active-match {
     display: none !important;
   }
 
-  /* Keep theme toggle and auth/logout button visible on the far right */
+  /* Ensure Theme Toggle is ALWAYS FIRST and visible on mobile header! */
   #themeToggleBtn,
   .header-btn-theme,
-  #headerAuthBtn,
-  .header-btn-auth {
+  .theme-toggle-btn {
+    order: -1 !important;
     display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex-shrink: 0 !important;
+    width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    border-radius: 8px !important;
+    margin-right: 2px !important;
   }
 
-  /* Compact styling for header buttons on small screens */
+  /* Hide duplicate top header auth/account button on mobile since Profile is in bottom nav & drawer */
+  #headerAuthBtn,
   .header-btn-auth,
-  .header-btn-theme {
-    padding: 6px 8px !important;
-    font-size: 0.82rem !important;
+  .header-btn-track {
+    display: none !important;
   }
 }
 
@@ -2654,13 +2693,14 @@ mark.search-highlight.active-match {
   .footer-col h4 { font-size: 0.95rem; }
   .footer-links a { font-size: 0.82rem; }
 
-  .header-btn-track {
+  .header-btn-track,
+  .header-btn-auth,
+  #headerAuthBtn {
     display: none !important;
   }
   .brand-logo-img {
     height: 32px !important;
   }
-  .header-btn-auth,
   .header-btn-theme,
   .mobile-menu-toggle {
     width: 34px !important;
@@ -3979,11 +4019,39 @@ select option {
 /* WhatsApp Chat Bubbles */
 .chat-bubble-user {
   align-self: flex-start; background: var(--bg-surface, #FFFFFF); border: 1px solid var(--border-color, #E2E8F0);
-  border-radius: 16px 16px 16px 4px; padding: 14px; max-width: 80%; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  border-radius: 16px 16px 16px 4px; padding: 14px; max-width: 82%; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  color: var(--text-main);
+}
+.chat-bubble-user p {
+  color: var(--text-main);
+  margin: 0;
 }
 .chat-bubble-admin {
   align-self: flex-end; background: var(--primary-light, #EEF2FF); border: 1px solid #C7D2FE;
-  border-radius: 16px 16px 4px 16px; padding: 14px; max-width: 80%; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  border-radius: 16px 16px 4px 16px; padding: 14px; max-width: 82%; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  color: var(--text-main);
+}
+.chat-bubble-admin p {
+  color: var(--text-main);
+  margin: 0;
+}
+
+[data-theme="dark"] .chat-bubble-user {
+  background: #16223e !important;
+  border-color: #1e2e4f !important;
+  color: #f8fafc !important;
+}
+[data-theme="dark"] .chat-bubble-user p {
+  color: #f8fafc !important;
+}
+[data-theme="dark"] .chat-bubble-admin {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.28), rgba(99, 102, 241, 0.18)) !important;
+  border: 1px solid rgba(129, 140, 248, 0.4) !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
+}
+[data-theme="dark"] .chat-bubble-admin p {
+  color: #f8fafc !important;
 }
 
 /* ==========================================================================

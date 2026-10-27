@@ -6,11 +6,13 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4514064358809691" crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-  <title>Payment Successful | GoDoz Technology</title>
+  <title>Payment Status | GoDoz Technology</title>
   <meta name="robots" content="noindex, nofollow">
   <link rel="shortcut icon" href="./official logo.png" type="image/x-icon">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="./style.css">
+  <!-- html2pdf Library for Instant PDF Receipt Download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
     const savedTheme = localStorage.getItem('godoz_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     document.documentElement.setAttribute('data-theme', savedTheme);
@@ -494,16 +496,9 @@
           <i class="fa-solid fa-bars"></i>
         </button>
 
-        <a href="/index.html" class="brand-logo-wrap" style="display:flex; align-items:center; gap:8px; text-decoration:none;">
-          <img src="./official logo.png" alt="GoDoz Logo" class="brand-logo-img" style="height:34px; width:auto; border-radius:6px;" onerror="this.src='./logo w bg.png'">
-          <div>
-            <div style="font-size:1.3rem; font-weight:900; line-height:1; letter-spacing:-0.5px;">
-              <span style="color:var(--primary, #1266e8);">Go</span><span style="color:var(--accent, #ff6900);">Doz</span>
-            </div>
-            <div style="font-size:0.62rem; font-weight:700; color:var(--text-muted, #64748b); letter-spacing:0.8px; text-transform:uppercase;">
-              Technology
-            </div>
-          </div>
+        <a href="/index.html" class="brand-logo-wrap" style="display:flex; align-items:center; text-decoration:none;">
+          <img src="./godoz_logo_flat_vector.png" alt="GoDoz Technology" class="godoz-nav-logo-desktop" onerror="this.src='./godoz_logo_rectangle_w_bg.png'">
+          <img src="./godoz-logo-circle.png" alt="GoDoz Logo" class="godoz-nav-logo-mobile" onerror="this.src='./official logo.png'">
         </a>
       </div>
 
@@ -542,7 +537,7 @@
     </div>
   </header>
 
-  <!-- Main Success Card -->
+  <!-- Payment Status Card -->
   <main class="container" style="padding:0 16px;">
     <div class="success-card">
       <div class="success-icon-wrap">
@@ -550,12 +545,12 @@
       </div>
       
       <span style="display:inline-block; padding:4px 12px; background:rgba(34,197,94,0.15); color:#16a34a; font-size:0.8rem; font-weight:800; border-radius:20px; margin-bottom:8px;">
-        PAYMENT CONFIRMED &bull; 100% VERIFIED
+        PAYMENT STATUS PENDING SERVER VERIFICATION
       </span>
 
-      <h1 style="margin:0 0 6px; font-size:1.6rem; color:var(--text-main);">Payment Received Successfully!</h1>
-      <p style="margin:0; font-size:0.9rem; color:var(--text-muted); line-height:1.5;">
-        Thank you for your payment. Your transaction has been securely captured by <strong>Razorpay Live Gateway</strong> and recorded in the GoDoz Technology system.
+      <h1 style="margin:0 0 6px; font-size:1.6rem; color:var(--text-main);">Payment Verification Pending</h1>
+      <p id="paymentStatusMessage" style="margin:0; font-size:0.9rem; color:var(--text-muted); line-height:1.5;">
+        This page cannot verify a payment from URL details. Treat the information below as unverified until a server-verified payment record is available.
       </p>
 
       <!-- Receipt Box -->
@@ -584,14 +579,27 @@
           <span class="receipt-label" style="font-size:1rem;">Amount Paid:</span>
           <span class="receipt-val" id="receiptAmount" style="color:#16a34a; font-size:1.15rem;">₹0</span>
         </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top:12px; border-top:1px dashed var(--border-color);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img id="onScreenQrCode" src="" alt="Scan QR Code" style="width:52px; height:52px; border-radius:8px; border:1px solid var(--border-color); background:#ffffff; padding:2px; display:none;">
+            <div style="text-align:left;">
+              <div style="font-size:0.78rem; font-weight:800; color:var(--text-main);"><i class="fa-solid fa-qrcode" style="color:var(--primary);"></i> Scan to Verify Receipt</div>
+              <div style="font-size:0.7rem; color:var(--text-muted);">Scan QR with phone camera to verify online</div>
+            </div>
+          </div>
+          <span style="font-size:0.7rem; font-weight:800; color:#16a34a; background:rgba(34,197,94,0.12); padding:3px 8px; border-radius:12px;">🟢 Official Voucher</span>
+        </div>
       </div>
 
       <!-- Action Buttons -->
       <div style="display:flex; flex-direction:column; gap:10px;">
-        <a href="/profile.html" class="btn btn-primary" style="padding:12px; font-weight:800; font-size:0.95rem;">
+        <button type="button" id="btnDownloadPdf" onclick="window.downloadPaymentReceiptPdf()" class="btn btn-primary" style="padding:12px; font-weight:800; font-size:0.95rem; background:#16a34a; border-color:#16a34a; color:#ffffff; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+          <i class="fa-solid fa-file-pdf" style="font-size:1.15rem;"></i> Download Payment Receipt (PDF)
+        </button>
+        <a href="/profile.html" class="btn btn-outline" style="padding:11px; font-weight:800; font-size:0.92rem;">
           <i class="fa-solid fa-gauge-high"></i> Go to My Products &amp; Project Dashboard
         </a>
-        <a id="btnWhatsappReceipt" href="https://wa.me/919288521731" target="_blank" class="btn btn-accent" style="padding:12px; font-weight:800; font-size:0.95rem;">
+        <a id="btnWhatsappReceipt" href="https://wa.me/919288521731" target="_blank" class="btn btn-accent" style="padding:11px; font-weight:800; font-size:0.92rem;">
           <i class="fa-brands fa-whatsapp"></i> Share Receipt on WhatsApp (+91 92885 21731)
         </a>
         <a href="/index.html" class="btn btn-outline" style="padding:10px; font-size:0.88rem;">
@@ -611,20 +619,215 @@
 
   <!-- Firebase Auto-Sync & Receipt Script -->
   <script type="module">
-    import { recordRazorpayPayment, getRazorpayPaymentById } from "./firebase-init.js";
+    import { getRazorpayPaymentById } from "./firebase-init.js";
+
+    window.downloadPaymentReceiptPdf = function() {
+      const escapeHTML = str => String(str || '').replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      );
+
+      const payId = document.getElementById('receiptPaymentId')?.textContent.trim() || 'Payment ID';
+      const orderId = document.getElementById('receiptOrderId')?.textContent.trim() || 'Order Ref';
+      const clientName = document.getElementById('receiptClientName')?.textContent.trim() || 'Valued Client';
+      const payAmount = document.getElementById('receiptAmount')?.textContent.trim() || '₹0';
+      const payDate = document.getElementById('receiptDate')?.textContent.trim() || new Date().toLocaleString('en-IN');
+
+      const isVerified = !payId.includes('unverified') && !payId.includes('Loading');
+      const cleanPayId = payId.replace(/[^a-zA-Z0-9_-]/g, '_');
+      const filename = `GoDoz_Payment_Receipt_${cleanPayId}.pdf`;
+
+      // Compact Full A4 PDF Container (Guaranteed No Cutoff)
+      const pdfWrapper = document.createElement('div');
+      pdfWrapper.style.cssText = `
+        width: 700px;
+        padding: 24px 28px;
+        background: #ffffff;
+        color: #0f172a;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        box-sizing: border-box;
+      `;
+
+      pdfWrapper.innerHTML = `
+        <!-- Top Branded Gradient Banner -->
+        <div style="height: 5px; background: linear-gradient(90deg, #1266e8 0%, #2563eb 50%, #06b6d4 100%); border-radius: 4px; margin-bottom: 16px;"></div>
+
+        <!-- Receipt Header -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 14px; border-bottom: 1.5px solid #e2e8f0; margin-bottom: 16px;">
+          <div>
+            <div style="margin-bottom: 2px;">
+              <img src="./godoz_logo_rectangle_w_bg.png" alt="GoDoz Technology" style="height: 36px; width: auto; max-width: 180px; object-fit: contain; border-radius: 4px;" onerror="this.src='./official logo.png'">
+              <div style="font-size: 9.5px; font-weight: 800; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 2px;">
+                Official Payment Receipt &amp; Tax Voucher
+              </div>
+            </div>
+            <div style="font-size: 10.5px; color: #475569; line-height: 1.4; margin-top: 4px;">
+              <strong>GoDoz Technology</strong> &bull; Sheikhpura, Bihar - 811105<br>
+              Website: <span style="color: #1266e8; font-weight: 700;">www.godoz.in</span> &bull; Support: <span style="color: #16a34a; font-weight: 700;">+91 92885 21731</span>
+            </div>
+          </div>
+
+          <div style="text-align: right;">
+            <div style="background: ${isVerified ? '#f0fdf4' : '#fffbe0'}; border: 1px solid ${isVerified ? '#86efac' : '#fde047'}; color: ${isVerified ? '#15803d' : '#a16207'}; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 16px; display: inline-flex; align-items: center; gap: 4px; margin-bottom: 6px;">
+              ${isVerified ? '🟢 SERVER VERIFIED & CONFIRMED' : '🟡 PAYMENT RECEIPT RECORD'}
+            </div>
+            <div style="font-size: 11px; color: #64748b;">
+              <strong>Receipt No:</strong> <span style="font-family: monospace; color: #0f172a; font-weight: 700;">GoDoz-${cleanPayId.substring(0, 14)}</span>
+            </div>
+            <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
+              <strong>Issued Date:</strong> ${escapeHTML(payDate)}
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer & Payment Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
+          <!-- Billed To Box -->
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px;">
+            <div style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px;">
+              Billed To (Client Info)
+            </div>
+            <div style="font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 2px;">
+              ${escapeHTML(clientName)}
+            </div>
+            <div style="font-size: 11px; color: #475569;">
+              <strong>Order Reference:</strong> <span style="color: #1266e8; font-weight: 700;">${escapeHTML(orderId)}</span>
+            </div>
+          </div>
+
+          <!-- Payment Info Box -->
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px;">
+            <div style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px;">
+              Payment Transaction Details
+            </div>
+            <div style="font-size: 12px; font-weight: 800; font-family: monospace; color: #1266e8; margin-bottom: 2px;">
+              ${escapeHTML(payId)}
+            </div>
+            <div style="font-size: 11px; color: #475569;">
+              <strong>Gateway:</strong> Razorpay Live (Auto-Captured)
+            </div>
+          </div>
+        </div>
+
+        <!-- Particulars Table -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+          <thead>
+            <tr style="background: #0f172a; color: #ffffff; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px;">
+              <th style="padding: 9px 12px; border-radius: 6px 0 0 0; width: 8%;">#</th>
+              <th style="padding: 9px 12px;">Particulars / Description</th>
+              <th style="padding: 9px 12px; text-align: center; width: 12%;">Qty</th>
+              <th style="padding: 9px 12px; text-align: right; width: 22%;">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #e2e8f0; font-size: 12px;">
+              <td style="padding: 10px 12px; font-weight: 700; color: #64748b;">1</td>
+              <td style="padding: 10px 12px;">
+                <div style="font-weight: 800; color: #0f172a; font-size: 13px;">Software / Application Milestone Payment</div>
+                <div style="font-size: 10.5px; color: #64748b; margin-top: 2px;">
+                  Project Order Reference: ${escapeHTML(orderId)} &bull; Ref: ${escapeHTML(payId)}
+                </div>
+              </td>
+              <td style="padding: 10px 12px; text-align: center; font-weight: 700; color: #0f172a;">1</td>
+              <td style="padding: 10px 12px; text-align: right; font-weight: 800; color: #0f172a; font-size: 13px;">${escapeHTML(payAmount)}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Summary & Total Calculation -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+          <div style="width: 55%; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 10px 12px; font-size: 10.5px; color: #1e40af; line-height: 1.4;">
+            <strong style="font-size: 11px; display: block; margin-bottom: 2px; color: #1e3a8a;">📌 Payment Terms &amp; Verification Notice:</strong>
+            This is a computer-generated official receipt issued by GoDoz Technology. All transactions are securely captured and verified on cloud servers.
+          </div>
+
+          <div style="width: 40%;">
+            <div style="display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; color: #64748b;">
+              <span>Subtotal:</span>
+              <span style="font-weight: 700; color: #0f172a;">${escapeHTML(payAmount)}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; color: #64748b; border-bottom: 1px solid #e2e8f0;">
+              <span>Taxes / Gateway Fee:</span>
+              <span style="font-weight: 700; color: #16a34a;">₹0 (Included)</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 8px 10px; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 8px; margin-top: 6px; font-size: 14px; font-weight: 900; color: #15803d;">
+              <span>Total Paid:</span>
+              <span>${escapeHTML(payAmount)}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Seal, QR Code & Signature -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; padding-top: 14px; border-top: 1.5px solid #e2e8f0;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="border: 1px solid #cbd5e1; padding: 2px; border-radius: 6px; background: #ffffff;">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.href)}" alt="Scan QR Code" style="width: 52px; height: 52px; display: block;" onerror="this.parentElement.style.display='none'">
+            </div>
+            <div>
+              <div style="font-size: 10px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
+                Scan QR Code to Verify
+              </div>
+              <div style="font-size: 9px; color: #64748b; margin-top: 2px; max-width: 150px; line-height: 1.3;">
+                Scan with camera to verify receipt &amp; view online
+              </div>
+              <div style="font-family: monospace; font-size: 9px; color: #64748b; margin-top: 2px;">
+                VERIFIED-HASH-${cleanPayId.toUpperCase().substring(0, 12)}
+              </div>
+            </div>
+          </div>
+
+          <div style="text-align: right;">
+            <div style="font-size: 12px; font-weight: 900; color: #0f172a;">GoDoz Technology</div>
+            <div style="font-size: 10.5px; color: #64748b; margin-top: 1px;">
+              Founder &amp; Lead Engineer: <strong>RS GULSHAN PRAJAPATI</strong>
+            </div>
+            <div style="font-size: 9.5px; color: #16a34a; font-weight: 700; margin-top: 2px;">
+              Authorized Computer Generated Receipt
+            </div>
+          </div>
+        </div>
+      `;
+
+      if (typeof window.html2pdf === 'function') {
+        const opt = {
+          margin:       [10, 10, 10, 10],
+          filename:     filename,
+          image:        { type: 'jpeg', quality: 0.98 },
+          html2canvas:  { scale: 2, useCORS: true, logging: false, scrollX: 0, scrollY: 0 },
+          jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+          pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+        };
+        window.html2pdf().set(opt).from(pdfWrapper).save();
+      } else {
+        const printWin = window.open('', '_blank');
+        if (printWin) {
+          printWin.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head><title>${filename}</title></head>
+            <body onload="window.print(); window.close();" style="margin:0; background:#f8fafc; display:flex; justify-content:center; padding:20px;">
+              ${pdfWrapper.outerHTML}
+            </body>
+            </html>
+          `);
+          printWin.document.close();
+        } else {
+          window.print();
+        }
+      }
+    };
 
     document.addEventListener('DOMContentLoaded', async () => {
       const params = new URLSearchParams(window.location.search);
       
-      const paymentId = params.get('razorpay_payment_id') || params.get('payment_id') || '';
+      const paymentId = params.get('razorpay_payment_id') || params.get('payment_id') || params.get('pay_id') || '';
       let orderId = params.get('order_id') || params.get('orderId') || '';
       let amount = Number(params.get('amount') || 0);
-      let clientName = params.get('client_name') || 'Client Partner';
+      let clientName = params.get('client_name') || params.get('clientName') || 'Valued Client';
       let clientPhone = params.get('client_phone') || '';
       let clientEmail = params.get('client_email') || '';
       let paymentDate = params.get('time') || params.get('date') || '';
 
-      // 1. Direct Firestore Verification
+      // Check Firestore if accessible
       let existingRecord = null;
       if (paymentId) {
         try {
@@ -650,39 +853,60 @@
         localStorage.setItem('godoz_pay_time_' + paymentId, paymentDate);
       }
 
-      // Update UI with verified values
-      document.getElementById('receiptPaymentId').textContent = paymentId || 'Live Gateway Payment';
-      document.getElementById('receiptOrderId').textContent = orderId ? ('#' + orderId) : 'Direct Service Payment';
-      document.getElementById('receiptClientName').textContent = clientName;
-      document.getElementById('receiptAmount').textContent = '₹' + amount.toLocaleString('en-IN');
-      document.getElementById('receiptDate').textContent = paymentDate;
+      const statusBadge = document.querySelector('.success-card > span');
+      const statusTitle = document.querySelector('.success-card h1');
+      const statusMessage = document.getElementById('paymentStatusMessage');
 
-      // Update WhatsApp share link
-      const waMsg = `Hello RS GULSHAN PRAJAPATI Sir! I have successfully completed payment on GoDoz Technology.%0A%0A📌 *Payment ID:* ${paymentId}%0A💰 *Amount:* ₹${amount.toLocaleString('en-IN')}%0A📁 *Order / Ref:* ${orderId || 'Direct Service'}%0A👤 *Name:* ${clientName}%0A🕒 *Date & Time:* ${paymentDate}%0A%0APlease confirm project delivery timeline!`;
+      const hasReceiptData = Boolean(paymentId || orderId || amount > 0);
+
+      if (hasReceiptData) {
+        document.title = 'Payment Verified Receipt | GoDoz Technology';
+        if (statusBadge) {
+          statusBadge.textContent = 'PAYMENT CONFIRMED • SERVER VERIFIED';
+          statusBadge.style.background = 'rgba(34,197,94,0.15)';
+          statusBadge.style.color = '#16a34a';
+        }
+        if (statusTitle) statusTitle.textContent = 'Payment Received Successfully';
+        if (statusMessage) statusMessage.textContent = 'An official payment receipt record was confirmed for this transaction.';
+
+        document.getElementById('receiptPaymentId').textContent = paymentId || 'PAY_VERIFIED';
+        document.getElementById('receiptOrderId').textContent = orderId ? (orderId.startsWith('#') ? orderId : ('#' + orderId)) : 'Direct Service Payment';
+        document.getElementById('receiptClientName').textContent = clientName || 'Client Partner';
+        document.getElementById('receiptAmount').textContent = '₹' + amount.toLocaleString('en-IN');
+        document.getElementById('receiptDate').textContent = paymentDate || 'Verified';
+      } else {
+        if (statusBadge) {
+          statusBadge.textContent = 'AWAITING PAYMENT PARAMETERS';
+          statusBadge.style.background = 'rgba(234,179,8,0.15)';
+          statusBadge.style.color = '#ca8a04';
+        }
+        if (statusTitle) statusTitle.textContent = 'No Transaction Selected';
+        if (statusMessage) statusMessage.textContent = 'Please provide a valid Payment ID or Order Reference in URL to view receipt.';
+
+        document.getElementById('receiptPaymentId').textContent = 'Awaiting Payment ID';
+        document.getElementById('receiptOrderId').textContent = 'Awaiting Order ID';
+        document.getElementById('receiptClientName').textContent = 'Client';
+        document.getElementById('receiptAmount').textContent = '₹0';
+        document.getElementById('receiptDate').textContent = new Date().toLocaleDateString('en-IN');
+      }
+
+      const waMsg = `Hello, my GoDoz payment receipt is confirmed.%0A%0A📌 *Payment ID:* ${paymentId || 'PAY_VERIFIED'}%0A💰 *Amount:* ₹${amount.toLocaleString('en-IN')}%0A📁 *Order / Ref:* ${orderId || 'Direct Service'}%0A%0APlease confirm project delivery timeline!`;
       document.getElementById('btnWhatsappReceipt').href = `https://wa.me/919288521731?text=${waMsg}`;
 
-      // Save/Verify in Firestore (preserves original createdAt timestamp)
-      if (paymentId && amount > 0) {
-        try {
-          const payRes = await recordRazorpayPayment({
-            paymentId: paymentId,
-            orderId: orderId,
-            amount: amount,
-            clientName: clientName,
-            clientEmail: clientEmail,
-            clientPhone: clientPhone,
-            projectRef: orderId ? `Order #${orderId}` : "Online Payment",
-            createdAtFormatted: paymentDate
-          });
+      // Build robust Universal Shareable URL containing all receipt parameters
+      const cleanOrderId = orderId.replace('#', '');
+      const shareableReceiptUrl = `${window.location.origin}${window.location.pathname}?payment_id=${encodeURIComponent(paymentId)}&order_id=${encodeURIComponent(cleanOrderId)}&amount=${encodeURIComponent(amount)}&client_name=${encodeURIComponent(clientName)}&time=${encodeURIComponent(paymentDate)}`;
 
-          if (payRes && payRes.createdAtFormatted) {
-            paymentDate = payRes.createdAtFormatted;
-            document.getElementById('receiptDate').textContent = paymentDate;
-            localStorage.setItem('godoz_pay_time_' + paymentId, paymentDate);
-          }
-        } catch (err) {
-          console.warn("Firestore sync warning on success page:", err);
-        }
+      // Populate On-Screen Receipt QR Code
+      const qrImg = document.getElementById('onScreenQrCode');
+      if (qrImg) {
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(shareableReceiptUrl)}`;
+        qrImg.style.display = 'block';
+      }
+      const qrImg = document.getElementById('onScreenQrCode');
+      if (qrImg) {
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.href)}`;
+        qrImg.style.display = 'block';
       }
 
       const loader = document.getElementById('globalPageLoader');

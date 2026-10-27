@@ -1297,6 +1297,571 @@
     [data-theme="dark"] .form-label {
       color: #f8fafc !important;
     }
+
+    /* Homepage Project Cost Estimator - Clean Responsive Styles for Laptop & Mobile */
+    #cost-estimator {
+      padding: clamp(36px, 6vw, 72px) 0 !important;
+      scroll-margin-top: 84px;
+    }
+    #cost-estimator .estimator-intro {
+      max-width: 760px;
+      margin: 0 auto 28px;
+      text-align: center;
+    }
+    #cost-estimator .estimator-intro .section-subtitle {
+      max-width: 640px;
+      margin: 10px auto 0;
+      line-height: 1.65;
+    }
+    #cost-estimator .estimator-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: clamp(16px, 3vw, 30px);
+      background: var(--bg-surface, #fff);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg);
+    }
+    [data-theme="dark"] #cost-estimator .estimator-shell {
+      background: #0f172a;
+      border-color: #1e293b;
+    }
+    #cost-estimator .estimator-presets {
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color, #e2e8f0);
+    }
+    #cost-estimator .estimator-presets-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: var(--text-main);
+      font-size: .95rem;
+      font-weight: 800;
+    }
+    #cost-estimator .estimator-presets-title i {
+      color: var(--primary);
+    }
+    #cost-estimator .estimator-preset-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+    #cost-estimator .smart-preset-pill {
+      min-height: 40px;
+      padding: 8px 14px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 999px;
+      background: var(--bg-surface-alt);
+      color: var(--text-main);
+      font: inherit;
+      font-size: .84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color .2s ease, background .2s ease, transform .2s ease;
+    }
+    #cost-estimator .smart-preset-pill:hover {
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+    #cost-estimator .smart-preset-pill.active {
+      border-color: var(--primary);
+      background: rgba(18, 102, 232, .12);
+      color: var(--primary);
+    }
+    [data-theme="dark"] #cost-estimator .smart-preset-pill.active {
+      border-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+    }
+    #cost-estimator .estimator-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, .75fr);
+      align-items: start;
+      gap: clamp(20px, 3vw, 32px);
+    }
+    #cost-estimator .estimator-step {
+      margin-bottom: 24px;
+    }
+    #cost-estimator .estimator-step:last-child {
+      margin-bottom: 0;
+    }
+    #cost-estimator .estimator-step-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 6px;
+      color: var(--text-main);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    #cost-estimator .estimator-step-number {
+      display: inline-grid;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(18, 102, 232, .1);
+      color: var(--primary);
+      font-size: .82rem;
+      font-weight: 800;
+    }
+    #cost-estimator .estimator-step-hint {
+      margin: 0 0 12px 38px;
+      color: var(--text-muted);
+      font-size: .82rem;
+      line-height: 1.5;
+    }
+
+    /* Step Headers with Scroll Navigation */
+    .est-step-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .est-scroll-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .est-scroll-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .est-scroll-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: rgba(18, 102, 232, 0.08);
+      transform: translateY(-1px);
+    }
+    .est-scroll-btn:active {
+      transform: translateY(0);
+    }
+    [data-theme="dark"] .est-scroll-btn {
+      background: #111a30;
+      border-color: #1e2e4f;
+      color: #e2e8f0;
+    }
+    [data-theme="dark"] .est-scroll-btn:hover {
+      border-color: #38bdf8;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.15);
+    }
+
+    /* Step 1: Project Type 2x2 Grid with Horizontal Scroll (2 rows x 2 columns = 4 visible) */
+    #cost-estimator #estimatorProjectTypesContainer {
+      display: grid !important;
+      grid-template-rows: repeat(2, minmax(72px, 1fr)) !important;
+      grid-auto-flow: column !important;
+      grid-auto-columns: calc((100% - 10px) / 2) !important;
+      gap: 10px !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      scroll-snap-type: x mandatory !important;
+      -webkit-overflow-scrolling: touch !important;
+      padding-bottom: 6px !important;
+      scrollbar-width: thin !important;
+    }
+    #cost-estimator #estimatorProjectTypesContainer::-webkit-scrollbar,
+    #cost-estimator #estimatorFeaturesContainer::-webkit-scrollbar {
+      height: 5px;
+    }
+    #cost-estimator #estimatorProjectTypesContainer::-webkit-scrollbar-track,
+    #cost-estimator #estimatorFeaturesContainer::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.04);
+      border-radius: 999px;
+    }
+    #cost-estimator #estimatorProjectTypesContainer::-webkit-scrollbar-thumb,
+    #cost-estimator #estimatorFeaturesContainer::-webkit-scrollbar-thumb {
+      background: rgba(18, 102, 232, 0.25);
+      border-radius: 999px;
+    }
+    #cost-estimator #estimatorProjectTypesContainer::-webkit-scrollbar-thumb:hover,
+    #cost-estimator #estimatorFeaturesContainer::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+    [data-theme="dark"] #cost-estimator #estimatorProjectTypesContainer::-webkit-scrollbar-track,
+    [data-theme="dark"] #cost-estimator #estimatorFeaturesContainer::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    [data-theme="dark"] #cost-estimator #estimatorProjectTypesContainer::-webkit-scrollbar-thumb,
+    [data-theme="dark"] #cost-estimator #estimatorFeaturesContainer::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.3);
+    }
+
+    .estimator-type-tile {
+      scroll-snap-align: start;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px !important;
+      border: 1.5px solid var(--border-color) !important;
+      border-radius: 14px !important;
+      background: var(--bg-surface) !important;
+      color: var(--text-main);
+      min-height: 72px;
+      cursor: pointer;
+      position: relative;
+      min-width: 0;
+      box-sizing: border-box;
+      transition: all 0.2s ease !important;
+    }
+    .estimator-type-tile:hover {
+      border-color: var(--primary) !important;
+      background: rgba(18, 102, 232, 0.04) !important;
+      transform: translateY(-1px);
+    }
+    .estimator-type-tile.selected,
+    .estimator-type-tile:has(input:checked) {
+      border-color: var(--primary) !important;
+      background: rgba(18, 102, 232, 0.08) !important;
+      box-shadow: 0 0 0 2px rgba(18, 102, 232, 0.2) !important;
+    }
+    [data-theme="dark"] .estimator-type-tile {
+      background: #111a30 !important;
+      border-color: #1e2e4f !important;
+    }
+    [data-theme="dark"] .estimator-type-tile.selected,
+    [data-theme="dark"] .estimator-type-tile:has(input:checked) {
+      border-color: #38bdf8 !important;
+      background: rgba(56, 189, 248, 0.12) !important;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3) !important;
+    }
+    .est-tile-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: rgba(18, 102, 232, 0.1);
+      color: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .estimator-type-tile.selected .est-tile-badge,
+    .estimator-type-tile:has(input:checked) .est-tile-badge {
+      background: var(--primary);
+      color: #ffffff;
+    }
+    [data-theme="dark"] .estimator-type-tile.selected .est-tile-badge,
+    [data-theme="dark"] .estimator-type-tile:has(input:checked) .est-tile-badge {
+      background: #38bdf8;
+      color: #0b1120;
+    }
+
+    /* Step 2: Features 2x2 Grid with Horizontal Scroll */
+    #cost-estimator #estimatorFeaturesContainer {
+      display: grid !important;
+      grid-template-rows: repeat(2, minmax(54px, 1fr)) !important;
+      grid-auto-flow: column !important;
+      grid-auto-columns: calc((100% - 10px) / 2) !important;
+      gap: 10px !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      scroll-snap-type: x mandatory !important;
+      -webkit-overflow-scrolling: touch !important;
+      padding-bottom: 6px !important;
+      scrollbar-width: thin !important;
+    }
+    .estimator-feature-tile,
+    #cost-estimator #estimatorFeaturesContainer label {
+      scroll-snap-align: start;
+      min-height: 54px;
+      padding: 9px 12px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 12px;
+      background: var(--bg-surface);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      min-width: 0;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+    }
+    .estimator-feature-tile:hover,
+    #cost-estimator #estimatorFeaturesContainer label:hover {
+      border-color: var(--primary);
+    }
+    .estimator-feature-tile.selected,
+    .estimator-feature-tile:has(input:checked),
+    #cost-estimator #estimatorFeaturesContainer label:has(input:checked) {
+      border-color: var(--primary);
+      background: rgba(18, 102, 232, .08);
+      box-shadow: 0 0 0 2px rgba(18, 102, 232, 0.15);
+    }
+    .est-feature-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: rgba(18, 102, 232, 0.08);
+      color: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+    .estimator-feature-tile:has(input:checked) .est-feature-icon,
+    #cost-estimator #estimatorFeaturesContainer label:has(input:checked) .est-feature-icon {
+      background: var(--primary);
+      color: #ffffff;
+    }
+    [data-theme="dark"] .estimator-feature-tile,
+    [data-theme="dark"] #cost-estimator #estimatorFeaturesContainer label {
+      background: #111a30;
+      border-color: #1e2e4f;
+    }
+    [data-theme="dark"] .estimator-feature-tile:has(input:checked),
+    [data-theme="dark"] #cost-estimator #estimatorFeaturesContainer label:has(input:checked) {
+      border-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25);
+    }
+    [data-theme="dark"] .estimator-feature-tile:has(input:checked) .est-feature-icon,
+    [data-theme="dark"] #cost-estimator #estimatorFeaturesContainer label:has(input:checked) .est-feature-icon {
+      background: #38bdf8;
+      color: #0b1120;
+    }
+    #cost-estimator #estimatorFeaturesContainer input,
+    #cost-estimator #estimatorTimelineContainer input {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      accent-color: var(--primary);
+    }
+
+    @media (max-width: 480px) {
+      #cost-estimator #estimatorProjectTypesContainer,
+      #cost-estimator #estimatorFeaturesContainer {
+        grid-auto-columns: calc((100% - 8px) / 2) !important;
+        gap: 8px !important;
+      }
+      .estimator-type-tile {
+        padding: 8px 10px !important;
+        gap: 8px !important;
+        min-height: 68px !important;
+      }
+      .est-tile-badge {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 0.82rem !important;
+      }
+      .estimator-feature-tile,
+      #cost-estimator #estimatorFeaturesContainer label {
+        padding: 8px 9px !important;
+        gap: 6px !important;
+        min-height: 50px !important;
+      }
+      .est-feature-icon {
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 0.75rem !important;
+      }
+    }
+
+    /* Step 3: Delivery Timeline (Firebase populated) */
+    #cost-estimator #estimatorTimelineContainer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px !important;
+      margin-bottom: 10px;
+    }
+    #cost-estimator #estimatorTimelineContainer label {
+      min-height: 46px;
+      padding: 9px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      background: var(--bg-surface);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    #cost-estimator #estimatorTimelineContainer label:hover {
+      border-color: var(--primary);
+    }
+    #cost-estimator #estimatorTimelineContainer label:has(input:checked) {
+      border-color: var(--primary);
+      background: rgba(18, 102, 232, .08);
+      box-shadow: 0 0 0 2px rgba(18, 102, 232, 0.15);
+    }
+    [data-theme="dark"] #cost-estimator #estimatorTimelineContainer label {
+      background: #111a30;
+      border-color: #1e2e4f;
+    }
+    [data-theme="dark"] #cost-estimator #estimatorTimelineContainer label:has(input:checked) {
+      border-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+    }
+    #cost-estimator .estimator-express-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 11px 13px;
+      border: 1px solid rgba(16, 185, 129, .22);
+      border-radius: 12px;
+      background: rgba(16, 185, 129, .07);
+      color: var(--text-main);
+      font-size: .8rem;
+      line-height: 1.5;
+    }
+    #cost-estimator .estimator-express-note i {
+      margin-top: 2px;
+      color: #10b981;
+    }
+
+    /* Right: Sticky Summary Box (Optimized for Laptop & Phone) */
+    #cost-estimator .estimator-summary {
+      position: sticky;
+      top: 84px;
+      padding: 22px;
+      border: 1px solid rgba(18, 102, 232, .3);
+      border-radius: 18px;
+      background: var(--bg-surface-alt, #f8fafc);
+      text-align: left;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      max-height: calc(100vh - 96px);
+      overflow-y: auto;
+    }
+    [data-theme="dark"] #cost-estimator .estimator-summary {
+      background: #111a30;
+      border-color: rgba(56, 189, 248, 0.3);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    }
+    #cost-estimator .estimator-summary-label {
+      color: var(--text-muted);
+      font-size: .77rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    #cost-estimator #estimatorTotalPrice {
+      margin: 5px 0 2px !important;
+      font-size: clamp(2.2rem, 5vw, 2.85rem) !important;
+      line-height: 1.15;
+      color: var(--primary, #1266e8);
+      font-weight: 900;
+    }
+    [data-theme="dark"] #cost-estimator #estimatorTotalPrice {
+      color: #38bdf8;
+    }
+    #cost-estimator .estimator-price-caption {
+      margin-bottom: 15px;
+      color: var(--text-muted);
+      font-size: .78rem;
+    }
+    #cost-estimator #estimatorSummaryText {
+      padding: 13px !important;
+      border-radius: 12px !important;
+      line-height: 1.7 !important;
+      overflow-wrap: anywhere;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      margin-bottom: 16px;
+      font-size: 0.86rem;
+    }
+    #cost-estimator .estimator-actions .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      border-radius: 11px;
+      text-align: center;
+      text-decoration: none;
+    }
+    #cost-estimator .estimator-trust-note {
+      margin-top: 12px;
+      color: var(--text-muted);
+      font-size: .76rem;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    /* Desktop Sidebar Collapse Button */
+    .sidebar-collapse-desktop-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface-alt);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .sidebar-collapse-desktop-btn:hover {
+      color: var(--primary);
+      border-color: var(--primary);
+      background: rgba(18, 102, 232, 0.08);
+    }
+    @media (max-width: 1080px) {
+      .sidebar-collapse-desktop-btn {
+        display: none !important;
+      }
+    }
+    .app-sidebar.collapsed .sidebar-collapse-desktop-btn i {
+      transform: rotate(180deg);
+    }
+
+    #cost-estimator button:focus-visible,
+    #cost-estimator a:focus-visible,
+    #cost-estimator input:focus-visible,
+    #cost-estimator textarea:focus-visible {
+      outline: 3px solid rgba(18, 102, 232, .4);
+      outline-offset: 3px;
+    }
+
+    /* Responsive Adjustments for Mobile and Laptop */
+    @media (max-width: 820px) {
+      #cost-estimator .estimator-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      #cost-estimator .estimator-summary {
+        position: static;
+        max-height: none;
+      }
+      #cost-estimator .estimator-preset-list {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 2px 2px 8px;
+        scrollbar-width: thin;
+      }
+      #cost-estimator .smart-preset-pill {
+        flex: 0 0 auto;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #cost-estimator *,
+      #cost-estimator *::before,
+      #cost-estimator *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
   </style>
 </head>
 <body id="home-top">
@@ -1345,16 +1910,9 @@
             <i class="fa-solid fa-bars"></i>
           </button>
 
-          <a href="#home-top" class="brand-logo-wrap">
-            <img src="./official logo.png" alt="GoDoz Logo" class="brand-logo-img" style="height:36px; width:auto; max-height:36px; max-width:40px; border-radius:8px; object-fit:contain;" onerror="this.src='./logo w bg.png'">
-            <div>
-              <div style="font-size:1.35rem; font-weight:900; line-height:1; letter-spacing:-0.5px;">
-                <span style="color:var(--primary, #1266e8);">Go</span><span style="color:var(--accent, #ff6900);">Doz</span>
-              </div>
-              <div style="font-size:0.65rem; font-weight:700; color:var(--text-muted, #64748b); letter-spacing:0.8px; text-transform:uppercase;">
-                Technology
-              </div>
-            </div>
+          <a href="#home-top" class="brand-logo-wrap" style="display:flex; align-items:center; text-decoration:none;">
+            <img src="./godoz_logo_flat_vector.png" alt="GoDoz Technology" class="godoz-nav-logo-desktop" onerror="this.src='./godoz_logo_rectangle_w_bg.png'">
+            <img src="./godoz-logo-circle.png" alt="GoDoz Logo" class="godoz-nav-logo-mobile" onerror="this.src='./official logo.png'">
           </a>
         </div>
 
@@ -1425,9 +1983,14 @@
             <div class="app-sidebar-header-subtitle" style="font-size:0.65rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Quick Navigation</div>
           </div>
         </div>
-        <button id="sidebarCloseBtn" type="button" class="sidebar-close-btn" onclick="window.closeMobileDrawer()" aria-label="Close Navigation Sidebar">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button id="sidebarCollapseDesktopBtn" type="button" class="sidebar-collapse-desktop-btn" onclick="window.toggleLeftNav()" aria-label="Toggle Sidebar Collapse" title="Collapse / Expand Sidebar">
+            <i class="fa-solid fa-angles-left"></i>
+          </button>
+          <button id="sidebarCloseBtn" type="button" class="sidebar-close-btn" onclick="window.closeMobileDrawer()" aria-label="Close Navigation Sidebar">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
       </div>
       
       <!-- Menu Group 1: Navigation & Services -->
@@ -1632,6 +2195,9 @@
 
       <!-- Sidebar Footer -->
       <div class="app-sidebar-footer">
+        <button type="button" onclick="window.toggleGoDozTheme()" class="btn btn-sm btn-outline" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:10px; font-weight:700; margin-bottom:10px; border-color:var(--border-color); color:var(--text-main); cursor:pointer;">
+          <i class="fa-solid fa-circle-half-stroke" style="color:var(--primary);"></i> Switch Light / Dark Mode
+        </button>
         <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20want%20to%20discuss%20a%20project!" target="_blank" class="app-sidebar-wa-btn">
           <i class="fa-brands fa-whatsapp"></i> Chat with Developer
         </a>
@@ -1690,13 +2256,13 @@
       </div>
       <div class="godoz-ticker-wrapper">
         <div class="godoz-ticker-content">
-          <span>🚀 Welcome to GoDoz Technology — Custom Android Apps &amp; Responsive Web Development</span>
+          <span>Note:- Maintenance is underway  🚀 Welcome to GoDoz Technology — Custom Android Apps &amp; Responsive Web Development</span>
           <span class="ticker-dot">•</span>
           <span>💡 100% Full Source Code Ownership &amp; Play Store Publishing Included</span>
           <span class="ticker-dot">•</span>
           <span>🛡️ Book Orders with PAD (Pay After Demo) &amp; 30-Day Post-Launch Support</span>
           <span class="ticker-dot">•</span>
-          <span>⚡ Direct Consultation with Lead Engineer RS GULSHAN PRAJAPATI</span>
+          <span> Note:- Maintenance is underway ⚡ Direct Consultation with Lead Engineer RS GULSHAN PRAJAPATI</span>
         </div>
       </div>
     </div>
@@ -1874,309 +2440,12 @@
             </p>
           </div>
 
-          <div class="services-grid">
-
-            <!-- Service 1: School, College & ITI Management Portal -->
-            <div class="service-card" data-category="services website apps" style="background:var(--bg-surface, #ffffff); border:1px solid var(--border-color, #e2e8f0); border-radius:16px; padding:22px; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; justify-content:space-between;">
-              <div>
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-                  <div style="width:46px; height:46px; border-radius:10px; background:rgba(139,92,246,0.1); color:#8b5cf6; display:flex; align-items:center; justify-content:center; font-size:22px;">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                  </div>
-                  <span style="font-size:0.8rem; font-weight:800; color:#8b5cf6; background:rgba(139,92,246,0.1); padding:4px 10px; border-radius:20px;"><s style="color:var(--text-muted); font-weight:600; text-decoration:line-through; margin-right:4px;">₹24,999</s> मात्र ₹9,999</span>
-                </div>
-                <h3 style="font-size:1.2rem; margin-bottom:8px; color:var(--text-main);">School, College &amp; ITI Management Portal</h3>
-                <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5; margin-bottom:14px;">
-                  Complete Management App &amp; Web Portal for Private Schools, Colleges, ITI Institutes &amp; Coaching Classes. Manage student attendance, online fee collection, marksheet results, and parent SMS alerts.
-                </p>
-                <ul style="color:var(--text-muted); font-size:0.84rem; margin-bottom:16px; padding-left:18px; line-height:1.6;">
-                  <li>Student Attendance &amp; ID Card System</li>
-                  <li>Online Fee Collection (Razorpay/UPI)</li>
-                  <li>Exam Marksheet &amp; Parent Mobile App</li>
-                  <li>Admit Card &amp; Notice Board Portal</li>
-                </ul>
-              </div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button onclick="window.openOrderModal('School & College Management Portal', 9999, 'Student Attendance, Online Fees Gateway, Exam Result Portal, Parent App')" class="btn btn-sm btn-primary" style="flex:1;">
-                  ⚡ Order School ERP App
-                </button>
-                <a href="https://wa.me/919288521731?text=Hi%20Gulshan,%20I%20want%20a%20School%20/%20College%20/%20ITI%20App." target="_blank" class="btn btn-sm btn-outline" aria-label="Chat on WhatsApp">
-                  <i class="fa-brands fa-whatsapp"></i> Chat
-                </a>
-              </div>
+          <div id="liveServicesGrid" class="services-grid">
+            <div style="text-align:center; padding:40px 20px; grid-column:1 / -1; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px;">
+              <i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary); margin-bottom:12px; display:block;"></i>
+              <div style="font-weight:800; font-size:1rem; color:var(--text-main);">Loading Live Products &amp; Services Catalog...</div>
+              <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Connecting to Firestore Database</div>
             </div>
-
-            <!-- Service 2: Restaurant, Cafe & Fast Food Billing -->
-            <div class="service-card" data-category="services apps" style="background:var(--bg-surface, #ffffff); border:1px solid var(--border-color, #e2e8f0); border-radius:16px; padding:22px; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; justify-content:space-between;">
-              <div>
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-                  <div style="width:46px; height:46px; border-radius:10px; background:rgba(234,179,8,0.12); color:#ca8a04; display:flex; align-items:center; justify-content:center; font-size:22px;">
-                    <i class="fa-solid fa-utensils"></i>
-                  </div>
-                  <span style="font-size:0.8rem; font-weight:800; color:#ca8a04; background:rgba(234,179,8,0.12); padding:4px 10px; border-radius:20px;"><s style="color:var(--text-muted); font-weight:600; text-decoration:line-through; margin-right:4px;">₹12,999</s> मात्र ₹4,999</span>
-                </div>
-                <h3 style="font-size:1.2rem; margin-bottom:8px; color:var(--text-main);">Restaurant, Cafe &amp; Hotel Software</h3>
-                <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5; margin-bottom:14px;">
-                  Smart POS billing app for Restaurants, Cafes, Food Corners, Bakeries &amp; Hotels. Digital QR Menu, KOT Kitchen Order Display, Table Billing &amp; WhatsApp Receipt.
-                </p>
-                <ul style="color:var(--text-muted); font-size:0.84rem; margin-bottom:16px; padding-left:18px; line-height:1.6;">
-                  <li>Digital QR Table Menu &amp; KOT System</li>
-                  <li>Fast Touchscreen POS Billing</li>
-                  <li>WhatsApp Bill Receipt to Customer</li>
-                  <li>Daily Sales &amp; Inventory Reports</li>
-                </ul>
-              </div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button onclick="window.openOrderModal('Restaurant & Cafe Billing Software', 4999, 'Digital QR Menu, KOT Kitchen Display, Touch Billing, WhatsApp Receipts')" class="btn btn-sm btn-accent" style="flex:1;">
-                  ⚡ Order Restaurant POS
-                </button>
-                <a href="https://wa.me/919288521731?text=Hi%20Gulshan,%20I%20want%20a%20Restaurant%20/%20Cafe%20Billing%20Software." target="_blank" class="btn btn-sm btn-outline" aria-label="Chat on WhatsApp">
-                  <i class="fa-brands fa-whatsapp"></i> Chat
-                </a>
-              </div>
-            </div>
-
-            <!-- Service 3: Doctor Clinic & Hospital Software -->
-            <div class="service-card" data-category="services apps" style="background:var(--bg-surface, #ffffff); border:1px solid var(--border-color, #e2e8f0); border-radius:16px; padding:22px; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; justify-content:space-between;">
-              <div>
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-                  <div style="width:46px; height:46px; border-radius:10px; background:rgba(16,185,129,0.12); color:#10b981; display:flex; align-items:center; justify-content:center; font-size:22px;">
-                    <i class="fa-solid fa-user-doctor"></i>
-                  </div>
-                  <span style="font-size:0.8rem; font-weight:800; color:#10b981; background:rgba(16,185,129,0.12); padding:4px 10px; border-radius:20px;"><s style="color:var(--text-muted); font-weight:600; text-decoration:line-through; margin-right:4px;">₹16,999</s> मात्र ₹6,999</span>
-                </div>
-                <h3 style="font-size:1.2rem; margin-bottom:8px; color:var(--text-main);">Doctor Clinic &amp; Hospital Software</h3>
-                <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5; margin-bottom:14px;">
-                  Complete appointment booking app for Clinics, Doctors, Hospitals, Pathology Labs &amp; Pharmacies. Digital Prescription Generator, Patient Records, and Automated Reminders.
-                </p>
-                <ul style="color:var(--text-muted); font-size:0.84rem; margin-bottom:16px; padding-left:18px; line-height:1.6;">
-                  <li>Patient Online Appointment Booking</li>
-                  <li>1-Click Digital Rx Prescription Print</li>
-                  <li>Pathology &amp; Medicine Inventory Billing</li>
-                  <li>WhatsApp Appointment Reminders</li>
-                </ul>
-              </div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button onclick="window.openOrderModal('Doctor Clinic & Hospital Management', 6999, 'Patient Appointment Booking, Digital Rx Prescription, Billing & WhatsApp Reminders')" class="btn btn-sm btn-primary" style="flex:1;">
-                  ⚡ Order Clinic Software
-                </button>
-                <a href="https://wa.me/919288521731?text=Hi%20Gulshan,%20I%20want%20a%20Doctor%20Clinic%20/%20Hospital%20Software." target="_blank" class="btn btn-sm btn-outline" aria-label="Chat on WhatsApp">
-                  <i class="fa-brands fa-whatsapp"></i> Chat
-                </a>
-              </div>
-            </div>
-
-            <!-- Service 4: Kirana, Retail & Wholesale POS -->
-            <div class="service-card" data-category="services" style="background:var(--bg-surface, #ffffff); border:1px solid var(--border-color, #e2e8f0); border-radius:16px; padding:22px; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; justify-content:space-between;">
-              <div>
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-                  <div style="width:46px; height:46px; border-radius:10px; background:rgba(6,182,212,0.12); color:#0891b2; display:flex; align-items:center; justify-content:center; font-size:22px;">
-                    <i class="fa-solid fa-store"></i>
-                  </div>
-                  <span style="font-size:0.8rem; font-weight:800; color:#0891b2; background:rgba(6,182,212,0.12); padding:4px 10px; border-radius:20px;"><s style="color:var(--text-muted); font-weight:600; text-decoration:line-through; margin-right:4px;">₹9,999</s> मात्र ₹3,999</span>
-                </div>
-                <h3 style="font-size:1.2rem; margin-bottom:8px; color:var(--text-main);">Kirana, Retail &amp; Wholesale Shop POS</h3>
-                <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5; margin-bottom:14px;">
-                  Easy Billing &amp; Stock Management App for Kirana Stores, Hardware, Garment, Electronics &amp; Local Traders. Barcode Scanning, Udhar Khata Ledger, and GST Receipt Print.
-                </p>
-                <ul style="color:var(--text-muted); font-size:0.84rem; margin-bottom:16px; padding-left:18px; line-height:1.6;">
-                  <li>Barcode Scanner &amp; Quick Billing</li>
-                  <li>Customer Udhar Khata (Digital Ledger)</li>
-                  <li>Low Stock Alerts &amp; GST Invoices</li>
-                  <li>WhatsApp Bill Receipt to Customers</li>
-                </ul>
-              </div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button onclick="window.openOrderModal('Kirana & Retail Shop POS Software', 3999, 'Barcode Scanning, Udhar Khata Ledger, Stock Inventory, GST Bill')" class="btn btn-sm btn-outline" style="flex:1;">
-                  ⚡ Order Shop POS App
-                </button>
-                <a href="https://wa.me/919288521731?text=Hi%20Gulshan,%20I%20want%20a%20Kirana%20/%20Retail%20Shop%20Billing%20Software." target="_blank" class="btn btn-sm btn-outline" aria-label="Chat on WhatsApp">
-                  <i class="fa-brands fa-whatsapp"></i> Chat
-                </a>
-              </div>
-            </div>
-
-            <!-- Service 5: Android App Development -->
-            <div class="service-card" data-category="services apps" style="background:var(--bg-surface, #ffffff); border:1px solid var(--border-color, #e2e8f0); border-radius:16px; padding:22px; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; justify-content:space-between;">
-              <div>
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-                  <div style="width:46px; height:46px; border-radius:10px; background:rgba(18,102,232,0.1); color:var(--primary, #1266e8); display:flex; align-items:center; justify-content:center; font-size:22px;">
-                    <i class="fa-brands fa-android"></i>
-                  </div>
-                  <span style="font-size:0.8rem; font-weight:800; color:var(--primary); background:rgba(18,102,232,0.1); padding:4px 10px; border-radius:20px;"><s style="color:var(--text-muted); font-weight:600; text-decoration:line-through; margin-right:4px;">₹22,999</s> मात्र ₹9,999</span>
-                </div>
-                <h3 style="font-size:1.2rem; margin-bottom:8px; color:var(--text-main);">Custom Android App Development</h3>
-                <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5; margin-bottom:14px;">
-                  Native &amp; high-speed Android applications tailored for businesses, stores, utility tools, booking systems, and portals. Includes complete Google Play Store publishing support.
-                </p>
-                <ul style="color:var(--text-muted); font-size:0.84rem; margin-bottom:16px; padding-left:18px; line-height:1.6;">
-                  <li>Modern Material UI/UX &amp; Offline DB</li>
-                  <li>Firebase Auth &amp; Real-time Cloud Sync</li>
-                  <li>Push notifications &amp; payment gateway</li>
-                  <li>Full APK release &amp; Play Store listing</li>
-                </ul>
-              </div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button onclick="window.openOrderModal('Custom Android Application', 9999, 'Play Store Ready, Offline DB, Firebase Auth')" class="btn btn-sm btn-primary" style="flex:1;">
-                  ⚡ Order App Now
-                </button>
-                <a href="https://wa.me/919288521731?text=Hi%20Gulshan,%20I%20want%20to%20develop%20an%20Android%20App." target="_blank" class="btn btn-sm btn-outline" aria-label="Chat on WhatsApp">
-                  <i class="fa-brands fa-whatsapp"></i> Chat
-                </a>
-              </div>
-            </div>
-
-            <!-- Service 2: Website & Landing Page Development -->
-            <div class="service-card" data-category="services website" style="background:var(--bg-surface, #ffffff); border:1px solid var(--border-color, #e2e8f0); border-radius:16px; padding:22px; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; justify-content:space-between;">
-              <div>
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-                  <div style="width:46px; height:46px; border-radius:10px; background:rgba(255,105,0,0.1); color:var(--accent, #ff6900); display:flex; align-items:center; justify-content:center; font-size:22px;">
-                    <i class="fa-solid fa-globe"></i>
-                  </div>
-                  <span style="font-size:0.8rem; font-weight:800; color:var(--accent); background:rgba(255,105,0,0.1); padding:4px 10px; border-radius:20px;"><s style="color:var(--text-muted); font-weight:600; text-decoration:line-through; margin-right:4px;">₹11,999</s> मात्र ₹4,999</span>
-                </div>
-                <h3 style="font-size:1.2rem; margin-bottom:8px; color:var(--text-main);">Modern Responsive Websites</h3>
-                <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5; margin-bottom:14px;">
-                  High-converting, lightning-fast, and 100% mobile-friendly websites for companies, schools, hospitals, local businesses, and portfolios with top-tier Google SEO optimization.
-                </p>
-                <ul style="color:var(--text-muted); font-size:0.84rem; margin-bottom:16px; padding-left:18px; line-height:1.6;">
-                  <li>Mobile &amp; tablet perfectly responsive</li>
-                  <li>Top Core Web Vitals &amp; Fast CDN hosting</li>
-                  <li>WhatsApp inquiry &amp; lead forms built-in</li>
-                  <li>Free SSL &amp; custom domain setup</li>
-                </ul>
-              </div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button onclick="window.openOrderModal('Modern Business Website', 4999, 'Responsive Design, SEO Optimized, WhatsApp Lead Form')" class="btn btn-sm btn-accent" style="flex:1;">
-                  ⚡ Order Website Now
-                </button>
-                <a href="https://wa.me/919288521731?text=Hi%20Gulshan,%20I%20want%20to%20build%20a%20Website." target="_blank" class="btn btn-sm btn-outline" aria-label="Chat on WhatsApp">
-                  <i class="fa-brands fa-whatsapp"></i> Chat
-                </a>
-              </div>
-            </div>
-
-            <!-- Service 3: Full-Stack Web Applications & Portals -->
-            <div class="service-card" data-category="services website apps" style="background:var(--bg-surface, #ffffff); border:1px solid var(--border-color, #e2e8f0); border-radius:16px; padding:22px; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; justify-content:space-between;">
-              <div>
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-                  <div style="width:46px; height:46px; border-radius:10px; background:rgba(16,185,129,0.1); color:#10b981; display:flex; align-items:center; justify-content:center; font-size:22px;">
-                    <i class="fa-solid fa-server"></i>
-                  </div>
-                  <span style="font-size:0.8rem; font-weight:800; color:#10b981; background:rgba(16,185,129,0.1); padding:4px 10px; border-radius:20px;"><s style="color:var(--text-muted); font-weight:600; text-decoration:line-through; margin-right:4px;">₹34,999</s> मात्र ₹14,999</span>
-                </div>
-                <h3 style="font-size:1.2rem; margin-bottom:8px; color:var(--text-main);">Full-Stack Web Apps &amp; Portals</h3>
-                <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5; margin-bottom:14px;">
-                  Custom browser-based web portals, admin panels, customer dashboards, job portals, online test systems, and multi-user database applications designed for heavy workflows.
-                </p>
-                <ul style="color:var(--text-muted); font-size:0.84rem; margin-bottom:16px; padding-left:18px; line-height:1.6;">
-                  <li>Secure authentication &amp; RBAC roles</li>
-                  <li>Database design (MongoDB, SQL, Firestore)</li>
-                  <li>Payment gateways &amp; automated invoices</li>
-                  <li>Realtime analytics &amp; CSV/PDF exports</li>
-                </ul>
-              </div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button onclick="window.openOrderModal('Full-Stack Web App / Portal', 14999, 'RBAC Auth, Custom DB, Admin Dashboard, Payment Gateway')" class="btn btn-sm btn-primary" style="flex:1;">
-                  ⚡ Order Portal Now
-                </button>
-                <a href="https://wa.me/919288521731?text=Hi%20Gulshan,%20I%20need%20a%20Web%20Application%20Portal." target="_blank" class="btn btn-sm btn-outline" aria-label="Chat on WhatsApp">
-                  <i class="fa-brands fa-whatsapp"></i> Chat
-                </a>
-              </div>
-            </div>
-
-            <!-- Service 4: Complete Android App + Website Combo Suite -->
-            <div class="service-card" data-category="services apps website" style="background:linear-gradient(180deg, rgba(18,102,232,0.03), var(--bg-surface, #ffffff)); border:2px solid var(--primary, #1266e8); border-radius:16px; padding:22px; box-shadow:var(--shadow-md); display:flex; flex-direction:column; justify-content:space-between; position:relative;">
-              <div style="position:absolute; top:-12px; right:16px; background:linear-gradient(135deg, #1266e8, #ff6900); color:#fff; font-size:0.75rem; font-weight:800; padding:3px 12px; border-radius:20px; box-shadow:var(--shadow-sm);">
-                🔥 BEST VALUE COMBO
-              </div>
-              <div>
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-                  <div style="width:46px; height:46px; border-radius:10px; background:linear-gradient(135deg, rgba(18,102,232,0.15), rgba(255,105,0,0.15)); color:var(--primary, #1266e8); display:flex; align-items:center; justify-content:center; font-size:22px;">
-                    <i class="fa-solid fa-layer-group"></i>
-                  </div>
-                  <span style="font-size:0.8rem; font-weight:800; color:var(--primary); background:rgba(18,102,232,0.1); padding:4px 10px; border-radius:20px;"><s style="color:var(--text-muted); font-weight:600; text-decoration:line-through; margin-right:4px;">₹45,000</s> मात्र ₹19,999</span>
-                </div>
-                <h3 style="font-size:1.2rem; margin-bottom:8px; color:var(--text-main);">Android App + Website Combo Suite</h3>
-                <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5; margin-bottom:14px;">
-                  The ultimate 360&deg; tech solution for your company. Get a dedicated Play Store Android App PLUS a high-speed SEO-optimized Website connected to a unified cloud database.
-                </p>
-                <ul style="color:var(--text-muted); font-size:0.84rem; margin-bottom:16px; padding-left:18px; line-height:1.6;">
-                  <li>Unified single database for App &amp; Web</li>
-                  <li>Google Play Store publishing included</li>
-                  <li>Customer web portal + Android Client App</li>
-                  <li>Unified Admin Master Dashboard</li>
-                </ul>
-              </div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button onclick="window.openOrderModal('Android App + Website Combo Suite', 19999, 'Complete Android App + Responsive Website + Unified Cloud Sync')" class="btn btn-sm btn-accent" style="flex:1;">
-                  ⚡ Order Combo Suite
-                </button>
-                <a href="https://wa.me/919288521731?text=Hi%20Gulshan,%20I%20want%20the%20Android%20App%20%2B%20Website%20Combo%20Suite." target="_blank" class="btn btn-sm btn-outline" aria-label="Chat on WhatsApp">
-                  <i class="fa-brands fa-whatsapp"></i> Chat
-                </a>
-              </div>
-            </div>
-
-            <!-- Service 5: Utility Tools & Automation -->
-            <div class="service-card" data-category="services" style="background:var(--bg-surface, #ffffff); border:1px solid var(--border-color, #e2e8f0); border-radius:16px; padding:22px; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; justify-content:space-between;">
-              <div>
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-                  <div style="width:46px; height:46px; border-radius:10px; background:rgba(139,92,246,0.1); color:#8b5cf6; display:flex; align-items:center; justify-content:center; font-size:22px;">
-                    <i class="fa-solid fa-gears"></i>
-                  </div>
-                  <span style="font-size:0.8rem; font-weight:800; color:#8b5cf6; background:rgba(139,92,246,0.1); padding:4px 10px; border-radius:20px;"><s style="color:var(--text-muted); font-weight:600; text-decoration:line-through; margin-right:4px;">₹6,999</s> मात्र ₹2,999</span>
-                </div>
-                <h3 style="font-size:1.2rem; margin-bottom:8px; color:var(--text-main);">Custom Tools &amp; Automation</h3>
-                <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5; margin-bottom:14px;">
-                  Automate daily tasks with custom PDF converters, QR scanners, invoice generators, direct WhatsApp automation, and custom API bots to save your team hours every single day.
-                </p>
-                <ul style="color:var(--text-muted); font-size:0.84rem; margin-bottom:16px; padding-left:18px; line-height:1.6;">
-                  <li>PDF processing &amp; OCR text conversion</li>
-                  <li>Automated messaging &amp; report generation</li>
-                  <li>Local offline-first desktop/web tools</li>
-                </ul>
-              </div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button onclick="window.openOrderModal('Custom Software Automation Tool', 2999, 'Custom Utility Tool, Automation Script, PDF/Data Engine')" class="btn btn-sm btn-outline" style="flex:1;">
-                  ⚡ Order Custom Tool
-                </button>
-                <a href="https://wa.me/919288521731?text=Hi%20Gulshan,%20I%20want%20Custom%20Software%20Automation." target="_blank" class="btn btn-sm btn-outline" aria-label="Chat on WhatsApp">
-                  <i class="fa-brands fa-whatsapp"></i> Chat
-                </a>
-              </div>
-            </div>
-
-            <!-- Service 6: App & Website Upgrades -->
-            <div class="service-card" data-category="services" style="background:var(--bg-surface, #ffffff); border:1px solid var(--border-color, #e2e8f0); border-radius:16px; padding:22px; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; justify-content:space-between;">
-              <div>
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-                  <div style="width:46px; height:46px; border-radius:10px; background:rgba(6,182,212,0.1); color:#06b6d4; display:flex; align-items:center; justify-content:center; font-size:22px;">
-                    <i class="fa-solid fa-wrench"></i>
-                  </div>
-                  <span style="font-size:0.8rem; font-weight:800; color:#06b6d4; background:rgba(6,182,212,0.1); padding:4px 10px; border-radius:20px;"><s style="color:var(--text-muted); font-weight:600; text-decoration:line-through; margin-right:4px;">₹3,499</s> मात्र ₹1,499</span>
-                </div>
-                <h3 style="font-size:1.2rem; margin-bottom:8px; color:var(--text-main);">Maintenance &amp; Bug Fixes</h3>
-                <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5; margin-bottom:14px;">
-                  Have an existing website or app with bugs, slow loading speed, or outdated UI? We modernize your existing code, fix responsive layouts, and enhance security.
-                </p>
-                <ul style="color:var(--text-muted); font-size:0.84rem; margin-bottom:16px; padding-left:18px; line-height:1.6;">
-                  <li>Mobile UI fixes &amp; Speed optimization</li>
-                  <li>Security patches &amp; Firebase upgrades</li>
-                  <li>Google Play Store policy compliance fixes</li>
-                </ul>
-              </div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button onclick="window.openOrderModal('Maintenance & Bug Fixes', 1499, 'Layout Bug Fixes, Speed Optimization, Security Patch')" class="btn btn-sm btn-outline" style="flex:1;">
-                  ⚡ Book Fixes
-                </button>
-                <a href="https://wa.me/919288521731?text=Hi%20Gulshan,%20I%20need%20help%20fixing/upgrading%20my%20website%20or%20app." target="_blank" class="btn btn-sm btn-outline" aria-label="Chat on WhatsApp">
-                  <i class="fa-brands fa-whatsapp"></i> Chat
-                </a>
-              </div>
-            </div>
-
           </div>
         </div>
       </section>
@@ -2184,24 +2453,23 @@
       <!-- ========================================================================
            7. Interactive Project Cost Estimator & Quote Calculator
            ======================================================================== -->
-      <section id="cost-estimator" class="section directory-card" data-category="pricing" style="padding:50px 0; background:var(--bg-surface-alt, #f8fafc);">
+      <section id="cost-estimator" class="section directory-card" data-category="pricing" style="background:var(--bg-surface-alt, #f8fafc);">
         <div class="container">
-          <div style="text-align:center; margin-bottom:30px;">
+          <div class="estimator-intro">
             <span class="section-badge"><i class="fa-solid fa-calculator"></i> Transparent Pricing</span>
             <h2 class="section-title">Interactive Project Cost Estimator</h2>
             <p class="section-subtitle">
-              Select your desired application type, features, and timeline to calculate an estimated quote. Send it directly to WhatsApp for an instant consultation!
+              Build a quick project estimate in three easy steps. Choose a project, add the features you need, and pick a delivery timeline.
             </p>
           </div>
 
-          <div style="max-width:900px; margin:0 auto; background:var(--bg-surface, #ffffff); border:2px solid var(--border-color, #e2e8f0); border-radius:20px; padding:24px; box-shadow:var(--shadow-lg);">
+          <div class="estimator-shell">
 
-            <!-- 1-Click Smart Scope Presets -->
-            <div style="margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border-color, #e2e8f0);">
-              <div style="font-size:0.84rem; font-weight:800; color:var(--text-muted); margin-bottom:10px; display:flex; align-items:center; gap:6px;">
-                <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--primary);"></i> 1-Click Smart Scope Presets:
+            <div class="estimator-presets">
+              <div class="estimator-presets-title">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Not sure where to start? Try a popular setup
               </div>
-              <div style="display:flex; flex-wrap:wrap; gap:8px;">
+              <div class="estimator-preset-list" aria-label="Popular project setups">
                 <button type="button" class="smart-preset-pill active" onclick="window.applyEstimatorPreset('website')">
                   🌐 Business Website
                 </button>
@@ -2220,92 +2488,59 @@
               </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px;">
+            <div class="estimator-layout">
 
               <!-- Left: Selections -->
               <div>
                 <!-- Step 1: Project Type -->
-                <div style="margin-bottom:20px;">
-                  <label style="display:block; font-weight:800; font-size:0.95rem; margin-bottom:10px; color:var(--text-main);">
-                    1. Select Project Type:
-                  </label>
-                  <div style="display:grid; gap:8px;">
-                    <label style="display:flex; align-items:center; gap:8px; padding:10px 12px; border:1px solid var(--border-color); border-radius:10px; cursor:pointer; background:var(--bg-surface-alt);">
-                      <input type="radio" name="project_type" value="4999" data-name="Modern Business Website" checked>
-                      <div>
-                        <strong style="font-size:0.9rem;">Modern Business Website</strong>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">Base: ₹4,999</div>
-                      </div>
-                    </label>
-                    <label style="display:flex; align-items:center; gap:8px; padding:10px 12px; border:1px solid var(--border-color); border-radius:10px; cursor:pointer; background:var(--bg-surface-alt);">
-                      <input type="radio" name="project_type" value="9999" data-name="Custom Android Application">
-                      <div>
-                        <strong style="font-size:0.9rem;">Custom Android App (Play Store Ready)</strong>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">Base: ₹9,999</div>
-                      </div>
-                    </label>
-                    <label style="display:flex; align-items:center; gap:8px; padding:10px 12px; border:1px solid var(--border-color); border-radius:10px; cursor:pointer; background:var(--bg-surface-alt);">
-                      <input type="radio" name="project_type" value="14999" data-name="Full-Stack Web App / Portal">
-                      <div>
-                        <strong style="font-size:0.9rem;">Full-Stack Web App / Portal</strong>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">Base: ₹14,999</div>
-                      </div>
-                    </label>
-                    <label style="display:flex; align-items:center; gap:8px; padding:10px 12px; border:1px solid var(--border-color); border-radius:10px; cursor:pointer; background:var(--bg-surface-alt);">
-                      <input type="radio" name="project_type" value="19999" data-name="Android App + Website Combo Suite">
-                      <div>
-                        <strong style="font-size:0.9rem;">🚀 Android App + Website Combo Suite</strong>
-                        <div style="font-size:0.75rem; color:var(--accent); font-weight:700;">Special Value: ₹19,999</div>
-                      </div>
-                    </label>
-                    <label style="display:flex; align-items:center; gap:8px; padding:10px 12px; border:1.5px solid var(--primary, #1266e8); border-radius:10px; cursor:pointer; background:rgba(18,102,232,0.04);">
-                      <input type="radio" name="project_type" value="0" data-name="Custom Requirement / Unique Idea" id="radioCustomProjectType">
-                      <div>
-                        <strong style="font-size:0.9rem; color:var(--primary, #1266e8);"><i class="fa-solid fa-lightbulb" style="color:var(--accent, #ff6900);"></i> Custom Requirement / Unique Idea</strong>
-                        <div style="font-size:0.75rem; color:#10b981; font-weight:800;">Free 1-on-1 Consultation on WhatsApp</div>
-                      </div>
-                    </label>
+                <div class="estimator-step">
+                  <div class="est-step-header">
+                    <h3 class="estimator-step-title" style="margin:0;"><span class="estimator-step-number">1</span> Choose your project type</h3>
+                    <div class="est-scroll-nav" aria-label="Scroll project types">
+                      <button type="button" id="btnScrollTypesPrev" class="est-scroll-btn" onclick="window.scrollEstimatorGrid('estimatorProjectTypesContainer', -1)" title="Previous options" aria-label="Previous options"><i class="fa-solid fa-chevron-left"></i></button>
+                      <button type="button" id="btnScrollTypesNext" class="est-scroll-btn" onclick="window.scrollEstimatorGrid('estimatorProjectTypesContainer', 1)" title="Next options" aria-label="Next options"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
                   </div>
+                  <p class="estimator-step-hint">Pick the option that is closest to what you want to build. <span style="font-size:0.75rem; opacity:0.85;">(Swipe ↔ or use arrows to view more)</span></p>
+                  <div id="estimatorProjectTypesContainer" role="radiogroup" aria-label="Project type">
+                    <div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.85rem; grid-column:1 / -1;">
+                      <i class="fa-solid fa-spinner fa-spin"></i> Loading Project Types...
+                    </div>
+                  </div>
+
+                  <!-- Custom Project Type Placement (Spans full width below 2x2 grid) -->
+                  <div id="customProjectTypeTileWrap" style="margin-top:10px;"></div>
 
                   <!-- Custom Requirement Description Input Box (Opens when Custom Selected) -->
                   <div id="customIdeaTextWrap" style="display:none; margin-top:12px;">
                     <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">
-                      <i class="fa-solid fa-pen-to-square" style="color:var(--accent);"></i> Describe your custom idea or unique features:
+                      <i class="fa-solid fa-pen-to-square" style="color:var(--accent);"></i> Tell us about your idea
                     </label>
-                    <textarea id="customIdeaInput" placeholder="e.g. I want a custom delivery app with live GPS tracking, vendor dashboard, and custom wallet..." style="width:100%; min-height:75px; padding:10px 12px; border:1.5px solid var(--primary); border-radius:10px; font-size:0.85rem; background:var(--bg-surface); color:var(--text-main); font-family:inherit; outline:none; resize:vertical; box-shadow:0 2px 8px rgba(18,102,232,0.1);"></textarea>
+                    <textarea id="customIdeaInput" aria-label="Describe your custom project idea" placeholder="For example: a delivery app with live tracking, vendor dashboard and a digital wallet." style="width:100%; min-height:90px; padding:12px 14px; border:1.5px solid var(--primary); border-radius:12px; font-size:0.9rem; background:var(--bg-surface); color:var(--text-main); font-family:inherit; outline:none; resize:vertical; box-shadow:0 2px 8px rgba(18,102,232,0.1);"></textarea>
                   </div>
                 </div>
 
                 <!-- Step 2: Add-on Features -->
-                <div style="margin-bottom:20px;">
-                  <label style="display:block; font-weight:800; font-size:0.95rem; margin-bottom:10px; color:var(--text-main);">
-                    2. Select Key Features &amp; Modules:
-                  </label>
-                  <div style="display:grid; grid-template-columns:1fr; gap:8px;">
-                    <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; cursor:pointer;">
-                      <input type="checkbox" name="feature_addon" value="2000" data-name="User Login/Auth"> User Login / OTP Auth (+₹2,000)
-                    </label>
-                    <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; cursor:pointer;">
-                      <input type="checkbox" name="feature_addon" value="3000" data-name="Razorpay Gateway"> Razorpay / UPI Gateway (+₹3,000)
-                    </label>
-                    <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; cursor:pointer;">
-                      <input type="checkbox" name="feature_addon" value="2500" data-name="Push Notifications"> Push Notifications (+₹2,500)
-                    </label>
-                    <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; cursor:pointer;">
-                      <input type="checkbox" name="feature_addon" value="3500" data-name="Admin CMS Dashboard"> Dedicated Admin CMS (+₹3,500)
-                    </label>
-                    <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; cursor:pointer;">
-                      <input type="checkbox" name="feature_addon" value="4000" data-name="Gemini AI Integration"> Gemini AI / Chatbot (+₹4,000)
-                    </label>
+                <div class="estimator-step">
+                  <div class="est-step-header">
+                    <h3 class="estimator-step-title" style="margin:0;"><span class="estimator-step-number">2</span> Add the features you need <span style="font-size:.75rem; font-weight:600; color:var(--text-muted);">(optional)</span></h3>
+                    <div class="est-scroll-nav" aria-label="Scroll features">
+                      <button type="button" id="btnScrollFeatPrev" class="est-scroll-btn" onclick="window.scrollEstimatorGrid('estimatorFeaturesContainer', -1)" title="Previous features" aria-label="Previous features"><i class="fa-solid fa-chevron-left"></i></button>
+                      <button type="button" id="btnScrollFeatNext" class="est-scroll-btn" onclick="window.scrollEstimatorGrid('estimatorFeaturesContainer', 1)" title="Next features" aria-label="Next features"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                  </div>
+                  <p class="estimator-step-hint">Select one or more. The estimate updates as you make changes. <span style="font-size:0.75rem; opacity:0.85;">(Swipe ↔ to view more)</span></p>
+                  <div id="estimatorFeaturesContainer">
+                    <div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.85rem; grid-column:1 / -1;">
+                      <i class="fa-solid fa-spinner fa-spin"></i> Loading Features from Firestore...
+                    </div>
                   </div>
                 </div>
-
                 <!-- Step 3: Delivery Timeline -->
-                <div>
-                  <label style="display:block; font-weight:800; font-size:0.95rem; margin-bottom:8px; color:var(--text-main);">
-                    3. Delivery Timeline:
-                  </label>
-                  <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:8px;">
+                <div class="estimator-step">
+                  <h3 class="estimator-step-title"><span class="estimator-step-number">3</span> Choose a delivery timeline</h3>
+                  <p class="estimator-step-hint">Express delivery adds a small charge to the estimate.</p>
+                  <div id="estimatorTimelineContainer" style="display:flex; flex-wrap:wrap; margin-bottom:10px;">
                     <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer; font-weight:700; color:var(--text-main);">
                       <input type="radio" name="timeline" value="1.0" data-name="Normal Delivery (लगभग 15 दिन)" checked> Normal (लगभग 15 दिन)
                     </label>
@@ -2313,44 +2548,46 @@
                       <input type="radio" name="timeline" value="1.05" data-name="Express Delivery (लगभग 10 दिन, +5%)"> ⚡ Express (लगभग 10 दिन)
                     </label>
                   </div>
-                  <div style="font-size:0.78rem; font-weight:700; color:#10b981; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); padding:6px 12px; border-radius:8px; display:inline-flex; align-items:center; gap:6px;">
-                    <i class="fa-solid fa-bolt-lightning" style="color:#10b981;"></i> हम आपकी आवश्यकता के अनुसार प्रोजेक्ट जल्द से जल्द (Fastest Possible) डिलीवर करने की पूरी कोशिश करते हैं!
-                     <br>  Express मात्र +5% Extra Price.
+                  <div class="estimator-express-note">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>We will confirm the final timeline after understanding your requirements. Express delivery is subject to availability and adds 5%.</span>
                   </div>
                 </div>
               </div>
 
               <!-- Right: Live Total Box -->
-              <div style="background:var(--bg-surface-alt, #f8fafc); border:2px dashed var(--primary, #1266e8); border-radius:16px; padding:20px; display:flex; flex-direction:column; justify-content:space-between; text-align:center;">
+              <aside class="estimator-summary" aria-label="Your project estimate">
                 <div>
-                  <div style="font-size:0.82rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.8px;">
-                    Estimated Investment
+                  <div class="estimator-summary-label">Your estimated investment</div>
+                  <div id="estimatorTotalPrice" aria-live="polite" aria-atomic="true" style="font-size:2.5rem; font-weight:900; color:var(--primary, #1266e8); margin:8px 0;">
+                    ₹0
                   </div>
-                  <div id="estimatorTotalPrice" style="font-size:2.5rem; font-weight:900; color:var(--primary, #1266e8); margin:8px 0;">
-                    ₹4,999
-                  </div>
-                  <div id="estimatorSummaryText" style="font-size:0.82rem; color:var(--text-muted); line-height:1.5; text-align:left; background:var(--bg-surface); padding:12px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:16px;">
-                    <strong>Project:</strong> Modern Business Website<br>
+                  <div class="estimator-price-caption">Indicative estimate · final quote after consultation</div>
+                  <div id="estimatorSummaryText" aria-live="polite" style="font-size:0.88rem; color:var(--text-muted); line-height:1.5; text-align:left; background:var(--bg-surface); padding:12px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:16px;">
+                    <strong>Project:</strong> Choose a project type<br>
                     <strong>Included:</strong> Standard Features<br>
                     <strong>Delivery:</strong> Normal Delivery (लगभग 15 दिन)
                   </div>
                 </div>
 
-                <div>
-                  <button id="btnOpenOrderEstimator" class="btn btn-primary" style="width:100%; padding:14px; font-size:1rem; font-weight:800; margin-bottom:10px; box-shadow:var(--shadow-md);">
-                    ⚡ Book / Order This Project
+                <div class="estimator-actions">
+                  <button type="button" id="btnOpenOrderEstimator" class="btn btn-primary" style="width:100%; padding:14px; font-size:1rem; font-weight:800; margin-bottom:10px; box-shadow:var(--shadow-md);">
+                    <i class="fa-solid fa-bag-shopping"></i> Continue with this project
                   </button>
-                  <a id="estimatorWhatsappBtn" href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir!%20I%20calculated%20a%20project%20quote%20on%20GoDoz." target="_blank" class="btn btn-accent" style="width:100%; padding:12px; font-size:0.92rem; margin-bottom:8px;">
-                    <i class="fa-brands fa-whatsapp"></i> Free Discuss on WhatsApp
+                  <button type="button" id="btnRequestDiscussInquiry" class="btn btn-primary" style="width:100%; padding:12px; font-size:0.92rem; font-weight:800; margin-bottom:8px; background: linear-gradient(135deg, #1266e8, #0ea5e9); border: none; box-shadow: var(--shadow-md);">
+                    <i class="fa-solid fa-paper-plane"></i> Request a detailed quote
+                  </button>
+                  <a id="estimatorWhatsappBtn" href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir!%20I%20calculated%20a%20project%20quote%20on%20GoDoz." target="_blank" rel="noopener noreferrer" class="btn btn-accent" style="width:100%; padding:12px; font-size:0.92rem; margin-bottom:8px;">
+                    <i class="fa-brands fa-whatsapp"></i> Discuss on WhatsApp
                   </a>
                   <button type="button" id="estimatorDownloadPdfBtn" class="btn btn-outline" style="width:100%; padding:10px; font-size:0.88rem;">
-                    <i class="fa-solid fa-file-pdf"></i> Download Official PDF Quote
+                    <i class="fa-solid fa-file-pdf"></i> Download quote
                   </button>
-                  <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px;">
-                    *Zero Advance option available (Milestone COD) &bull; 100% Free Consultation.
+                  <div class="estimator-trust-note">
+                    <i class="fa-solid fa-shield-halved"></i> Pay After Demo option · Free consultation · No commitment
                   </div>
                 </div>
-              </div>
+              </aside>
 
             </div>
           </div>
@@ -2479,7 +2716,7 @@
                   <!-- Firebase Firestore Script for Main Page Widget -->
                   <script type="module">
                     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-                    import { getFirestore, collection, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+                    import { getFirestore, collection, doc, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
                     const firebaseConfig = {
                       apiKey: "AIzaSyABHJz_4ERnwrT_uB3BgBz-BD_3JZjlVNE",
@@ -2556,6 +2793,65 @@
                         btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Project Inquiry';
                       }
                     };
+
+                    // Cost Estimator - Request Discuss & Submit Quote Handler
+                    document.getElementById('btnRequestDiscussInquiry')?.addEventListener('click', async () => {
+                      const calcPrice = document.getElementById('estimatorTotalPrice')?.innerText || '₹4,999';
+                      const summaryText = document.getElementById('estimatorSummaryText')?.innerText || 'Modern Business Website';
+
+                      // Automatic Autofill for Logged-In Users / Saved Local Session
+                      let clientName = window.currentUser?.displayName || localStorage.getItem('godoz_auth_name') || localStorage.getItem('godoz_user_name') || '';
+                      let clientContact = window.currentUser?.email || localStorage.getItem('godoz_auth_email') || localStorage.getItem('godoz_user_phone') || localStorage.getItem('godoz_user_email') || '';
+
+                      // Only prompt if Name or Contact is not available (Unauthenticated Guest)
+                      if (!clientName) {
+                        clientName = prompt("Enter your Name for GoDoz Lead Engineer:", "");
+                        if (!clientName) return;
+                      }
+
+                      if (!clientContact) {
+                        clientContact = prompt("Enter your WhatsApp Phone or Email:", "");
+                        if (!clientContact) return;
+                      }
+
+                      const isEmail = clientContact.includes('@');
+                      const digits = clientContact.replace(/\D/g, '');
+
+                      try {
+                        // 1. Save to 'inquiries' collection (Appears in Admin Inquiries & Leads table!)
+                        await addDoc(collection(db, "inquiries"), {
+                          name: clientName,
+                          email: isEmail ? clientContact : "",
+                          phone: !isEmail ? clientContact : "",
+                          service: "Project Cost Estimator Quote",
+                          budget: calcPrice,
+                          message: `📊 [Cost Estimator Breakdown]:\n${summaryText}\nCalculated Price: ${calcPrice}`,
+                          source: "Cost Calculator Widget",
+                          createdAt: Date.now(),
+                          createdAtDate: new Date().toISOString()
+                        });
+
+                        // 2. Also save to 'messages' collection
+                        const targetUid = isEmail ? `user_${clientContact.replace(/[^a-zA-Z0-9]/g, '')}` : `phone_${digits.slice(-10)}`;
+                        const newDocRef = doc(collection(db, "messages"));
+                        await setDoc(newDocRef, {
+                          id: newDocRef.id,
+                          senderUid: targetUid,
+                          senderName: clientName,
+                          senderEmail: isEmail ? clientContact : `${digits}@phone.user`,
+                          senderPhone: !isEmail ? clientContact : null,
+                          messageText: `💬 [GoDoz Cost Estimator Discussion Request]:\n${summaryText}\nCalculated Price: ${calcPrice}`,
+                          isLoggedIn: Boolean(window.currentUser),
+                          timestamp: Date.now(),
+                          status: "pending",
+                          adminNotes: "Submitted via Cost Calculator Request Discuss Button"
+                        });
+
+                        alert(`✅ Thank you ${clientName}! Your project calculation (${calcPrice}) has been sent to GoDoz Founder Desk. We will connect with you shortly!`);
+                      } catch (err) {
+                        alert(`Error submitting request: ${err.message}`);
+                      }
+                    });
                   </script>
 
                 </div>
@@ -3276,38 +3572,38 @@
             <article class="product-showcase-card" data-category="apps">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; gap:8px;">
-              <span style="background:rgba(139,92,246,0.12); color:#8b5cf6; font-weight:700; font-size:0.75rem; padding:4px 10px; border-radius:20px;">
-                🗺️ Land Record &amp; Public Portal
-              </span>
-                  <span style="font-size:0.8rem; color:var(--text-muted);"><i class="fa-solid fa-globe"></i> Live Portal</span>
+                  <span style="background:rgba(34,197,94,0.12); color:#16a34a; font-weight:700; font-size:0.75rem; padding:4px 10px; border-radius:20px;">
+                    🟢 Published on Play Store
+                  </span>
+                  <span style="font-size:0.8rem; color:var(--text-muted);"><i class="fa-brands fa-google-play"></i> Android App</span>
                 </div>
 
                 <div style="display:flex; align-items:center; gap:14px; margin-bottom:14px;">
                   <img src="bhulekh logo.png" alt="Bhulekh Logo" loading="lazy" decoding="async" style="width:52px; height:52px; border-radius:12px; box-shadow:var(--shadow-sm); object-fit:cover;" onerror="this.src='./official logo.png'">
                   <div>
-                    <h3 style="font-size:1.2rem; margin-bottom:2px; color:var(--text-main); font-weight:800;">My Bhulekh - Khata &amp; Khasra</h3>
+                    <h3 style="font-size:1.2rem; margin-bottom:2px; color:var(--text-main); font-weight:800;">Mera Bhulekh – Bihar Land Records</h3>
                     <div style="font-size:0.8rem; color:var(--primary, #1266e8); font-weight:700;">com.gdz.bhulekh</div>
                   </div>
                 </div>
 
                 <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55; margin-bottom:14px;">
-                  Citizen service directory and job information gateway featuring Bhulekh land record lookups, direct message dispatchers, admit cards, citizen portals, and online utility tool suites.
+                  Citizen utility mobile app &amp; portal featuring Bihar Bhulekh land record lookups, Jamabandi Panji, Khasra Khatiyan search, LPC certificate status, and online land tax (Lagaan) payment gateway.
                 </p>
 
                 <div style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:16px;">
                   <span class="official-tag">Bhulekh Bihar</span>
                   <span class="official-tag">Land Records</span>
-                  <span class="official-tag">Govt Updates</span>
-                  <span class="official-tag">Utility Tools</span>
+                  <span class="official-tag">Jamabandi Panji</span>
+                  <span class="official-tag">Mutation Status</span>
                 </div>
               </div>
 
               <div style="display:flex; gap:8px; flex-wrap:wrap; border-top:1px solid var(--border-color, #e2e8f0); padding-top:14px; margin-top:auto;">
-                <a href="/apps/Bhulekh/index.html" class="btn btn-sm btn-primary" style="flex:1; justify-content:center;">
-                  <i class="fa-solid fa-map-location-dot"></i> View Portal
+                <a href="https://play.google.com/store/apps/details?id=com.gdz.bhulekh" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-accent" style="flex:1; justify-content:center;">
+                  <i class="fa-brands fa-google-play"></i> Get on Play Store
                 </a>
-                <a href="/apps/index.html" class="btn btn-sm btn-outline">
-                  <i class="fa-solid fa-layer-group"></i> All Apps
+                <a href="/apps/Bhulekh/index.html" class="btn btn-sm btn-primary" style="flex:1; justify-content:center;">
+                  <i class="fa-solid fa-map-location-dot"></i> View Details
                 </a>
               </div>
             </article>
@@ -3959,39 +4255,11 @@
         <!-- ORDER FORM VIEW -->
         <form id="projectOrderForm">
           
-          <!-- Category & Base Package Selection -->
-          <div style="margin-bottom:16px;">
-            <label class="form-label" style="display:block; font-weight:800; font-size:0.88rem; margin-bottom:8px;">
-              1. Project Category / Solution:
-            </label>
-            <select id="modalOrderCategory" class="form-input" style="width:100%; padding:10px 12px; font-size:0.9rem; font-weight:700; background:var(--bg-surface); color:var(--text-main); border:1px solid var(--border-color); border-radius:10px;">
-              <option value="School & College Management Portal" data-price="9999" data-original="24999" data-discount="60">🏫 School &amp; College Management Portal — ₹9,999 (Original: ₹24,999 • 60% OFF)</option>
-              <option value="Restaurant & Cafe Billing Software" data-price="4999" data-original="12999" data-discount="61">🍽️ Restaurant &amp; Hotel Billing Software — ₹4,999 (Original: ₹12,999 • 61% OFF)</option>
-              <option value="Doctor Clinic & Hospital Management" data-price="6999" data-original="16999" data-discount="58">🏥 Doctor Clinic &amp; Hospital Management — ₹6,999 (Original: ₹16,999 • 58% OFF)</option>
-              <option value="Kirana & Retail Shop POS Software" data-price="3999" data-original="9999" data-discount="60">🏬 Kirana &amp; Retail Shop POS — ₹3,999 (Original: ₹9,999 • 60% OFF)</option>
-              <option value="Modern Business Website" data-price="4999" data-original="11999" data-discount="58">🌐 Modern Business Website — ₹4,999 (Original: ₹11,999 • 58% OFF)</option>
-              <option value="Custom Android Application" data-price="9999" data-original="22999" data-discount="56">📱 Custom Android Application — ₹9,999 (Original: ₹22,999 • 56% OFF)</option>
-              <option value="Full-Stack Web App / Portal" data-price="14999" data-original="34999" data-discount="57">💻 Full-Stack Web Portal &amp; DB — ₹14,999 (Original: ₹34,999 • 57% OFF)</option>
-              <option value="Android App + Website Combo Suite" data-price="19999" data-original="45000" data-discount="55" selected>🚀 Android App + Website Combo Suite — ₹19,999 (Original: ₹45,000 • 55% OFF Special)</option>
-              <option value="Custom Requirement / Unique Idea" data-price="0" data-original="0" data-discount="100">💡 Custom Requirement / Unique Idea — ₹0 (Free Consultation &amp; Quote)</option>
-              <option value="Custom Software Automation Tool" data-price="2999" data-original="6999" data-discount="57">⚙️ Custom Software Utility Tool — ₹2,999 (Original: ₹6,999 • 57% OFF)</option>
-              <option value="Maintenance &amp; Bug Fixes" data-price="1499" data-original="3499" data-discount="57">🔧 Maintenance &amp; Bug Fixes — ₹1,499 (Original: ₹34,999 • 57% OFF)</option>
-            </select>
-          </div>
-
-          <!-- Included Features / Summary -->
-          <div style="margin-bottom:16px;">
-            <label class="form-label" style="display:block; font-weight:800; font-size:0.88rem; margin-bottom:6px;">
-              2. Selected Features &amp; Modules:
-            </label>
-            <input type="text" id="modalOrderFeatures" class="form-input" style="width:100%; padding:9px 12px; font-size:0.84rem;" value="Complete Android App + Responsive Website + Unified Cloud Sync">
-          </div>
-
-          <!-- Client Contact Details -->
+          <!-- 1. Client Contact Details (FIRST!) -->
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap:12px; margin-bottom:16px;">
             <div style="grid-column:1 / -1;">
               <label for="modalOrderClientName" class="form-label" style="display:block; font-weight:800; font-size:0.88rem; margin-bottom:6px;">
-                Your Full Name <span style="color:#ef4444;">*</span>
+                1. Your Full Name <span style="color:#ef4444;">*</span>
               </label>
               <input type="text" id="modalOrderClientName" class="form-input" aria-label="Your Full Name" placeholder="e.g. Rahul Sharma" style="width:100%; padding:10px 12px;" required>
             </div>
@@ -4000,26 +4268,43 @@
               <label for="modalOrderClientPhone" class="form-label" style="display:block; font-weight:800; font-size:0.88rem; margin-bottom:6px;">
                 WhatsApp / Phone <span style="color:#ef4444;">*</span>
               </label>
-              <input type="tel" id="modalOrderClientPhone" class="form-input" aria-label="WhatsApp or Phone Number" placeholder="+91 98765 43210" style="width:100%; padding:10px 12px;">
+              <input type="tel" id="modalOrderClientPhone" class="form-input" aria-label="WhatsApp or Phone Number" placeholder="+91 98765 43210" style="width:100%; padding:10px 12px;" required>
             </div>
 
             <div>
               <label for="modalOrderClientEmail" class="form-label" style="display:block; font-weight:800; font-size:0.88rem; margin-bottom:6px;">
-                Email Address
+                Email Address <span style="color:#ef4444;">*</span>
               </label>
-              <input type="email" id="modalOrderClientEmail" class="form-input" aria-label="Email Address" placeholder="client@domain.com" style="width:100%; padding:10px 12px;">
+              <input type="email" id="modalOrderClientEmail" class="form-input" aria-label="Email Address" placeholder="client@domain.com" style="width:100%; padding:10px 12px;" required>
             </div>
           </div>
 
-          <!-- Project Requirements / Notes -->
-          <div style="margin-bottom:18px;">
+          <!-- 2. Category & Base Package Selection -->
+          <div style="margin-bottom:14px;">
             <label class="form-label" style="display:block; font-weight:800; font-size:0.88rem; margin-bottom:6px;">
-              Project Scope / Specific Requirements (Optional):
+              2. Choose Project Category / Solution:
             </label>
-            <textarea id="modalOrderNotes" rows="2" class="form-input" placeholder="Explain your business requirements, specific pages, or reference links..." style="width:100%; padding:10px 12px; resize:vertical;"></textarea>
+            <select id="modalOrderCategory" class="form-input" style="width:100%; padding:10px 12px; font-size:0.9rem; font-weight:700; background:var(--bg-surface); color:var(--text-main); border:1px solid var(--border-color); border-radius:10px;" onchange="window.updateOrderModalPricing()">
+              <option value="" disabled selected>Loading solutions from Firestore...</option>
+              <option value="Custom Requirement / Unique Idea" data-price="0" data-original="0" data-discount="100">💡 Custom Requirement / Unique Idea — ₹0 (Free Consultation &amp; Quote)</option>
+            </select>
           </div>
 
-          <!-- Payment Options (3 Options) -->
+          <!-- Hidden Features Input Sync -->
+          <input type="hidden" id="modalOrderFeatures" value="Complete Android App + Responsive Website + Unified Cloud Sync">
+
+          <!-- Combined Project Scope, Features & Requirements Box (Right Below Category!) -->
+          <div style="margin-bottom:16px;">
+            <label for="modalOrderNotes" class="form-label" style="display:block; font-weight:800; font-size:0.88rem; margin-bottom:6px;">
+              Project Scope, Features &amp; Specific Requirements (Optional):
+            </label>
+            <textarea id="modalOrderNotes" rows="3" class="form-input" placeholder="Type your desired app/software features, business requirements, custom modules, or reference website/app links..." style="width:100%; padding:10px 12px; resize:vertical;"></textarea>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px; line-height:1.4;">
+              <i class="fa-solid fa-circle-info" style="color:var(--primary);"></i> <strong>Note:</strong> Your exact project features and scope will be reviewed &amp; verified by Lead Engineer RS GULSHAN PRAJAPATI before active coding starts.
+            </div>
+          </div>
+
+          <!-- 3. Payment Options -->
           <div style="margin-bottom:20px;">
             <label class="form-label" style="display:block; font-weight:800; font-size:0.88rem; margin-bottom:10px;">
               3. Choose Payment &amp; Milestone Method:
@@ -4058,6 +4343,7 @@
                 </div>
               </label>
 
+              <!-- AI/maintainer note: PAD means Pay After Demo; it is a payment-timing agreement, not a payment method or proof of payment. -->
               <!-- Option 2: Pay After Demo (PAD) -->
               <label class="pay-option-card" id="optPayCod">
                 <input type="radio" name="order_payment_mode" value="pay_after_demo" style="margin-top:3px;">
@@ -4080,7 +4366,7 @@
 
           <!-- Promo Code / Coupon Input Section -->
           <div style="background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:12px; padding:12px; margin-bottom:16px;">
-            <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:6px;">
+            <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:6px;">8. 
               <i class="fa-solid fa-ticket" style="color:var(--accent);"></i> Have a Promo Code / Discount Coupon?
             </label>
             <div style="display:flex; gap:8px;">
@@ -4095,7 +4381,7 @@
           <!-- Total Investment Summary Box with Strikethrough & Offer Badge -->
           <div style="background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:12px; padding:14px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
             <div>
-              <div style="font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Special Offer Investment</div>
+              <div style="font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">9. Special Offer Investment</div>
               <div style="display:flex; align-items:baseline; gap:8px;">
                 <span id="modalOrderOriginalDisplay" style="font-size:1.05rem; text-decoration:line-through; color:var(--text-muted); font-weight:700;">₹45,000</span>
                 <span id="modalOrderPriceDisplay" style="font-size:1.6rem; font-weight:900; color:#10b981;">₹19,999</span>
@@ -4144,7 +4430,7 @@
             </div>
             <div style="display:flex; justify-content:space-between;">
               <span style="font-size:0.82rem; color:var(--text-muted);">Payment Mode:</span>
-              <span id="successPaymentMode" style="font-size:0.82rem; font-weight:700; color:var(--text-main);">Milestone COD (Pay on Completion)</span>
+              <span id="successPaymentMode" style="font-size:0.82rem; font-weight:700; color:var(--text-main);">Pay After Demo (PAD)</span>
             </div>
           </div>
 
@@ -4311,12 +4597,30 @@
       syncUserProfile,
       recordRazorpayPayment,
       RAZORPAY_CONFIG,
-      validateCouponInFirestore
+      validateCouponInFirestore,
+      listenToProductsCatalog,
+      listenToEstimatorAddons
     } from "./firebase-init.js";
     import { signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     let currentAuthUser = null;
     let activeAppliedCoupon = null;
+
+    // Listen to Live Products Catalog & Estimator Addons from Firestore
+    listenToProductsCatalog((productsList) => {
+      if (typeof window.renderLiveServicesGrid === 'function') {
+        window.renderLiveServicesGrid(productsList);
+      }
+      if (typeof window.applyProductsCatalogUI === 'function') {
+        window.applyProductsCatalogUI(productsList);
+      }
+    });
+
+    listenToEstimatorAddons((addonsData) => {
+      if (typeof window.applyEstimatorAddonsUI === 'function') {
+        window.applyEstimatorAddonsUI(addonsData);
+      }
+    });
 
     window.applyOrderCoupon = async function() {
       const couponInput = document.getElementById('orderCouponInput');
@@ -4606,18 +4910,25 @@
       const phone = document.getElementById('modalOrderClientPhone')?.value.trim();
       const email = document.getElementById('modalOrderClientEmail')?.value.trim();
       const category = document.getElementById('modalOrderCategory')?.value;
-      const features = document.getElementById('modalOrderFeatures')?.value.trim();
       const notes = document.getElementById('modalOrderNotes')?.value.trim();
+      const features = notes || (document.getElementById('modalOrderFeatures')?.value.trim()) || category || "Standard Features";
       const priceDisplay = document.getElementById('modalOrderPriceDisplay');
       const price = (priceDisplay && priceDisplay.dataset.amount !== undefined && priceDisplay.dataset.amount !== "") ? parseInt(priceDisplay.dataset.amount, 10) : 0;
       const paymentMode = document.querySelector('input[name="order_payment_mode"]:checked')?.value || 'pay_on_completion';
 
       if (!name) {
         alert("Please enter your Full Name.");
+        document.getElementById('modalOrderClientName')?.focus();
         return;
       }
-      if (!phone && !email) {
-        alert("Please provide either your WhatsApp Phone number or Email address so we can coordinate your project.");
+      if (!phone) {
+        alert("Please enter your WhatsApp / Phone number.");
+        document.getElementById('modalOrderClientPhone')?.focus();
+        return;
+      }
+      if (!email || !email.includes('@')) {
+        alert("Please enter a valid Email Address so your project order attaches to your Client Portal account.");
+        document.getElementById('modalOrderClientEmail')?.focus();
         return;
       }
 
@@ -4644,7 +4955,7 @@
           clientName: name,
           clientPhone: phone,
           clientEmail: email,
-          userId: currentAuthUser ? currentAuthUser.uid : ("guest_" + Date.now()),
+          userId: currentAuthUser ? currentAuthUser.uid : "",
           price: price,
           amountPaid: paidAmount,
           remainingBalance: Math.max(0, price - paidAmount),
@@ -4677,8 +4988,17 @@
         }
       }
 
-      // Razorpay Live Gateway or Pay on Completion
+      // AI/maintainer note: PAD means Pay After Demo, never Cash on Delivery (COD) or a payment instrument.
+      // Razorpay Live Gateway or Pay After Demo
       if (paymentMode === 'razorpay') {
+        if (!RAZORPAY_CONFIG.onlinePaymentsEnabled) {
+          alert("Online payments are temporarily unavailable until server-side Razorpay verification is configured. Please choose Pay After Demo (PAD) or contact support.");
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '⚡ Confirm &amp; Book Project Order';
+          }
+          return;
+        }
         const selectedPct = parseInt(document.querySelector('input[name="advance_pct"]:checked')?.value || '10', 10);
         const tokenAmount = Math.max(1, Math.round((price * selectedPct) / 100)); // Minimum ₹1 for Razorpay API
         let isPaymentCompleted = false;
@@ -4732,9 +5052,9 @@
             modal: {
               ondismiss: function () {
                 if (isPaymentCompleted) return;
-                // If user closed without paying, prompt for Pay on Completion fallback
-                if (confirm("Razorpay window closed. Would you like to proceed with 'Pay on Completion (Milestone COD)' instead?")) {
-                  completeBooking("COD Requested (Pay on Completion)", "Pay on Completion (Milestone COD)");
+                // If user closed without paying, offer Pay After Demo as the fallback.
+                if (confirm("Razorpay window closed. Would you like to proceed with Pay After Demo (PAD) instead?")) {
+                  completeBooking("PAD Requested (Pay After Demo)", "Pay After Demo (PAD)");
                 } else if (submitBtn) {
                   submitBtn.disabled = false;
                   submitBtn.innerHTML = '⚡ Confirm &amp; Book Project Order';
@@ -4747,8 +5067,8 @@
             const rzp = new Razorpay(rzpOptions);
             rzp.on('payment.failed', function (resp) {
               if (isPaymentCompleted) return;
-              alert("Payment notice: " + (resp.error?.description || "Payment was not completed. Proceeding with Pay on Completion."));
-              completeBooking("COD Requested (Payment Attempted)", "Pay on Completion (Milestone COD)");
+              alert("Payment notice: " + (resp.error?.description || "Payment was not completed. Proceeding with Pay After Demo (PAD)."));
+              completeBooking("PAD Requested (Pay After Demo)", "Pay After Demo (PAD)");
             });
             rzp.open();
           } catch (e) {
@@ -4759,8 +5079,8 @@
           await completeBooking("Token Booking (Online Mode)", "Razorpay Online Advance");
         }
       } else {
-        // Pay on completion / Milestone COD
-        await completeBooking("COD Requested (Pay on Completion)", "Pay on Completion (Milestone COD)");
+        // Pay After Demo
+        await completeBooking("PAD Requested (Pay After Demo)", "Pay After Demo (PAD)");
       }
 
     });

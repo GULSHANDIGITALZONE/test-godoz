@@ -18,7 +18,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="./style.css">
   <style>
-    .brand-logo-wrap img,
     .brand-img,
     .brand-logo-img {
       height: 36px !important;
@@ -30,6 +29,35 @@
       display: inline-block !important;
       vertical-align: middle !important;
       flex-shrink: 0 !important;
+    }
+
+    a.brand-logo-wrap img.godoz-nav-logo-desktop {
+      display: inline-block !important;
+      height: 38px !important;
+      max-height: 42px !important;
+      width: auto !important;
+      max-width: 220px !important;
+      object-fit: contain !important;
+      border-radius: 0 !important;
+    }
+
+    a.brand-logo-wrap img.godoz-nav-logo-mobile {
+      display: none !important;
+    }
+
+    @media (max-width: 768px) {
+      a.brand-logo-wrap img.godoz-nav-logo-desktop {
+        display: none !important;
+      }
+      a.brand-logo-wrap img.godoz-nav-logo-mobile {
+        display: inline-block !important;
+        height: 34px !important;
+        max-height: 36px !important;
+        width: 34px !important;
+        max-width: 36px !important;
+        border-radius: 50% !important;
+        object-fit: contain !important;
+      }
     }
     .drawer-header img {
       height: 32px !important;

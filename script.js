@@ -5,6 +5,18 @@
  *           Theme Switcher, FAQ Accordion, Print Engine Trigger.
  */
 
+/* Global Safe HTML Escaper */
+function escapeHTML(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+window.escapeHTML = escapeHTML;
+
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initGoDozLanguage();
@@ -24,6 +36,415 @@ document.addEventListener('DOMContentLoaded', () => {
     window.autoFillUserInputs();
   }
 });
+
+/* Render Live Services Cards directly from Firestore /products/ (Zero hardcoding) */
+window.renderLiveServicesGrid = function(products) {
+  const container = document.querySelector('.services-grid');
+  if (!container) return;
+
+  if (!Array.isArray(products) || products.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center; padding:40px 20px; grid-column:1 / -1; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px;">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary); margin-bottom:12px; display:block;"></i>
+        <div style="font-weight:800; font-size:1rem; color:var(--text-main);">Loading Live Products &amp; Services Catalog...</div>
+        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Connecting to Firestore Database (<code>/products/</code>)</div>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = '';
+  products.forEach((prod, index) => {
+    const card = document.createElement('div');
+    card.className = 'service-card';
+    card.setAttribute('data-category', 'services website apps');
+    card.style.cssText = 'background:var(--bg-surface, #ffffff); border:1px solid var(--border-color, #e2e8f0); border-radius:16px; padding:22px; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; justify-content:space-between;';
+
+    const icons = [
+      'fa-graduation-cap', 'fa-utensils', 'fa-user-doctor', 'fa-store',
+      'fa-android', 'fa-globe', 'fa-server', 'fa-layer-group', 'fa-gears', 'fa-wrench'
+    ];
+    const colors = ['#8b5cf6', '#ca8a04', '#10b981', '#0891b2', '#1266e8', '#ff6900', '#10b981', '#1266e8', '#8b5cf6', '#06b6d4'];
+
+    const iconClass = icons[index % icons.length] || 'fa-laptop-code';
+    const colorTheme = colors[index % colors.length] || '#1266e8';
+
+    const origPriceText = prod.originalPrice > 0 ? `<s style="color:var(--text-muted); font-weight:600; text-decoration:line-through; margin-right:4px;">₹${Number(prod.originalPrice).toLocaleString('en-IN')}</s> ` : '';
+    const offerPriceText = `मात्र ₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}`;
+
+    const detailLines = (prod.details || '').split('\n').map(l => l.trim()).filter(l => l.length > 0);
+    const mainDesc = detailLines[0] || 'High quality software & app development service by GoDoz Technology.';
+    const bulletItems = detailLines.slice(1).slice(0, 4);
+
+    let bulletsHtml = '';
+    if (bulletItems.length > 0) {
+      bulletsHtml = `<ul style="color:var(--text-muted); font-size:0.84rem; margin-bottom:16px; padding-left:18px; line-height:1.6;">` +
+        bulletItems.map(item => `<li>${escapeHTML(item)}</li>`).join('') +
+        `</ul>`;
+    }
+
+    card.innerHTML = `
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <div style="width:46px; height:46px; border-radius:10px; background:${colorTheme}20; color:${colorTheme}; display:flex; align-items:center; justify-content:center; font-size:22px;">
+            <i class="fa-solid ${iconClass}"></i>
+          </div>
+          <span style="font-size:0.8rem; font-weight:800; color:${colorTheme}; background:${colorTheme}15; padding:4px 10px; border-radius:20px;">
+            ${origPriceText}${offerPriceText}
+          </span>
+        </div>
+        <h3 style="font-size:1.2rem; margin-bottom:8px; color:var(--text-main);">${escapeHTML(prod.title || '')}</h3>
+        <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5; margin-bottom:14px;">
+          ${escapeHTML(mainDesc)}
+        </p>
+        ${bulletsHtml}
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button onclick="window.openOrderModal('${escapeHTML(prod.title || '').replace(/'/g, "\\'")}', ${prod.offerPrice || 0}, '${escapeHTML(mainDesc).replace(/'/g, "\\'")}')" class="btn btn-sm btn-primary" style="flex:1;">
+          ⚡ Order ${escapeHTML((prod.title || '').split(' ')[0])} Now
+        </button>
+        <a href="https://wa.me/919288521731?text=Hi%20Gulshan,%20I%20want%20information%20about%20${encodeURIComponent(prod.title || '')}." target="_blank" class="btn btn-sm btn-outline" aria-label="Chat on WhatsApp">
+          <i class="fa-brands fa-whatsapp"></i> Chat
+        </a>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+};
+
+/* Helper to smoothly scroll estimator 2x2 grids horizontally */
+window.scrollEstimatorGrid = function(containerId, dir) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  // Scroll roughly one viewport width (approx. 2 columns)
+  const scrollDistance = (container.clientWidth || 300) * 0.95;
+  container.scrollBy({ left: dir * scrollDistance, behavior: 'smooth' });
+};
+
+function setupGridScrollIndicators(containerId, prevBtnId, nextBtnId) {
+  const container = document.getElementById(containerId);
+  const prevBtn = document.getElementById(prevBtnId);
+  const nextBtn = document.getElementById(nextBtnId);
+  if (!container || !prevBtn || !nextBtn) return;
+
+  function update() {
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    const canScroll = maxScroll > 8;
+    if (!canScroll) {
+      prevBtn.style.opacity = '0.35';
+      prevBtn.style.pointerEvents = 'none';
+      nextBtn.style.opacity = '0.35';
+      nextBtn.style.pointerEvents = 'none';
+      return;
+    }
+    const atStart = container.scrollLeft <= 5;
+    const atEnd = container.scrollLeft >= maxScroll - 5;
+    prevBtn.style.opacity = atStart ? '0.35' : '1';
+    prevBtn.style.pointerEvents = atStart ? 'none' : 'auto';
+    nextBtn.style.opacity = atEnd ? '0.35' : '1';
+    nextBtn.style.pointerEvents = atEnd ? 'none' : 'auto';
+  }
+
+  container.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+  setTimeout(update, 120);
+}
+
+/* Render Live Estimator Addon Checkboxes & Timeline Radios from Firestore /estimator_features/addons_and_timelines */
+window.applyEstimatorAddonsUI = function(data) {
+  const featContainer = document.getElementById('estimatorFeaturesContainer');
+  if (!data) {
+    if (featContainer && !featContainer.querySelector('.estimator-feature-tile')) {
+      featContainer.innerHTML = `
+        <div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.85rem; grid-column:1 / -1;">
+          <i class="fa-solid fa-spinner fa-spin"></i> Loading Features from Firestore...
+        </div>
+      `;
+    }
+    return;
+  }
+
+  // 1. Feature Checkboxes (2x2 Grid populated from Firestore addons data)
+  if (featContainer) {
+    featContainer.innerHTML = '';
+    const items = [
+      { name: 'User Login / OTP Auth', price: data.loginPrice !== undefined ? data.loginPrice : 2000, key: 'User Login/Auth', icon: 'fa-user-lock' },
+      { name: 'Razorpay / UPI Gateway', price: data.gatewayPrice !== undefined ? data.gatewayPrice : 3000, key: 'Razorpay Gateway', icon: 'fa-credit-card' },
+      { name: 'Push Notifications', price: data.pushPrice !== undefined ? data.pushPrice : 2500, key: 'Push Notifications', icon: 'fa-bell' },
+      { name: 'Dedicated Admin CMS', price: data.cmsPrice !== undefined ? data.cmsPrice : 3500, key: 'Admin CMS Dashboard', icon: 'fa-chart-pie' },
+      { name: 'Gemini AI / Chatbot', price: data.aiPrice !== undefined ? data.aiPrice : 4000, key: 'Gemini AI Integration', icon: 'fa-robot' }
+    ];
+
+    items.forEach(item => {
+      const label = document.createElement('label');
+      label.className = 'estimator-feature-tile';
+      label.innerHTML = `
+        <input type="checkbox" name="feature_addon" value="${item.price}" data-name="${item.key}" onchange="if(typeof window.calculateQuote === 'function') window.calculateQuote();">
+        <div class="est-feature-icon"><i class="fa-solid ${item.icon}"></i></div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-size:0.82rem; font-weight:800; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${item.name}">${item.name}</div>
+          <div style="font-size:0.75rem; font-weight:800; color:#10b981; margin-top:2px;">+₹${Number(item.price).toLocaleString('en-IN')}</div>
+        </div>
+      `;
+      featContainer.appendChild(label);
+    });
+
+    setupGridScrollIndicators('estimatorFeaturesContainer', 'btnScrollFeatPrev', 'btnScrollFeatNext');
+  }
+
+  // 2. Delivery Timeline Radios
+  const timeContainer = document.getElementById('estimatorTimelineContainer');
+  if (timeContainer) {
+    timeContainer.innerHTML = '';
+    const expressPct = data.expressExtraPct !== undefined ? data.expressExtraPct : 5;
+    const expressMultiplier = (1 + (expressPct / 100)).toFixed(2);
+
+    timeContainer.innerHTML = `
+      <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer; font-weight:700; color:var(--text-main);">
+        <input type="radio" name="timeline" value="1.0" data-name="Normal Delivery (लगभग 15 दिन)" checked onchange="if(typeof window.calculateQuote === 'function') window.calculateQuote();"> Normal (लगभग 15 दिन)
+      </label>
+      <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer; font-weight:700; color:var(--primary);">
+        <input type="radio" name="timeline" value="${expressMultiplier}" data-name="Express Delivery (लगभग 10 दिन, +${expressPct}%)" onchange="if(typeof window.calculateQuote === 'function') window.calculateQuote();"> ⚡ Express (लगभग 10 दिन)
+      </label>
+    `;
+  }
+
+  if (typeof window.calculateQuote === 'function') {
+    window.calculateQuote();
+  }
+};
+
+/* Render Live Estimator Radio Options directly from Firestore /products/ (Zero hardcoding) */
+window.renderEstimatorProjectTypes = function(products) {
+  const container = document.getElementById('estimatorProjectTypesContainer');
+  if (!container) return;
+
+  if (!Array.isArray(products) || products.length === 0) {
+    container.innerHTML = `
+      <div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.85rem; grid-column:1 / -1;">
+        <i class="fa-solid fa-spinner fa-spin"></i> Loading Project Types from Firestore...
+      </div>
+    `;
+    return;
+  }
+
+  const iconsMap = {
+    'school': 'fa-graduation-cap',
+    'restaurant': 'fa-utensils',
+    'doctor': 'fa-user-doctor',
+    'clinic': 'fa-user-doctor',
+    'kirana': 'fa-store',
+    'retail': 'fa-store',
+    'shop': 'fa-store',
+    'android': 'fa-android',
+    'app': 'fa-mobile-screen',
+    'website': 'fa-globe',
+    'portal': 'fa-server',
+    'combo': 'fa-layer-group',
+    'tool': 'fa-gears',
+    'fixes': 'fa-wrench',
+    'maintenance': 'fa-wrench'
+  };
+
+  container.innerHTML = '';
+  products.forEach((prod, idx) => {
+    const isChecked = idx === 0 ? 'checked' : '';
+    const lowerTitle = (prod.title || '').toLowerCase();
+
+    let icon = 'fa-laptop-code';
+    for (const key in iconsMap) {
+      if (lowerTitle.includes(key)) {
+        icon = iconsMap[key];
+        break;
+      }
+    }
+
+    const label = document.createElement('label');
+    label.className = `estimator-type-tile ${isChecked ? 'selected' : ''}`;
+    label.innerHTML = `
+      <input type="radio" name="project_type" value="${prod.offerPrice || 0}" data-name="${escapeHTML(prod.title || '')}" ${isChecked} style="accent-color:var(--primary); width:18px; height:18px; cursor:pointer; flex-shrink:0;">
+      <div class="est-tile-badge">
+        <i class="fa-solid ${icon}"></i>
+      </div>
+      <div style="flex:1; min-width:0;">
+        <div style="font-size:0.86rem; font-weight:800; color:var(--text-main); line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word;" title="${escapeHTML(prod.title || '')}">
+          ${escapeHTML(prod.title || '')}
+        </div>
+        <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-top:3px;">
+          Base: <span style="color:#10b981; font-weight:900; font-size:0.82rem;">₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}</span>
+        </div>
+      </div>
+    `;
+    container.appendChild(label);
+  });
+
+  // Custom Consultation Tile (Appended to dedicated wrapper so it doesn't break 2x2 grid)
+  let customWrap = document.getElementById('customProjectTypeTileWrap');
+  if (!customWrap) {
+    customWrap = document.createElement('div');
+    customWrap.id = 'customProjectTypeTileWrap';
+    customWrap.style.marginTop = '10px';
+    container.parentNode.insertBefore(customWrap, container.nextSibling);
+  }
+  customWrap.innerHTML = '';
+
+  const customLabel = document.createElement('label');
+  customLabel.className = 'estimator-type-tile';
+  customLabel.style.cssText = 'display:flex; align-items:center; gap:10px; padding:12px 14px; border:1.5px solid var(--accent, #ff6900); border-radius:14px; cursor:pointer; background:rgba(255,105,0,0.05); transition:all 0.2s ease; width:100%; box-sizing:border-box; min-height:64px;';
+  customLabel.innerHTML = `
+    <input type="radio" name="project_type" value="0" data-name="Custom Requirement / Unique Idea" id="radioCustomProjectType" style="accent-color:var(--accent); width:18px; height:18px; cursor:pointer; flex-shrink:0;">
+    <div class="est-tile-badge" style="background:rgba(255,105,0,0.12); color:var(--accent, #ff6900);">
+      <i class="fa-solid fa-lightbulb"></i>
+    </div>
+    <div style="flex:1; min-width:0;">
+      <div style="font-size:0.88rem; font-weight:800; color:var(--accent, #ff6900); line-height:1.35;">Custom Requirement / Unique Idea</div>
+      <div style="font-size:0.75rem; color:#10b981; font-weight:800; margin-top:2px; display:flex; align-items:center; gap:4px;">
+        <i class="fa-brands fa-whatsapp" style="font-size:0.85rem;"></i> Free 1-on-1 Consultation on WhatsApp &bull; Custom Quote
+      </div>
+    </div>
+  `;
+  customWrap.appendChild(customLabel);
+
+  // Attach change listener to all project_type radio buttons
+  document.querySelectorAll('input[name="project_type"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      document.querySelectorAll('.estimator-type-tile').forEach(t => {
+        t.style.borderColor = 'var(--border-color)';
+        t.style.background = 'var(--bg-surface)';
+        t.classList.remove('selected');
+      });
+      const parentLabel = radio.closest('.estimator-type-tile');
+      if (parentLabel) {
+        parentLabel.classList.add('selected');
+        if (radio.id === 'radioCustomProjectType') {
+          parentLabel.style.borderColor = 'var(--accent)';
+          parentLabel.style.background = 'rgba(255,105,0,0.08)';
+        } else {
+          parentLabel.style.borderColor = 'var(--primary)';
+          parentLabel.style.background = 'rgba(18,102,232,0.08)';
+        }
+      }
+
+      if (typeof window.calculateQuote === 'function') {
+        window.calculateQuote();
+      } else if (typeof window.calculateEstimate === 'function') {
+        window.calculateEstimate();
+      }
+
+      const textWrap = document.getElementById('customIdeaTextWrap');
+      if (textWrap) {
+        textWrap.style.display = (radio.id === 'radioCustomProjectType') ? 'block' : 'none';
+      }
+    });
+  });
+
+  setupGridScrollIndicators('estimatorProjectTypesContainer', 'btnScrollTypesPrev', 'btnScrollTypesNext');
+
+  if (typeof window.calculateQuote === 'function') {
+    window.calculateQuote();
+  } else if (typeof window.calculateEstimate === 'function') {
+    window.calculateEstimate();
+  }
+};
+
+/* Render Live Booking Modal Select Options & Project Types from Firestore /products/ */
+window.applyProductsCatalogUI = function(products) {
+  // Always render Services Cards & Estimator Radios
+  window.renderLiveServicesGrid(products);
+  window.renderEstimatorProjectTypes(products);
+
+  const orderSelect = document.getElementById('modalOrderCategory');
+  if (orderSelect && Array.isArray(products) && products.length > 0) {
+    const selectedVal = orderSelect.value;
+    orderSelect.innerHTML = '';
+
+    products.forEach(prod => {
+      const opt = document.createElement('option');
+      opt.value = prod.title;
+      opt.setAttribute('data-price', prod.offerPrice || 0);
+      opt.setAttribute('data-original', prod.originalPrice || 0);
+      const discPct = prod.originalPrice > 0 ? Math.round(((prod.originalPrice - prod.offerPrice) / prod.originalPrice) * 100) : 0;
+      opt.setAttribute('data-discount', Math.max(0, discPct));
+
+      const discText = discPct > 0 ? ` (${discPct}% OFF)` : '';
+      opt.textContent = `${prod.title} — ₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}${discText}`;
+
+      if (prod.title === selectedVal) opt.selected = true;
+      orderSelect.appendChild(opt);
+    });
+
+    // Custom Consultation Fallback Option
+    const customOpt = document.createElement('option');
+    customOpt.value = "Custom Requirement / Unique Idea";
+    customOpt.setAttribute('data-price', "0");
+    customOpt.setAttribute('data-original', "0");
+    customOpt.setAttribute('data-discount', "100");
+    customOpt.textContent = "💡 Custom Requirement / Unique Idea — ₹0 (Free Consultation & Quote)";
+    orderSelect.appendChild(customOpt);
+
+    if (typeof window.updateOrderModalPricing === 'function') {
+      window.updateOrderModalPricing();
+    }
+  }
+};
+
+/* Live Sync Global Base Pricing & Special Offers across index.html */
+window.applyWebsiteGlobalPricing = function(pricing) {
+  if (!pricing) return;
+
+  // 1. Special Offer Top Banner
+  const offerBanner = document.getElementById('globalOfferBanner');
+  const offerText = document.getElementById('globalOfferBannerText');
+  if (offerBanner && offerText) {
+    if (pricing.festivalOfferActive && pricing.festivalOfferTitle) {
+      offerText.textContent = pricing.festivalOfferTitle;
+      offerBanner.style.display = 'block';
+    } else {
+      offerBanner.style.display = 'none';
+    }
+  }
+
+  // 2. Custom Products in #modalOrderCategory select dropdown options
+  const customProducts = pricing.customProducts || [];
+  if (customProducts.length > 0) {
+    window.renderLiveServicesGrid(customProducts);
+  }
+
+  const orderSelect = document.getElementById('modalOrderCategory');
+  if (orderSelect && Array.isArray(customProducts) && customProducts.length > 0) {
+    const selectedVal = orderSelect.value;
+    orderSelect.innerHTML = '';
+
+    customProducts.forEach(prod => {
+      const opt = document.createElement('option');
+      opt.value = prod.title;
+      opt.setAttribute('data-price', prod.offerPrice || 0);
+      opt.setAttribute('data-original', prod.originalPrice || 0);
+      const discPct = prod.originalPrice > 0 ? Math.round(((prod.originalPrice - prod.offerPrice) / prod.originalPrice) * 100) : 0;
+      opt.setAttribute('data-discount', Math.max(0, discPct));
+
+      const discText = discPct > 0 ? ` (${discPct}% OFF)` : '';
+      opt.textContent = `${prod.title} — ₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}${discText}`;
+
+      if (prod.title === selectedVal) opt.selected = true;
+      orderSelect.appendChild(opt);
+    });
+
+    // Custom Consultation Fallback Option
+    const customOpt = document.createElement('option');
+    customOpt.value = "Custom Requirement / Unique Idea";
+    customOpt.setAttribute('data-price', "0");
+    customOpt.setAttribute('data-original', "0");
+    customOpt.setAttribute('data-discount', "100");
+    customOpt.textContent = "💡 Custom Requirement / Unique Idea — ₹0 (Free Consultation & Quote)";
+    orderSelect.appendChild(customOpt);
+
+    if (typeof window.updateOrderModalPricing === 'function') {
+      window.updateOrderModalPricing();
+    }
+  }
+};
 
 /* Dismiss Global Branded Page Preloader */
 function initGlobalPreloader() {
@@ -157,7 +578,13 @@ function updateMetaThemeColor(theme) {
   metaTheme.content = theme === 'dark' ? '#090e1a' : '#1266e8';
 }
 
+let lastThemeToggleTime = 0;
 window.toggleGoDozTheme = function() {
+  const now = Date.now();
+  if (now - lastThemeToggleTime < 300) {
+    return;
+  }
+  lastThemeToggleTime = now;
   const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
   applyTheme(newTheme, true);
@@ -204,11 +631,6 @@ function initGoDozLanguage() {
         includedLanguages: 'hi,en',
         autoDisplay: false
       }, 'google_translate_element');
-
-      const savedLang = localStorage.getItem('godoz_lang') || 'en';
-      if (savedLang === 'hi') {
-        setTimeout(() => applyLanguage('hi'), 300);
-      }
     } catch(e) {}
   };
 
@@ -255,9 +677,9 @@ function updateLangBtnUI(lang) {
   const langBtns = document.querySelectorAll('#langToggleBtn, .lang-toggle-btn, .header-btn-lang, [data-action="toggle-lang"]');
   langBtns.forEach(btn => {
     const isHi = lang === 'hi';
-    btn.innerHTML = isHi ? `<i class="fa-solid fa-language"></i> <span class="btn-text">English</span>` : `<i class="fa-solid fa-language"></i> <span class="btn-text">हिन्दी</span>`;
-    btn.setAttribute('title', isHi ? 'Switch to English Language' : 'Switch to Hindi (हिन्दी) Language');
-    btn.setAttribute('aria-label', isHi ? 'Switch to English Language' : 'Switch to Hindi Language');
+    btn.innerHTML = `<i class="fa-solid fa-language" style="font-size:1.15rem;"></i>`;
+    btn.setAttribute('title', isHi ? 'Language: Hindi (Click to switch to English)' : 'Language: English (Click to switch to Hindi / हिन्दी)');
+    btn.setAttribute('aria-label', isHi ? 'Language: Hindi' : 'Language: English');
   });
 }
 
@@ -534,6 +956,8 @@ function initEstimator() {
   const whatsappQuoteBtn = document.getElementById('estimatorWhatsappBtn');
 
   function calculateQuote() {
+    window.calculateQuote = calculateQuote;
+    window.calculateEstimate = calculateQuote;
     let basePrice = 0;
     let typeName = 'Standard Website';
     let selectedFeatures = [];
@@ -549,7 +973,8 @@ function initEstimator() {
 
     // 2. Add-on Features
     let featuresCost = 0;
-    featureCheckboxes.forEach(cb => {
+    const currentFeatures = document.querySelectorAll('input[name="feature_addon"]');
+    currentFeatures.forEach(cb => {
       if (cb.checked) {
         featuresCost += parseInt(cb.value, 10);
         selectedFeatures.push(cb.dataset.name);
@@ -771,51 +1196,78 @@ function initEstimator() {
   window.applyEstimatorPreset = function(preset) {
     // Update active pill styling
     document.querySelectorAll('.smart-preset-pill').forEach(p => p.classList.remove('active'));
-    event?.target?.classList.add('active');
+    if (window.event && window.event.target) {
+      const btn = window.event.target.closest('.smart-preset-pill');
+      if (btn) btn.classList.add('active');
+    }
 
     // Uncheck all features first
-    featureCheckboxes.forEach(cb => cb.checked = false);
+    document.querySelectorAll('input[name="feature_addon"]').forEach(cb => cb.checked = false);
 
-    if (preset === 'website') {
-      const r = document.querySelector('input[name="project_type"][value="4999"]');
-      if (r) r.checked = true;
-    } else if (preset === 'android_app') {
-      const r = document.querySelector('input[name="project_type"][value="9999"]');
-      if (r) r.checked = true;
-      const f1 = document.querySelector('input[name="feature_addon"][data-name="Push Notifications"]');
-      if (f1) f1.checked = true;
-    } else if (preset === 'ecommerce') {
-      const r = document.querySelector('input[name="project_type"][value="14999"]');
-      if (r) r.checked = true;
-      const f1 = document.querySelector('input[name="feature_addon"][data-name="User Login/Auth"]');
-      const f2 = document.querySelector('input[name="feature_addon"][data-name="Razorpay Gateway"]');
-      const f3 = document.querySelector('input[name="feature_addon"][data-name="Admin CMS Dashboard"]');
-      if (f1) f1.checked = true;
-      if (f2) f2.checked = true;
-      if (f3) f3.checked = true;
-    } else if (preset === 'combo_suite') {
-      const r = document.querySelector('input[name="project_type"][value="19999"]');
-      if (r) r.checked = true;
-      const f1 = document.querySelector('input[name="feature_addon"][data-name="User Login/Auth"]');
-      const f2 = document.querySelector('input[name="feature_addon"][data-name="Razorpay Gateway"]');
-      const f3 = document.querySelector('input[name="feature_addon"][data-name="Admin CMS Dashboard"]');
-      const f4 = document.querySelector('input[name="feature_addon"][data-name="Push Notifications"]');
-      if (f1) f1.checked = true;
-      if (f2) f2.checked = true;
-      if (f3) f3.checked = true;
-      if (f4) f4.checked = true;
-    } else if (preset === 'saas_portal') {
-      const r = document.querySelector('input[name="project_type"][value="14999"]');
-      if (r) r.checked = true;
-      const f1 = document.querySelector('input[name="feature_addon"][data-name="User Login/Auth"]');
-      const f2 = document.querySelector('input[name="feature_addon"][data-name="Razorpay Gateway"]');
-      const f3 = document.querySelector('input[name="feature_addon"][data-name="Admin CMS Dashboard"]');
-      const f4 = document.querySelector('input[name="feature_addon"][data-name="Gemini AI Integration"]');
-      if (f1) f1.checked = true;
-      if (f2) f2.checked = true;
-      if (f3) f3.checked = true;
-      if (f4) f4.checked = true;
+    // Ensure all categories are visible when a preset is picked
+    if (typeof window.filterEstimatorCategory === 'function') {
+      const allFilterBtn = document.querySelector('.est-cat-btn[data-filter="all"]');
+      window.filterEstimatorCategory('all', allFilterBtn);
     }
+
+    const availableRadios = Array.from(document.querySelectorAll('input[name="project_type"]')).filter(r => r.value !== '0');
+    let targetRadio = null;
+    if (availableRadios.length > 0) {
+      if (preset === 'website') {
+        targetRadio = availableRadios.find(r => (r.dataset.name || '').toLowerCase().includes('website')) || availableRadios[0];
+      } else if (preset === 'android_app') {
+        targetRadio = availableRadios.find(r => (r.dataset.name || '').toLowerCase().includes('android') || (r.dataset.name || '').toLowerCase().includes('app')) || availableRadios[1] || availableRadios[0];
+        const f1 = document.querySelector('input[name="feature_addon"][data-name*="Push"]');
+        if (f1) f1.checked = true;
+      } else if (preset === 'ecommerce') {
+        targetRadio = availableRadios.find(r => (r.dataset.name || '').toLowerCase().includes('commerce') || (r.dataset.name || '').toLowerCase().includes('shop') || (r.dataset.name || '').toLowerCase().includes('store')) || availableRadios[2] || availableRadios[0];
+        const f1 = document.querySelector('input[name="feature_addon"][data-name*="Login"]');
+        const f2 = document.querySelector('input[name="feature_addon"][data-name*="Gateway"]');
+        const f3 = document.querySelector('input[name="feature_addon"][data-name*="CMS"]');
+        if (f1) f1.checked = true;
+        if (f2) f2.checked = true;
+        if (f3) f3.checked = true;
+      } else if (preset === 'combo_suite') {
+        targetRadio = availableRadios.find(r => (r.dataset.name || '').toLowerCase().includes('combo')) || availableRadios[3] || availableRadios[availableRadios.length - 1];
+        const f1 = document.querySelector('input[name="feature_addon"][data-name*="Login"]');
+        const f2 = document.querySelector('input[name="feature_addon"][data-name*="Gateway"]');
+        const f3 = document.querySelector('input[name="feature_addon"][data-name*="CMS"]');
+        const f4 = document.querySelector('input[name="feature_addon"][data-name*="Push"]');
+        if (f1) f1.checked = true;
+        if (f2) f2.checked = true;
+        if (f3) f3.checked = true;
+        if (f4) f4.checked = true;
+      } else if (preset === 'saas_portal') {
+        targetRadio = availableRadios.find(r => (r.dataset.name || '').toLowerCase().includes('portal') || (r.dataset.name || '').toLowerCase().includes('saas') || (r.dataset.name || '').toLowerCase().includes('stack')) || availableRadios[availableRadios.length - 1];
+        const f1 = document.querySelector('input[name="feature_addon"][data-name*="Login"]');
+        const f2 = document.querySelector('input[name="feature_addon"][data-name*="Gateway"]');
+        const f3 = document.querySelector('input[name="feature_addon"][data-name*="CMS"]');
+        const f4 = document.querySelector('input[name="feature_addon"][data-name*="AI"]');
+        if (f1) f1.checked = true;
+        if (f2) f2.checked = true;
+        if (f3) f3.checked = true;
+        if (f4) f4.checked = true;
+      }
+    }
+
+    if (targetRadio) {
+      targetRadio.checked = true;
+      document.querySelectorAll('.estimator-type-tile').forEach(t => t.classList.remove('selected'));
+      const parentLabel = targetRadio.closest('.estimator-type-tile');
+      if (parentLabel) {
+        parentLabel.classList.add('selected');
+        parentLabel.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+
+    document.querySelectorAll('.estimator-feature-tile').forEach(t => {
+      const cb = t.querySelector('input[type="checkbox"]');
+      if (cb && cb.checked) {
+        t.classList.add('selected');
+      } else {
+        t.classList.remove('selected');
+      }
+    });
 
     calculateQuote();
   };
@@ -824,6 +1276,18 @@ function initEstimator() {
   featureCheckboxes.forEach(c => c.addEventListener('change', calculateQuote));
   timelineRadios.forEach(r => r.addEventListener('change', calculateQuote));
   document.getElementById('customIdeaInput')?.addEventListener('input', calculateQuote);
+
+  document.getElementById('estimatorFeaturesContainer')?.addEventListener('change', (e) => {
+    if (e.target && e.target.name === 'feature_addon') {
+      const tile = e.target.closest('.estimator-feature-tile');
+      if (tile) {
+        tile.classList.toggle('selected', e.target.checked);
+      }
+    }
+  });
+
+  setupGridScrollIndicators('estimatorFeaturesContainer', 'btnScrollFeatPrev', 'btnScrollFeatNext');
+  setupGridScrollIndicators('estimatorProjectTypesContainer', 'btnScrollTypesPrev', 'btnScrollTypesNext');
 
   calculateQuote();
 }
@@ -1649,7 +2113,7 @@ window.updateNavAuthStatus = function(isLoggedIn, userData = {}) {
       const avatarPhoto = userData.photoURL || localStorage.getItem('godoz_user_avatar');
       
       if (isManager) {
-        btn.href = prefix + 'admin.html';
+        btn.href = prefix + 'manager.html';
         btn.innerHTML = `<i class="fa-solid fa-crown" style="color:#7c3aed; font-size:1rem;"></i> <span class="btn-text" style="font-weight:800; color:#7c3aed;">Manager Hub</span>`;
         btn.setAttribute('title', `Master Manager (${userName}) - Click to open Management Hub`);
         btn.style.borderColor = '#7c3aed';

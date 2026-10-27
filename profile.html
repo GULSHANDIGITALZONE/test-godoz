@@ -688,16 +688,9 @@
           <i class="fa-solid fa-bars"></i>
         </button>
 
-        <a href="/index.html" class="brand-logo-wrap" style="display:flex; align-items:center; gap:8px; text-decoration:none;">
-          <img src="./official logo.png" alt="GoDoz Logo" class="brand-logo-img" style="height:34px; width:auto; border-radius:6px;" onerror="this.src='./logo w bg.png'">
-          <div>
-            <div style="font-size:1.3rem; font-weight:900; line-height:1; letter-spacing:-0.5px;">
-              <span style="color:var(--primary, #1266e8);">Go</span><span style="color:var(--accent, #ff6900);">Doz</span>
-            </div>
-            <div style="font-size:0.62rem; font-weight:700; color:var(--text-muted, #64748b); letter-spacing:0.8px; text-transform:uppercase;">
-              Technology
-            </div>
-          </div>
+        <a href="/index.html" class="brand-logo-wrap" style="display:flex; align-items:center; text-decoration:none;">
+          <img src="./godoz_logo_flat_vector.png" alt="GoDoz Technology" class="godoz-nav-logo-desktop" onerror="this.src='./godoz_logo_rectangle_w_bg.png'">
+          <img src="./godoz-logo-circle.png" alt="GoDoz Logo" class="godoz-nav-logo-mobile" onerror="this.src='./official logo.png'">
         </a>
       </div>
 
@@ -943,6 +936,9 @@
 
       <!-- Drawer Footer -->
       <div class="app-sidebar-footer" style="padding:14px 0 20px; border-top:1px solid var(--border-color); margin-top:8px;">
+        <button type="button" onclick="window.toggleGoDozTheme()" class="btn btn-sm btn-outline" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:10px; font-weight:700; margin-bottom:10px; border-color:var(--border-color); color:var(--text-main); cursor:pointer;">
+          <i class="fa-solid fa-circle-half-stroke" style="color:var(--primary);"></i> Switch Light / Dark Mode
+        </button>
         <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20want%20to%20discuss%20a%20project!" target="_blank" class="app-sidebar-wa-btn">
           <i class="fa-brands fa-whatsapp"></i> Chat with Developer
         </a>
@@ -1621,6 +1617,10 @@
 
     // Trigger Razorpay for Modal Project-Specific Payment
     document.getElementById('btnExecuteProjectRazorpay')?.addEventListener('click', () => {
+      if (!RAZORPAY_CONFIG.onlinePaymentsEnabled) {
+        showError("Online payments are temporarily unavailable until server-side Razorpay verification is configured.");
+        return;
+      }
       const amount = Number(document.getElementById('modalCustomAmount').value);
       if (!amount || amount < 1) {
         showError("Please enter a valid amount of at least ₹1.");
@@ -1707,7 +1707,17 @@
 
     // Render Client Products & Orders dynamically
     function renderClientOrders(orders) {
-      clientLoadedOrders = orders || [];
+      const currentAuthEmail = (currentUser?.email || localStorage.getItem('godoz_user_email') || localStorage.getItem('godoz_auth_email') || '').toLowerCase().trim();
+      let userSpecificOrders = orders || [];
+
+      if (currentAuthEmail) {
+        userSpecificOrders = userSpecificOrders.filter(ord => {
+          const ordEmail = (ord.clientEmail || '').toLowerCase().trim();
+          return ordEmail === currentAuthEmail;
+        });
+      }
+
+      clientLoadedOrders = userSpecificOrders;
       const container = document.getElementById('myProductsContainer');
       const recentContainer = document.getElementById('recentOrdersList');
       const metricTotalOrdersEl = document.getElementById('metricTotalOrders');
@@ -1764,6 +1774,11 @@
         const paymentMode = order.paymentMode || 'Milestone Escrow';
         const paymentStatus = order.paymentStatus || (isFullyPaid ? 'Full Paid (100%)' : (amountPaid > 0 ? `Partially Paid (₹${amountPaid})` : 'Payment Pending'));
         const deliverableUrl = order.deliverableUrl || '';
+        const orderLinks = Array.isArray(order.deliverableLinks) && order.deliverableLinks.length > 0
+          ? order.deliverableLinks
+          : (deliverableUrl ? [{ label: 'Live Deliverable / Preview', url: deliverableUrl }] : []);
+        const orderFeatures = String(order.features || '').trim();
+        const orderScope = String(order.notes || '').trim();
 
         // Status badge class
         let statusBadgeClass = 'status-pending';
@@ -1834,6 +1849,13 @@
             </div>
           </div>
 
+          <div style="margin:0 0 14px; padding:10px 12px; border:1px solid var(--border-color); border-radius:10px; background:var(--bg-surface-alt); font-size:0.82rem; line-height:1.5;">
+            <div style="font-weight:800; margin-bottom:4px; color:var(--text-main);"><i class="fa-solid fa-list-check" style="color:var(--primary); margin-right:6px;"></i> Project Scope &amp; Requirements</div>
+            <div style="white-space:pre-wrap; overflow-wrap:anywhere; color:var(--text-main);">
+              ${escapeHTML(orderScope || orderFeatures || 'Standard Package Features')}
+            </div>
+          </div>
+
           <!-- Project Development Sprint Progress Bar -->
           <div style="margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-bottom:4px;">
@@ -1879,11 +1901,11 @@
           <!-- Project Actions Toolbar -->
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:14px; padding-top:12px; border-top:1px solid var(--border-color);">
             <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-              ${deliverableUrl ? `
-                <a href="${escapeHTML(deliverableUrl)}" target="_blank" class="btn btn-sm btn-outline" style="color:var(--primary); font-weight:700;">
-                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Deliverable / Preview
+              ${orderLinks.map(link => `
+                <a href="${escapeHTML(link.url)}" target="_blank" class="btn btn-sm btn-outline" style="color:var(--primary); font-weight:700;">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> ${escapeHTML(link.label || 'Live Deliverable / Preview')}
                 </a>
-              ` : ''}
+              `).join('')}
               <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20have%20a%20question%20regarding%20my%20Order%20%23${escapeHTML(orderId)}%20(${encodeURIComponent(projectName)})." target="_blank" class="btn btn-sm btn-outline" style="color:#16a34a;">
                 <i class="fa-brands fa-whatsapp"></i> Chat Support
               </a>
@@ -2271,6 +2293,10 @@
 
     // Razorpay Integration General Checkout Trigger (Safe Optional Chaining)
     document.getElementById('btnTriggerRazorpay')?.addEventListener('click', () => {
+      if (!RAZORPAY_CONFIG.onlinePaymentsEnabled) {
+        showError("Online payments are temporarily unavailable until server-side Razorpay verification is configured.");
+        return;
+      }
       const customPayAmount = document.getElementById('customPayAmount');
       const paySelectProject = document.getElementById('paySelectProject');
       const amount = Number(customPayAmount?.value || 0);

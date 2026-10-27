@@ -74,11 +74,6 @@ function initGoDozLanguage() {
         includedLanguages: 'hi,en',
         autoDisplay: false
       }, 'google_translate_element');
-
-      const savedLang = localStorage.getItem('godoz_lang') || 'en';
-      if (savedLang === 'hi') {
-        setTimeout(() => applyLanguage('hi'), 300);
-      }
     } catch(e) {}
   };
 
@@ -125,8 +120,8 @@ function updateLangBtnUI(lang) {
   const langBtns = document.querySelectorAll('#langToggleBtn, .lang-toggle-btn, .header-btn-lang, [data-action="toggle-lang"]');
   langBtns.forEach(btn => {
     const isHi = lang === 'hi';
-    btn.innerHTML = isHi ? `<i class="fa-solid fa-language"></i> <span class="btn-text">English</span>` : `<i class="fa-solid fa-language"></i> <span class="btn-text">हिन्दी</span>`;
-    btn.setAttribute('title', isHi ? 'Switch to English Language' : 'Switch to Hindi (हिन्दी) Language');
+    btn.innerHTML = `<i class="fa-solid fa-language" style="font-size:1.15rem;"></i>`;
+    btn.setAttribute('title', isHi ? 'Language: Hindi (Click to switch to English)' : 'Language: English (Click to switch to Hindi / हिन्दी)');
   });
 }
 

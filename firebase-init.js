@@ -78,56 +78,59 @@ export async function isUserManager(userOrEmail) {
 
   if (!email && !uid) return false;
 
-  try {
-    // 1. Direct document lookups in 'managers'
-    if (email) {
-      const docByEmail = await getDoc(doc(db, "managers", email));
-      if (docByEmail.exists() && docByEmail.data()?.active !== false) {
-        return true;
-      }
-    }
-    if (uid) {
-      const docByUid = await getDoc(doc(db, "managers", uid));
-      if (docByUid.exists() && docByUid.data()?.active !== false) {
-        return true;
-      }
-
-      // Check users collection for manager / owner role
+  // The signed-in user can read their own profile even if collection-level
+  // manager reads are restricted by Firestore rules.
+  if (uid) {
+    try {
       const userDoc = await getDoc(doc(db, "users", uid));
       if (userDoc.exists()) {
-        const uRole = (userDoc.data()?.role || '').toLowerCase();
-        if (uRole === 'manager' || uRole === 'owner') {
-          return true;
-        }
+        const role = (userDoc.data()?.role || '').toLowerCase();
+        if (role === 'manager' || role === 'owner') return true;
       }
+    } catch (err) {
+      console.warn("Firestore manager profile check notice:", err);
     }
+  }
 
-    // 2. Query all documents in 'managers' collection (handles custom auto-generated document IDs)
+  // Check exact document IDs first; these are the canonical manager records.
+  for (const managerId of [email, uid].filter(Boolean)) {
+    try {
+      const managerDoc = await getDoc(doc(db, "managers", managerId));
+      if (managerDoc.exists() && managerDoc.data()?.active !== false) return true;
+    } catch (err) {
+      console.warn("Firestore manager document check notice:", err);
+    }
+  }
+
+  if (email) {
+    try {
+      const qEmail = query(collection(db, "managers"), where("email", "==", email));
+      const snapEmail = await getDocs(qEmail);
+      if (snapEmail.docs.some(managerDoc => managerDoc.data()?.active !== false)) return true;
+    } catch (err) {
+      console.warn("Firestore manager email query notice:", err);
+    }
+  }
+
+  // Keep legacy/custom manager document IDs supported for existing projects.
+  try {
     const snap = await getDocs(collection(db, "managers"));
     for (const d of snap.docs) {
       const docId = d.id.toLowerCase().trim();
       const data = d.data() || {};
-
-      // Match Doc ID
-      if (email && docId === email && data.active !== false) return true;
-      if (uid && docId === uid && data.active !== false) return true;
-
-      // Match email fields
       const docEmail = (data.email || data.Email || data.userEmail || data.user_email || "").toLowerCase().trim();
-      const docUid = data.uid || data.userId || data.user_id || "";
+      const docRole = (data.role || data.Role || "").toLowerCase().trim();
 
-      if (email && docEmail === email && data.active !== false) return true;
-      if (uid && docUid === uid && data.active !== false) return true;
-
-      // Value scan in document fields
-      for (const val of Object.values(data)) {
-        if (typeof val === 'string' && val.toLowerCase().trim() === email && data.active !== false) {
-          return true;
-        }
+      if (data.active === false) continue;
+      if ((email && (docId === email || docEmail === email)) ||
+          (uid && docId === uid) ||
+          ((docRole === 'owner' || docRole === 'manager') &&
+            (email === docEmail || email === docId))) {
+        return true;
       }
     }
   } catch (err) {
-    console.warn("Firestore isUserManager check notice:", err);
+    console.warn("Firestore manager collection check notice:", err);
   }
 
   return false;
@@ -215,7 +218,7 @@ export async function getUserRole(userOrEmail) {
 /**
  * Real-time listener for 'admins' collection
  */
-export function listenToAdmins(callback) {
+export function listenToAdmins(callback, onError) {
   try {
     const q = query(collection(db, "admins"));
     return onSnapshot(q, (snapshot) => {
@@ -223,13 +226,15 @@ export function listenToAdmins(callback) {
       snapshot.forEach(docSnap => {
         admins.push({ id: docSnap.id, ...docSnap.data() });
       });
-      callback(admins);
+      callback(admins, null);
     }, (error) => {
       console.warn("Admin listener warning:", error);
-      callback([]);
+      if (onError) onError(error);
+      callback([], error);
     });
   } catch (e) {
-    callback([]);
+    if (onError) onError(e);
+    callback([], e);
     return () => {};
   }
 }
@@ -237,7 +242,7 @@ export function listenToAdmins(callback) {
 /**
  * Real-time listener for 'managers' collection
  */
-export function listenToManagers(callback) {
+export function listenToManagers(callback, onError) {
   try {
     const q = query(collection(db, "managers"));
     return onSnapshot(q, (snapshot) => {
@@ -245,13 +250,15 @@ export function listenToManagers(callback) {
       snapshot.forEach(docSnap => {
         managers.push({ id: docSnap.id, ...docSnap.data() });
       });
-      callback(managers);
+      callback(managers, null);
     }, (error) => {
       console.warn("Manager listener warning:", error);
-      callback([]);
+      if (onError) onError(error);
+      callback([], error);
     });
   } catch (e) {
-    callback([]);
+    if (onError) onError(e);
+    callback([], e);
     return () => {};
   }
 }
@@ -351,7 +358,7 @@ export async function syncUserProfile(user, extraData = {}) {
 /**
  * Real-time listener for all client orders (Used by Admin & Manager Panel)
  */
-export function listenToAllOrders(callback) {
+export function listenToAllOrders(callback, onError) {
   try {
     const ordersCol = collection(db, "orders");
     return onSnapshot(ordersCol, (snapshot) => {
@@ -381,15 +388,27 @@ export function listenToAllOrders(callback) {
         localStorage.setItem('godoz_admin_orders', JSON.stringify(orders));
       } catch (e) {}
 
-      callback(orders);
+      callback(orders, null);
     }, (err) => {
       console.warn("Orders listener notice:", err);
-      const local = JSON.parse(localStorage.getItem('godoz_admin_orders') || '[]');
-      callback(local);
+      if (onError) onError(err);
+      let local = [];
+      try {
+        local = JSON.parse(localStorage.getItem('godoz_admin_orders') || '[]');
+      } catch (storageError) {
+        console.warn("Could not load cached orders:", storageError);
+      }
+      callback(local, err);
     });
   } catch (e) {
-    const local = JSON.parse(localStorage.getItem('godoz_admin_orders') || '[]');
-    callback(local);
+    if (onError) onError(e);
+    let local = [];
+    try {
+      local = JSON.parse(localStorage.getItem('godoz_admin_orders') || '[]');
+    } catch (storageError) {
+      console.warn("Could not load cached orders:", storageError);
+    }
+    callback(local, e);
     return () => {};
   }
 }
@@ -401,63 +420,62 @@ export function listenToClientOrders(clientEmail, userId, callback) {
   try {
     const ordersCol = collection(db, "orders");
     const emailNorm = (clientEmail || "").toLowerCase().trim();
-    const phoneNorm = (localStorage.getItem('godoz_user_phone') || "").trim();
-    const storedName = (localStorage.getItem('godoz_user_name') || "").toLowerCase().trim();
 
-    return onSnapshot(ordersCol, (snapshot) => {
+    // Query Firestore primarily by clientEmail if available, or by userId
+    const ordersQuery = emailNorm
+      ? query(ordersCol, where("clientEmail", "==", emailNorm))
+      : (userId ? query(ordersCol, where("userId", "==", userId)) : null);
+
+    if (!ordersQuery) {
+      callback(getLocalClientRecords('godoz_orders', userId, emailNorm));
+      return () => {};
+    }
+
+    return onSnapshot(ordersQuery, (snapshot) => {
       const userOrders = [];
       snapshot.forEach(docSnap => {
         const data = docSnap.data();
-        const docEmail = (data.clientEmail || data.email || data.client_email || "").toLowerCase().trim();
-        const docUserId = data.userId || data.uid || "";
-        const docPhone = (data.clientPhone || data.phone || data.client_phone || "").toString().trim();
-        const docName = (data.clientName || data.name || data.client_name || "").toLowerCase().trim();
+        const ordId = data.id || data.orderId || docSnap.id;
+        userOrders.push({ docId: docSnap.id, id: ordId, orderId: ordId, ...data });
+      });
 
-        const cleanDocPhone = docPhone.replace(/\D/g, '');
-        const cleanUserPhone = phoneNorm.replace(/\D/g, '');
-        const phoneMatch = cleanDocPhone.length >= 10 && cleanUserPhone.length >= 10 && (cleanDocPhone.slice(-10) === cleanUserPhone.slice(-10));
-
-        // Match by Email, UID, Phone (last 10 digits), or Client Name
-        const isMatch = (emailNorm && docEmail && (docEmail === emailNorm || emailNorm.includes(docEmail) || docEmail.includes(emailNorm))) ||
-                        (userId && docUserId === userId) ||
-                        phoneMatch ||
-                        (storedName && docName && (docName === storedName || docName.includes(storedName) || storedName.includes(docName))) ||
-                        (!emailNorm && !userId); // If guest without email/uid, show all guest/active orders
-
-        if (isMatch) {
-          const ordId = data.id || data.orderId || docSnap.id;
-          userOrders.push({ docId: docSnap.id, id: ordId, orderId: ordId, ...data });
+      // Strict Client Order Isolation: Ensure order belongs to logged-in email/UID
+      const filteredOrders = userOrders.filter(ord => {
+        const ordEmail = (ord.clientEmail || "").toLowerCase().trim();
+        if (emailNorm) {
+          return ordEmail === emailNorm;
         }
+        if (userId) {
+          return ord.userId === userId;
+        }
+        return false;
       });
 
       // Merge with user's local orders from localStorage
-      try {
-        const local = JSON.parse(localStorage.getItem('godoz_orders') || '[]');
-        if (Array.isArray(local)) {
-          local.forEach(locOrd => {
-            const locId = locOrd.id || locOrd.orderId;
-            if (locId && !userOrders.some(u => u.id === locId || u.orderId === locId)) {
-              userOrders.push(locOrd);
-            }
-          });
+      const local = getLocalClientRecords('godoz_orders', userId, emailNorm);
+      local.forEach(locOrd => {
+        const locId = locOrd.id || locOrd.orderId;
+        const locEmail = (locOrd.clientEmail || "").toLowerCase().trim();
+        if (locId && (!emailNorm || locEmail === emailNorm) && !filteredOrders.some(u => u.id === locId || u.orderId === locId)) {
+          filteredOrders.push(locOrd);
         }
-      } catch (e) {}
+      });
 
       // Sort newest first
-      userOrders.sort((a, b) => {
+      filteredOrders.sort((a, b) => {
         const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : Date.parse(a.createdTime || a.createdAtDate || 0);
         const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : Date.parse(b.createdTime || b.createdAtDate || 0);
         return (timeB || 0) - (timeA || 0);
       });
 
-      callback(userOrders);
+      callback(filteredOrders);
     }, (err) => {
       console.warn("Client orders listener notice:", err);
-      const local = JSON.parse(localStorage.getItem('godoz_orders') || '[]');
+      const local = getLocalClientRecords('godoz_orders', userId, emailNorm);
       callback(local);
     });
   } catch (e) {
-    const local = JSON.parse(localStorage.getItem('godoz_orders') || '[]');
+    const local = getLocalClientRecords('godoz_orders', userId, clientEmail);
     callback(local);
     return () => {};
   }
@@ -486,48 +504,27 @@ export const MASTER_PRICE_MAP = {
 export function getOrderFinancials(order) {
   if (!order) return { totalPrice: 0, amountPaid: 0, remainingBalance: 0, isFullyPaid: false, paidPercent: 0 };
 
-  const totalPrice = Number(order.price || 0);
+  const parsedTotalPrice = Number(order.price || 0);
+  const totalPrice = Number.isFinite(parsedTotalPrice) ? Math.max(0, parsedTotalPrice) : 0;
   let amountPaid = 0;
 
-  // 1. Check explicit valid amountPaid
-  if (typeof order.amountPaid === 'number' && !isNaN(order.amountPaid) && order.amountPaid > 0) {
-    amountPaid = order.amountPaid;
-  } else if (order.amountPaid && !isNaN(Number(order.amountPaid)) && Number(order.amountPaid) > 0) {
-    amountPaid = Number(order.amountPaid);
+  // Only persisted payment totals and transaction history affect the due.
+  const explicitAmountPaid = Number(order.amountPaid);
+  if (Number.isFinite(explicitAmountPaid) && explicitAmountPaid > 0) {
+    amountPaid = explicitAmountPaid;
   }
 
-  // 2. Check paymentHistory array
   if (Array.isArray(order.paymentHistory) && order.paymentHistory.length > 0) {
-    const histSum = order.paymentHistory.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+    const histSum = order.paymentHistory.reduce((sum, item) => {
+      const amount = Number(item.amount);
+      return sum + (Number.isFinite(amount) && amount > 0 ? amount : 0);
+    }, 0);
     if (histSum > amountPaid) {
       amountPaid = histSum;
     }
   }
 
-  // 3. Check local storage last payment link if matched
-  if (amountPaid === 0 && order) {
-    try {
-      const lastOrdId = localStorage.getItem('godoz_last_order_id');
-      const lastPayAmt = Number(localStorage.getItem('godoz_last_pay_amount') || 0);
-      const ordId = order.id || order.orderId;
-      if (lastOrdId && ordId && lastPayAmt > 0 && (lastOrdId === ordId || ordId.includes(lastOrdId) || lastOrdId.includes(ordId))) {
-        amountPaid = lastPayAmt;
-      }
-    } catch(e) {}
-  }
-
-  // 3. Parse amount from paymentStatus string e.g. "10% Advance Paid (₹1 via Razorpay Live - Ref: ...)"
-  if (amountPaid === 0 && order.paymentStatus) {
-    const statusLower = order.paymentStatus.toLowerCase();
-    if (statusLower.includes('100% paid') || statusLower.includes('full paid') || statusLower.includes('paid completed')) {
-      amountPaid = totalPrice;
-    } else {
-      const match = order.paymentStatus.match(/(?:₹|rs\.?|inr\s*)\s*(\d+(?:,\d+)*(?:\.\d+)?)/i);
-      if (match && match[1]) {
-        amountPaid = Number(match[1].replace(/,/g, ''));
-      }
-    }
-  }
+  amountPaid = Math.min(totalPrice, amountPaid);
 
   const remainingBalance = Math.max(0, totalPrice - amountPaid);
   const isFullyPaid = totalPrice > 0 && amountPaid >= totalPrice;
@@ -551,7 +548,7 @@ export async function saveOrderToFirestore(orderData) {
     const orderId = orderData.id || orderData.orderId || (`GoDoz-${currentYear}-` + Math.floor(100000 + Math.random() * 900000));
     const docRef = doc(db, "orders", orderId);
 
-    // Server-enforced price & coupon validation (Prevents client-side price tampering via DevTools)
+    // Calculate a client-side order quote; it is not authoritative for payment.
     const categoryName = orderData.projectName || "";
     const isCustomCat = categoryName.toLowerCase().includes('custom requirement') || categoryName.toLowerCase().includes('unique idea') || categoryName.toLowerCase().includes('custom app');
     let basePrice = isCustomCat
@@ -579,8 +576,22 @@ export async function saveOrderToFirestore(orderData) {
       } else if (initialPaid > 0) {
         derivedStatus = `Advance Paid (₹${initialPaid})`;
       } else {
-        derivedStatus = "COD Requested (Pending Verification)";
+        // AI/maintainer note: PAD means Pay After Demo; this pending agreement does not mean payment was made.
+        derivedStatus = "PAD Requested (Pay After Demo)";
       }
+    }
+
+    const targetEmail = (orderData.clientEmail || "").toLowerCase().trim();
+    const currentEmail = (auth.currentUser?.email || "").toLowerCase().trim();
+    const isStaffCreatingForClient = Boolean(currentEmail && targetEmail && targetEmail !== currentEmail);
+
+    let orderUserId = "";
+    if (orderData.userId) {
+      orderUserId = orderData.userId;
+    } else if (orderData.clientUid) {
+      orderUserId = orderData.clientUid;
+    } else if (!isStaffCreatingForClient && auth.currentUser) {
+      orderUserId = auth.currentUser.uid;
     }
 
     const payload = {
@@ -591,12 +602,14 @@ export async function saveOrderToFirestore(orderData) {
       notes: orderData.notes || "",
       clientName: orderData.clientName || "Client",
       clientPhone: orderData.clientPhone || "",
-      clientEmail: (orderData.clientEmail || "").toLowerCase().trim(),
-      userId: orderData.userId || (auth.currentUser ? auth.currentUser.uid : ""),
+      clientEmail: targetEmail,
+      userId: orderUserId,
+      createdByStaffEmail: isStaffCreatingForClient ? currentEmail : "",
       price: totalPrice,
       amountPaid: initialPaid,
       remainingBalance: remaining,
-      paymentMode: orderData.paymentMode || "Cash on Delivery (COD Milestone)",
+      // AI/maintainer note: PAD is a payment schedule (Pay After Demo), not the payment method itself.
+      paymentMode: orderData.paymentMode || "Pay After Demo (PAD)",
       paymentStatus: derivedStatus,
       paymentHistory: Array.isArray(orderData.paymentHistory) ? orderData.paymentHistory : (initialPaid > 0 ? [{
         paymentId: orderData.paymentId || ('pay_' + Date.now()),
@@ -702,22 +715,7 @@ export async function updateOrderInFirestore(orderId, updateFields) {
     return { success: true };
   } catch (error) {
     console.error("Error updating order:", error);
-    try {
-      const local = JSON.parse(localStorage.getItem('godoz_admin_orders') || '[]');
-      const idx = local.findIndex(o => o.id === orderId || o.orderId === orderId);
-      if (idx >= 0) {
-        local[idx] = { ...local[idx], ...updateFields };
-        localStorage.setItem('godoz_admin_orders', JSON.stringify(local));
-      }
-
-      const clientOrders = JSON.parse(localStorage.getItem('godoz_orders') || '[]');
-      const clientIdx = clientOrders.findIndex(o => o.id === orderId || o.orderId === orderId);
-      if (clientIdx >= 0) {
-        clientOrders[clientIdx] = { ...clientOrders[clientIdx], ...updateFields };
-        localStorage.setItem('godoz_orders', JSON.stringify(clientOrders));
-      }
-    } catch(e) {}
-    return { success: true, offline: true };
+    return { success: false, error: error.message || "Order update failed." };
   }
 }
 
@@ -764,21 +762,177 @@ export async function saveInquiryToFirestore(inquiryData) {
   }
 }
 
-export function listenToInquiries(callback) {
+export function listenToInquiries(callback, assignedEmail = null) {
   try {
-    const q = query(collection(db, "inquiries"), orderBy("createdAt", "desc"));
+    const inquiries = collection(db, "inquiries");
+    const email = (assignedEmail || "").toLowerCase().trim();
+    if (assignedEmail !== null && !email) {
+      callback([], new Error("Your signed-in account does not have an email address."));
+      return () => {};
+    }
+    const q = email
+      ? query(inquiries, where("assignedAdmin", "==", email))
+      : query(inquiries);
     return onSnapshot(q, (snapshot) => {
       const items = [];
       snapshot.forEach(docSnap => {
         items.push({ id: docSnap.id, ...docSnap.data() });
       });
-      callback(items);
+      // Sort safely in JS memory handling Timestamps, numbers, and dates
+      items.sort((a, b) => {
+        const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (typeof a.createdAt === 'number' ? a.createdAt : (a.timestamp || 0));
+        const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (typeof b.createdAt === 'number' ? b.createdAt : (b.timestamp || 0));
+        return timeB - timeA;
+      });
+      callback(items, null);
     }, (err) => {
       console.warn("Inquiries listener notice:", err);
-      callback([]);
+      callback([], err);
     });
   } catch (e) {
-    callback([]);
+    callback([], e);
+    return () => {};
+  }
+}
+
+export async function updateInquiryInFirestore(inquiryId, updateData) {
+  try {
+    const docRef = doc(db, "inquiries", inquiryId);
+    await updateDoc(docRef, updateData);
+    return { success: true };
+  } catch (err) {
+    console.warn("Firestore Inquiry update notice:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+// ============================================================================
+// COST ESTIMATOR FEATURES & TIMELINES (/estimator_features/addons_and_timelines)
+// ============================================================================
+export async function saveEstimatorAddonsToFirestore(addonsData) {
+  try {
+    const docRef = doc(db, "estimator_features", "addons_and_timelines");
+    await setDoc(docRef, {
+      ...addonsData,
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    return { success: true };
+  } catch (err) {
+    console.error("Firestore saveEstimatorAddons error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+export function listenToEstimatorAddons(callback) {
+  try {
+    const docRef = doc(db, "estimator_features", "addons_and_timelines");
+    return onSnapshot(docRef, (snap) => {
+      if (snap.exists()) {
+        if (typeof callback === 'function') callback(snap.data());
+      } else {
+        if (typeof callback === 'function') callback(null);
+      }
+    }, (err) => {
+      console.warn("Estimator addons listener notice:", err);
+      if (typeof callback === 'function') callback(null);
+    });
+  } catch(e) {
+    if (typeof callback === 'function') callback(null);
+    return () => {};
+  }
+}
+
+// ============================================================================
+// SPECIAL FESTIVE OFFERS & BANNERS (/special_offers/festival_banner)
+// ============================================================================
+export async function saveGlobalPricingToFirestore(pricingData) {
+  try {
+    const docRef = doc(db, "special_offers", "festival_banner");
+    await setDoc(docRef, {
+      ...pricingData,
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    return { success: true };
+  } catch (err) {
+    console.error("Firestore saveGlobalPricing error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+export function listenToGlobalPricing(callback) {
+  try {
+    const docRef = doc(db, "special_offers", "festival_banner");
+    return onSnapshot(docRef, (snap) => {
+      if (snap.exists()) {
+        if (typeof callback === 'function') callback(snap.data());
+      } else {
+        if (typeof callback === 'function') callback(null);
+      }
+    }, (err) => {
+      console.warn("Global pricing listener notice:", err);
+      if (typeof callback === 'function') callback(null);
+    });
+  } catch(e) {
+    if (typeof callback === 'function') callback(null);
+    return () => {};
+  }
+}
+
+// ============================================================================
+// INDIVIDUAL PRODUCTS CATALOG COLLECTION (/products/{productId})
+// ============================================================================
+export async function saveProductToFirestore(product) {
+  try {
+    const prodId = product.id || ('prod_' + Date.now());
+    const docRef = doc(db, "products", prodId);
+    await setDoc(docRef, {
+      ...product,
+      id: prodId,
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    return { success: true, id: prodId };
+  } catch (err) {
+    console.error("Firestore saveProduct error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+export async function deleteProductFromFirestore(productId) {
+  try {
+    const docRef = doc(db, "products", productId);
+    await deleteDoc(docRef);
+    return { success: true };
+  } catch (err) {
+    console.error("Firestore deleteProduct error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+export function listenToProductsCatalog(callback) {
+  try {
+    const q = query(collection(db, "products"), orderBy("slNo", "asc"));
+    return onSnapshot(q, (snap) => {
+      const list = [];
+      snap.forEach(docSnap => {
+        list.push({ id: docSnap.id, ...docSnap.data() });
+      });
+      if (typeof callback === 'function') callback(list);
+    }, (err) => {
+      // Fallback query if slNo index missing
+      try {
+        onSnapshot(collection(db, "products"), (snap2) => {
+          const list2 = [];
+          snap2.forEach(docSnap2 => {
+            list2.push({ id: docSnap2.id, ...docSnap2.data() });
+          });
+          if (typeof callback === 'function') callback(list2);
+        });
+      } catch(e) {
+        if (typeof callback === 'function') callback([]);
+      }
+    });
+  } catch(e) {
+    if (typeof callback === 'function') callback([]);
     return () => {};
   }
 }
@@ -1020,20 +1174,36 @@ export function subscribeToAuth(callback) {
 // Firestore Orders & Project Inquiries Management
 // -------------------------------------------------------------
 
+function getLocalClientRecords(storageKey, userId, userEmail) {
+  try {
+    const records = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    if (!Array.isArray(records)) return [];
+    const email = (userEmail || '').toLowerCase().trim();
+    return records.filter(record => {
+      const recordUserId = record.userId || record.uid || record.clientUid || '';
+      const recordEmail = (record.clientEmail || record.email || '').toLowerCase().trim();
+      return (userId && recordUserId === userId) || (email && recordEmail === email);
+    });
+  } catch (error) {
+    console.warn(`Could not read local client records (${storageKey}):`, error);
+    return [];
+  }
+}
+
 /**
  * Retrieve client orders for dashboard
  */
 export async function getClientOrders(userId, userEmail) {
   try {
     const ordersCol = collection(db, "orders");
-    let q;
-    if (userId) {
+    const emailNorm = (userEmail || "").toLowerCase().trim();
+    let q = null;
+    if (emailNorm) {
+      q = query(ordersCol, where("clientEmail", "==", emailNorm));
+    } else if (userId) {
       q = query(ordersCol, where("userId", "==", userId));
-    } else if (userEmail) {
-      q = query(ordersCol, where("clientEmail", "==", userEmail));
-    } else {
-      q = query(ordersCol, orderBy("createdAt", "desc"));
     }
+    if (!q) return [];
     const snapshot = await getDocs(q);
     const orders = [];
     snapshot.forEach(docSnap => {
@@ -1042,11 +1212,7 @@ export async function getClientOrders(userId, userEmail) {
     return orders;
   } catch (error) {
     console.warn("Error fetching orders from Firestore, fallback to local:", error);
-    try {
-      return JSON.parse(localStorage.getItem('godoz_orders') || '[]');
-    } catch (e) {
-      return [];
-    }
+    return getLocalClientRecords('godoz_orders', userId, emailNorm);
   }
 }
 
@@ -1055,6 +1221,7 @@ export async function getClientOrders(userId, userEmail) {
 // ============================================================================
 export const RAZORPAY_CONFIG = {
   // Official GoDoz Production Live Razorpay Gateway
+  onlinePaymentsEnabled: false,
   testKey: "rzp_test_TgdERHVdl9Et35",
   liveKey: "rzp_live_Tienbwktx6frm1",
   defaultKey: "rzp_live_Tienbwktx6frm1",
@@ -1091,159 +1258,13 @@ export async function getRazorpayPaymentById(paymentId) {
 }
 
 /**
- * Record a Verified Razorpay Live Payment into Firestore 'payments' & link with 'orders'
+ * Payment records require server-side Razorpay verification; browser data is not trusted.
  */
-export async function recordRazorpayPayment(paymentData) {
-  try {
-    const payAmount = Number(paymentData.amount) || 0;
-    if (payAmount <= 0) {
-      return { success: false, error: "Invalid payment amount. Amount must be greater than 0." };
-    }
-    const payId = paymentData.paymentId || ('pay_' + Date.now());
-    const orderId = paymentData.orderId || null;
-
-    const payRef = doc(db, "payments", payId);
-    let existingData = null;
-    try {
-      const snap = await getDoc(payRef);
-      if (snap.exists()) {
-        existingData = snap.data();
-      }
-    } catch (e) {
-      console.warn("Check existing payment notice:", e);
-    }
-
-    // Preserve original creation time if record already exists (prevents refresh from changing time)
-    const createdAt = existingData?.createdAt || serverTimestamp();
-    const createdAtDate = existingData?.createdAtDate || paymentData.createdAtDate || new Date().toISOString();
-    const createdAtFormatted = existingData?.createdAtFormatted || paymentData.createdAtFormatted || new Date().toLocaleString('en-IN');
-
-    const payload = {
-      paymentId: payId,
-      orderId: orderId || existingData?.orderId || null,
-      amount: payAmount,
-      currency: "INR",
-      clientName: paymentData.clientName || existingData?.clientName || "Client",
-      clientEmail: (paymentData.clientEmail || existingData?.clientEmail || "").toLowerCase().trim(),
-      clientPhone: paymentData.clientPhone || existingData?.clientPhone || "",
-      projectRef: paymentData.projectRef || paymentData.projectName || existingData?.projectRef || "General Service Payment",
-      status: "SUCCESS",
-      gateway: "Razorpay Live",
-      createdAt: createdAt,
-      createdAtDate: createdAtDate,
-      createdAtFormatted: createdAtFormatted
-    };
-
-    await setDoc(payRef, payload, { merge: true });
-
-    // Save/Update in persistent localStorage payment history list
-    try {
-      const localHistory = JSON.parse(localStorage.getItem('godoz_payments_history') || '[]');
-      const newPayItem = {
-        paymentId: payId,
-        orderId: orderId || 'Direct Payment',
-        projectName: payload.projectRef || 'Project Milestone Payment',
-        amount: payAmount,
-        date: createdAtFormatted,
-        dateFormatted: createdAtFormatted,
-        method: 'Razorpay Live Online',
-        note: paymentData.note || 'Verified Online Payment',
-        status: 'SUCCESS'
-      };
-      const existingIdx = localHistory.findIndex(p => p.paymentId === payId);
-      if (existingIdx >= 0) {
-        localHistory[existingIdx] = { ...localHistory[existingIdx], ...newPayItem };
-      } else {
-        localHistory.unshift(newPayItem);
-      }
-      localStorage.setItem('godoz_payments_history', JSON.stringify(localHistory));
-    } catch(e) {}
-
-    if (orderId) {
-      try {
-        const orderRef = doc(db, "orders", orderId);
-        const orderSnap = await getDoc(orderRef);
-        let curPaid = 0;
-        let totalPrice = 0;
-        let existingHistory = [];
-
-        if (orderSnap.exists()) {
-          const ordData = orderSnap.data();
-          totalPrice = Number(ordData.price || 0);
-          curPaid = Number(ordData.amountPaid || 0);
-          existingHistory = Array.isArray(ordData.paymentHistory) ? ordData.paymentHistory : [];
-        } else {
-          // Check local orders fallback
-          try {
-            const localOrders = JSON.parse(localStorage.getItem('godoz_orders') || '[]');
-            const found = localOrders.find(o => o.id === orderId || o.orderId === orderId);
-            if (found) {
-              totalPrice = Number(found.price || 0);
-              curPaid = Number(found.amountPaid || 0);
-              existingHistory = Array.isArray(found.paymentHistory) ? found.paymentHistory : [];
-            }
-          } catch (e) {}
-        }
-
-        // Prevent duplicate payment addition if this paymentId was already logged
-        const isAlreadyLogged = existingHistory.some(h => h.paymentId === payId);
-        if (isAlreadyLogged) {
-          return {
-            success: true,
-            paymentId: payId,
-            alreadyRecorded: true,
-            createdAtFormatted: createdAtFormatted,
-            createdAtDate: createdAtDate
-          };
-        }
-
-        const newTotalPaid = curPaid + payAmount;
-        const remaining = Math.max(0, totalPrice - newTotalPaid);
-        const newHistoryItem = {
-          paymentId: payId,
-          amount: payAmount,
-          date: createdAtDate,
-          dateFormatted: createdAtFormatted,
-          method: "Razorpay Live Online",
-          note: paymentData.note || "Project Payment / Milestone"
-        };
-
-        const updatedHistory = [...existingHistory, newHistoryItem];
-        let newStatus = "";
-        if (totalPrice > 0 && newTotalPaid >= totalPrice) {
-          newStatus = `100% Paid Completed (₹${newTotalPaid.toLocaleString('en-IN')})`;
-        } else if (newTotalPaid > 0) {
-          newStatus = `Partially Paid (₹${newTotalPaid.toLocaleString('en-IN')} / ₹${totalPrice.toLocaleString('en-IN')})`;
-        } else {
-          newStatus = `Paid (₹${payAmount} via Razorpay Live - ID: ${payId})`;
-        }
-
-        await updateOrderInFirestore(orderId, {
-          amountPaid: newTotalPaid,
-          remainingBalance: remaining,
-          paymentStatus: newStatus,
-          paymentMode: "Razorpay Live Online",
-          lastPaymentId: payId,
-          lastPaymentAmount: payAmount,
-          lastPaymentDate: createdAtDate,
-          paymentHistory: updatedHistory
-        });
-      } catch (err) {
-        console.warn("Error updating order payment linkage:", err);
-      }
-    }
-
-    return {
-      success: true,
-      paymentId: payId,
-      docId: payId,
-      createdAtFormatted: createdAtFormatted,
-      createdAtDate: createdAtDate
-    };
-  } catch (error) {
-    console.warn("Firestore record payment notice:", error);
-    return { success: true, paymentId: paymentData.paymentId || ('pay_' + Date.now()), offline: true };
-  }
+export async function recordRazorpayPayment() {
+  return {
+    success: false,
+    error: "Payment recording is unavailable until server-side Razorpay verification is configured."
+  };
 }
 
 /**
@@ -1316,18 +1337,43 @@ export async function getCouponsFromFirestore() {
 
 export async function toggleCouponStatusInFirestore(couponId, currentStatus) {
   try {
-    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
-    const docRef = doc(db, "coupons", couponId);
-    await updateDoc(docRef, { status: newStatus, updatedAt: serverTimestamp() });
+    const cleanId = String(couponId).trim();
+    const isCurrentlyActive = (currentStatus === 'active' || currentStatus === true || currentStatus === 'true');
+    const newStatusStr = isCurrentlyActive ? 'inactive' : 'active';
+    const newActiveBool = !isCurrentlyActive;
 
-    try {
-      const local = JSON.parse(localStorage.getItem('godoz_coupons') || '[]');
-      const item = local.find(c => c.id === couponId || c.code === couponId);
-      if (item) item.status = newStatus;
-      localStorage.setItem('godoz_coupons', JSON.stringify(local));
-    } catch(e) {}
+    // 1. Try direct doc reference
+    const docRef = doc(db, "coupons", cleanId);
+    let docSnap = await getDoc(docRef);
 
-    return { success: true, status: newStatus };
+    if (docSnap.exists()) {
+      await updateDoc(docRef, {
+        status: newStatusStr,
+        active: newActiveBool,
+        updatedAt: Date.now()
+      });
+      return { success: true, status: newStatusStr };
+    }
+
+    // 2. Query document by code field or uppercase/lowercase ID
+    const qUpper = query(collection(db, "coupons"), where("code", "==", cleanId.toUpperCase()));
+    let snap = await getDocs(qUpper);
+    if (snap.empty) {
+      const qLower = query(collection(db, "coupons"), where("code", "==", cleanId.toLowerCase()));
+      snap = await getDocs(qLower);
+    }
+
+    if (!snap.empty) {
+      const targetDoc = snap.docs[0];
+      await updateDoc(doc(db, "coupons", targetDoc.id), {
+        status: newStatusStr,
+        active: newActiveBool,
+        updatedAt: Date.now()
+      });
+      return { success: true, status: newStatusStr };
+    }
+
+    return { success: false, error: "Coupon document not found in Firestore." };
   } catch (e) {
     console.error("Error toggling coupon status:", e);
     return { success: false, error: e.message };
@@ -1336,14 +1382,26 @@ export async function toggleCouponStatusInFirestore(couponId, currentStatus) {
 
 export async function deleteCouponFromFirestore(couponId) {
   try {
-    const docRef = doc(db, "coupons", couponId);
-    await deleteDoc(docRef);
+    const cleanId = String(couponId).trim();
+    const docRef = doc(db, "coupons", cleanId);
+    let docSnap = await getDoc(docRef);
 
-    try {
-      let local = JSON.parse(localStorage.getItem('godoz_coupons') || '[]');
-      local = local.filter(c => c.id !== couponId && c.code !== couponId);
-      localStorage.setItem('godoz_coupons', JSON.stringify(local));
-    } catch(e) {}
+    if (docSnap.exists()) {
+      await deleteDoc(docRef);
+      return { success: true };
+    }
+
+    const qUpper = query(collection(db, "coupons"), where("code", "==", cleanId.toUpperCase()));
+    let snap = await getDocs(qUpper);
+    if (snap.empty) {
+      const qLower = query(collection(db, "coupons"), where("code", "==", cleanId.toLowerCase()));
+      snap = await getDocs(qLower);
+    }
+
+    if (!snap.empty) {
+      await deleteDoc(doc(db, "coupons", snap.docs[0].id));
+      return { success: true };
+    }
 
     return { success: true };
   } catch(e) {
@@ -1399,7 +1457,7 @@ export async function validateCouponInFirestore(codeStr, orderAmount) {
   }
 }
 
-export function listenToPayments(callback) {
+export function listenToPayments(callback, onError) {
   try {
     const q = query(collection(db, "payments"), orderBy("createdAt", "desc"));
     return onSnapshot(q, (snapshot) => {
@@ -1407,13 +1465,15 @@ export function listenToPayments(callback) {
       snapshot.forEach(docSnap => {
         items.push({ id: docSnap.id, ...docSnap.data() });
       });
-      callback(items);
+      callback(items, null);
     }, (err) => {
       console.warn("Payments listener notice:", err);
-      callback([]);
+      if (onError) onError(err);
+      callback([], err);
     });
   } catch (e) {
-    callback([]);
+    if (onError) onError(e);
+    callback([], e);
     return () => {};
   }
 }
@@ -1425,58 +1485,43 @@ export function listenToClientPayments(clientEmail, userId, callback) {
   try {
     const payCol = collection(db, "payments");
     const emailNorm = (clientEmail || "").toLowerCase().trim();
-    const phoneNorm = (localStorage.getItem('godoz_user_phone') || "").trim();
-    const storedName = (localStorage.getItem('godoz_user_name') || "").toLowerCase().trim();
+    const paymentsQuery = emailNorm
+      ? query(payCol, where("clientEmail", "==", emailNorm))
+      : (userId ? query(payCol, where("userId", "==", userId)) : null);
 
-    return onSnapshot(payCol, (snapshot) => {
+    if (!paymentsQuery) {
+      callback(getLocalClientRecords('godoz_payments_history', userId, emailNorm));
+      return () => {};
+    }
+
+    return onSnapshot(paymentsQuery, (snapshot) => {
       const userPayments = [];
       snapshot.forEach(docSnap => {
         const data = docSnap.data();
-        const docEmail = (data.clientEmail || data.email || "").toLowerCase().trim();
-        const docUserId = data.userId || data.uid || "";
-        const docPhone = (data.clientPhone || data.phone || "").toString().trim();
-        const docName = (data.clientName || data.name || "").toLowerCase().trim();
-
-        const cleanDocPhone = docPhone.replace(/\D/g, '');
-        const cleanUserPhone = phoneNorm.replace(/\D/g, '');
-        const phoneMatch = cleanDocPhone.length >= 10 && cleanUserPhone.length >= 10 && (cleanDocPhone.slice(-10) === cleanUserPhone.slice(-10));
-
-        const isMatch = (emailNorm && docEmail && (docEmail === emailNorm || emailNorm.includes(docEmail) || docEmail.includes(emailNorm))) ||
-                        (userId && docUserId === userId) ||
-                        phoneMatch ||
-                        (storedName && docName && (docName === storedName || docName.includes(storedName) || storedName.includes(docName))) ||
-                        (!emailNorm && !userId);
-
-        if (isMatch) {
-          const payId = data.paymentId || docSnap.id;
-          userPayments.push({
-            id: docSnap.id,
-            paymentId: payId,
-            orderId: data.orderId || 'Direct Payment',
-            projectName: data.projectRef || data.projectName || 'Project Milestone Payment',
-            amount: Number(data.amount || 0),
-            date: data.createdAtFormatted || (data.createdAtDate ? new Date(data.createdAtDate).toLocaleString('en-IN') : 'Recent'),
-            dateFormatted: data.createdAtFormatted || (data.createdAtDate ? new Date(data.createdAtDate).toLocaleString('en-IN') : 'Recent'),
-            createdAtRaw: data.createdAtDate || '',
-            method: data.gateway || 'Razorpay Live',
-            note: data.note || 'Verified Online Payment',
-            status: data.status || 'SUCCESS'
-          });
-        }
+        const payId = data.paymentId || docSnap.id;
+        userPayments.push({
+          id: docSnap.id,
+          paymentId: payId,
+          orderId: data.orderId || 'Direct Payment',
+          projectName: data.projectRef || data.projectName || 'Project Milestone Payment',
+          amount: Number(data.amount || 0),
+          date: data.createdAtFormatted || (data.createdAtDate ? new Date(data.createdAtDate).toLocaleString('en-IN') : 'Recent'),
+          dateFormatted: data.createdAtFormatted || (data.createdAtDate ? new Date(data.createdAtDate).toLocaleString('en-IN') : 'Recent'),
+          createdAtRaw: data.createdAtDate || '',
+          method: data.gateway || 'Razorpay Live',
+          note: data.note || 'Verified Online Payment',
+          status: data.status || 'SUCCESS'
+        });
       });
 
       // Merge with user's local payments history
-      try {
-        const local = JSON.parse(localStorage.getItem('godoz_payments_history') || '[]');
-        if (Array.isArray(local)) {
-          local.forEach(locPay => {
-            const locId = locPay.paymentId || locPay.id;
-            if (locId && !userPayments.some(u => u.paymentId === locId || u.id === locId)) {
-              userPayments.push(locPay);
-            }
-          });
+      const local = getLocalClientRecords('godoz_payments_history', userId, emailNorm);
+      local.forEach(locPay => {
+        const locId = locPay.paymentId || locPay.id;
+        if (locId && !userPayments.some(u => u.paymentId === locId || u.id === locId)) {
+          userPayments.push(locPay);
         }
-      } catch (e) {}
+      });
 
       // Sort newest first
       userPayments.sort((a, b) => {
@@ -1488,13 +1533,40 @@ export function listenToClientPayments(clientEmail, userId, callback) {
       callback(userPayments);
     }, (err) => {
       console.warn("Client payments listener notice:", err);
-      const local = JSON.parse(localStorage.getItem('godoz_payments_history') || '[]');
+      const local = getLocalClientRecords('godoz_payments_history', userId, emailNorm);
       callback(local);
     });
   } catch (e) {
-    const local = JSON.parse(localStorage.getItem('godoz_payments_history') || '[]');
+    const local = getLocalClientRecords('godoz_payments_history', userId, clientEmail);
     callback(local);
     return () => {};
+  }
+}
+
+// Dynamic Firestore Razorpay Key Management (Prevents Hardcoding)
+export async function getRazorpayKeyFromFirestore() {
+  try {
+    const docSnap = await getDoc(doc(db, "settings", "razorpay"));
+    if (docSnap.exists() && docSnap.data()?.keyId) {
+      return docSnap.data().keyId;
+    }
+  } catch(e) {
+    console.warn("Firestore Razorpay key fetch notice:", e);
+  }
+  return RAZORPAY_CONFIG.keyId || "rzp_live_Tienbwktx6frm1";
+}
+
+export async function saveRazorpayKeyToFirestore(keyId) {
+  try {
+    await setDoc(doc(db, "settings", "razorpay"), {
+      keyId: keyId.trim(),
+      updatedAt: Date.now(),
+      updatedBy: auth.currentUser?.email || "Manager"
+    }, { merge: true });
+    return { success: true };
+  } catch(err) {
+    console.warn("Firestore Razorpay key save error:", err);
+    return { success: false, error: err.message };
   }
 }
 
@@ -1509,10 +1581,19 @@ if (typeof window !== 'undefined') {
     resendVerificationLink,
     isUserAdmin,
     isUserManager,
-    getUserRole
+    getUserRole,
+    updateInquiryInFirestore,
+    getRazorpayKeyFromFirestore,
+    saveRazorpayKeyToFirestore
   };
   window.logoutUser = logoutUser;
   window.resendVerificationLink = resendVerificationLink;
+  window.isUserAdmin = isUserAdmin;
+  window.isUserManager = isUserManager;
+  window.getUserRole = getUserRole;
+  window.updateInquiryInFirestore = updateInquiryInFirestore;
+  window.getRazorpayKeyFromFirestore = getRazorpayKeyFromFirestore;
+  window.saveRazorpayKeyToFirestore = saveRazorpayKeyToFirestore;
 
   // Global Auth State Observer to keep Navbar and Drawer menus dynamically in sync
   onAuthStateChanged(auth, async (user) => {
@@ -1531,14 +1612,8 @@ if (typeof window !== 'undefined') {
         localStorage.setItem('godoz_auth_logged_in', 'true');
         localStorage.setItem('godoz_auth_uid', user.uid || '');
         localStorage.setItem('godoz_auth_email', user.email || '');
-        localStorage.setItem('godoz_auth_name', user.displayName || (user.isAnonymous ? 'Guest Client' : (userRole === 'manager' ? 'RS GULSHAN PRAJAPATI' : 'GoDoz User')));
-        localStorage.setItem('godoz_user_role', userRole);
+        localStorage.setItem('godoz_auth_name', user.displayName || (user.email ? user.email.split('@')[0] : 'GoDoz User'));
         localStorage.setItem('godoz_auth_timestamp', Date.now().toString());
-        if (userRole === 'manager' || userRole === 'admin') {
-          localStorage.setItem('godoz_admin_role', userRole);
-        } else {
-          localStorage.removeItem('godoz_admin_role');
-        }
         if (user.photoURL) {
           localStorage.setItem('godoz_user_avatar', user.photoURL);
         }
@@ -1546,7 +1621,7 @@ if (typeof window !== 'undefined') {
 
       if (typeof window.updateNavAuthStatus === 'function') {
         window.updateNavAuthStatus(true, {
-          displayName: user.displayName || (user.isAnonymous ? 'Guest' : (userRole === 'manager' ? 'RS GULSHAN PRAJAPATI' : '')),
+          displayName: user.displayName || (user.email ? user.email.split('@')[0] : 'User'),
           email: user.email || '',
           photoURL: user.photoURL || '',
           isAnonymous: user.isAnonymous,
@@ -1571,4 +1646,3 @@ if (typeof window !== 'undefined') {
     }
   });
 }
-

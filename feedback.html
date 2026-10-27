@@ -101,7 +101,13 @@
       cursor: pointer;
       margin: 15px 0 20px;
     }
-    .star-rating i.active, .star-rating i:hover, .star-rating i:hover ~ i {
+    .star-rating i {
+      transition: color 0.15s ease, transform 0.15s ease;
+    }
+    .star-rating i:hover {
+      transform: scale(1.18);
+    }
+    .star-rating i.active {
       color: #f59e0b;
     }
     .form-group {
@@ -904,20 +910,42 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Star Rating Click Logic
+    // Star Rating Hover & Click Logic (Highlights hovered star and all stars to its left)
     let currentRating = 5;
     const stars = document.querySelectorAll('#starRatingWrap i');
-    stars.forEach(star => {
+    const starWrap = document.getElementById('starRatingWrap');
+
+    function updateStarsDisplay(ratingVal) {
+      stars.forEach((s, idx) => {
+        if (idx < ratingVal) {
+          s.classList.add('active');
+        } else {
+          s.classList.remove('active');
+        }
+      });
+    }
+
+    stars.forEach((star, idx) => {
+      // Hover: Highlight this star and all stars to its left
+      star.addEventListener('mouseenter', () => {
+        updateStarsDisplay(idx + 1);
+      });
+
+      // Click: Set rating value
       star.addEventListener('click', () => {
-        const val = parseInt(star.dataset.rating, 10);
+        const val = idx + 1;
         currentRating = val;
         document.getElementById('feedbackRating').value = val;
-        stars.forEach((s, idx) => {
-          if (idx < val) s.classList.add('active');
-          else s.classList.remove('active');
-        });
+        updateStarsDisplay(val);
       });
     });
+
+    // Restore to selected rating when mouse leaves star area
+    if (starWrap) {
+      starWrap.addEventListener('mouseleave', () => {
+        updateStarsDisplay(currentRating);
+      });
+    }
 
     // Auto-fill from localStorage if available
     const savedName = localStorage.getItem('godoz_user_name');
@@ -944,33 +972,63 @@
       submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
 
       try {
-        await addDoc(collection(db, "reviews"), {
+        const timestamp = Date.now();
+        const dateStr = new Date().toLocaleDateString('en-IN');
+
+        // 1. Save to NEW "Rating" Collection in Firestore
+        await addDoc(collection(db, "Rating"), {
           name,
           contact,
           project: project || "Custom Development Service",
           message,
           rating,
-          createdAt: serverTimestamp(),
-          dateStr: new Date().toLocaleDateString('en-IN'),
-          status: "private"
+          timestamp: timestamp,
+          createdAt: timestamp,
+          dateStr: dateStr,
+          replyText: null,
+          repliedAt: null,
+          status: "published"
         });
+
+        // 2. Also Save to Firestore "messages" Collection (for Admin Contact Hub)
+        try {
+          await addDoc(collection(db, "messages"), {
+            senderName: name,
+            senderEmail: contact.includes('@') ? contact : null,
+            senderPhone: !contact.includes('@') ? contact : null,
+            category: "Client Review & Feedback",
+            subject: `⭐ ${rating} Star Review - ${project || 'GoDoz Service'}`,
+            messageText: message,
+            rating: rating,
+            project: project || "Custom Development Service",
+            isLoggedIn: false,
+            timestamp: timestamp,
+            createdAt: timestamp,
+            replyText: null,
+            repliedAt: null,
+            status: "pending",
+            adminNotes: null
+          });
+        } catch (msgErr) {
+          console.warn("Messages collection secondary write note:", msgErr.message);
+        }
 
         statusDiv.style.display = 'block';
         statusDiv.style.background = 'rgba(34, 197, 94, 0.15)';
         statusDiv.style.color = '#16a34a';
         statusDiv.style.border = '1px solid #bbf7d0';
-        statusDiv.innerHTML = `🎉 <strong>Thank you, ${name}!</strong> Your review (${rating} ⭐) has been recorded successfully.`;
+        statusDiv.innerHTML = `🎉 <strong>Thank you, ${name}!</strong> Your review (${rating} ⭐) has been submitted successfully and sent to GoDoz Admin Desk.`;
 
         form.reset();
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Review Submitted';
+        submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Review Submitted Successfully';
       } catch (err) {
         console.warn("Feedback submission notice:", err);
         statusDiv.style.display = 'block';
         statusDiv.style.background = 'rgba(239, 68, 68, 0.15)';
         statusDiv.style.color = '#dc2626';
         statusDiv.style.border = '1px solid #fecaca';
-        statusDiv.innerHTML = '⚠️ Review recorded locally. Thank you for your feedback!';
+        statusDiv.innerHTML = `⚠️ Submission failed: ${err.message || 'Please check internet or Firestore rules.'}`;
         submitBtn.disabled = false;
         submitBtn.innerHTML = '⚡ Submit Official Review';
       }

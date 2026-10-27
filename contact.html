@@ -6,6 +6,13 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4514064358809691" crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (function(){
+      const savedTheme = localStorage.getItem('godoz_theme') || 
+        (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
   <title>Contact App - Modern Web Dashboard &amp; GoDoz Support</title>
 
   <link rel="shortcut icon" href="./contact_godoz.png" type="image/x-icon">
@@ -133,26 +140,271 @@
     .stat-val { font-size: 24px; font-weight: 800; color: var(--primary); }
     .stat-lbl { font-size: 12px; font-weight: 700; color: var(--text-muted); margin-top: 2px; }
 
-    /* WhatsApp Chat Bubbles */
+    /* WhatsApp Chat Feed & Bubbles */
+    .chat-feed {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px;
+      background: var(--bg-surface-alt, #F1F5F9);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
     .chat-bubble-user {
-      align-self: flex-start; background: var(--bg-surface, #FFFFFF); border: 1px solid var(--border);
-      border-radius: 16px 16px 16px 4px; padding: 14px; max-width: 80%; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      align-self: flex-start;
+      background: var(--bg-surface, #FFFFFF);
+      border: 1px solid var(--border);
+      border-radius: 16px 16px 16px 4px;
+      padding: 14px;
+      max-width: 82%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      color: var(--text-main);
+    }
+    .chat-bubble-user p {
+      color: var(--text-main);
+      margin: 0;
     }
     .chat-bubble-admin {
-      align-self: flex-end; background: var(--primary-light); border: 1px solid #C7D2FE;
-      border-radius: 16px 16px 4px 16px; padding: 14px; max-width: 80%; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      align-self: flex-end;
+      background: var(--primary-light, #EEF2FF);
+      border: 1px solid #C7D2FE;
+      border-radius: 16px 16px 4px 16px;
+      padding: 14px;
+      max-width: 82%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      color: var(--text-main);
+    }
+    .chat-bubble-admin p {
+      color: var(--text-main);
+      margin: 0;
+    }
+    .chat-bubble-notes {
+      align-self: flex-end;
+      background: #FEF3C7;
+      border: 1px solid #FCD34D;
+      border-radius: 16px 16px 4px 16px;
+      padding: 14px;
+      max-width: 82%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .chat-bubble-notes p {
+      color: #78350F;
+      margin: 0;
     }
 
     /* Modal */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(6px);
+      background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px);
       display: none; align-items: center; justify-content: center; z-index: 1000;
     }
     .modal-overlay.active { display: flex; }
     .modal {
       background: var(--bg-surface, #ffffff); border-radius: var(--radius); padding: 28px;
       width: 100%; max-width: 520px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border);
+    }
+
+    /* ==========================================================================
+       Dark Theme Overrides for Contact App & Admin Reply Chat Modal
+       ========================================================================== */
+    [data-theme="dark"] {
+      --primary: #6366F1;
+      --primary-hover: #4F46E5;
+      --primary-light: rgba(99, 102, 241, 0.16);
+      --secondary: #38BDF8;
+      --secondary-light: rgba(56, 189, 248, 0.15);
+      --card-bg: #10192e;
+      --border: #1e2e4f;
+      --success-bg: rgba(16, 185, 129, 0.16);
+      --warning-bg: rgba(245, 158, 11, 0.16);
+    }
+    [data-theme="dark"] body {
+      background: #090e1a !important;
+      color: var(--text-main, #f8fafc) !important;
+    }
+    [data-theme="dark"] .card,
+    [data-theme="dark"] .msg-card,
+    [data-theme="dark"] .banner,
+    [data-theme="dark"] .stat-card {
+      background: #10192e !important;
+      border-color: #1e2e4f !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35) !important;
+    }
+    [data-theme="dark"] .tab-btn {
+      background: #16223e !important;
+      border-color: #1e2e4f !important;
+      color: #94a3b8 !important;
+    }
+    [data-theme="dark"] .tab-btn.active {
+      background: var(--primary) !important;
+      color: #ffffff !important;
+      border-color: var(--primary) !important;
+    }
+    [data-theme="dark"] .form-control {
+      background: #0d1527 !important;
+      border-color: #1e2e4f !important;
+      color: #f8fafc !important;
+    }
+    [data-theme="dark"] .form-control:focus {
+      background: #16223e !important;
+      border-color: var(--primary) !important;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important;
+    }
+    [data-theme="dark"] .form-control::placeholder {
+      color: #64748b !important;
+    }
+    [data-theme="dark"] .form-group label {
+      color: #cbd5e1 !important;
+    }
+    [data-theme="dark"] .btn-outline {
+      background: #16223e !important;
+      border-color: #1e2e4f !important;
+      color: #f8fafc !important;
+    }
+    [data-theme="dark"] .btn-outline:hover {
+      background: #1e2e4f !important;
+      border-color: var(--primary) !important;
+      color: #ffffff !important;
+    }
+    [data-theme="dark"] .pill-logged {
+      background: rgba(99, 102, 241, 0.22) !important;
+      color: #818cf8 !important;
+      border: 1px solid rgba(99, 102, 241, 0.35) !important;
+    }
+    [data-theme="dark"] .pill-guest {
+      background: rgba(148, 163, 184, 0.18) !important;
+      color: #cbd5e1 !important;
+      border: 1px solid rgba(148, 163, 184, 0.25) !important;
+    }
+    [data-theme="dark"] .pill-replied {
+      background: rgba(16, 185, 129, 0.2) !important;
+      color: #34d399 !important;
+      border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    }
+    [data-theme="dark"] .pill-pending {
+      background: rgba(245, 158, 11, 0.2) !important;
+      color: #fbbf24 !important;
+      border: 1px solid rgba(245, 158, 11, 0.3) !important;
+    }
+    [data-theme="dark"] .reply-box {
+      background: rgba(99, 102, 241, 0.14) !important;
+      border: 1px solid rgba(99, 102, 241, 0.3) !important;
+      border-left: 4px solid var(--primary) !important;
+    }
+    [data-theme="dark"] .reply-title {
+      color: #818cf8 !important;
+    }
+    [data-theme="dark"] .action-box {
+      background: rgba(245, 158, 11, 0.14) !important;
+      border: 1px solid rgba(245, 158, 11, 0.3) !important;
+      border-left: 4px solid var(--warning) !important;
+    }
+    [data-theme="dark"] .user-badge {
+      background: rgba(99, 102, 241, 0.2) !important;
+      color: #818cf8 !important;
+      border: 1px solid rgba(99, 102, 241, 0.35) !important;
+    }
+    [data-theme="dark"] .banner-icon.logged-in {
+      background: rgba(16, 185, 129, 0.2) !important;
+      color: #34d399 !important;
+    }
+    [data-theme="dark"] .banner-icon.logged-out {
+      background: rgba(14, 165, 233, 0.2) !important;
+      color: #38bdf8 !important;
+    }
+
+    /* Modal Dark Theme */
+    [data-theme="dark"] .modal {
+      background: #10192e !important;
+      border: 1px solid #1e2e4f !important;
+      color: #f8fafc !important;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important;
+    }
+    [data-theme="dark"] .chat-feed {
+      background: #090e1a !important;
+      border: 1px solid #1e2e4f !important;
+    }
+    [data-theme="dark"] .chat-bubble-user {
+      background: #16223e !important;
+      border: 1px solid #1e2e4f !important;
+      color: #f8fafc !important;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25) !important;
+    }
+    [data-theme="dark"] .chat-bubble-user p {
+      color: #f8fafc !important;
+    }
+    [data-theme="dark"] .chat-bubble-admin {
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.28), rgba(99, 102, 241, 0.18)) !important;
+      border: 1px solid rgba(129, 140, 248, 0.4) !important;
+      color: #f8fafc !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
+    }
+    [data-theme="dark"] .chat-bubble-admin p {
+      color: #f8fafc !important;
+    }
+    [data-theme="dark"] .chat-bubble-admin .chat-admin-meta {
+      color: #a5b4fc !important;
+    }
+    [data-theme="dark"] .chat-bubble-admin .btn-outline {
+      background: rgba(99, 102, 241, 0.22) !important;
+      border-color: rgba(129, 140, 248, 0.45) !important;
+      color: #e0e7ff !important;
+    }
+    [data-theme="dark"] .chat-bubble-admin .btn-outline:hover {
+      background: rgba(99, 102, 241, 0.45) !important;
+      color: #ffffff !important;
+    }
+    [data-theme="dark"] .chat-bubble-user .btn-outline {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border-color: #1e2e4f !important;
+      color: #cbd5e1 !important;
+    }
+    [data-theme="dark"] .chat-bubble-user .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.16) !important;
+      color: #ffffff !important;
+    }
+    [data-theme="dark"] .chat-bubble-notes {
+      background: rgba(245, 158, 11, 0.14) !important;
+      border: 1px solid rgba(245, 158, 11, 0.35) !important;
+      color: #fef3c7 !important;
+    }
+    [data-theme="dark"] .chat-bubble-notes p {
+      color: #fde68a !important;
+    }
+    [data-theme="dark"] .chat-bubble-notes .notes-meta {
+      color: #fbbf24 !important;
+    }
+    [data-theme="dark"] #chatReplyInput {
+      background: #0d1527 !important;
+      border: 1.5px solid #1e2e4f !important;
+      color: #f8fafc !important;
+    }
+    [data-theme="dark"] #chatReplyInput::placeholder {
+      color: #64748b !important;
+    }
+    [data-theme="dark"] #chatReplyInput:focus {
+      background: #16223e !important;
+      border-color: var(--primary) !important;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important;
+    }
+    [data-theme="dark"] #chatModal .btn-outline {
+      background: #16223e !important;
+      border-color: #1e2e4f !important;
+      color: #f8fafc !important;
+    }
+    [data-theme="dark"] #chatModal .btn-outline:hover {
+      background: #1e2e4f !important;
+      color: #38bdf8 !important;
+    }
+    [data-theme="dark"] #chatModalUserName {
+      color: #f8fafc !important;
+    }
+    [data-theme="dark"] #chatModalUserEmail {
+      color: #94a3b8 !important;
     }
 
     /* Toast Notification */
@@ -311,6 +563,9 @@
             <button type="button" class="tab-btn" id="tabFeedback" style="display:none;" onclick="switchMainTab('feedback')">
               <i class="fa-solid fa-star" style="color: #f59e0b;"></i> Client Feedbacks (<span id="fbCountBadge">0</span>)
             </button>
+            <button type="button" class="tab-btn" id="tabManageAdmins" style="display:none;" onclick="switchMainTab('manage-admins')">
+              <i class="fa-solid fa-users-gear" style="color: #7c3aed;"></i> Manage Admins
+            </button>
           </div>
 
           <!-- Sleek Support Contact Badges -->
@@ -374,7 +629,10 @@
               <i class="fa-solid fa-comments" style="color: var(--primary);"></i> My Messages &amp; Live Replies
             </h3>
             <div id="userMsgList">
-              <p style="color: var(--text-muted); font-size: 14px;">No messages sent yet.</p>
+              <div style="text-align: center; padding: 30px 20px; color: var(--primary);">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size: 28px; margin-bottom: 8px;"></i>
+                <p style="font-size: 13px; font-weight: 700; color: var(--text-muted);">Loading conversation messages...</p>
+              </div>
             </div>
           </div>
         </div>
@@ -397,29 +655,18 @@
             </div>
           </div>
 
-          <!-- Stats Row -->
-          <div class="stats-row">
-            <div class="stat-card">
-              <div class="stat-val" id="statTotal">0</div>
-              <div class="stat-lbl">User Chats</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-val" style="color: var(--primary);" id="statLogged">0</div>
-              <div class="stat-lbl">Logged-In Users</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-val" style="color: var(--secondary);" id="statGuest">0</div>
-              <div class="stat-lbl">Guest Users</div>
-            </div>
-          </div>
-
-          <!-- Admin Sub Tabs & Search -->
+          <!-- Admin Sub Tabs with Integrated Counts & Horizontal Scroll -->
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
-            <div class="nav-tabs" style="border: none; padding: 0; margin: 0;">
-              <button type="button" class="tab-btn active" id="adminSubAll" onclick="filterAdminView('all')">All Chats</button>
-              <button type="button" class="tab-btn" id="adminSubLogged" onclick="filterAdminView('logged')">Logged In</button>
-              <button type="button" class="tab-btn" id="adminSubGuest" onclick="filterAdminView('guest')">Guests</button>
-              <button type="button" class="tab-btn" id="adminSubAdmins" onclick="filterAdminView('admins')">Manage Admins</button>
+            <div class="nav-tabs" style="border: none; padding: 0; margin: 0; display: flex; gap: 8px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; max-width: 100%;">
+              <button type="button" class="tab-btn active" id="adminSubAll" onclick="filterAdminView('all')">
+                All Chats (<span id="statTotal">0</span>)
+              </button>
+              <button type="button" class="tab-btn" id="adminSubLogged" onclick="filterAdminView('logged')">
+                Logged In (<span id="statLogged">0</span>)
+              </button>
+              <button type="button" class="tab-btn" id="adminSubGuest" onclick="filterAdminView('guest')">
+                Guests (<span id="statGuest">0</span>)
+              </button>
             </div>
 
             <input type="text" id="adminSearch" class="form-control" style="max-width: 280px;" placeholder="Search user name or email..." oninput="renderAdminMessages()">
@@ -427,25 +674,9 @@
 
           <!-- Messages Stream for Admin -->
           <div id="adminMsgList">
-            <p style="color: var(--text-muted);">Loading user chats...</p>
-          </div>
-
-          <!-- Manage Admins Panel -->
-          <div id="adminEmailsPanel" style="display: none;">
-            <div class="card">
-              <div class="card-title"><i class="fa-solid fa-user-plus" style="color: var(--primary);"></i> Add Authorized Admin Email</div>
-              <div class="form-group">
-                <label for="newAdminEmail">Admin Email Address</label>
-                <input type="email" id="newAdminEmail" class="form-control" placeholder="e.g. admin@gmail.com">
-              </div>
-              <button type="button" class="btn btn-primary" onclick="addNewAdminEmail()">
-                <i class="fa-solid fa-plus"></i> Add Admin Email
-              </button>
-            </div>
-
-            <div class="card">
-              <div class="card-title"><i class="fa-solid fa-users-gear"></i> Current Authorized Admins in Firestore</div>
-              <div id="adminList">Loading admins...</div>
+            <div style="text-align: center; padding: 35px 20px; color: var(--primary);">
+              <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 32px; margin-bottom: 10px;"></i>
+              <p style="font-size: 14px; font-weight: 700; color: var(--text-muted);">Loading user chat conversations...</p>
             </div>
           </div>
         </div>
@@ -494,7 +725,45 @@
 
           <!-- Feedbacks List Container -->
           <div id="adminFeedbackList">
-            <p style="color: var(--text-muted); text-align: center; padding: 20px;">Loading client feedbacks...</p>
+            <div style="text-align: center; padding: 35px 20px; color: #D97706;">
+              <i class="fa-solid fa-spinner fa-spin" style="font-size: 32px; margin-bottom: 10px;"></i>
+              <p style="font-size: 14px; font-weight: 700; color: var(--text-muted);">Loading client feedbacks &amp; reviews...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- MANAGE ADMINS SECTION (MANAGER / OWNER ONLY) -->
+        <div id="sectionManageAdmins" style="display: none;">
+          <div class="card" style="background: linear-gradient(135deg, #F3E8FF, #E9D5FF); border-color: #C084FC;">
+            <div>
+              <h3 style="color: #6B21A8; font-size: 22px; font-weight: 800;">
+                <i class="fa-solid fa-users-gear" style="color: #7C3AED;"></i> Authorized Admins Management
+              </h3>
+              <p style="font-size: 13px; color: #581C87; margin-top: 4px; font-weight: 600;">
+                Add or revoke admin permissions for support staff. Master Manager Access Only.
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><i class="fa-solid fa-user-plus" style="color: #7C3AED;"></i> Add Authorized Admin Email</div>
+            <div class="form-group">
+              <label for="newAdminEmail">Admin Email Address</label>
+              <input type="email" id="newAdminEmail" class="form-control" placeholder="e.g. admin@gmail.com">
+            </div>
+            <button type="button" class="btn btn-primary" style="background: #7C3AED; border-color: #7C3AED;" onclick="addNewAdminEmail()">
+              <i class="fa-solid fa-plus"></i> Add Admin Email
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><i class="fa-solid fa-users-gear"></i> Current Authorized Admins in Firestore</div>
+            <div id="adminList">
+              <div style="text-align: center; padding: 20px; color: #7C3AED;">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 6px;"></i>
+                <p style="font-size: 13px; font-weight: 700; color: var(--text-muted);">Loading authorized admins...</p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -567,7 +836,7 @@
         <span id="chatModalUserBadge" class="pill pill-logged">LOGGED IN</span>
       </div>
 
-      <div id="chatFeed" style="flex: 1; overflow-y: auto; padding: 14px; background: #F1F5F9; border-radius: 16px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 14px;">
+      <div id="chatFeed" class="chat-feed">
         <!-- Chat bubbles rendered dynamically -->
       </div>
 
@@ -635,8 +904,25 @@
     const db = getFirestore(app);
 
     // Global State Variables
-    window.currentUser = null;
+    const cachedLoggedIn = localStorage.getItem('godoz_auth_logged_in') === 'true';
+    const cachedName = localStorage.getItem('godoz_auth_name') || '';
+    const cachedEmail = localStorage.getItem('godoz_auth_email') || '';
+    const cachedUid = localStorage.getItem('godoz_auth_uid') || '';
+    const cachedAvatar = localStorage.getItem('godoz_user_avatar') || '';
+
+    if (cachedLoggedIn && (cachedEmail || cachedUid)) {
+      window.currentUser = {
+        uid: cachedUid,
+        email: cachedEmail,
+        displayName: cachedName,
+        photoURL: cachedAvatar
+      };
+    } else {
+      window.currentUser = null;
+    }
+    window.isManagerUser = false;
     window.isAdminUser = false;
+
     window.allMessagesData = [];
     window.allFeedbacksData = [];
     window.filterFbRating = 'all';
@@ -649,13 +935,25 @@
     let adminEmailsUnsub = null;
     let feedbacksUnsub = null;
 
-    // Initialize Auth Listener (Automatic Global Sync with Header & Sidebar)
-    onAuthStateChanged(auth, async (user) => {
-      window.currentUser = user;
+    // Run Instant UI Sync on 0ms Page Load
+    setTimeout(() => {
       updateHeaderUI();
       updateUserBannerUI();
+      updateAdminEmailControls();
+      if (window.isManagerUser) {
+        const tabAdm = document.getElementById('tabAdmin');
+        const tabFb = document.getElementById('tabFeedback');
+        const tabMgr = document.getElementById('tabManageAdmins');
+        if (tabAdm) tabAdm.style.display = 'inline-block';
+        if (tabFb) tabFb.style.display = 'inline-block';
+        if (tabMgr) tabMgr.style.display = 'inline-block';
+      }
+    }, 0);
 
+    // Initialize Auth Listener (Automatic Global Sync with Header & Sidebar)
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
+        window.currentUser = user;
         try {
           localStorage.setItem('godoz_auth_logged_in', 'true');
           localStorage.setItem('godoz_auth_uid', user.uid);
@@ -668,53 +966,117 @@
           window.updateNavAuthStatus(true, user);
         }
 
-        window.isAdminUser = await checkIfAdmin(user.email);
-        document.getElementById('tabAdmin').style.display = window.isAdminUser ? 'inline-block' : 'none';
+        window.isManagerUser = await checkIsManager(user.email);
+        window.isAdminUser = window.isManagerUser || (await checkIfAdmin(user.email));
+
+        updateHeaderUI();
+        updateUserBannerUI();
+        updateAdminEmailControls();
+        document.getElementById('tabAdmin').style.display = window.isManagerUser ? 'inline-block' : 'none';
         const tabFb = document.getElementById('tabFeedback');
-        if (tabFb) tabFb.style.display = window.isAdminUser ? 'inline-block' : 'none';
+        if (tabFb) tabFb.style.display = window.isManagerUser ? 'inline-block' : 'none';
+        const tabMgr = document.getElementById('tabManageAdmins');
+        if (tabMgr) tabMgr.style.display = window.isManagerUser ? 'inline-block' : 'none';
 
-        listenUserMessages(user.uid);
+        listenUserMessages(user);
 
-        if (window.isAdminUser) {
+        if (window.isManagerUser) {
           listenAllMessagesForAdmin();
           listenAdminEmails();
           listenAllFeedbacksForAdmin();
         }
       } else {
-        try {
-          localStorage.setItem('godoz_auth_logged_in', 'false');
-        } catch(e) {}
+        const stillLoggedIn = isUserLoggedIn();
+        if (!stillLoggedIn) {
+          window.currentUser = null;
+          try {
+            localStorage.setItem('godoz_auth_logged_in', 'false');
+          } catch(e) {}
 
-        if (typeof window.updateNavAuthStatus === 'function') {
-          window.updateNavAuthStatus(false);
+          if (typeof window.updateNavAuthStatus === 'function') {
+            window.updateNavAuthStatus(false);
+          }
+
+          window.isManagerUser = false;
+          window.isAdminUser = false;
+          updateHeaderUI();
+          updateUserBannerUI();
+          updateAdminEmailControls();
+
+          document.getElementById('tabAdmin').style.display = 'none';
+          const tabFb = document.getElementById('tabFeedback');
+          if (tabFb) tabFb.style.display = 'none';
+          document.getElementById('userRepliesContainer').style.display = 'none';
+          if (userMessagesUnsub) userMessagesUnsub();
+          if (feedbacksUnsub) feedbacksUnsub();
+        } else {
+          // Keep hydrated cached session alive while Firebase network reconnects
+          updateHeaderUI();
+          updateUserBannerUI();
+          updateAdminEmailControls();
         }
-
-        window.isAdminUser = false;
-        document.getElementById('tabAdmin').style.display = 'none';
-        const tabFb = document.getElementById('tabFeedback');
-        if (tabFb) tabFb.style.display = 'none';
-        document.getElementById('userRepliesContainer').style.display = 'none';
-        if (userMessagesUnsub) userMessagesUnsub();
-        if (feedbacksUnsub) feedbacksUnsub();
       }
     });
 
-    async function checkIfAdmin(email) {
-      if (!email) return false;
-      const cleanEmail = email.toLowerCase().trim();
+    async function checkIsManager(email) {
+      const user = window.currentUser;
+      if (!user) return false;
 
-      try {
-        const docRef = doc(db, "admins", cleanEmail);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) return true;
-
-        const q = query(collection(db, "admins"), where("email", "==", cleanEmail));
-        const snap = await getDocs(q);
-        return !snap.empty;
-      } catch (e) {
-        console.error("Error checking admin status", e);
-        return false;
+      const managerEmails = [...new Set([email, user.email].filter(Boolean).map(value => value.toLowerCase().trim()))];
+      for (const managerEmail of managerEmails) {
+        const managerDoc = await getDoc(doc(db, "managers", managerEmail));
+        if (managerDoc.exists() && managerDoc.data()?.active !== false) return true;
       }
+
+      if (user.uid) {
+        const managerDoc = await getDoc(doc(db, "managers", user.uid));
+        if (managerDoc.exists() && managerDoc.data()?.active !== false) return true;
+
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        const role = (userDoc.data()?.role || '').toLowerCase().trim();
+        if (userDoc.exists() && (role === 'manager' || role === 'owner')) return true;
+      }
+
+      const managers = await getDocs(collection(db, "managers"));
+      const normalizedEmail = user.email?.toLowerCase().trim();
+      return managers.docs.some(managerDoc => {
+        const data = managerDoc.data() || {};
+        if (data.active === false) return false;
+        const managerEmail = (data.email || data.Email || data.userEmail || data.user_email || '').toLowerCase().trim();
+        const managerUid = data.uid || data.userId || data.user_id || '';
+        return managerDoc.id.toLowerCase().trim() === normalizedEmail ||
+          managerDoc.id === user.uid ||
+          (!!normalizedEmail && managerEmail === normalizedEmail) ||
+          managerUid === user.uid ||
+          Object.values(data).some(value =>
+            typeof value === 'string' && !!normalizedEmail && value.toLowerCase().trim() === normalizedEmail
+          );
+      });
+
+    }
+
+    async function checkIfAdmin(email) {
+      if (await checkIsManager(email)) return true;
+
+      const user = window.currentUser;
+      if (!user) return false;
+
+      const adminEmails = [...new Set([email, user.email].filter(Boolean).map(value => value.toLowerCase().trim()))];
+      for (const adminEmail of adminEmails) {
+        const adminDoc = await getDoc(doc(db, "admins", adminEmail));
+        if (adminDoc.exists() && adminDoc.data()?.active !== false) return true;
+      }
+
+      if (user.uid) {
+        const adminDoc = await getDoc(doc(db, "admins", user.uid));
+        if (adminDoc.exists() && adminDoc.data()?.active !== false) return true;
+
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        const role = (userDoc.data()?.role || '').toLowerCase().trim();
+        if (userDoc.exists() && (role === 'admin' || role === 'manager' || role === 'owner')) return true;
+      }
+
+      return false;
     }
 
     // Check redirect sign in result
@@ -756,6 +1118,14 @@
       }
     };
 
+    function isUserLoggedIn() {
+      if (window.currentUser) return true;
+      const loggedIn = localStorage.getItem('godoz_auth_logged_in') === 'true';
+      const email = localStorage.getItem('godoz_auth_email');
+      const uid = localStorage.getItem('godoz_auth_uid');
+      return loggedIn && Boolean(email || uid);
+    }
+
     function updateHeaderUI() {
       const navActions = document.getElementById('navActions');
       if (!navActions) return;
@@ -764,16 +1134,18 @@
         <a href="tel:+919288521731" style="display: inline-flex; align-items: center; gap: 8px; background: var(--primary-light); color: var(--primary); padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: 13px; text-decoration: none; border: 1px solid #C7D2FE; transition: transform 0.2s;">
           <i class="fa-solid fa-phone"></i> Call +91 9288521731
         </a>
-        <a href="mailto:godoz.info@gmail.com" style="display: inline-flex; align-items: center; gap: 8px; background: #E0F2FE; color: #0369A1; padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: 13px; text-decoration: none; border: 1px solid #BAE6FD; transition: transform 0.2s;">
+        <a href="mailto:godoz.info@gmail.com" style="display: inline-flex; align- items: center; gap: 8px; background: #E0F2FE; color: #0369A1; padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: 13px; text-decoration: none; border: 1px solid #BAE6FD; transition: transform 0.2s;">
           <i class="fa-solid fa-envelope"></i> Email godoz.info@gmail.com
         </a>
       `;
 
-      if (window.currentUser) {
+      if (isUserLoggedIn()) {
+        const uName = window.currentUser?.displayName || localStorage.getItem('godoz_auth_name') || localStorage.getItem('godoz_auth_email') || 'User';
+        const uPhoto = window.currentUser?.photoURL || localStorage.getItem('godoz_user_avatar') || 'https://via.placeholder.com/30';
         navActions.innerHTML = `
           <div class="user-badge">
-            <img src="${window.currentUser.photoURL || 'https://via.placeholder.com/30'}" alt="User">
-            <span>${window.currentUser.displayName || window.currentUser.email}</span>
+            <img src="${uPhoto}" alt="User">
+            <span>${escapeHtml(uName)}</span>
           </div>
           ${contactBadges}
         `;
@@ -787,18 +1159,27 @@
       const guestNameInput = document.getElementById('guestName');
       const guestEmailInput = document.getElementById('guestEmail');
 
-      if (window.currentUser) {
-        if (banner) banner.style.display = 'none'; // LOGGED IN: HIDE GUEST MODE BANNER
+      const loggedIn = isUserLoggedIn();
+
+      if (loggedIn) {
+        if (banner) {
+          banner.style.setProperty('display', 'none', 'important');
+        }
+        const uName = window.currentUser?.displayName || localStorage.getItem('godoz_auth_name') || '';
+        const uEmail = window.currentUser?.email || localStorage.getItem('godoz_auth_email') || '';
+
         if (guestNameInput) {
-          guestNameInput.value = window.currentUser.displayName || 'Google User';
+          guestNameInput.value = uName;
           guestNameInput.disabled = true;
         }
         if (guestEmailInput) {
-          guestEmailInput.value = window.currentUser.email || '';
+          guestEmailInput.value = uEmail;
           guestEmailInput.disabled = true;
         }
       } else {
-        if (banner) banner.style.display = 'flex'; // LOGGED OUT: SHOW GUEST MODE BANNER
+        if (banner) {
+          banner.style.setProperty('display', 'flex', 'important');
+        }
         if (guestNameInput) {
           guestNameInput.value = '';
           guestNameInput.disabled = false;
@@ -807,6 +1188,13 @@
           guestEmailInput.value = '';
           guestEmailInput.disabled = false;
         }
+      }
+    }
+
+    function updateAdminEmailControls() {
+      const addEmailCard = document.getElementById('adminAddEmailCard');
+      if (addEmailCard) {
+        addEmailCard.style.display = window.isManagerUser ? '' : 'none';
       }
     }
 
@@ -887,7 +1275,7 @@
         let targetEmail = email || `${digits}@phone.user`;
         let targetPhone = phone || null;
 
-        await setDoc(doc(db, "registered_users", targetUid), {
+        await setDoc(doc(db, "users", targetUid), {
           uid: targetUid,
           email: targetEmail,
           displayName: name,
@@ -964,21 +1352,36 @@
     };
 
     let prevRepliedCountWeb = -1;
-    function listenUserMessages(uid) {
+    function listenUserMessages(userOrUid) {
       requestWebNotificationPermission();
       document.getElementById('userRepliesContainer').style.display = 'block';
-      const q = query(collection(db, "messages"), where("senderUid", "==", uid));
+
+      const userObj = (typeof userOrUid === 'object' && userOrUid) ? userOrUid : window.currentUser;
+      const uid = userObj?.uid || (typeof userOrUid === 'string' ? userOrUid : localStorage.getItem('godoz_auth_uid'));
+      const email = (userObj?.email || localStorage.getItem('godoz_auth_email') || '').toLowerCase().trim();
+      const phoneDigits = (userObj?.phoneNumber || localStorage.getItem('godoz_user_phone') || '').replace(/\D/g, '').slice(-10);
+
+      const q = query(collection(db, "messages"), orderBy("timestamp", "desc"));
 
       userMessagesUnsub = onSnapshot(q, (snapshot) => {
-        const msgs = snapshot.docs.map(doc => doc.data()).sort((a,b) => b.timestamp - a.timestamp);
+        const allMsgs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-        const currentReplied = msgs.filter(m => m.replyText && m.replyText.trim() !== "").length;
+        // Match user messages strictly by UID or Email
+        const userMsgs = allMsgs.filter(m => {
+          if (uid && m.senderUid === uid) return true;
+          if (email && m.senderEmail && m.senderEmail.toLowerCase().trim() === email) return true;
+          return false;
+        });
+
+        userMsgs.sort((a,b) => b.timestamp - a.timestamp);
+
+        const currentReplied = userMsgs.filter(m => m.replyText && m.replyText.trim() !== "").length;
         if (prevRepliedCountWeb !== -1 && currentReplied > prevRepliedCountWeb) {
-          sendWebNotification("💬 Admin Replied!", "Admin has replied to your message. Click to view.");
+          sendWebNotification("💬 Admin Replied!", "Admin has replied to your message or logged complaint. Click to view.");
         }
         prevRepliedCountWeb = currentReplied;
 
-        renderUserMessages(msgs);
+        renderUserMessages(userMsgs);
       });
     }
 
@@ -997,13 +1400,25 @@
       `;
 
       if (msgs.length === 0) {
-        container.innerHTML = welcomeHtml + '<p style="color: var(--text-muted); font-size: 13px;">No messages sent yet. Type your message below to start chatting!</p>';
+        container.innerHTML = welcomeHtml + `
+          <div class="card" style="text-align: center; padding: 24px; margin-top: 14px;">
+            <i class="fa-solid fa-comments" style="font-size: 32px; color: var(--text-muted); margin-bottom: 8px;"></i>
+            <h4 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">No message found</h4>
+            <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Type your message or inquiry below to start chatting with GoDoz Support.</p>
+          </div>
+        `;
         return;
       }
 
       container.innerHTML = welcomeHtml + msgs.map(m => {
         const dateStr = new Date(m.timestamp).toLocaleString();
-        const isReplied = m.replyText && m.replyText.trim() !== "";
+
+        // Extract all replies (Multiple Replies Support)
+        const repliesList = Array.isArray(m.replies) && m.replies.length > 0
+          ? m.replies
+          : (m.replyText ? [{ id: 'rep_0', text: m.replyText, timestamp: m.repliedAt || m.timestamp, senderName: 'Godoz Support' }] : []);
+
+        const isReplied = repliesList.length > 0;
         const lineCount = (m.messageText || '').split('\n').length;
         const isLongMsg = lineCount > 25 || (m.messageText || '').length > 1000;
 
@@ -1013,7 +1428,7 @@
               <span class="msg-date"><i class="fa-regular fa-clock"></i> ${dateStr}</span>
               <span class="pill ${isReplied ? 'pill-replied' : 'pill-pending'}">
                 <i class="fa-solid ${isReplied ? 'fa-check-circle' : 'fa-hourglass-half'}"></i>
-                ${isReplied ? 'Replied by Godoz Support' : 'Pending Reply'}
+                ${isReplied ? `Replied (${repliesList.length})` : 'Pending Reply'}
               </span>
             </div>
 
@@ -1032,24 +1447,42 @@
               </button>
             </div>
 
-            ${isReplied ? `
-              <div class="reply-box">
-                <div class="reply-title"><i class="fa-solid fa-shield-halved"></i> Godoz Support (godoz.info@gmail.com) • ${new Date(m.repliedAt).toLocaleTimeString()}</div>
-                <div class="text-expandable">
-                  <p style="font-size: 14px; color: var(--text-main); font-weight: 600; white-space: pre-wrap;">${escapeHtml(m.replyText)}</p>
+            ${repliesList.map((r, rIdx) => {
+              const isClientReply = r.senderRole === 'client';
+              return `
+                <div class="reply-box" style="margin-top: 10px; background: ${isClientReply ? '#ECFDF5' : 'var(--primary-light)'}; border: 1.5px solid ${isClientReply ? '#A7F3D0' : '#C7D2FE'}; border-left: 4px solid ${isClientReply ? '#10B981' : 'var(--primary)'}; border-radius: 12px; padding: 12px 16px;">
+                  <div class="reply-title" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="font-weight: 800; font-size: 13px; color: ${isClientReply ? '#065F46' : '#312E81'};">
+                      <i class="fa-solid ${isClientReply ? 'fa-user' : 'fa-shield-halved'}" style="color: ${isClientReply ? '#059669' : 'var(--primary)'};"></i>
+                      ${escapeHtml(r.senderName || (isClientReply ? 'Client Reply' : 'GoDoz Support'))} • ${new Date(r.timestamp || m.timestamp).toLocaleTimeString()}
+                    </span>
+                    ${window.isAdminUser ? `
+                      <button type="button" class="btn btn-outline btn-sm" style="padding: 2px 8px; font-size: 10px;" onclick="editReplySPA('${m.id}', '${r.id || rIdx}')">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                      </button>
+                    ` : ''}
+                  </div>
+                  <div class="text-expandable">
+                    <p style="font-size: 14px; color: ${isClientReply ? '#047857' : 'var(--text-main)'}; font-weight: 600; white-space: pre-wrap; margin:0;">${escapeHtml(r.text)}</p>
+                  </div>
+                  <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
+                    <button type="button" class="btn btn-outline btn-sm" style="padding: 2px 8px; font-size: 10px;" onclick="copyToClipboard(\`${escapeJsString(r.text)}\`)">
+                      <i class="fa-regular fa-copy"></i> Copy Reply
+                    </button>
+                  </div>
                 </div>
-                ${(m.replyText || '').split('\n').length > 25 || (m.replyText || '').length > 1000 ? `
-                  <button type="button" class="btn-toggle-expand" onclick="toggleExpandText(this)">
-                    Show More... <i class="fa-solid fa-chevron-down"></i>
-                  </button>
-                ` : ''}
-                <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
-                  <button type="button" class="btn btn-outline btn-sm" onclick="copyToClipboard(\`${escapeJsString(m.replyText)}\`)">
-                    <i class="fa-regular fa-copy"></i> Copy Reply
-                  </button>
-                </div>
+              `;
+            }).join('')}
+
+            <!-- 2-Way Live Ticket Reply Box for Client -->
+            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border);">
+              <div style="display: flex; gap: 8px; align-items: flex-end;">
+                <textarea id="clientReplyInput_${m.id}" class="form-control" style="min-height: 42px; height: 42px; padding: 10px 14px; font-size: 13px;" placeholder="Reply to GoDoz Support in this thread..."></textarea>
+                <button type="button" class="btn btn-primary btn-sm" style="height: 42px; padding: 0 16px; flex-shrink: 0; font-weight: 700;" onclick="sendClientReplySPA('${m.id}')">
+                  <i class="fa-solid fa-paper-plane"></i> Reply
+                </button>
               </div>
-            ` : ''}
+            </div>
           </div>
         `;
       }).join('');
@@ -1157,7 +1590,13 @@
       }
 
       if (filtered.length === 0) {
-        container.innerHTML = '<div class="card"><p style="color: var(--text-muted); text-align: center; font-weight: 600;">No chat conversations found.</p></div>';
+        container.innerHTML = `
+          <div class="card" style="text-align: center; padding: 30px 20px;">
+            <i class="fa-solid fa-inbox" style="font-size: 36px; color: var(--text-muted); margin-bottom: 10px;"></i>
+            <h4 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">No message found</h4>
+            <p style="color: var(--text-muted); font-size: 13px; font-weight: 600; margin: 0;">No user chat conversations match your selected view or search criteria.</p>
+          </div>
+        `;
         return;
       }
 
@@ -1213,35 +1652,57 @@
       const feed = document.getElementById('chatFeed');
       feed.innerHTML = thread.messages.map(m => {
         const timeStr = new Date(m.timestamp).toLocaleString();
+
+        // Extract multi-replies for this message
+        const repliesList = Array.isArray(m.replies) && m.replies.length > 0
+          ? m.replies
+          : (m.replyText ? [{ id: 'rep_0', text: m.replyText, timestamp: m.repliedAt || m.timestamp, senderName: 'Godoz Support' }] : []);
+
         return `
           <div class="chat-bubble-user">
-            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 700;">
-              ${escapeHtml(m.senderName)} • ${timeStr}
+            <div class="chat-user-meta" style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 700; display: flex; justify-content: space-between; align-items: center;">
+              <span>${escapeHtml(m.senderName)} • ${timeStr}</span>
+              ${window.isAdminUser ? `
+                <button type="button" class="btn btn-outline btn-sm" style="padding: 1px 6px; font-size: 10px;" onclick="editMessageSPA('${m.id}')">
+                  <i class="fa-solid fa-pen-to-square"></i> Edit Msg
+                </button>
+              ` : ''}
             </div>
-            <p style="font-size: 14px; font-weight: 600; white-space: pre-wrap;">${escapeHtml(m.messageText)}</p>
+            <p style="font-size: 14px; font-weight: 600; white-space: pre-wrap; margin:0;">${escapeHtml(m.messageText)}</p>
             <div style="margin-top: 6px; text-align: right;">
               <button type="button" class="btn btn-outline btn-sm" style="padding: 2px 8px; font-size: 10px;" onclick="copyToClipboard(\`${escapeJsString(m.messageText)}\`)"><i class="fa-regular fa-copy"></i> Copy</button>
             </div>
           </div>
 
-          ${m.replyText ? `
-            <div class="chat-bubble-admin">
-              <div style="font-size: 11px; color: var(--primary); margin-bottom: 4px; font-weight: 800;">
-                <i class="fa-solid fa-reply"></i> Admin Reply • ${m.repliedAt ? new Date(m.repliedAt).toLocaleTimeString() : ''}
+          ${repliesList.map((r, rIdx) => {
+            const isClientReply = r.senderRole === 'client';
+            return `
+              <div class="${isClientReply ? 'chat-bubble-user' : 'chat-bubble-admin'}" style="${isClientReply ? 'background: #ECFDF5; border: 1.5px solid #A7F3D0; border-left: 4px solid #10B981; margin-left: 0; margin-right: auto; max-width: 85%;' : 'background: var(--primary-light); border: 1.5px solid #C7D2FE; border-left: 4px solid var(--primary); margin-left: auto; margin-right: 0; max-width: 85%;'} border-radius: 14px; padding: 12px 16px; margin-top: 8px;">
+                <div class="chat-admin-meta" style="font-size: 11px; color: ${isClientReply ? '#065F46' : 'var(--primary)'}; margin-bottom: 4px; font-weight: 800; display: flex; justify-content: space-between; align-items: center;">
+                  <span>
+                    <i class="fa-solid ${isClientReply ? 'fa-user' : 'fa-reply'}"></i>
+                    ${escapeHtml(r.senderName || (isClientReply ? 'Client' : 'Admin Reply'))} • ${new Date(r.timestamp || m.timestamp).toLocaleTimeString()}
+                  </span>
+                  ${window.isAdminUser ? `
+                    <button type="button" class="btn btn-outline btn-sm" style="padding: 1px 6px; font-size: 10px;" onclick="editReplySPA('${m.id}', '${r.id || rIdx}')">
+                      <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </button>
+                  ` : ''}
+                </div>
+                <p style="font-size: 14px; font-weight: 600; white-space: pre-wrap; margin: 0; color: ${isClientReply ? '#047857' : 'var(--text-main)'};">${escapeHtml(r.text)}</p>
+                <div style="margin-top: 6px; text-align: right;">
+                  <button type="button" class="btn btn-outline btn-sm" style="padding: 2px 8px; font-size: 10px;" onclick="copyToClipboard(\`${escapeJsString(r.text)}\`)"><i class="fa-regular fa-copy"></i> Copy</button>
+                </div>
               </div>
-              <p style="font-size: 14px; font-weight: 600; white-space: pre-wrap;">${escapeHtml(m.replyText)}</p>
-              <div style="margin-top: 6px; text-align: right;">
-                <button type="button" class="btn btn-outline btn-sm" style="padding: 2px 8px; font-size: 10px;" onclick="copyToClipboard(\`${escapeJsString(m.replyText)}\`)"><i class="fa-regular fa-copy"></i> Copy</button>
-              </div>
-            </div>
-          ` : ''}
+            `;
+          }).join('')}
 
           ${m.adminNotes ? `
-            <div class="chat-bubble-admin" style="background: #FEF3C7; border-color: #FCD34D;">
-              <div style="font-size: 11px; color: #B45309; margin-bottom: 4px; font-weight: 800;">
+            <div class="chat-bubble-notes">
+              <div class="notes-meta" style="font-size: 11px; color: #B45309; margin-bottom: 4px; font-weight: 800;">
                 <i class="fa-solid fa-clipboard-check"></i> Action Notes
               </div>
-              <p style="font-size: 13px; font-weight: 600; white-space: pre-wrap;">${escapeHtml(m.adminNotes)}</p>
+              <p style="font-size: 13px; font-weight: 600; white-space: pre-wrap; margin: 0;">${escapeHtml(m.adminNotes)}</p>
             </div>
           ` : ''}
         `;
@@ -1283,20 +1744,181 @@
     };
 
     window.sendChatModalReply = async function() {
-      const reply = document.getElementById('chatReplyInput').value.trim();
-      if (!reply) { showToast("Type a reply first!"); return; }
+      const replyText = document.getElementById('chatReplyInput').value.trim();
+      if (!replyText) { showToast("Type a reply first!", true); return; }
+
+      const msgId = window.activeChatTargetMsgId;
+      if (!msgId) { showToast("No active conversation selected!", true); return; }
+
+      const targetDoc = window.allMessagesData.find(m => m.id === msgId);
+
+      let existingReplies = [];
+      if (targetDoc && Array.isArray(targetDoc.replies) && targetDoc.replies.length > 0) {
+        existingReplies = [...targetDoc.replies];
+      } else if (targetDoc && targetDoc.replyText) {
+        existingReplies = [{
+          id: 'rep_0',
+          text: targetDoc.replyText,
+          timestamp: targetDoc.repliedAt || targetDoc.timestamp || Date.now(),
+          senderName: 'Godoz Support'
+        }];
+      }
+
+      const newReply = {
+        id: 'rep_' + Date.now(),
+        text: replyText,
+        timestamp: Date.now(),
+        senderName: window.currentUser?.displayName || 'Godoz Support',
+        senderRole: 'admin'
+      };
+
+      existingReplies.push(newReply);
 
       try {
-        await updateDoc(doc(db, "messages", window.activeChatTargetMsgId), {
-          replyText: reply,
+        await updateDoc(doc(db, "messages", msgId), {
+          replies: existingReplies,
+          replyText: replyText,
           repliedAt: Date.now(),
           status: "replied"
         });
+
         document.getElementById('chatReplyInput').value = '';
-        closeModal('chatModal');
-        showToast("Reply sent to user!");
+        showToast("Reply added to thread successfully!");
+
+        if (window.activeChatThreadObject) {
+          openWhatsAppChatModal(window.activeChatThreadObject.threadKey);
+        }
       } catch (e) {
-        showToast(`Failed: ${e.message}`);
+        showToast(`Failed to send reply: ${e.message}`, true);
+      }
+    };
+
+    window.sendClientReplySPA = async function(msgId) {
+      const input = document.getElementById(`clientReplyInput_${msgId}`);
+      if (!input) return;
+      const text = input.value.trim();
+      if (!text) {
+        showToast("Type a reply first!", true);
+        return;
+      }
+
+      try {
+        const msgRef = doc(db, "messages", msgId);
+        const msgSnap = await getDoc(msgRef);
+        if (!msgSnap.exists()) {
+          showToast("Message conversation not found!", true);
+          return;
+        }
+
+        const mData = msgSnap.data();
+        let replies = Array.isArray(mData.replies) && mData.replies.length > 0
+          ? [...mData.replies]
+          : (mData.replyText ? [{ id: 'rep_0', text: mData.replyText, timestamp: mData.repliedAt || mData.timestamp, senderName: 'Godoz Support' }] : []);
+
+        const clientName = window.currentUser?.displayName || mData.senderName || 'Client';
+        const clientReply = {
+          id: 'rep_' + Date.now(),
+          text: text,
+          timestamp: Date.now(),
+          senderName: clientName,
+          senderRole: 'client'
+        };
+
+        replies.push(clientReply);
+
+        await updateDoc(msgRef, {
+          replies: replies,
+          replyText: text,
+          repliedAt: Date.now(),
+          status: "pending",
+          updatedAt: Date.now()
+        });
+
+        input.value = '';
+        showToast("Reply sent to GoDoz Support!");
+      } catch (err) {
+        showToast(`Error sending reply: ${err.message}`, true);
+      }
+    };
+
+    window.editReplySPA = async function(msgId, replyIdOrIndex) {
+      if (!window.isAdminUser) {
+        showToast("Permission Denied: Only Admins or Managers can edit replies!", true);
+        return;
+      }
+
+      const targetDoc = window.allMessagesData.find(m => m.id === msgId);
+      if (!targetDoc) return;
+
+      let replies = Array.isArray(targetDoc.replies) && targetDoc.replies.length > 0
+        ? [...targetDoc.replies]
+        : (targetDoc.replyText ? [{ id: 'rep_0', text: targetDoc.replyText, timestamp: targetDoc.repliedAt || Date.now(), senderName: 'Godoz Support' }] : []);
+
+      if (replies.length === 0) return;
+
+      let replyIndex = replies.findIndex(r => String(r.id) === String(replyIdOrIndex));
+      if (replyIndex === -1 && !isNaN(Number(replyIdOrIndex))) {
+        replyIndex = Number(replyIdOrIndex);
+      }
+      if (replyIndex === -1 || !replies[replyIndex]) replyIndex = replies.length - 1;
+
+      const currentText = replies[replyIndex].text || '';
+      const newText = prompt("Edit Admin Reply Text:", currentText);
+      if (newText === null) return;
+      const trimmedText = newText.trim();
+      if (!trimmedText) {
+        showToast("Reply text cannot be empty!", true);
+        return;
+      }
+
+      replies[replyIndex].text = trimmedText;
+      replies[replyIndex].editedAt = Date.now();
+
+      try {
+        await updateDoc(doc(db, "messages", msgId), {
+          replies: replies,
+          replyText: replies[replies.length - 1].text,
+          status: "replied"
+        });
+
+        showToast("Admin Reply updated successfully!");
+        if (window.activeChatThreadObject) {
+          openWhatsAppChatModal(window.activeChatThreadObject.threadKey);
+        }
+      } catch (err) {
+        showToast(`Error updating reply: ${err.message}`, true);
+      }
+    };
+
+    window.editMessageSPA = async function(msgId) {
+      if (!window.isAdminUser) {
+        showToast("Permission Denied: Only Admins or Managers can edit messages!", true);
+        return;
+      }
+
+      const targetDoc = window.allMessagesData.find(m => m.id === msgId);
+      if (!targetDoc) return;
+
+      const newMsgText = prompt("Edit Message / Complaint Details:", targetDoc.messageText || '');
+      if (newMsgText === null) return;
+      const trimmedMsg = newMsgText.trim();
+      if (!trimmedMsg) {
+        showToast("Message text cannot be empty!", true);
+        return;
+      }
+
+      try {
+        await updateDoc(doc(db, "messages", msgId), {
+          messageText: trimmedMsg,
+          editedAt: Date.now()
+        });
+
+        showToast("Message text updated successfully!");
+        if (window.activeChatThreadObject) {
+          openWhatsAppChatModal(window.activeChatThreadObject.threadKey);
+        }
+      } catch (err) {
+        showToast(`Error updating message: ${err.message}`, true);
       }
     };
 
@@ -1317,18 +1939,53 @@
         container.innerHTML = '<p style="color: var(--text-muted); font-size: 13px; font-weight: 600;">No custom admins in Firestore yet.</p>';
         return;
       }
-      container.innerHTML = admins.map(a => `
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border);">
-          <div>
-            <strong style="font-size: 15px;">${escapeHtml(a.email)}</strong>
-            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Added by ${escapeHtml(a.addedBy || 'system')}</div>
+
+      const isMgr = !!window.isManagerUser;
+
+      container.innerHTML = admins.map(a => {
+        const emailStr = a.email || a.id || '';
+        return `
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border);">
+            <div>
+              <strong style="font-size: 15px; color: var(--text-main);">${escapeHtml(emailStr)}</strong>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Added by ${escapeHtml(a.addedBy || 'system')}</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="pill pill-replied"><i class="fa-solid fa-user-shield"></i> Active Admin</span>
+              ${isMgr ? `
+                <button type="button" class="btn btn-sm" style="background: rgba(239, 68, 68, 0.1); color: #dc2626; border: 1px solid #fecaca; font-weight: 700;" onclick="removeAdminEmailSPA('${escapeJsString(emailStr)}')">
+                  <i class="fa-solid fa-user-minus"></i> Remove
+                </button>
+              ` : ''}
+            </div>
           </div>
-          <span class="pill pill-replied"><i class="fa-solid fa-user-shield"></i> Active Admin</span>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
+    window.removeAdminEmailSPA = async function(email) {
+      if (!email) return;
+      if (!window.isManagerUser) {
+        showToast("Permission Denied: Only Master Manager or Owner can remove Admin accounts!", true);
+        return;
+      }
+
+      if (!confirm(`Are you sure you want to remove Admin permissions for "${email}"?`)) return;
+
+      try {
+        const cleanEmail = email.toLowerCase().trim();
+        await deleteDoc(doc(db, "admins", cleanEmail));
+        showToast(`Removed Admin access for ${cleanEmail}!`);
+      } catch (err) {
+        showToast(`Error removing admin: ${err.message}`, true);
+      }
+    };
     window.addNewAdminEmail = async function() {
+      if (!window.isManagerUser) {
+        showToast("Permission Denied: Only Master Manager or Owner can add Admin accounts!", true);
+        return;
+      }
+
       const email = document.getElementById('newAdminEmail').value.trim().toLowerCase();
       if (!email) { showToast("Enter a valid email"); return; }
 
@@ -1346,49 +2003,89 @@
     };
 
     window.switchMainTab = function(tab) {
-      document.getElementById('tabHome').classList.remove('active');
-      document.getElementById('tabAdmin').classList.remove('active');
+      document.getElementById('tabHome')?.classList.remove('active');
+      document.getElementById('tabAdmin')?.classList.remove('active');
       const tabFb = document.getElementById('tabFeedback');
       if (tabFb) tabFb.classList.remove('active');
+      const tabMgr = document.getElementById('tabManageAdmins');
+      if (tabMgr) tabMgr.classList.remove('active');
 
       const secUser = document.getElementById('sectionUser');
       const secAdmin = document.getElementById('sectionAdmin');
       const secFb = document.getElementById('sectionFeedback');
+      const secMgr = document.getElementById('sectionManageAdmins');
 
       if (tab === 'user') {
-        document.getElementById('tabHome').classList.add('active');
+        document.getElementById('tabHome')?.classList.add('active');
         if (secUser) secUser.style.display = 'block';
         if (secAdmin) secAdmin.style.display = 'none';
         if (secFb) secFb.style.display = 'none';
+        if (secMgr) secMgr.style.display = 'none';
       } else if (tab === 'admin') {
-        document.getElementById('tabAdmin').classList.add('active');
+        if (!window.isManagerUser) {
+          showToast("Permission Denied: Only Master Manager / Owner can access Admin Panel!", true);
+          return;
+        }
+        document.getElementById('tabAdmin')?.classList.add('active');
         if (secUser) secUser.style.display = 'none';
         if (secAdmin) secAdmin.style.display = 'block';
         if (secFb) secFb.style.display = 'none';
+        if (secMgr) secMgr.style.display = 'none';
       } else if (tab === 'feedback') {
+        if (!window.isManagerUser) {
+          showToast("Permission Denied: Only Master Manager / Owner can access Client Feedbacks!", true);
+          return;
+        }
         if (tabFb) tabFb.classList.add('active');
         if (secUser) secUser.style.display = 'none';
         if (secAdmin) secAdmin.style.display = 'none';
         if (secFb) secFb.style.display = 'block';
+        if (secMgr) secMgr.style.display = 'none';
         renderAdminFeedbacks();
+      } else if (tab === 'manage-admins') {
+        if (!window.isManagerUser) {
+          showToast("Permission Denied: Only Master Manager or Owner can manage admin accounts!", true);
+          return;
+        }
+        if (tabMgr) tabMgr.classList.add('active');
+        if (secUser) secUser.style.display = 'none';
+        if (secAdmin) secAdmin.style.display = 'none';
+        if (secFb) secFb.style.display = 'none';
+        if (secMgr) secMgr.style.display = 'block';
       }
     };
 
     function listenAllFeedbacksForAdmin() {
-      const q = query(collection(db, "reviews"));
-      feedbacksUnsub = onSnapshot(q, (snapshot) => {
-        window.allFeedbacksData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const qRating = query(collection(db, "Rating"));
+      feedbacksUnsub = onSnapshot(qRating, (snapshotRating) => {
+        let ratingsList = snapshotRating.docs.map(doc => ({ id: doc.id, colName: 'Rating', ...doc.data() }));
 
-        window.allFeedbacksData.sort((a, b) => {
-          const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0);
-          const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0);
-          return timeB - timeA;
+        const qReviews = query(collection(db, "reviews"));
+        onSnapshot(qReviews, (snapshotReviews) => {
+          const reviewsList = snapshotReviews.docs.map(doc => ({ id: doc.id, colName: 'reviews', ...doc.data() }));
+
+          const map = new Map();
+          [...ratingsList, ...reviewsList].forEach(item => {
+            if (!map.has(item.id)) map.set(item.id, item);
+          });
+
+          window.allFeedbacksData = Array.from(map.values());
+          window.allFeedbacksData.sort((a, b) => {
+            const timeA = a.timestamp || (a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0));
+            const timeB = b.timestamp || (b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0));
+            return timeB - timeA;
+          });
+
+          updateFeedbackStats();
+          renderAdminFeedbacks();
+        }, (revErr) => {
+          console.warn("Reviews fallback listener notice:", revErr);
+          window.allFeedbacksData = ratingsList;
+          updateFeedbackStats();
+          renderAdminFeedbacks();
         });
-
-        updateFeedbackStats();
-        renderAdminFeedbacks();
       }, (err) => {
-        console.warn("Feedback listener notice:", err);
+        console.warn("Rating listener notice:", err);
       });
     }
 
@@ -1456,8 +2153,8 @@
         container.innerHTML = `
           <div class="card" style="text-align: center; padding: 36px 20px;">
             <i class="fa-solid fa-star-half-stroke" style="font-size: 40px; color: #cbd5e1; margin-bottom: 12px;"></i>
-            <h4 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">No Feedback Found</h4>
-            <p style="font-size: 13px; color: var(--text-muted); margin: 0;">No client reviews match your search or filter criteria.</p>
+            <h4 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">No message found</h4>
+            <p style="font-size: 13px; color: var(--text-muted); margin: 0;">No client reviews or ratings match your selected filter or search criteria.</p>
           </div>
         `;
         return;
@@ -1549,7 +2246,7 @@
                   <i class="fa-regular fa-copy"></i> Copy Text
                 </button>
               </div>
-              <button type="button" class="btn btn-sm" style="background: rgba(239, 68, 68, 0.1); color: #dc2626; border: 1px solid #fecaca; font-weight: 700;" onclick="deleteFeedbackDoc('${f.id}', \`${escapeJsString(f.name || 'this review')}\`)">
+              <button type="button" class="btn btn-sm" style="background: rgba(239, 68, 68, 0.1); color: #dc2626; border: 1px solid #fecaca; font-weight: 700;" onclick="deleteFeedbackDoc('${f.id}', \`${escapeJsString(f.name || 'this review')}\`, '${f.colName || 'Rating'}')">
                 <i class="fa-solid fa-trash-can"></i> Delete
               </button>
             </div>
@@ -1558,12 +2255,12 @@
       }).join('');
     };
 
-    window.deleteFeedbackDoc = async function(id, clientName) {
+    window.deleteFeedbackDoc = async function(id, clientName, colName = 'Rating') {
       if (!id) return;
       if (!confirm(`Are you sure you want to permanently delete review from "${clientName}"?`)) return;
 
       try {
-        await deleteDoc(doc(db, "reviews", id));
+        await deleteDoc(doc(db, colName || "Rating", id));
         showToast("Feedback review deleted successfully!");
       } catch (err) {
         showToast(`Error deleting review: ${err.message}`);
