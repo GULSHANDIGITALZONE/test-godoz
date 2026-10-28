@@ -1934,7 +1934,7 @@
           </button>
 
           <!-- Start Project Pulsing CTA Button -->
-          <button type="button" onclick="window.openOrderModal('Custom App/Web', 9999, 'Full Development')" class="btn btn-sm btn-primary header-btn-order" style="padding:6px 14px; font-size:0.84rem; font-weight:800; background:linear-gradient(135deg, #1266e8, #2563eb); border:none; box-shadow:0 4px 12px rgba(18,102,232,0.3);"><i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> Start Project</button>
+          <a href="./order.html" class="btn btn-sm btn-primary header-btn-order" style="padding:6px 14px; font-size:0.84rem; font-weight:800; background:linear-gradient(135deg, #1266e8, #2563eb); border:none; box-shadow:0 4px 12px rgba(18,102,232,0.3); text-decoration:none; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> Start Project</a>
 
           <!-- WhatsApp Chat Button (Desktop) -->
           <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20want%20to%20hire%20you%20for%20an%20App/Website%20project!" target="_blank" class="btn btn-sm btn-accent header-btn-chat" title="Direct WhatsApp Chat" style="padding:6px 12px; font-size:0.84rem; font-weight:700;">
@@ -2355,7 +2355,9 @@
                   </span>
                 </div>
                 <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
-                  <img src="./official logo.png" alt="GoDoz App Logo" style="width:48px; height:48px; border-radius:12px; box-shadow:var(--shadow-sm);">
+                  <div id="heroAppIconBadge" style="width:48px; height:48px; border-radius:12px; background:rgba(18,102,232,0.15); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; overflow:hidden; box-shadow:var(--shadow-sm);">
+                    <i id="heroAppIcon" class="fa-brands fa-android"></i>
+                  </div>
                   <div>
                     <h4 id="heroAppTitle" style="margin:0; font-size:1.05rem; color:var(--text-main);">Custom Android Application</h4>
                     <div id="heroAppSubtitle" style="font-size:0.75rem; color:var(--primary); font-weight:700;">com.client.customapp</div>
@@ -2385,8 +2387,8 @@
                   </span>
                 </div>
                 <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
-                  <div style="width:48px; height:48px; border-radius:12px; background:linear-gradient(135deg, #10b981, #059669); color:#fff; display:flex; align-items:center; justify-content:center; font-size:22px;">
-                    <i class="fa-solid fa-server"></i>
+                  <div id="heroWebIconBadge" style="width:48px; height:48px; border-radius:12px; background:rgba(16,185,129,0.15); color:#10b981; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; overflow:hidden; box-shadow:var(--shadow-sm);">
+                    <i id="heroWebIcon" class="fa-solid fa-server"></i>
                   </div>
                   <div>
                     <h4 id="heroWebTitle" style="margin:0; font-size:1.05rem; color:var(--text-main);">Responsive Web &amp; Portal</h4>
@@ -4200,261 +4202,6 @@
   </div>
 
   <!-- ========================================================================
-       24. Interactive Client Project Order & Booking Modal
-       ======================================================================== -->
-  <div id="projectOrderModal" class="godoz-modal-backdrop" style="display:none;" aria-hidden="true">
-    <div class="godoz-modal-box" style="max-width:620px;">
-      
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <div>
-          <h3 style="margin:0; font-size:1.25rem; font-weight:900; color:var(--text-main); display:flex; align-items:center; gap:8px;">
-            <span style="color:var(--primary);"><i class="fa-solid fa-bolt"></i></span> Book / Order Project
-          </h3>
-          <p style="margin:2px 0 0; font-size:0.8rem; color:var(--text-muted);">
-            Direct with RS GULSHAN PRAJAPATI &bull; Official GoDoz Development
-          </p>
-        </div>
-        <button type="button" onclick="window.closeOrderModal()" style="background:none; border:none; font-size:1.5rem; color:var(--text-muted); cursor:pointer; padding:4px 8px; border-radius:8px; line-height:1;" aria-label="Close modal">
-          &times;
-        </button>
-      </div>
-
-      <!-- Modal Body -->
-      <div class="modal-body" style="max-height:calc(85vh - 120px); overflow-y:auto;">
-        
-        <!-- Auth Status Pill -->
-        <div id="modalAuthBanner" style="background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:12px; padding:10px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-          <div style="font-size:0.82rem; color:var(--text-muted);">
-            <span id="modalAuthUserStatus"><i class="fa-solid fa-user-circle"></i> Guest Session</span>
-          </div>
-          <button type="button" id="btnModalGoogleAuth" class="btn btn-sm btn-outline" style="padding:4px 10px; font-size:0.78rem;">
-            <i class="fa-brands fa-google" style="color:#ea4335;"></i> Sign in with Google
-          </button>
-        </div>
-
-        <!-- Trust & Guarantees Bar -->
-        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:18px; text-align:center;">
-          <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); padding:8px 6px; border-radius:10px;">
-            <i class="fa-solid fa-shield-halved" style="color:#10b981; font-size:1rem; margin-bottom:2px;"></i>
-            <div style="font-size:0.72rem; font-weight:800; color:#10b981;">0% Advance COD</div>
-            <div style="font-size:0.65rem; color:var(--text-muted);">Pay after demo</div>
-          </div>
-          <div style="background:rgba(18,102,232,0.08); border:1px solid rgba(18,102,232,0.2); padding:8px 6px; border-radius:10px;">
-            <i class="fa-solid fa-code" style="color:#1266e8; font-size:1rem; margin-bottom:2px;"></i>
-            <div style="font-size:0.72rem; font-weight:800; color:#1266e8;">Full Source Code</div>
-            <div style="font-size:0.65rem; color:var(--text-muted);">100% Ownership</div>
-          </div>
-          <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); padding:8px 6px; border-radius:10px;">
-            <i class="fa-solid fa-headset" style="color:#f59e0b; font-size:1rem; margin-bottom:2px;"></i>
-            <div style="font-size:0.72rem; font-weight:800; color:#d97706;">30-Day Support</div>
-            <div style="font-size:0.65rem; color:var(--text-muted);">Free Post-Launch</div>
-          </div>
-        </div>
-
-        <!-- ORDER FORM VIEW -->
-        <form id="projectOrderForm">
-          
-          <!-- 1. Client Contact Details (FIRST!) -->
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap:12px; margin-bottom:16px;">
-            <div style="grid-column:1 / -1;">
-              <label for="modalOrderClientName" class="form-label" style="display:block; font-weight:800; font-size:0.88rem; margin-bottom:6px;">
-                1. Your Full Name <span style="color:#ef4444;">*</span>
-              </label>
-              <input type="text" id="modalOrderClientName" class="form-input" aria-label="Your Full Name" placeholder="e.g. Rahul Sharma" style="width:100%; padding:10px 12px;" required>
-            </div>
-            
-            <div>
-              <label for="modalOrderClientPhone" class="form-label" style="display:block; font-weight:800; font-size:0.88rem; margin-bottom:6px;">
-                WhatsApp / Phone <span style="color:#ef4444;">*</span>
-              </label>
-              <input type="tel" id="modalOrderClientPhone" class="form-input" aria-label="WhatsApp or Phone Number" placeholder="+91 98765 43210" style="width:100%; padding:10px 12px;" required>
-            </div>
-
-            <div>
-              <label for="modalOrderClientEmail" class="form-label" style="display:block; font-weight:800; font-size:0.88rem; margin-bottom:6px;">
-                Email Address <span style="color:#ef4444;">*</span>
-              </label>
-              <input type="email" id="modalOrderClientEmail" class="form-input" aria-label="Email Address" placeholder="client@domain.com" style="width:100%; padding:10px 12px;" required>
-            </div>
-          </div>
-
-          <!-- 2. Category & Base Package Selection -->
-          <div style="margin-bottom:14px;">
-            <label class="form-label" style="display:block; font-weight:800; font-size:0.88rem; margin-bottom:6px;">
-              2. Choose Project Category / Solution:
-            </label>
-            <select id="modalOrderCategory" class="form-input" style="width:100%; padding:10px 12px; font-size:0.9rem; font-weight:700; background:var(--bg-surface); color:var(--text-main); border:1px solid var(--border-color); border-radius:10px;" onchange="window.updateOrderModalPricing()">
-              <option value="" disabled selected>Loading solutions from Firestore...</option>
-              <option value="Custom Requirement / Unique Idea" data-price="0" data-original="0" data-discount="100">💡 Custom Requirement / Unique Idea — ₹0 (Free Consultation &amp; Quote)</option>
-            </select>
-          </div>
-
-          <!-- Hidden Features Input Sync -->
-          <input type="hidden" id="modalOrderFeatures" value="Complete Android App + Responsive Website + Unified Cloud Sync">
-
-          <!-- Combined Project Scope, Features & Requirements Box (Right Below Category!) -->
-          <div style="margin-bottom:16px;">
-            <label for="modalOrderNotes" class="form-label" style="display:block; font-weight:800; font-size:0.88rem; margin-bottom:6px;">
-              Project Scope, Features &amp; Specific Requirements (Optional):
-            </label>
-            <textarea id="modalOrderNotes" rows="3" class="form-input" placeholder="Type your desired app/software features, business requirements, custom modules, or reference website/app links..." style="width:100%; padding:10px 12px; resize:vertical;"></textarea>
-            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px; line-height:1.4;">
-              <i class="fa-solid fa-circle-info" style="color:var(--primary);"></i> <strong>Note:</strong> Your exact project features and scope will be reviewed &amp; verified by Lead Engineer RS GULSHAN PRAJAPATI before active coding starts.
-            </div>
-          </div>
-
-          <!-- 3. Payment Options -->
-          <div style="margin-bottom:20px;">
-            <label class="form-label" style="display:block; font-weight:800; font-size:0.88rem; margin-bottom:10px;">
-              3. Choose Payment &amp; Milestone Method:
-            </label>
-            
-            <div style="display:grid; gap:10px;">
-              
-              <!-- Option 1: Razorpay Instant Online Pay (% Based Advance) - Default Selected -->
-              <label class="pay-option-card selected" id="optPayRazorpay">
-                <input type="radio" name="order_payment_mode" value="razorpay" checked style="margin-top:3px;">
-                <div style="flex:1;">
-                  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-                    <strong style="font-size:0.92rem; color:var(--text-main);"><i class="fa-solid fa-credit-card" style="color:var(--primary);"></i> Razorpay (% Advance Payment)</strong>
-                    <span id="razorpayAdvanceBadge" style="background:rgba(18,102,232,0.15); color:var(--primary); font-weight:800; font-size:0.72rem; padding:2px 8px; border-radius:12px;">Min 10% Advance</span>
-                  </div>
-                  <div style="font-size:0.78rem; color:var(--text-muted); margin-top:3px; line-height:1.4;">
-                    Lock priority development schedule with flexible advance payment (% based, Min 10%). Supports UPI (GPay, PhonePe, Paytm), Cards &amp; NetBanking.
-                  </div>
-
-                  <!-- Percentage Selection Bar (50% Default Checked) -->
-                  <div id="advancePctSelector" style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; padding-top:6px; border-top:1px dashed var(--border-color);">
-                    <span style="font-size:0.78rem; font-weight:800; color:var(--text-main); align-self:center;">Select Advance %:</span>
-                    <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
-                      <input type="radio" name="advance_pct" value="10"> 10% (Min)
-                    </label>
-                    <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
-                      <input type="radio" name="advance_pct" value="25"> 25%
-                    </label>
-                    <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
-                      <input type="radio" name="advance_pct" value="50" checked> 50%
-                    </label>
-                    <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
-                      <input type="radio" name="advance_pct" value="100"> 100% (Full)
-                    </label>
-                  </div>
-                </div>
-              </label>
-
-              <!-- AI/maintainer note: PAD means Pay After Demo; it is a payment-timing agreement, not a payment method or proof of payment. -->
-              <!-- Option 2: Pay After Demo (PAD) -->
-              <label class="pay-option-card" id="optPayCod">
-                <input type="radio" name="order_payment_mode" value="pay_after_demo" style="margin-top:3px;">
-                <div style="flex:1;">
-                  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-                    <div style="display:flex; align-items:center; gap:6px;">
-                      <strong style="font-size:0.92rem; color:var(--text-main);"><i class="fa-solid fa-laptop-code" style="color:#10b981;"></i> Pay After Demo (PAD)</strong>
-                      <button type="button" onclick="window.openPadInfoModal(event)" style="background:rgba(18,102,232,0.12); color:var(--primary); border:none; border-radius:50%; width:20px; height:20px; font-size:0.75rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;" title="Why PAD instead of COD? Click to read info">?</button>
-                    </div>
-                    <span style="background:rgba(16,185,129,0.15); color:#10b981; font-weight:800; font-size:0.72rem; padding:2px 8px; border-radius:12px;">₹0 Upfront • Pay 10% After Demo</span>
-                  </div>
-                  <div style="font-size:0.78rem; color:var(--text-muted); margin-top:3px; line-height:1.4;">
-                    Book order &amp; discuss requirements on WhatsApp/Call. See wireframe/demo first, then pay 10% security deposit to start development.
-                  </div>
-                </div>
-              </label>
-
-            </div>
-          </div>
-
-          <!-- Promo Code / Coupon Input Section -->
-          <div style="background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:12px; padding:12px; margin-bottom:16px;">
-            <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:6px;">8. 
-              <i class="fa-solid fa-ticket" style="color:var(--accent);"></i> Have a Promo Code / Discount Coupon?
-            </label>
-            <div style="display:flex; gap:8px;">
-              <input type="text" id="orderCouponInput" placeholder="Enter coupon e.g. GODZO10 or LAUNCH1000" style="flex:1; text-transform:uppercase; padding:8px 12px; border:1.5px solid var(--border-color); border-radius:8px; font-weight:800; font-size:0.88rem; background:var(--bg-surface); color:var(--text-main); outline:none;">
-              <button type="button" id="btnApplyCoupon" onclick="window.applyOrderCoupon()" class="btn btn-sm btn-primary" style="padding:8px 16px; font-weight:800;">
-                Apply Coupon
-              </button>
-            </div>
-            <div id="orderCouponMessage" style="font-size:0.78rem; font-weight:800; margin-top:6px; display:none;"></div>
-          </div>
-
-          <!-- Total Investment Summary Box with Strikethrough & Offer Badge -->
-          <div style="background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:12px; padding:14px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-            <div>
-              <div style="font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">9. Special Offer Investment</div>
-              <div style="display:flex; align-items:baseline; gap:8px;">
-                <span id="modalOrderOriginalDisplay" style="font-size:1.05rem; text-decoration:line-through; color:var(--text-muted); font-weight:700;">₹45,000</span>
-                <span id="modalOrderPriceDisplay" style="font-size:1.6rem; font-weight:900; color:#10b981;">₹19,999</span>
-                <span id="modalOrderDiscountBadge" style="background:#fee2e2; color:#dc2626; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:12px; border:1px solid #fca5a5;">55% OFF</span>
-              </div>
-            </div>
-            <div style="text-align:right;">
-              <div style="font-size:0.75rem; color:var(--text-muted);">Due Today:</div>
-              <div id="modalOrderDueToday" style="font-size:1.1rem; font-weight:800; color:#16a34a;">₹0 (10% Pay After Demo)</div>
-            </div>
-          </div>
-
-          <!-- Submit Button -->
-          <button type="submit" id="btnSubmitOrder" class="btn btn-primary" style="width:100%; padding:14px; font-size:1.05rem; font-weight:800; box-shadow:var(--shadow-md);">
-            ⚡ Confirm &amp; Book Project Order
-          </button>
-          
-          <div style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:8px;">
-            <i class="fa-solid fa-shield-halved" style="color:#16a34a;"></i> 100% NDA Protected &bull; Direct WhatsApp response within 2 hours.
-          </div>
-
-        </form>
-
-        <!-- SUCCESS CONFIRMATION VIEW (Hidden by default) -->
-        <div id="orderSuccessView" style="display:none; text-align:center; padding:20px 10px;">
-          <div style="width:64px; height:64px; border-radius:50%; background:rgba(34,197,94,0.15); color:#16a34a; font-size:32px; display:flex; align-items:center; justify-content:center; margin:0 auto 14px;">
-            <i class="fa-solid fa-check"></i>
-          </div>
-          <h3 style="margin:0 0 6px; font-size:1.4rem; color:var(--text-main);">Project Order Booked Successfully!</h3>
-          <p style="color:var(--text-muted); font-size:0.88rem; margin:0 0 16px;">
-            Your project order is registered with GoDoz Engineering Team.
-          </p>
-
-          <div style="background:var(--bg-surface-alt); border:1px dashed var(--primary); border-radius:12px; padding:16px; text-align:left; margin-bottom:20px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-              <span style="font-size:0.82rem; color:var(--text-muted);">Order ID:</span>
-              <strong id="successOrderId" style="font-size:0.95rem; color:var(--primary);">#GoDoz-2026-882194</strong>
-            </div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-              <span style="font-size:0.82rem; color:var(--text-muted);">Project:</span>
-              <strong id="successProjectName" style="font-size:0.85rem; color:var(--text-main);">Android App + Website Combo Suite</strong>
-            </div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-              <span style="font-size:0.82rem; color:var(--text-muted);">Investment:</span>
-              <strong id="successPrice" style="font-size:0.9rem; color:#16a34a;">₹19,999</strong>
-            </div>
-            <div style="display:flex; justify-content:space-between;">
-              <span style="font-size:0.82rem; color:var(--text-muted);">Payment Mode:</span>
-              <span id="successPaymentMode" style="font-size:0.82rem; font-weight:700; color:var(--text-main);">Pay After Demo (PAD)</span>
-            </div>
-          </div>
-
-          <div style="display:grid; gap:10px;">
-            <a id="successWhatsappBtn" href="https://wa.me/919288521731" target="_blank" class="btn btn-accent" style="padding:12px; font-size:0.95rem; font-weight:800;">
-              <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp with RS GULSHAN PRAJAPATI
-            </a>
-            <div style="display:flex; gap:10px;">
-              <a href="/profile.html" class="btn btn-outline" style="flex:1; padding:10px; font-size:0.88rem;">
-                <i class="fa-solid fa-user-gear"></i> View in Dashboard
-              </a>
-              <button type="button" onclick="window.closeOrderModal()" class="btn btn-outline" style="flex:1; padding:10px; font-size:0.88rem;">
-                Done / Close
-              </button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ========================================================================
        Live Project Order Tracker Modal (Public Client Verification)
        ======================================================================== -->
   <div id="trackOrderModal" class="godoz-modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="trackModalTitle">
@@ -4606,12 +4353,31 @@
     let currentAuthUser = null;
     let activeAppliedCoupon = null;
 
+    // 0ms Instant Pre-hydration from localStorage Cache
+    try {
+      const cachedCatalogStr = localStorage.getItem('godoz_cached_products_catalog');
+      if (cachedCatalogStr) {
+        const cachedList = JSON.parse(cachedCatalogStr);
+        if (Array.isArray(cachedList) && cachedList.length > 0) {
+          if (typeof window.applyProductsCatalogUI === 'function') {
+            window.applyProductsCatalogUI(cachedList);
+          } else if (typeof window.renderLiveServicesGrid === 'function') {
+            window.renderLiveServicesGrid(cachedList);
+          }
+        }
+      }
+    } catch(e) {}
+
     // Listen to Live Products Catalog & Estimator Addons from Firestore
     listenToProductsCatalog((productsList) => {
+      const list = Array.isArray(productsList) ? productsList : [];
+      try {
+        localStorage.setItem('godoz_cached_products_catalog', JSON.stringify(list));
+      } catch(e) {}
       if (typeof window.applyProductsCatalogUI === 'function') {
-        window.applyProductsCatalogUI(productsList);
+        window.applyProductsCatalogUI(list);
       } else if (typeof window.renderLiveServicesGrid === 'function') {
-        window.renderLiveServicesGrid(productsList);
+        window.renderLiveServicesGrid(list);
       }
     });
 
@@ -4670,74 +4436,13 @@
       }
     };
 
-    // Global Modal Controllers
+    // Global Order & Project Booking Navigation (Dedicated Full Page Experience)
     window.openOrderModal = function(category = '', price = 0, features = '') {
-      const modal = document.getElementById('projectOrderModal');
-      if (!modal) return;
-
-      const categorySelect = document.getElementById('modalOrderCategory');
-      const priceDisplay = document.getElementById('modalOrderPriceDisplay');
-      const origDisplay = document.getElementById('modalOrderOriginalDisplay');
-      const discBadge = document.getElementById('modalOrderDiscountBadge');
-      const featuresInput = document.getElementById('modalOrderFeatures');
-      const formView = document.getElementById('projectOrderForm');
-      const successView = document.getElementById('orderSuccessView');
-
-      if (formView) formView.style.display = 'block';
-      if (successView) successView.style.display = 'none';
-
-      if (categorySelect) {
-        if (category) {
-          for (let i = 0; i < categorySelect.options.length; i++) {
-            const val = categorySelect.options[i].value.toLowerCase();
-            const cat = category.toLowerCase();
-            if (val.includes(cat) || cat.includes(val)) {
-              categorySelect.selectedIndex = i;
-              break;
-            }
-          }
-        }
-        const opt = categorySelect.options[categorySelect.selectedIndex] || categorySelect.options[0];
-        if (opt) {
-          const p = (price !== undefined && price !== null && !isNaN(price)) ? price : parseInt(opt.dataset.price || '0', 10);
-          const orig = parseInt(opt.dataset.original || '0', 10);
-          const disc = opt.dataset.discount || '0';
-
-          if (priceDisplay) {
-            priceDisplay.textContent = p === 0 ? `₹0 (Pay After Demo)` : `₹${p.toLocaleString('en-IN')}`;
-            priceDisplay.dataset.amount = p;
-          }
-          if (origDisplay) {
-            origDisplay.textContent = orig > 0 ? `₹${orig.toLocaleString('en-IN')}` : '';
-          }
-          if (discBadge) {
-            discBadge.textContent = (disc !== '0' && disc !== '100') ? `${disc}% OFF` : (p === 0 ? '₹0 PAD' : 'Custom');
-          }
-        }
-      }
-
-      const isCustomCategory = category.toLowerCase().includes('custom requirement') || category.toLowerCase().includes('unique idea');
-      const razorpayOption = document.getElementById('optPayRazorpay');
-      const padRadio = document.querySelector('input[name="order_payment_mode"][value="pay_after_demo"]');
-
-      if (isCustomCategory) {
-        if (razorpayOption) razorpayOption.style.display = 'none';
-        if (padRadio) padRadio.checked = true;
-      } else {
-        if (razorpayOption) razorpayOption.style.display = 'flex';
-      }
-
-      if (features && featuresInput) {
-        featuresInput.value = features;
-      }
-
-      if (typeof window.updateDueToday === 'function') {
-        window.updateDueToday();
-      }
-
-      modal.style.display = 'flex';
-      setTimeout(() => modal.classList.add('active'), 10);
-      document.body.style.overflow = 'hidden';
+      const params = new URLSearchParams();
+      if (category) params.set('service', category);
+      if (price !== undefined && price !== null && !isNaN(price) && Number(price) > 0) params.set('price', price);
+      if (features) params.set('features', features);
+      window.location.href = './order.html?' + params.toString();
     };
 
     window.openPadInfoModal = function(e) {

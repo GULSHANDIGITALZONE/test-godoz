@@ -1039,15 +1039,52 @@
         </div>
       </div>
 
-      <!-- Navigation Tabs -->
-      <div class="admin-nav-tabs">
-        <button class="admin-tab-btn active" id="tabBtnOrders" onclick="switchAdminTab('orders')"><i class="fa-solid fa-list-check" style="color:#7c3aed;"></i> Master Orders &amp; Staff Assignments</button>
-        <button class="admin-tab-btn" id="tabBtnInquiries" onclick="switchAdminTab('inquiries')"><i class="fa-solid fa-inbox" style="color:#0ea5e9;"></i> Client Inquiries &amp; Lead Assignments</button>
-        <button class="admin-tab-btn" id="tabBtnAdmins" onclick="switchAdminTab('admins')"><i class="fa-solid fa-users-gear" style="color:#10b981;"></i> Authorized Support Staff &amp; Admins</button>
-        <button class="admin-tab-btn" id="tabBtnCoupons" onclick="switchAdminTab('coupons')"><i class="fa-solid fa-ticket" style="color:#f59e0b;"></i> Promo Codes &amp; Coupons</button>
-        <button class="admin-tab-btn" id="tabBtnPricing" onclick="switchAdminTab('pricing')"><i class="fa-solid fa-tags" style="color:#ef4444;"></i> Product &amp; Pricing Catalog</button>
-        <button class="admin-tab-btn" id="tabBtnPayments" onclick="switchAdminTab('payments')"><i class="fa-solid fa-credit-card" style="color:#ec4899;"></i> Razorpay Gateway &amp; Escrow Logs</button>
+      <!-- Navigation Tabs (With URL Hash & ID Persistence) -->
+      <div class="admin-nav-tabs" id="adminNavTabs">
+        <button class="admin-tab-btn active" id="tabBtnOrders" data-tab="orders" onclick="switchAdminTab('orders')"><i class="fa-solid fa-list-check" style="color:#7c3aed;"></i> Master Orders &amp; Staff Assignments</button>
+        <button class="admin-tab-btn" id="tabBtnInquiries" data-tab="inquiries" onclick="switchAdminTab('inquiries')"><i class="fa-solid fa-inbox" style="color:#0ea5e9;"></i> Client Inquiries &amp; Lead Assignments</button>
+        <button class="admin-tab-btn" id="tabBtnAdmins" data-tab="admins" onclick="switchAdminTab('admins')"><i class="fa-solid fa-users-gear" style="color:#10b981;"></i> Authorized Support Staff &amp; Admins</button>
+        <button class="admin-tab-btn" id="tabBtnCoupons" data-tab="coupons" onclick="switchAdminTab('coupons')"><i class="fa-solid fa-ticket" style="color:#f59e0b;"></i> Promo Codes &amp; Coupons</button>
+        <button class="admin-tab-btn" id="tabBtnPricing" data-tab="pricing" onclick="switchAdminTab('pricing')"><i class="fa-solid fa-tags" style="color:#ef4444;"></i> Product &amp; Pricing Catalog</button>
+        <button class="admin-tab-btn" id="tabBtnPayments" data-tab="payments" onclick="switchAdminTab('payments')"><i class="fa-solid fa-credit-card" style="color:#ec4899;"></i> Razorpay Gateway &amp; Escrow Logs</button>
       </div>
+
+      <!-- Instant Synchronous Tab Restorer on Page Refresh (Zero Flash) -->
+      <script>
+        (function() {
+          try {
+            var raw = (window.location.hash || '').replace(/^#\/?(tab=)?/, '').toLowerCase().trim();
+            var stored = (localStorage.getItem('godoz_manager_active_tab') || '').toLowerCase().trim();
+            var activeTab = raw || stored;
+            if (activeTab === 'pricing' || activeTab === 'products' || activeTab === 'catalog') {
+              var b1 = document.getElementById('tabBtnOrders');
+              var b2 = document.getElementById('tabBtnPricing');
+              if (b1) b1.classList.remove('active');
+              if (b2) b2.classList.add('active');
+            } else if (activeTab === 'inquiries') {
+              var b1 = document.getElementById('tabBtnOrders');
+              var b2 = document.getElementById('tabBtnInquiries');
+              if (b1) b1.classList.remove('active');
+              if (b2) b2.classList.add('active');
+            } else if (activeTab === 'admins') {
+              var b1 = document.getElementById('tabBtnOrders');
+              var b2 = document.getElementById('tabBtnAdmins');
+              if (b1) b1.classList.remove('active');
+              if (b2) b2.classList.add('active');
+            } else if (activeTab === 'coupons') {
+              var b1 = document.getElementById('tabBtnOrders');
+              var b2 = document.getElementById('tabBtnCoupons');
+              if (b1) b1.classList.remove('active');
+              if (b2) b2.classList.add('active');
+            } else if (activeTab === 'payments') {
+              var b1 = document.getElementById('tabBtnOrders');
+              var b2 = document.getElementById('tabBtnPayments');
+              if (b1) b1.classList.remove('active');
+              if (b2) b2.classList.add('active');
+            }
+          } catch(e) {}
+        })();
+      </script>
 
       <!-- ==================== TAB 1: ORDERS & PAD MANAGEMENT ==================== -->
       <section id="sectionOrders">
@@ -1220,9 +1257,14 @@
               <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);"><i class="fa-solid fa-briefcase" style="color:var(--primary);"></i> 1. Professional Services Catalog ("What We Can Build")</h3>
               <p style="margin:0; font-size:0.84rem; color:var(--text-muted);">Manage all full-stack business solutions &amp; packages displayed in Section 5 on index.html. Storage: <code>/products/{productId}</code></p>
             </div>
-            <button class="btn btn-accent" onclick="window.openAddServiceModal()" style="padding:8px 16px; font-weight:800; background:#16a34a; border-color:#16a34a; color:#ffffff;">
-              <i class="fa-solid fa-plus"></i> Add Service
-            </button>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <button class="btn btn-outline" id="btnRefreshCatalogData" onclick="window.refreshCatalogFromFirestore()" style="padding:8px 14px; font-weight:700; font-size:0.85rem;" title="Refresh live data from Firestore">
+                <i class="fa-solid fa-arrows-rotate"></i> Refresh Data
+              </button>
+              <button class="btn btn-accent" onclick="window.openAddServiceModal()" style="padding:8px 16px; font-weight:800; background:#16a34a; border-color:#16a34a; color:#ffffff;">
+                <i class="fa-solid fa-plus"></i> Add Service
+              </button>
+            </div>
           </div>
 
           <div class="order-table-wrap">
@@ -1238,7 +1280,15 @@
                 </tr>
               </thead>
               <tbody id="pricingProductsTableBody">
-                <!-- Dynamic Professional Services Rows Rendered Here -->
+                <tr id="pricingLoaderRow">
+                  <td colspan="6" style="text-align:center; padding:35px 20px; color:var(--text-muted);">
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;">
+                      <i class="fa-solid fa-circle-notch fa-spin" style="color:var(--primary); font-size:2rem;"></i>
+                      <span style="font-weight:800; font-size:0.95rem; color:var(--text-main);">Loading Services from Firestore...</span>
+                      <span style="font-size:0.78rem; color:var(--text-muted);">Fetching live packages from <code>/products/</code></span>
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -1300,7 +1350,15 @@
                 </tr>
               </thead>
               <tbody id="projectTypesTableBody">
-                <!-- Dynamic Project Types Rows Rendered Here -->
+                <tr id="projectTypesLoaderRow">
+                  <td colspan="6" style="text-align:center; padding:30px 20px; color:var(--text-muted);">
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;">
+                      <i class="fa-solid fa-circle-notch fa-spin" style="color:#6366f1; font-size:1.9rem;"></i>
+                      <span style="font-weight:800; font-size:0.95rem; color:var(--text-main);">Loading Project Types from Firestore...</span>
+                      <span style="font-size:0.78rem; color:var(--text-muted);">Fetching Cost Estimator base options (Step 1)</span>
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -1333,7 +1391,15 @@
                 </tr>
               </thead>
               <tbody id="keyFeaturesTableBody">
-                <!-- Dynamic Key Features Rows Rendered Here -->
+                <tr id="keyFeaturesLoaderRow">
+                  <td colspan="6" style="text-align:center; padding:30px 20px; color:var(--text-muted);">
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;">
+                      <i class="fa-solid fa-circle-notch fa-spin" style="color:#eab308; font-size:1.9rem;"></i>
+                      <span style="font-weight:800; font-size:0.95rem; color:var(--text-main);">Loading Key Features from Firestore...</span>
+                      <span style="font-size:0.78rem; color:var(--text-muted);">Fetching selectable add-on features (Step 2)</span>
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -1378,7 +1444,15 @@
                 </tr>
               </thead>
               <tbody id="otherServicesTableBody">
-                <!-- Dynamic Other Services Rows Rendered Here -->
+                <tr id="otherServicesLoaderRow">
+                  <td colspan="6" style="text-align:center; padding:30px 20px; color:var(--text-muted);">
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;">
+                      <i class="fa-solid fa-circle-notch fa-spin" style="color:#f59e0b; font-size:1.9rem;"></i>
+                      <span style="font-weight:800; font-size:0.95rem; color:var(--text-main);">Loading Other Services from Firestore...</span>
+                      <span style="font-size:0.78rem; color:var(--text-muted);">Fetching Android App &amp; Web Portal showcases</span>
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -1747,6 +1821,109 @@
         <input type="text" id="productTitleInput" placeholder="e.g. Retail & Wholesale Shop App" required style="width:100%; padding:9px 12px; border:1px solid var(--border-color); border-radius:8px; font-weight:700; font-size:0.9rem; background:var(--bg-surface); color:var(--text-main);">
       </div>
 
+      <!-- Card Top-Left Icon & Color Theme Selector (Manager Control) -->
+      <div style="background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:10px; padding:12px;">
+        <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:6px;">
+          <i class="fa-solid fa-icons" style="color:var(--primary);"></i> Top-Left Box Logo / Icon &amp; Color Theme *
+        </label>
+
+        <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+          <!-- Live Preview Box -->
+          <div id="productIconPreviewBadge" style="width:46px; height:46px; border-radius:10px; background:rgba(139,92,246,0.15); color:#8b5cf6; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; border:1px solid var(--border-color); box-shadow:var(--shadow-sm);">
+            <i id="productIconPreviewIcon" class="fa-solid fa-store"></i>
+          </div>
+
+          <!-- Icon Class Text Input -->
+          <div style="flex:1;">
+            <input type="text" id="productIconInput" placeholder="e.g. fa-store, fa-brands fa-android, fa-globe" value="fa-store" oninput="window.updateProductIconPreview()" required style="width:100%; padding:9px 12px; border:1.5px solid var(--border-color); border-radius:8px; font-weight:700; font-size:0.88rem; background:var(--bg-surface); color:var(--text-main); font-family:monospace;">
+          </div>
+
+          <!-- Color Theme Picker -->
+          <div style="display:flex; flex-direction:column; align-items:center;">
+            <input type="color" id="productIconColorInput" value="#8b5cf6" onchange="window.updateProductIconPreview()" title="Choose Theme Color" style="width:42px; height:38px; border:1.5px solid var(--border-color); border-radius:8px; padding:2px; cursor:pointer; background:var(--bg-surface);">
+          </div>
+        </div>
+
+        <!-- Quick 1-Click Common Icons Grid -->
+        <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">
+          Quick 1-Click Common Icons:
+        </div>
+        <div id="quickIconButtonsContainer" style="display:flex; flex-wrap:wrap; gap:6px;">
+          <button type="button" onclick="window.selectQuickProductIcon('fa-store', '#8b5cf6')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-store" style="color:#8b5cf6;"></i> Shop
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-cart-shopping', '#10b981')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-cart-shopping" style="color:#10b981;"></i> Cart
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-brands fa-android', '#16a34a')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-brands fa-android" style="color:#16a34a;"></i> Android
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-mobile-screen', '#0ea5e9')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-mobile-screen" style="color:#0ea5e9;"></i> Mobile
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-globe', '#1266e8')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-globe" style="color:#1266e8;"></i> Website
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-graduation-cap', '#7c3aed')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-graduation-cap" style="color:#7c3aed;"></i> School
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-utensils', '#ca8a04')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-utensils" style="color:#ca8a04;"></i> Restaurant
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-user-doctor', '#10b981')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-user-doctor" style="color:#10b981;"></i> Doctor
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-building', '#f59e0b')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-building" style="color:#f59e0b;"></i> Property
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-file-invoice-dollar', '#0891b2')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-file-invoice-dollar" style="color:#0891b2;"></i> Billing
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-chart-pie', '#8b5cf6')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-chart-pie" style="color:#8b5cf6;"></i> ERP/CRM
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-robot', '#ec4899')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-robot" style="color:#ec4899;"></i> AI Bot
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-user-lock', '#6366f1')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-user-lock" style="color:#6366f1;"></i> Login/Auth
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-credit-card', '#10b981')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-credit-card" style="color:#10b981;"></i> Payment
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-database', '#0284c7')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-database" style="color:#0284c7;"></i> Database
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-bell', '#eab308')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-bell" style="color:#eab308;"></i> Notification
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-laptop-code', '#1266e8')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-laptop-code" style="color:#1266e8;"></i> Software
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-rocket', '#ff6900')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-rocket" style="color:#ff6900;"></i> Rocket
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-wrench', '#64748b')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-wrench" style="color:#64748b;"></i> Tools
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-server', '#10b981')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-server" style="color:#10b981;"></i> Server
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-star', '#f59e0b')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-star" style="color:#f59e0b;"></i> Star
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-cloud', '#0ea5e9')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-cloud" style="color:#0ea5e9;"></i> Cloud
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-brands fa-apple', '#64748b')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-brands fa-apple" style="color:#64748b;"></i> Apple
+          </button>
+          <button type="button" onclick="window.selectQuickProductIcon('fa-code', '#8b5cf6')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-code" style="color:#8b5cf6;"></i> Code
+          </button>
+        </div>
+      </div>
+
       <div>
         <label id="labelProductDetails" style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Product Details &amp; Key Features</label>
         <textarea id="productDetailsInput" rows="4" placeholder="Easy Billing & Stock Management App for Kirana Stores, Hardware, Garment. Barcode Scanning, Udhar Khata Ledger, GST Invoices..." style="width:100%; padding:9px 12px; border:1px solid var(--border-color); border-radius:8px; font-size:0.85rem; background:var(--bg-surface); color:var(--text-main); resize:vertical;"></textarea>
@@ -1852,6 +2029,122 @@
   }
 
   // ========================================================================
+  // Canonical Tab Aliases & Active Tab Persistence (#pricing, #orders, etc.)
+  // ========================================================================
+  const TAB_ALIASES = {
+    'orders': 'orders',
+    'order': 'orders',
+    'sectionorders': 'orders',
+    'inquiries': 'inquiries',
+    'inquiry': 'inquiries',
+    'leads': 'inquiries',
+    'sectioninquiries': 'inquiries',
+    'admins': 'admins',
+    'admin': 'admins',
+    'staff': 'admins',
+    'sectionadmins': 'admins',
+    'coupons': 'coupons',
+    'coupon': 'coupons',
+    'promos': 'coupons',
+    'sectioncoupons': 'coupons',
+    'pricing': 'pricing',
+    'price': 'pricing',
+    'products': 'pricing',
+    'product': 'pricing',
+    'catalog': 'pricing',
+    'pricing-catalog': 'pricing',
+    'sectionpricing': 'pricing',
+    'payments': 'payments',
+    'payment': 'payments',
+    'gateway': 'payments',
+    'sectionpayments': 'payments'
+  };
+
+  window.getInitialAdminTab = function() {
+    // 1. Check window.location.hash (#pricing, #orders, etc.)
+    if (window.location.hash) {
+      const rawHash = window.location.hash.replace(/^#\/?(tab=)?/, '').toLowerCase().trim();
+      if (TAB_ALIASES[rawHash]) return TAB_ALIASES[rawHash];
+    }
+    // 2. Check URL search param (?tab=pricing)
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = (params.get('tab') || '').toLowerCase().trim();
+      if (TAB_ALIASES[tabParam]) return TAB_ALIASES[tabParam];
+    } catch(e) {}
+    // 3. Check localStorage (remembers tab across browser refresh)
+    try {
+      const stored = (localStorage.getItem('godoz_manager_active_tab') || '').toLowerCase().trim();
+      if (TAB_ALIASES[stored]) return TAB_ALIASES[stored];
+    } catch(e) {}
+    // 4. Default to orders tab
+    return 'orders';
+  };
+
+  // Global Tab Switching with URL Hash & State Retention on Refresh
+  window.switchAdminTab = function(tabName, updateUrl = true) {
+    const raw = (tabName || '').toLowerCase().trim();
+    const canonical = TAB_ALIASES[raw] || 'orders';
+
+    document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+    const secOrders = document.getElementById('sectionOrders');
+    const secAdmins = document.getElementById('sectionAdmins');
+    const secInquiries = document.getElementById('sectionInquiries');
+    const secPayments = document.getElementById('sectionPayments');
+    const secCoupons = document.getElementById('sectionCoupons');
+    const secPricing = document.getElementById('sectionPricing');
+
+    if (secOrders) secOrders.style.display = 'none';
+    if (secAdmins) secAdmins.style.display = 'none';
+    if (secInquiries) secInquiries.style.display = 'none';
+    if (secPayments) secPayments.style.display = 'none';
+    if (secCoupons) secCoupons.style.display = 'none';
+    if (secPricing) secPricing.style.display = 'none';
+
+    if (canonical === 'orders') {
+      document.getElementById('tabBtnOrders')?.classList.add('active');
+      if (secOrders) secOrders.style.display = 'block';
+    } else if (canonical === 'admins') {
+      document.getElementById('tabBtnAdmins')?.classList.add('active');
+      if (secAdmins) secAdmins.style.display = 'block';
+    } else if (canonical === 'inquiries') {
+      document.getElementById('tabBtnInquiries')?.classList.add('active');
+      if (secInquiries) secInquiries.style.display = 'block';
+    } else if (canonical === 'pricing') {
+      document.getElementById('tabBtnPricing')?.classList.add('active');
+      if (secPricing) secPricing.style.display = 'block';
+    } else if (canonical === 'payments') {
+      document.getElementById('tabBtnPayments')?.classList.add('active');
+      if (secPayments) secPayments.style.display = 'block';
+    } else if (canonical === 'coupons') {
+      document.getElementById('tabBtnCoupons')?.classList.add('active');
+      if (secCoupons) secCoupons.style.display = 'block';
+      if (typeof window.loadCouponsTable === 'function') window.loadCouponsTable();
+    }
+
+    // Persist active tab to localStorage so page refresh never resets to Tab 1
+    try {
+      localStorage.setItem('godoz_manager_active_tab', canonical);
+    } catch(e) {}
+
+    // Update URL hash (#pricing) smoothly without causing scroll jumps
+    if (updateUrl) {
+      try {
+        if (window.history && window.history.replaceState) {
+          history.replaceState(null, null, '#' + canonical);
+        } else {
+          window.location.hash = '#' + canonical;
+        }
+      } catch(e) {}
+    }
+  };
+
+  // Sync tab on browser Back/Forward or direct hash entry
+  window.addEventListener('hashchange', () => {
+    window.switchAdminTab(window.getInitialAdminTab(), false);
+  });
+
+  // ========================================================================
   // 0. INSTANT PRE-HYDRATION (0ms Zero-Flicker Admin Interface Load)
   // ========================================================================
   (function preHydrateAdmin() {
@@ -1913,47 +2206,25 @@
           }
         } catch(e) {}
       }
+
+      // Pre-hydrate catalog from localStorage cache for 0-second display
+      try {
+        const cachedCatalogStr = localStorage.getItem('godoz_cached_products_catalog');
+        if (cachedCatalogStr) {
+          const parsedCat = JSON.parse(cachedCatalogStr);
+          if (Array.isArray(parsedCat) && parsedCat.length > 0) {
+            currentProductsCatalog = parsedCat;
+            if (typeof window.renderProductsCatalogTable === 'function') {
+              window.renderProductsCatalogTable(parsedCat);
+            }
+          }
+        }
+      } catch(e) {}
+
+      // Immediately activate the tab requested by hash or saved session
+      window.switchAdminTab(window.getInitialAdminTab(), false);
     }
   })();
-
-  // Global Tab Switching
-  window.switchAdminTab = function(tabName) {
-    document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
-    const secOrders = document.getElementById('sectionOrders');
-    const secAdmins = document.getElementById('sectionAdmins');
-    const secInquiries = document.getElementById('sectionInquiries');
-    const secPayments = document.getElementById('sectionPayments');
-    const secCoupons = document.getElementById('sectionCoupons');
-    const secPricing = document.getElementById('sectionPricing');
-
-    if (secOrders) secOrders.style.display = 'none';
-    if (secAdmins) secAdmins.style.display = 'none';
-    if (secInquiries) secInquiries.style.display = 'none';
-    if (secPayments) secPayments.style.display = 'none';
-    if (secCoupons) secCoupons.style.display = 'none';
-    if (secPricing) secPricing.style.display = 'none';
-
-    if (tabName === 'orders') {
-      document.getElementById('tabBtnOrders')?.classList.add('active');
-      if (secOrders) secOrders.style.display = 'block';
-    } else if (tabName === 'admins') {
-      document.getElementById('tabBtnAdmins')?.classList.add('active');
-      if (secAdmins) secAdmins.style.display = 'block';
-    } else if (tabName === 'inquiries') {
-      document.getElementById('tabBtnInquiries')?.classList.add('active');
-      if (secInquiries) secInquiries.style.display = 'block';
-    } else if (tabName === 'pricing') {
-      document.getElementById('tabBtnPricing')?.classList.add('active');
-      if (secPricing) secPricing.style.display = 'block';
-    } else if (tabName === 'payments') {
-      document.getElementById('tabBtnPayments')?.classList.add('active');
-      if (secPayments) secPayments.style.display = 'block';
-    } else if (tabName === 'coupons') {
-      document.getElementById('tabBtnCoupons')?.classList.add('active');
-      if (secCoupons) secCoupons.style.display = 'block';
-      if (typeof window.loadCouponsTable === 'function') window.loadCouponsTable();
-    }
-  };
 
   let currentCoupons = [];
 
@@ -2136,6 +2407,9 @@
         listenersInitialized = true;
         initFirestoreListeners();
       }
+
+      // Restore user's active tab (#pricing, #orders, etc.) upon unlock
+      window.switchAdminTab(window.getInitialAdminTab(), false);
     } catch (err) {
       console.error("Error unlocking admin interface:", err);
     } finally {
@@ -2821,6 +3095,75 @@
     }
   };
 
+  // Normalize FontAwesome Icon string for safe rendering
+  window.normalizeIconClass = function(iconStr) {
+    if (!iconStr || typeof iconStr !== 'string' || !iconStr.trim()) return 'fa-solid fa-laptop-code';
+    const clean = iconStr.trim();
+    if (clean.includes('fa-solid') || clean.includes('fa-brands') || clean.includes('fa-regular')) {
+      return clean;
+    }
+    if (clean.startsWith('fa-')) {
+      if (clean.includes('android') || clean.includes('apple') || clean.includes('google') || clean.includes('whatsapp')) {
+        return `fa-brands ${clean}`;
+      }
+      return `fa-solid ${clean}`;
+    }
+    return `fa-solid fa-${clean}`;
+  };
+
+  // Smart fallback icons based on service title
+  window.getProductDefaultIcon = function(title = '', category = 'professional_service') {
+    const t = (title || '').toLowerCase();
+    if (t.includes('retail') || t.includes('wholesale') || t.includes('kirana') || t.includes('shop') || t.includes('store')) return 'fa-solid fa-store';
+    if (t.includes('billing') || t.includes('invoice') || t.includes('khata')) return 'fa-solid fa-file-invoice-dollar';
+    if (t.includes('android') || t.includes('mobile app')) return 'fa-brands fa-android';
+    if (t.includes('website') || t.includes('portal') || t.includes('web')) return 'fa-solid fa-globe';
+    if (t.includes('school') || t.includes('college') || t.includes('education') || t.includes('student')) return 'fa-solid fa-graduation-cap';
+    if (t.includes('restaurant') || t.includes('cafe') || t.includes('food') || t.includes('hotel') || t.includes('kot')) return 'fa-solid fa-utensils';
+    if (t.includes('doctor') || t.includes('clinic') || t.includes('hospital') || t.includes('medical') || t.includes('pharma')) return 'fa-solid fa-user-doctor';
+    if (t.includes('estate') || t.includes('property') || t.includes('builder') || t.includes('plot')) return 'fa-solid fa-building';
+    if (t.includes('ecommerce') || t.includes('e-commerce') || t.includes('cart') || t.includes('vendor')) return 'fa-solid fa-cart-shopping';
+    if (t.includes('erp') || t.includes('crm') || t.includes('automation') || t.includes('custom erp')) return 'fa-solid fa-network-wired';
+    if (category === 'project_type') return 'fa-solid fa-shapes';
+    if (category === 'key_feature') return 'fa-solid fa-bolt';
+    if (category === 'other_service') return 'fa-solid fa-star';
+    return 'fa-solid fa-briefcase';
+  };
+
+  // Update Live Preview in Modal
+  window.updateProductIconPreview = function() {
+    const iconInput = document.getElementById('productIconInput');
+    const colorInput = document.getElementById('productIconColorInput');
+    const iconVal = (iconInput?.value || '').trim() || 'fa-store';
+    const colorVal = (colorInput?.value || '').trim() || '#8b5cf6';
+
+    const previewBadge = document.getElementById('productIconPreviewBadge');
+    if (previewBadge) {
+      const isImg = iconVal.startsWith('http://') || iconVal.startsWith('https://') || iconVal.startsWith('data:') || iconVal.startsWith('./') || iconVal.startsWith('/') || /\.(png|jpg|jpeg|svg|webp|gif)$/i.test(iconVal);
+      if (isImg) {
+        previewBadge.innerHTML = `<img src="${iconVal}" alt="Logo Preview" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>';">`;
+        previewBadge.style.color = 'inherit';
+        previewBadge.style.backgroundColor = 'transparent';
+        previewBadge.style.borderColor = colorVal;
+      } else {
+        const norm = window.normalizeIconClass(iconVal);
+        previewBadge.innerHTML = `<i id="productIconPreviewIcon" class="${norm}"></i>`;
+        previewBadge.style.color = colorVal;
+        previewBadge.style.backgroundColor = `${colorVal}20`;
+        previewBadge.style.borderColor = colorVal;
+      }
+    }
+  };
+
+  // Quick 1-click select from palette
+  window.selectQuickProductIcon = function(iconClass, color) {
+    const iconInput = document.getElementById('productIconInput');
+    const colorInput = document.getElementById('productIconColorInput');
+    if (iconInput) iconInput.value = iconClass;
+    if (color && colorInput) colorInput.value = color;
+    window.updateProductIconPreview();
+  };
+
   // Button actions for specific categories
   window.openAddServiceModal = function() {
     window.openAddProductModal('professional_service');
@@ -2848,6 +3191,12 @@
 
     window.handleProductCategoryChange(cat);
 
+    const defaultIcon = cat === 'project_type' ? 'fa-mobile-screen' : (cat === 'key_feature' ? 'fa-bolt' : (cat === 'other_service' ? 'fa-star' : 'fa-store'));
+    const defaultColor = cat === 'project_type' ? '#6366f1' : (cat === 'key_feature' ? '#eab308' : (cat === 'other_service' ? '#f59e0b' : '#8b5cf6'));
+    if (document.getElementById('productIconInput')) document.getElementById('productIconInput').value = defaultIcon;
+    if (document.getElementById('productIconColorInput')) document.getElementById('productIconColorInput').value = defaultColor;
+    window.updateProductIconPreview();
+
     document.getElementById('productTitleInput').value = "";
     document.getElementById('productDetailsInput').value = "";
     document.getElementById('productOriginalPriceInput').value = "";
@@ -2873,6 +3222,12 @@
     const titleEl = document.getElementById('addProductModalTitle');
     if (titleEl) titleEl.textContent = `Edit: ${prod.title}`;
 
+    const currentIcon = prod.icon || window.getProductDefaultIcon(prod.title, cat);
+    const currentColor = prod.color || '#8b5cf6';
+    if (document.getElementById('productIconInput')) document.getElementById('productIconInput').value = currentIcon;
+    if (document.getElementById('productIconColorInput')) document.getElementById('productIconColorInput').value = currentColor;
+    window.updateProductIconPreview();
+
     document.getElementById('productTitleInput').value = prod.title || "";
     document.getElementById('productDetailsInput').value = prod.details || "";
     document.getElementById('productOriginalPriceInput').value = prod.originalPrice || "";
@@ -2893,6 +3248,9 @@
       const res = await deleteProductFromFirestore(docId);
       if (res && res.success) {
         currentProductsCatalog = currentProductsCatalog.filter(p => p.id !== docId);
+        try {
+          localStorage.setItem('godoz_cached_products_catalog', JSON.stringify(currentProductsCatalog));
+        } catch(e) {}
         window.renderProductsCatalogTable(currentProductsCatalog);
       } else {
         alert("❌ Error deleting product: " + (res?.error || 'Unknown error'));
@@ -2943,10 +3301,20 @@
           const globalIndex = startIndex + pageIdx;
           const tr = document.createElement('tr');
           tr.style.borderBottom = '1px solid var(--border-color)';
+          const rawIcon = (prod.icon || '').trim();
+          const isImg = rawIcon.startsWith('http://') || rawIcon.startsWith('https://') || rawIcon.startsWith('data:') || rawIcon.startsWith('./') || rawIcon.startsWith('/') || /\.(png|jpg|jpeg|svg|webp|gif)$/i.test(rawIcon);
+          const itemIcon = prod.icon ? window.normalizeIconClass(prod.icon) : window.getProductDefaultIcon(prod.title || '', 'professional_service');
+          const itemColor = prod.color || '#8b5cf6';
+          const iconDisplay = isImg 
+            ? `<div style="width:36px; height:36px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; border:1px solid var(--border-color); background:transparent;"><img src="${rawIcon}" alt="Logo" style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'fa-solid fa-store\\'></i>';"></div>`
+            : `<div style="width:36px; height:36px; border-radius:8px; background:${itemColor}20; color:${itemColor}; display:inline-flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; border:1px solid ${itemColor}30;"><i class="${itemIcon}"></i></div>`;
           tr.innerHTML = `
             <td style="padding:12px; text-align:center; font-weight:800; color:var(--text-muted);">${globalIndex + 1}</td>
             <td style="padding:12px; font-weight:800; color:var(--text-main); font-size:0.92rem;">
-              ${escapeHTML(prod.title || 'Untitled Service')}
+              <div style="display:flex; align-items:center; gap:10px;">
+                ${iconDisplay}
+                <span>${escapeHTML(prod.title || 'Untitled Service')}</span>
+              </div>
             </td>
             <td style="padding:12px; font-size:0.83rem; color:var(--text-main); line-height:1.5; white-space:pre-wrap; max-width:320px;">
               ${escapeHTML(prod.details || 'No details provided.')}
@@ -2992,13 +3360,20 @@
         projectTypes.forEach((prod, idx) => {
           const tr = document.createElement('tr');
           tr.style.borderBottom = '1px solid var(--border-color)';
+          const rawIcon = (prod.icon || '').trim();
+          const isImg = rawIcon.startsWith('http://') || rawIcon.startsWith('https://') || rawIcon.startsWith('data:') || rawIcon.startsWith('./') || rawIcon.startsWith('/') || /\.(png|jpg|jpeg|svg|webp|gif)$/i.test(rawIcon);
+          const itemIcon = prod.icon ? window.normalizeIconClass(prod.icon) : 'fa-solid fa-shapes';
+          const itemColor = prod.color || '#6366f1';
+          const iconDisplay = isImg 
+            ? `<div style="width:34px; height:34px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; border:1px solid var(--border-color); background:transparent;"><img src="${rawIcon}" alt="Logo" style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'fa-solid fa-shapes\\'></i>';"></div>`
+            : `<div style="width:34px; height:34px; border-radius:8px; background:${itemColor}20; color:${itemColor}; display:inline-flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; border:1px solid ${itemColor}30;"><i class="${itemIcon}"></i></div>`;
           tr.innerHTML = `
             <td style="padding:12px; text-align:center; font-weight:800; color:var(--text-muted);">${idx + 1}</td>
             <td style="padding:12px; font-weight:800; color:var(--text-main); font-size:0.92rem;">
-              <span style="display:inline-flex; align-items:center; gap:6px;">
-                <i class="fa-solid fa-shapes" style="color:#6366f1; font-size:0.85rem;"></i>
-                ${escapeHTML(prod.title || 'Untitled Project Type')}
-              </span>
+              <div style="display:flex; align-items:center; gap:10px;">
+                ${iconDisplay}
+                <span>${escapeHTML(prod.title || 'Untitled Project Type')}</span>
+              </div>
             </td>
             <td style="padding:12px; font-size:0.83rem; color:var(--text-main); line-height:1.5; white-space:pre-wrap; max-width:320px;">
               ${escapeHTML(prod.details || 'Standard architecture and base development scope.')}
@@ -3035,13 +3410,20 @@
         keyFeatures.forEach((prod, idx) => {
           const tr = document.createElement('tr');
           tr.style.borderBottom = '1px solid var(--border-color)';
+          const rawIcon = (prod.icon || '').trim();
+          const isImg = rawIcon.startsWith('http://') || rawIcon.startsWith('https://') || rawIcon.startsWith('data:') || rawIcon.startsWith('./') || rawIcon.startsWith('/') || /\.(png|jpg|jpeg|svg|webp|gif)$/i.test(rawIcon);
+          const itemIcon = prod.icon ? window.normalizeIconClass(prod.icon) : 'fa-solid fa-bolt';
+          const itemColor = prod.color || '#eab308';
+          const iconDisplay = isImg 
+            ? `<div style="width:34px; height:34px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; border:1px solid var(--border-color); background:transparent;"><img src="${rawIcon}" alt="Logo" style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'fa-solid fa-bolt\\'></i>';"></div>`
+            : `<div style="width:34px; height:34px; border-radius:8px; background:${itemColor}20; color:${itemColor}; display:inline-flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; border:1px solid ${itemColor}30;"><i class="${itemIcon}"></i></div>`;
           tr.innerHTML = `
             <td style="padding:12px; text-align:center; font-weight:800; color:var(--text-muted);">${idx + 1}</td>
             <td style="padding:12px; font-weight:800; color:var(--text-main); font-size:0.92rem;">
-              <span style="display:inline-flex; align-items:center; gap:6px;">
-                <i class="fa-solid fa-bolt" style="color:#eab308; font-size:0.85rem;"></i>
-                ${escapeHTML(prod.title || 'Untitled Feature')}
-              </span>
+              <div style="display:flex; align-items:center; gap:10px;">
+                ${iconDisplay}
+                <span>${escapeHTML(prod.title || 'Untitled Feature')}</span>
+              </div>
             </td>
             <td style="padding:12px; font-size:0.83rem; color:var(--text-main); line-height:1.5; white-space:pre-wrap; max-width:320px;">
               ${escapeHTML(prod.details || 'Add-on module integration')}
@@ -3078,13 +3460,20 @@
         otherServices.forEach((prod, idx) => {
           const tr = document.createElement('tr');
           tr.style.borderBottom = '1px solid var(--border-color)';
+          const rawIcon = (prod.icon || '').trim();
+          const isImg = rawIcon.startsWith('http://') || rawIcon.startsWith('https://') || rawIcon.startsWith('data:') || rawIcon.startsWith('./') || rawIcon.startsWith('/') || /\.(png|jpg|jpeg|svg|webp|gif)$/i.test(rawIcon);
+          const itemIcon = prod.icon ? window.normalizeIconClass(prod.icon) : 'fa-solid fa-star';
+          const itemColor = prod.color || '#f59e0b';
+          const iconDisplay = isImg 
+            ? `<div style="width:34px; height:34px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; border:1px solid var(--border-color); background:transparent;"><img src="${rawIcon}" alt="Logo" style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'fa-solid fa-star\\'></i>';"></div>`
+            : `<div style="width:34px; height:34px; border-radius:8px; background:${itemColor}20; color:${itemColor}; display:inline-flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; border:1px solid ${itemColor}30;"><i class="${itemIcon}"></i></div>`;
           tr.innerHTML = `
             <td style="padding:12px; text-align:center; font-weight:800; color:var(--text-muted);">${idx + 1}</td>
             <td style="padding:12px; font-weight:800; color:var(--text-main); font-size:0.92rem;">
-              <span style="display:inline-flex; align-items:center; gap:6px;">
-                <i class="fa-solid fa-star" style="color:#f59e0b; font-size:0.85rem;"></i>
-                ${escapeHTML(prod.title || 'Untitled Showcase')}
-              </span>
+              <div style="display:flex; align-items:center; gap:10px;">
+                ${iconDisplay}
+                <span>${escapeHTML(prod.title || 'Untitled Showcase')}</span>
+              </div>
             </td>
             <td style="padding:12px; font-size:0.83rem; color:var(--text-main); line-height:1.5; white-space:pre-wrap; max-width:320px;">
               ${escapeHTML(prod.details || 'Showcase highlights & features.')}
@@ -3119,6 +3508,8 @@
     const category = document.getElementById('productCategorySelect')?.value || 'professional_service';
     const title = document.getElementById('productTitleInput').value.trim();
     const details = document.getElementById('productDetailsInput').value.trim();
+    const icon = (document.getElementById('productIconInput')?.value || '').trim() || 'fa-store';
+    const color = (document.getElementById('productIconColorInput')?.value || '').trim() || '#8b5cf6';
     const originalPrice = Math.max(0, parseInt(document.getElementById('productOriginalPriceInput').value || '0', 10));
     const offerPrice = Math.max(0, parseInt(document.getElementById('productOfferPriceInput').value || '0', 10));
 
@@ -3130,6 +3521,8 @@
       category: category,
       title: title,
       details: details,
+      icon: icon,
+      color: color,
       originalPrice: originalPrice,
       offerPrice: offerPrice,
       updatedAt: new Date().toISOString()
@@ -3156,6 +3549,9 @@
       } else {
         currentProductsCatalog.push(newProd);
       }
+      try {
+        localStorage.setItem('godoz_cached_products_catalog', JSON.stringify(currentProductsCatalog));
+      } catch(e) {}
       window.renderProductsCatalogTable(currentProductsCatalog);
     } else {
       alert("❌ Error saving product: " + (res?.error || 'Unknown error'));
@@ -3190,9 +3586,89 @@
     }
   });
 
+  // Helper to show animated loading circles across all 4 tables in Tab 5
+  window.showCatalogLoadingSpinners = function() {
+    const proTbody = document.getElementById('pricingProductsTableBody');
+    const typeTbody = document.getElementById('projectTypesTableBody');
+    const keyTbody = document.getElementById('keyFeaturesTableBody');
+    const otherTbody = document.getElementById('otherServicesTableBody');
+
+    if (proTbody) {
+      proTbody.innerHTML = `
+        <tr id="pricingLoaderRow">
+          <td colspan="6" style="text-align:center; padding:35px 20px; color:var(--text-muted);">
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;">
+              <i class="fa-solid fa-circle-notch fa-spin" style="color:var(--primary); font-size:2rem;"></i>
+              <span style="font-weight:800; font-size:0.95rem; color:var(--text-main);">Loading Services from Firestore...</span>
+              <span style="font-size:0.78rem; color:var(--text-muted);">Fetching live packages from <code>/products/</code></span>
+            </div>
+          </td>
+        </tr>`;
+    }
+    if (typeTbody) {
+      typeTbody.innerHTML = `
+        <tr id="projectTypesLoaderRow">
+          <td colspan="6" style="text-align:center; padding:30px 20px; color:var(--text-muted);">
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;">
+              <i class="fa-solid fa-circle-notch fa-spin" style="color:#6366f1; font-size:1.9rem;"></i>
+              <span style="font-weight:800; font-size:0.95rem; color:var(--text-main);">Loading Project Types from Firestore...</span>
+              <span style="font-size:0.78rem; color:var(--text-muted);">Fetching Cost Estimator base options (Step 1)</span>
+            </div>
+          </td>
+        </tr>`;
+    }
+    if (keyTbody) {
+      keyTbody.innerHTML = `
+        <tr id="keyFeaturesLoaderRow">
+          <td colspan="6" style="text-align:center; padding:30px 20px; color:var(--text-muted);">
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;">
+              <i class="fa-solid fa-circle-notch fa-spin" style="color:#eab308; font-size:1.9rem;"></i>
+              <span style="font-weight:800; font-size:0.95rem; color:var(--text-main);">Loading Key Features from Firestore...</span>
+              <span style="font-size:0.78rem; color:var(--text-muted);">Fetching selectable add-on features (Step 2)</span>
+            </div>
+          </td>
+        </tr>`;
+    }
+    if (otherTbody) {
+      otherTbody.innerHTML = `
+        <tr id="otherServicesLoaderRow">
+          <td colspan="6" style="text-align:center; padding:30px 20px; color:var(--text-muted);">
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;">
+              <i class="fa-solid fa-circle-notch fa-spin" style="color:#f59e0b; font-size:1.9rem;"></i>
+              <span style="font-weight:800; font-size:0.95rem; color:var(--text-main);">Loading Other Services from Firestore...</span>
+              <span style="font-size:0.78rem; color:var(--text-muted);">Fetching Android App &amp; Web Portal showcases</span>
+            </div>
+          </td>
+        </tr>`;
+    }
+  };
+
+  // Re-fetch / Refresh Catalog data with visible spin feedback
+  window.refreshCatalogFromFirestore = function() {
+    const btn = document.getElementById('btnRefreshCatalogData');
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-arrows-rotate fa-spin"></i> Refreshing...';
+    }
+    window.showCatalogLoadingSpinners();
+    setTimeout(() => {
+      if (currentProductsCatalog && currentProductsCatalog.length > 0) {
+        window.renderProductsCatalogTable(currentProductsCatalog);
+      }
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Refresh Data';
+      }
+    }, 600);
+  };
+
   // Listen to /products/ collection in real-time
   listenToProductsCatalog((productsList) => {
-    window.renderProductsCatalogTable(Array.isArray(productsList) ? productsList : []);
+    const list = Array.isArray(productsList) ? productsList : [];
+    try {
+      localStorage.setItem('godoz_cached_products_catalog', JSON.stringify(list));
+    } catch(e) {}
+    window.renderProductsCatalogTable(list);
   });
 
   // Render Razorpay Payments Table

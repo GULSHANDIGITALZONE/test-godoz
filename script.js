@@ -37,6 +37,40 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+/* Global FontAwesome Icon Normalizer & Smart Category Fallback */
+window.normalizeIconClass = function(iconStr) {
+  if (!iconStr || typeof iconStr !== 'string' || !iconStr.trim()) return 'fa-solid fa-laptop-code';
+  const clean = iconStr.trim();
+  if (clean.includes('fa-solid') || clean.includes('fa-brands') || clean.includes('fa-regular')) {
+    return clean;
+  }
+  if (clean.startsWith('fa-')) {
+    if (clean.includes('android') || clean.includes('apple') || clean.includes('google') || clean.includes('whatsapp')) {
+      return `fa-brands ${clean}`;
+    }
+    return `fa-solid ${clean}`;
+  }
+  return `fa-solid fa-${clean}`;
+};
+
+window.getProductDefaultIcon = function(title = '', category = 'professional_service') {
+  const t = (title || '').toLowerCase();
+  if (t.includes('retail') || t.includes('wholesale') || t.includes('kirana') || t.includes('shop') || t.includes('store')) return 'fa-solid fa-store';
+  if (t.includes('billing') || t.includes('invoice') || t.includes('khata')) return 'fa-solid fa-file-invoice-dollar';
+  if (t.includes('android') || t.includes('mobile app')) return 'fa-brands fa-android';
+  if (t.includes('website') || t.includes('portal') || t.includes('web')) return 'fa-solid fa-globe';
+  if (t.includes('school') || t.includes('college') || t.includes('education') || t.includes('student')) return 'fa-solid fa-graduation-cap';
+  if (t.includes('restaurant') || t.includes('cafe') || t.includes('food') || t.includes('hotel') || t.includes('kot')) return 'fa-solid fa-utensils';
+  if (t.includes('doctor') || t.includes('clinic') || t.includes('hospital') || t.includes('medical') || t.includes('pharma')) return 'fa-solid fa-user-doctor';
+  if (t.includes('estate') || t.includes('property') || t.includes('builder') || t.includes('plot')) return 'fa-solid fa-building';
+  if (t.includes('ecommerce') || t.includes('e-commerce') || t.includes('cart') || t.includes('vendor')) return 'fa-solid fa-cart-shopping';
+  if (t.includes('erp') || t.includes('crm') || t.includes('automation') || t.includes('custom erp')) return 'fa-solid fa-network-wired';
+  if (category === 'project_type') return 'fa-solid fa-shapes';
+  if (category === 'key_feature') return 'fa-solid fa-bolt';
+  if (category === 'other_service') return 'fa-solid fa-star';
+  return 'fa-solid fa-briefcase';
+};
+
 /* Render Live Services Cards directly from Firestore /products/ (Zero hardcoding) */
 window.renderLiveServicesGrid = function(products) {
   const container = document.querySelector('.services-grid');
@@ -60,14 +94,14 @@ window.renderLiveServicesGrid = function(products) {
     card.setAttribute('data-category', 'services website apps');
     card.style.cssText = 'background:var(--bg-surface, #ffffff); border:1px solid var(--border-color, #e2e8f0); border-radius:16px; padding:22px; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; justify-content:space-between;';
 
-    const icons = [
-      'fa-graduation-cap', 'fa-utensils', 'fa-user-doctor', 'fa-store',
-      'fa-android', 'fa-globe', 'fa-server', 'fa-layer-group', 'fa-gears', 'fa-wrench'
-    ];
-    const colors = ['#8b5cf6', '#ca8a04', '#10b981', '#0891b2', '#1266e8', '#ff6900', '#10b981', '#1266e8', '#8b5cf6', '#06b6d4'];
-
-    const iconClass = icons[index % icons.length] || 'fa-laptop-code';
-    const colorTheme = colors[index % colors.length] || '#1266e8';
+    const defaultColors = ['#8b5cf6', '#ca8a04', '#10b981', '#0891b2', '#1266e8', '#ff6900', '#10b981', '#1266e8', '#8b5cf6', '#06b6d4'];
+    const colorTheme = prod.color || defaultColors[index % defaultColors.length] || '#1266e8';
+    const rawIcon = (prod.icon || '').trim();
+    const isImg = rawIcon.startsWith('http://') || rawIcon.startsWith('https://') || rawIcon.startsWith('data:') || rawIcon.startsWith('./') || rawIcon.startsWith('/') || /\.(png|jpg|jpeg|svg|webp|gif)$/i.test(rawIcon);
+    const iconClass = prod.icon ? window.normalizeIconClass(prod.icon) : window.getProductDefaultIcon(prod.title || '', 'professional_service');
+    const badgeContent = isImg 
+      ? `<img src="${rawIcon}" alt="Logo" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'${iconClass}\\'></i>';">`
+      : `<i class="${iconClass}"></i>`;
 
     const origPriceText = prod.originalPrice > 0 ? `<s style="color:var(--text-muted); font-weight:600; text-decoration:line-through; margin-right:4px;">₹${Number(prod.originalPrice).toLocaleString('en-IN')}</s> ` : '';
     const offerPriceText = `मात्र ₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}`;
@@ -86,8 +120,8 @@ window.renderLiveServicesGrid = function(products) {
     card.innerHTML = `
       <div>
         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-          <div style="width:46px; height:46px; border-radius:10px; background:${colorTheme}20; color:${colorTheme}; display:flex; align-items:center; justify-content:center; font-size:22px;">
-            <i class="fa-solid ${iconClass}"></i>
+          <div style="width:46px; height:46px; border-radius:10px; background:${colorTheme}20; color:${colorTheme}; display:flex; align-items:center; justify-content:center; font-size:22px; overflow:hidden;">
+            ${badgeContent}
           </div>
           <span style="font-size:0.8rem; font-weight:800; color:${colorTheme}; background:${colorTheme}15; padding:4px 10px; border-radius:20px;">
             ${origPriceText}${offerPriceText}
@@ -253,12 +287,21 @@ window.renderEstimatorProjectTypes = function(products) {
         }
       }
 
+      const rawIcon = (prod.icon || '').trim();
+      const isImg = rawIcon.startsWith('http://') || rawIcon.startsWith('https://') || rawIcon.startsWith('data:') || rawIcon.startsWith('./') || rawIcon.startsWith('/') || /\.(png|jpg|jpeg|svg|webp|gif)$/i.test(rawIcon);
+      const itemIcon = prod.icon ? window.normalizeIconClass(prod.icon) : ('fa-solid ' + icon);
+      const itemColor = prod.color || '';
+      const customBadgeStyle = itemColor ? `style="background:${itemColor}20; color:${itemColor};"` : '';
+      const badgeContent = isImg
+        ? `<img src="${rawIcon}" alt="Logo" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'${itemIcon}\\'></i>';">`
+        : `<i class="${itemIcon}"></i>`;
+
       const label = document.createElement('label');
       label.className = `estimator-type-tile ${isChecked ? 'selected' : ''}`;
       label.innerHTML = `
         <input type="radio" name="project_type" value="${prod.offerPrice || 0}" data-name="${escapeHTML(prod.title || '')}" ${isChecked} style="accent-color:var(--primary); width:18px; height:18px; cursor:pointer; flex-shrink:0;">
-        <div class="est-tile-badge">
-          <i class="fa-solid ${icon}"></i>
+        <div class="est-tile-badge" ${customBadgeStyle} style="overflow:hidden;">
+          ${badgeContent}
         </div>
         <div style="flex:1; min-width:0;">
           <div style="font-size:0.86rem; font-weight:800; color:var(--text-main); line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word;" title="${escapeHTML(prod.title || '')}">
@@ -428,12 +471,21 @@ window.renderEstimatorKeyFeatures = function(keyFeatures) {
       }
     }
 
+    const rawIcon = (item.icon || '').trim();
+    const isImg = rawIcon.startsWith('http://') || rawIcon.startsWith('https://') || rawIcon.startsWith('data:') || rawIcon.startsWith('./') || rawIcon.startsWith('/') || /\.(png|jpg|jpeg|svg|webp|gif)$/i.test(rawIcon);
+    const itemIcon = item.icon ? window.normalizeIconClass(item.icon) : ('fa-solid ' + icon);
+    const itemColor = item.color || '';
+    const customIconStyle = itemColor ? `style="background:${itemColor}20; color:${itemColor};"` : '';
+    const badgeContent = isImg
+      ? `<img src="${rawIcon}" alt="Logo" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'${itemIcon}\\'></i>';">`
+      : `<i class="${itemIcon}"></i>`;
+
     const price = Number(item.offerPrice || 0);
     const label = document.createElement('label');
     label.className = 'estimator-feature-tile';
     label.innerHTML = `
       <input type="checkbox" name="feature_addon" value="${price}" data-name="${escapeHTML(item.title || '')}" onchange="if(typeof window.calculateQuote === 'function') window.calculateQuote();">
-      <div class="est-feature-icon"><i class="fa-solid ${icon}"></i></div>
+      <div class="est-feature-icon" ${customIconStyle} style="overflow:hidden;">${badgeContent}</div>
       <div style="flex:1; min-width:0;">
         <div style="font-size:0.82rem; font-weight:800; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHTML(item.title || '')}">${escapeHTML(item.title || '')}</div>
         <div style="font-size:0.75rem; font-weight:800; color:#10b981; margin-top:2px;">+₹${price.toLocaleString('en-IN')}</div>
@@ -453,6 +505,53 @@ window.renderEstimatorKeyFeatures = function(keyFeatures) {
 window.renderOtherServicesShowcases = function(otherServices) {
   if (!Array.isArray(otherServices) || otherServices.length === 0) return;
 
+  const escapeHTML = window.escapeHTML || function(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>'"]/g, tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag] || tag));
+  };
+
+  const applyShowcaseIconAndBadge = function(badgeEl, iconVal, colorVal, defaultIconClass, defaultColor) {
+    if (!badgeEl) return;
+    const rawIcon = (iconVal || '').trim();
+    const isImage = rawIcon.startsWith('http://') || rawIcon.startsWith('https://') || rawIcon.startsWith('data:') || rawIcon.startsWith('./') || rawIcon.startsWith('/') || /\.(png|jpg|jpeg|svg|webp|gif)$/i.test(rawIcon);
+    const themeColor = colorVal || defaultColor;
+
+    if (isImage) {
+      badgeEl.innerHTML = `<img src="${rawIcon}" alt="Logo" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'${defaultIconClass}\\'></i>';">`;
+      badgeEl.style.background = 'transparent';
+      badgeEl.style.color = 'inherit';
+      badgeEl.style.border = '1px solid var(--border-color)';
+    } else {
+      const normClass = rawIcon ? (window.normalizeIconClass ? window.normalizeIconClass(rawIcon) : rawIcon) : defaultIconClass;
+      badgeEl.innerHTML = `<i class="${normClass}"></i>`;
+      badgeEl.style.background = colorVal ? `${colorVal}22` : `${defaultColor}22`;
+      badgeEl.style.color = themeColor;
+      badgeEl.style.border = `1px solid ${themeColor}33`;
+    }
+  };
+
+  const applySwitcherTab = function(btnEl, title, iconVal, colorVal, defaultIconClass) {
+    if (!btnEl) return;
+    const rawIcon = (iconVal || '').trim();
+    const isImage = rawIcon.startsWith('http://') || rawIcon.startsWith('https://') || rawIcon.startsWith('data:') || rawIcon.startsWith('./') || rawIcon.startsWith('/') || /\.(png|jpg|jpeg|svg|webp|gif)$/i.test(rawIcon);
+
+    let iconHtml = '';
+    if (isImage) {
+      iconHtml = `<img src="${rawIcon}" alt="icon" style="width:16px; height:16px; border-radius:3px; object-fit:cover; vertical-align:middle; margin-right:4px;"> `;
+    } else {
+      const normClass = rawIcon ? (window.normalizeIconClass ? window.normalizeIconClass(rawIcon) : rawIcon) : defaultIconClass;
+      const colorStyle = colorVal ? ` style="color:${colorVal};"` : '';
+      iconHtml = `<i class="${normClass}"${colorStyle}></i> `;
+    }
+    btnEl.innerHTML = `${iconHtml}${escapeHTML(title || btnEl.textContent.trim())}`;
+  };
+
   // 1. Android App Showcase View
   const appProd = otherServices.find(p => (p.title || '').toLowerCase().includes('android') || (p.title || '').toLowerCase().includes('app')) || otherServices[0];
   if (appProd) {
@@ -461,6 +560,8 @@ window.renderOtherServicesShowcases = function(otherServices) {
     const descEl = document.getElementById('heroAppDesc');
     const priceEl = document.getElementById('heroAppPrice');
     const orderBtn = document.getElementById('heroAppOrderBtn');
+    const iconBadge = document.getElementById('heroAppIconBadge');
+    const btnApp = document.getElementById('btnMockupApp');
 
     if (titleEl) titleEl.textContent = appProd.title;
     if (priceEl) priceEl.textContent = `Starting ₹${Number(appProd.offerPrice || 0).toLocaleString('en-IN')}`;
@@ -473,6 +574,10 @@ window.renderOtherServicesShowcases = function(otherServices) {
         window.openOrderModal(appProd.title, appProd.offerPrice || 0, appProd.details || 'Google Play Ready, Offline DB');
       };
     }
+
+    // Dynamic icon, badge and tab
+    applyShowcaseIconAndBadge(iconBadge, appProd.icon, appProd.color, 'fa-brands fa-android', '#1266e8');
+    applySwitcherTab(btnApp, appProd.title || 'Android App View', appProd.icon, appProd.color, 'fa-brands fa-android');
   }
 
   // 2. Web Portal Showcase View
@@ -483,6 +588,8 @@ window.renderOtherServicesShowcases = function(otherServices) {
     const descEl = document.getElementById('heroWebDesc');
     const priceEl = document.getElementById('heroWebPrice');
     const orderBtn = document.getElementById('heroWebOrderBtn');
+    const iconBadge = document.getElementById('heroWebIconBadge');
+    const btnWeb = document.getElementById('btnMockupWeb');
 
     if (titleEl) titleEl.textContent = webProd.title;
     if (priceEl) priceEl.textContent = `Starting ₹${Number(webProd.offerPrice || 0).toLocaleString('en-IN')}`;
@@ -495,6 +602,93 @@ window.renderOtherServicesShowcases = function(otherServices) {
         window.openOrderModal(webProd.title, webProd.offerPrice || 0, webProd.details || 'Responsive Web Portal & DB');
       };
     }
+
+    // Dynamic icon, badge and tab
+    applyShowcaseIconAndBadge(iconBadge, webProd.icon, webProd.color, 'fa-solid fa-server', '#10b981');
+    applySwitcherTab(btnWeb, webProd.title || 'Web Portal View', webProd.icon, webProd.color, 'fa-solid fa-globe');
+  }
+
+  // 3. Dynamic Extra Showcase Views (if user added 3 or more items in Other Services)
+  const switcherBar = document.querySelector('.mockup-switcher-bar');
+  const mockupContainer = document.querySelector('.hero-interactive-mockup');
+  const btnFounder = document.getElementById('btnMockupFounder');
+
+  // Clean up any previously created extra tabs/screens on reload
+  document.querySelectorAll('.mockup-switch-btn-extra').forEach(el => el.remove());
+  document.querySelectorAll('.mockup-screen-container-extra').forEach(el => el.remove());
+
+  const extraServices = otherServices.filter(p => p !== appProd && p !== webProd);
+  if (switcherBar && mockupContainer && extraServices.length > 0) {
+    extraServices.forEach((extraProd, idx) => {
+      const extraId = 'extra_' + idx;
+      const extraColor = extraProd.color || '#8b5cf6';
+      const extraIcon = extraProd.icon || 'fa-solid fa-star';
+
+      // Create Switcher Tab Button
+      const tabBtn = document.createElement('button');
+      tabBtn.type = 'button';
+      tabBtn.className = 'mockup-switch-btn mockup-switch-btn-extra';
+      tabBtn.id = `btnMockup_${extraId}`;
+      tabBtn.onclick = function() { window.switchHeroMockup(extraId); };
+      applySwitcherTab(tabBtn, extraProd.title || `Service ${idx + 3}`, extraIcon, extraColor, 'fa-solid fa-star');
+      if (btnFounder) {
+        switcherBar.insertBefore(tabBtn, btnFounder);
+      } else {
+        switcherBar.appendChild(tabBtn);
+      }
+
+      // Create Mockup Screen
+      const screenDiv = document.createElement('div');
+      screenDiv.id = `mockupScreen_${extraId}`;
+      screenDiv.className = 'mockup-screen-container mockup-screen-container-extra';
+      screenDiv.style.display = 'none';
+
+      const detailLines = (extraProd.details || '').split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      const mainDesc = detailLines[0] || 'Custom engineered software solution by GoDoz Technology.';
+
+      screenDiv.innerHTML = `
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div class="mockup-header-dots">
+              <span class="mockup-dot red"></span>
+              <span class="mockup-dot yellow"></span>
+              <span class="mockup-dot green"></span>
+            </div>
+            <span style="font-size:0.72rem; font-weight:800; background:${extraColor}20; color:${extraColor}; padding:3px 8px; border-radius:12px;">
+              ${escapeHTML(extraProd.title || 'Custom Solution')}
+            </span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+            <div id="heroExtraIconBadge_${idx}" style="width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; overflow:hidden; box-shadow:var(--shadow-sm);">
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:1.05rem; color:var(--text-main);">${escapeHTML(extraProd.title || 'Custom Solution')}</h4>
+              <div style="font-size:0.75rem; color:${extraColor}; font-weight:700;">Full-Stack Custom Engine</div>
+            </div>
+          </div>
+          <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.45; margin-bottom:12px;">
+            ${escapeHTML(mainDesc)}
+          </p>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-surface); padding:8px 12px; border-radius:10px; border:1px solid var(--border-color);">
+          <span style="font-size:0.82rem; font-weight:800; color:var(--text-main);">Starting ₹${Number(extraProd.offerPrice || 0).toLocaleString('en-IN')}</span>
+          <button type="button" class="btn btn-sm btn-primary" style="padding:5px 12px; font-size:0.78rem; background:${extraColor}; border-color:${extraColor};">
+            ⚡ Order Now
+          </button>
+        </div>
+      `;
+      mockupContainer.appendChild(screenDiv);
+
+      const extraBadge = screenDiv.querySelector(`#heroExtraIconBadge_${idx}`);
+      applyShowcaseIconAndBadge(extraBadge, extraIcon, extraColor, 'fa-solid fa-star', '#8b5cf6');
+
+      const extraOrderBtn = screenDiv.querySelector('button');
+      if (extraOrderBtn) {
+        extraOrderBtn.onclick = function() {
+          window.openOrderModal(extraProd.title, extraProd.offerPrice || 0, extraProd.details || 'Custom Software Solution');
+        };
+      }
+    });
   }
 };
 
@@ -1267,6 +1461,17 @@ function initEstimator() {
     }
   }
 
+  /* ==========================================================================
+     Global Order & Project Booking Navigation (Dedicated Full Page Experience)
+     ========================================================================== */
+  window.openOrderModal = function(category = '', price = 0, features = '') {
+    const params = new URLSearchParams();
+    if (category) params.set('service', category);
+    if (price !== undefined && price !== null && !isNaN(price) && Number(price) > 0) params.set('price', price);
+    if (features) params.set('features', features);
+    window.location.href = './order.html?' + params.toString();
+  };
+
   // Printable / Downloadable Official Quotation Engine
   window.downloadEstimatorQuotation = function() {
     const selectedType = document.querySelector('input[name="project_type"]:checked');
@@ -1817,11 +2022,11 @@ window.switchHeroMockup = function(mode) {
   const screenWeb = document.getElementById('mockupScreenWeb');
   const screenFounder = document.getElementById('mockupScreenFounder');
 
-  // Reset tab active classes
-  [btnApp, btnWeb, btnFounder].forEach(b => b?.classList.remove('active'));
-  // Hide all screens
-  [screenApp, screenWeb, screenFounder].forEach(s => {
-    if (s) s.style.display = 'none';
+  // Reset tab active classes for all tabs (including extra tabs)
+  document.querySelectorAll('.mockup-switcher-bar .mockup-switch-btn').forEach(b => b.classList.remove('active'));
+  // Hide all mockup screens (including extra screens)
+  document.querySelectorAll('.hero-interactive-mockup .mockup-screen-container').forEach(s => {
+    s.style.display = 'none';
   });
 
   if (mode === 'app') {
@@ -1833,6 +2038,11 @@ window.switchHeroMockup = function(mode) {
   } else if (mode === 'founder') {
     btnFounder?.classList.add('active');
     if (screenFounder) screenFounder.style.display = 'block';
+  } else {
+    const customBtn = document.getElementById(`btnMockup_${mode}`);
+    const customScreen = document.getElementById(`mockupScreen_${mode}`);
+    customBtn?.classList.add('active');
+    if (customScreen) customScreen.style.display = 'flex';
   }
 };
 

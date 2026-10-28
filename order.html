@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-4514064358809691">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4514064358809691" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Immediate Theme Initializer -->
+  <script>
+    (function(){
+      const savedTheme = localStorage.getItem('godoz_theme') || 
+        (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+
+  <title>Book &amp; Order Project | GoDoz Technology - Direct Software Development</title>
+  <meta name="description" content="Book your custom Android App, Web Portal, or Business Software directly with Lead Software Engineer RS GULSHAN PRAJAPATI. 0% Advance Option, Full Source Code Ownership &amp; 30-Day Free Support.">
+  <link rel="canonical" href="https://www.godoz.in/order.html">
+
+  <link rel="shortcut icon" href="./contact_godoz.png" type="image/x-icon">
+
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <!-- Razorpay Official Checkout SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <!-- GoDoz Website Core Stylesheet -->
+  <link rel="stylesheet" href="./style.css">
+
+  <style>
+    /* Dedicated Full Page Order & Checkout Styles */
+    .order-page-wrapper {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+    }
+
+    .order-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .order-breadcrumb a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .order-breadcrumb a:hover {
+      color: var(--primary);
+    }
+    .order-breadcrumb i {
+      font-size: 0.7rem;
+      opacity: 0.7;
+    }
+    .order-breadcrumb span {
+      color: var(--primary);
+    }
+
+    .order-hero-header {
+      background: linear-gradient(135deg, rgba(18, 102, 232, 0.08), rgba(255, 105, 0, 0.05));
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 28px 24px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .order-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(18, 102, 232, 0.12);
+      color: var(--primary);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .order-hero-title {
+      font-size: 1.85rem;
+      font-weight: 900;
+      color: var(--text-main);
+      margin: 0 0 8px;
+      line-height: 1.25;
+      letter-spacing: -0.5px;
+    }
+    .order-hero-subtitle {
+      font-size: 0.94rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0;
+      max-width: 780px;
+    }
+
+    /* Trust Highlights Grid */
+    .order-trust-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .order-trust-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .order-trust-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .order-trust-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .order-trust-text h4 {
+      margin: 0 0 2px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+    .order-trust-text p {
+      margin: 0;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Main 2-Column Responsive Checkout Layout */
+    .order-checkout-layout {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* Left: Checkout Form Container */
+    .order-form-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .order-section-block {
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .order-section-block:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .order-section-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 0 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .order-section-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(18, 102, 232, 0.12);
+      color: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    /* Auth Banner Card */
+    .order-auth-pill {
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .order-auth-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .order-auth-left img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+    }
+
+    /* Form Inputs */
+    .order-input-group {
+      margin-bottom: 14px;
+    }
+    .order-input-group label {
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+    .order-input-control {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      background: var(--bg-surface);
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+    .order-input-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(18, 102, 232, 0.12);
+    }
+    textarea.order-input-control {
+      resize: vertical;
+      min-height: 95px;
+      line-height: 1.5;
+    }
+
+    /* Payment Option Radio Cards */
+    .order-pay-card {
+      border: 1.5px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--bg-surface);
+      transition: all 0.2s;
+    }
+    .order-pay-card:hover {
+      border-color: var(--primary);
+      background: rgba(18, 102, 232, 0.02);
+    }
+    .order-pay-card.selected {
+      border-color: var(--primary);
+      background: rgba(18, 102, 232, 0.04);
+      box-shadow: 0 0 0 2px rgba(18, 102, 232, 0.15);
+    }
+    .order-pay-card input[type="radio"] {
+      margin-top: 4px;
+      accent-color: var(--primary);
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    /* Right: Sticky Order Summary Card */
+    .order-summary-sidebar {
+      position: sticky;
+      top: 90px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .order-summary-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .summary-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 16px;
+    }
+    .summary-header h3 {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .summary-item-preview {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px;
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      margin-bottom: 16px;
+    }
+    .summary-item-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+      overflow: hidden;
+      background: rgba(18, 102, 232, 0.15);
+      color: var(--primary);
+    }
+    .summary-item-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 0 0 2px;
+      line-height: 1.3;
+    }
+    .summary-item-cat {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .summary-ledger-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+    .summary-ledger-row.total-row {
+      border-top: 1px dashed var(--border-color);
+      padding-top: 14px;
+      margin-top: 12px;
+      margin-bottom: 14px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--text-main);
+    }
+    .summary-due-box {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .summary-milestones {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 18px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .summary-milestones li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .summary-milestones li i {
+      color: #10b981;
+      font-size: 0.85rem;
+    }
+
+    /* WhatsApp Direct Contact Box */
+    .order-support-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .order-support-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+      flex-shrink: 0;
+    }
+
+    /* Success Screen */
+    .order-success-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 40px 24px;
+      text-align: center;
+      max-width: 680px;
+      margin: 20px auto 40px;
+      box-shadow: var(--shadow-md);
+      display: none;
+    }
+    .order-success-icon-wrap {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: rgba(34, 197, 94, 0.15);
+      color: #16a34a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      margin: 0 auto 18px;
+    }
+
+    @media (max-width: 900px) {
+      .order-checkout-layout {
+        grid-template-columns: 1fr;
+      }
+      .order-summary-sidebar {
+        position: static;
+      }
+      .order-trust-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 580px) {
+      .order-trust-grid {
+        grid-template-columns: 1fr;
+      }
+      .order-hero-title {
+        font-size: 1.45rem;
+      }
+      .order-form-panel {
+        padding: 18px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       1. Top Priority Security Announcement Bar
+       ======================================================================== -->
+  <div class="top-announcement-bar">
+    <div class="announcement-content">
+      <span class="announcement-badge"><i class="fa-solid fa-bolt"></i> DIRECT CODE</span>
+      <span class="announcement-text">
+        Direct Software Engineering with <strong>RS GULSHAN PRAJAPATI</strong>. Zero middlemen. 0% Advance PAD Available.
+      </span>
+      <a href="https://wa.me/919288521731?text=Hi%20Gulshan,%20I%20want%20to%20discuss%20a%20project!" target="_blank" class="announcement-link">
+        <i class="fa-brands fa-whatsapp"></i> Chat Direct <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       2. Sticky Modern Header Navigation
+       ======================================================================== -->
+  <header class="navbar">
+    <div class="container">
+      <div class="navbar-inner">
+        
+        <!-- Brand Logo & Left Hamburger Toggle -->
+        <div class="navbar-left">
+          <button id="mobileMenuToggle" class="mobile-menu-toggle" aria-label="Toggle Navigation Sidebar" title="Toggle Sidebar Navigation" onclick="window.toggleMobileDrawer()" style="display:inline-flex !important;">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+
+          <a href="./index.html" class="brand-logo-wrap" style="display:flex; align-items:center; text-decoration:none;">
+            <img src="./godoz_logo_flat_vector.png" alt="GoDoz Technology" class="godoz-nav-logo-desktop" onerror="this.src='./godoz_logo_rectangle_w_bg.png'">
+            <img src="./godoz-logo-circle.png" alt="GoDoz Logo" class="godoz-nav-logo-mobile" onerror="this.src='./official logo.png'">
+          </a>
+        </div>
+
+        <!-- Center: Desktop Horizontal Navigation Menu -->
+        <nav class="desktop-nav-menu" aria-label="Desktop Main Navigation">
+          <a href="./index.html" class="desktop-nav-link"><i class="fa-solid fa-house" style="font-size:0.8rem;"></i> Home</a>
+          <a href="./index.html#services" class="desktop-nav-link"><i class="fa-solid fa-laptop-code" style="font-size:0.8rem; color:var(--primary);"></i> Services</a>
+          <a href="./index.html#cost-estimator" class="desktop-nav-link"><i class="fa-solid fa-calculator" style="font-size:0.8rem; color:#10b981;"></i> Calculator</a>
+          <a href="./apps/index.html" class="desktop-nav-link"><i class="fa-solid fa-mobile-screen" style="font-size:0.8rem; color:#0ea5e9;"></i> Apps Hub</a>
+          <a href="./order.html" class="desktop-nav-link active" style="color:var(--primary); font-weight:800;"><i class="fa-solid fa-bolt" style="font-size:0.8rem; color:#f59e0b;"></i> Book Project</a>
+          <a href="./contact.html" class="desktop-nav-link"><i class="fa-solid fa-comments" style="font-size:0.8rem;"></i> Contact</a>
+        </nav>
+
+        <!-- Right: Header Action Controls -->
+        <div class="header-actions">
+          
+          <!-- Track Order Quick Trigger -->
+          <button type="button" onclick="window.openTrackOrderModal()" class="btn btn-sm btn-outline header-btn-track" title="Track Live Project Order" style="padding:6px 11px; font-size:0.84rem; font-weight:700; border-color:var(--primary);">
+            <i class="fa-solid fa-magnifying-glass" style="color:var(--primary);"></i> <span class="btn-text">Track Order</span>
+          </button>
+
+          <!-- WhatsApp Chat Button (Desktop) -->
+          <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20want%20to%20hire%20you%20for%20an%20App/Website%20project!" target="_blank" class="btn btn-sm btn-accent header-btn-chat" title="Direct WhatsApp Chat" style="padding:6px 12px; font-size:0.84rem; font-weight:700;">
+            <i class="fa-brands fa-whatsapp"></i> <span class="btn-text">Chat Now</span>
+          </a>
+
+          <!-- Theme Toggle Button -->
+          <button id="themeToggleBtn" class="btn btn-sm btn-outline header-btn-theme" aria-label="Toggle Theme" title="Switch Theme" onclick="window.toggleGoDozTheme()" style="padding:6px 10px; border-radius:8px; cursor:pointer;">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+
+          <!-- User Login / Profile Button -->
+          <a href="./profile.html" id="headerAuthBtn" class="btn btn-sm btn-outline header-btn-auth" title="Client Portal &amp; Profile">
+            <span id="headerAuthIcon"><i class="fa-solid fa-user"></i></span> <span id="headerAuthText" class="btn-text">Account</span>
+          </a>
+
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Drawer Backdrop -->
+  <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="window.closeMobileDrawer()"></div>
+
+  <!-- Mobile Drawer Sidebar (Loaded & toggled via script.js) -->
+  <aside id="mobileDrawerNav" class="mobile-drawer-nav" aria-label="Mobile Navigation Drawer">
+    <div class="drawer-header">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <img src="./official logo.png" alt="GoDoz" style="height:32px; width:auto; border-radius:6px;">
+        <span style="font-size:1.2rem; font-weight:900;"><span style="color:var(--primary);">Go</span><span style="color:var(--accent);">Doz</span></span>
+      </div>
+      <button class="drawer-close-btn" onclick="window.closeMobileDrawer()" aria-label="Close menu">&times;</button>
+    </div>
+    <div class="drawer-body">
+      <nav class="drawer-nav-menu">
+        <a href="./index.html" class="drawer-nav-item"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="./index.html#services" class="drawer-nav-item"><i class="fa-solid fa-laptop-code"></i> Services</a>
+        <a href="./index.html#cost-estimator" class="drawer-nav-item"><i class="fa-solid fa-calculator"></i> Cost Calculator</a>
+        <a href="./order.html" class="drawer-nav-item active"><i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> Book Project Order</a>
+        <a href="./apps/index.html" class="drawer-nav-item"><i class="fa-solid fa-mobile-screen"></i> Apps Hub</a>
+        <a href="./contact.html" class="drawer-nav-item"><i class="fa-solid fa-comments"></i> Contact Us</a>
+        <a href="./profile.html" class="drawer-nav-item"><i class="fa-solid fa-user"></i> My Orders &amp; Profile</a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       3. Main Page Order Container
+       ======================================================================== -->
+  <main class="order-page-wrapper">
+    
+    <!-- Breadcrumb -->
+    <nav class="order-breadcrumb" aria-label="Breadcrumb">
+      <a href="./index.html"><i class="fa-solid fa-house"></i> Home</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="./index.html#services">Services</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span>Order &amp; Book Project</span>
+    </nav>
+
+    <!-- Hero Header Box -->
+    <div class="order-hero-header">
+      <div class="order-hero-badge">
+        <i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> 100% Direct Architecture • RS GULSHAN PRAJAPATI
+      </div>
+      <h1 class="order-hero-title">Book &amp; Customize Your Project</h1>
+      <p class="order-hero-subtitle">
+        Direct Software Engineering with zero middlemen. Enjoy full source code ownership, production-grade cloud setup, and complete peace of mind with <strong>Pay After Demo (0% Advance)</strong> option.
+      </p>
+    </div>
+
+    <!-- Trust Badges Bar -->
+    <div class="order-trust-grid">
+      <div class="order-trust-card">
+        <div class="order-trust-icon" style="background:rgba(16,185,129,0.12); color:#10b981;">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div class="order-trust-text">
+          <h4>0% Advance COD</h4>
+          <p>Pay After Demo Review</p>
+        </div>
+      </div>
+      <div class="order-trust-card">
+        <div class="order-trust-icon" style="background:rgba(18,102,232,0.12); color:#1266e8;">
+          <i class="fa-solid fa-code"></i>
+        </div>
+        <div class="order-trust-text">
+          <h4>Full Source Code</h4>
+          <p>100% IP &amp; Git Ownership</p>
+        </div>
+      </div>
+      <div class="order-trust-card">
+        <div class="order-trust-icon" style="background:rgba(245,158,11,0.12); color:#d97706;">
+          <i class="fa-solid fa-headset"></i>
+        </div>
+        <div class="order-trust-text">
+          <h4>30-Day Free Support</h4>
+          <p>Post-Launch Warranty</p>
+        </div>
+      </div>
+      <div class="order-trust-card">
+        <div class="order-trust-icon" style="background:rgba(139,92,246,0.12); color:#8b5cf6;">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <div class="order-trust-text">
+          <h4>100% NDA Protected</h4>
+          <p>Your Data &amp; Idea Safe</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================
+         ORDER SUCCESS VIEW (Displayed upon successful booking submission)
+         ======================================================================== -->
+    <div id="orderSuccessScreen" class="order-success-card">
+      <div class="order-success-icon-wrap">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <h2 style="font-size:1.75rem; font-weight:900; color:var(--text-main); margin:0 0 8px;">
+        Project Booked Successfully!
+      </h2>
+      <p style="font-size:0.95rem; color:var(--text-muted); margin:0 0 24px; line-height:1.5;">
+        Your project requirements have been registered with Lead Software Engineer <strong>RS GULSHAN PRAJAPATI</strong>.
+      </p>
+
+      <div style="background:var(--bg-surface-alt); border:1.5px dashed var(--primary); border-radius:16px; padding:20px; text-align:left; margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+          <span style="font-size:0.86rem; color:var(--text-muted);">Order Tracking ID:</span>
+          <strong id="successOrderId" style="font-size:1.05rem; color:var(--primary); font-family:monospace;">#GoDoz-2026-000000</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+          <span style="font-size:0.86rem; color:var(--text-muted);">Client Name:</span>
+          <strong id="successClientName" style="font-size:0.92rem; color:var(--text-main);">-</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+          <span style="font-size:0.86rem; color:var(--text-muted);">Selected Solution:</span>
+          <strong id="successProjectName" style="font-size:0.92rem; color:var(--text-main);">-</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+          <span style="font-size:0.86rem; color:var(--text-muted);">Final Value:</span>
+          <strong id="successPrice" style="font-size:1.05rem; color:#10b981;">₹0</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="font-size:0.86rem; color:var(--text-muted);">Payment Agreement:</span>
+          <span id="successPaymentMode" style="font-size:0.86rem; font-weight:800; color:var(--text-main);">-</span>
+        </div>
+      </div>
+
+      <div style="display:grid; gap:12px; max-width:440px; margin:0 auto;">
+        <a id="successWhatsappBtn" href="https://wa.me/919288521731" target="_blank" class="btn btn-accent" style="padding:14px; font-size:1rem; font-weight:800; display:flex; align-items:center; justify-content:center; gap:8px;">
+          <i class="fa-brands fa-whatsapp" style="font-size:1.25rem;"></i> Chat with RS GULSHAN PRAJAPATI
+        </a>
+        <div style="display:flex; gap:10px;">
+          <a href="./profile.html" class="btn btn-outline" style="flex:1; padding:12px; font-weight:700;">
+            <i class="fa-solid fa-box-open"></i> Client Portal
+          </a>
+          <a href="./index.html" class="btn btn-outline" style="flex:1; padding:12px; font-weight:700;">
+            <i class="fa-solid fa-house"></i> Home
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================
+         MAIN CHECKOUT FORM & SIDEBAR LAYOUT
+         ======================================================================== -->
+    <div id="orderFormLayout" class="order-checkout-layout">
+      
+      <!-- Left Column: The Order & Configuration Form -->
+      <div class="order-form-panel">
+        
+        <!-- Auth Status Pill -->
+        <div id="orderAuthPill" class="order-auth-pill">
+          <div class="order-auth-left">
+            <span id="orderAuthUserAvatar"><i class="fa-solid fa-user-circle" style="font-size:24px; color:var(--text-muted);"></i></span>
+            <div>
+              <div id="orderAuthUserName" style="line-height:1.2;">Guest Session</div>
+              <div id="orderAuthUserEmail" style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Sign in to link order to your Client Portal</div>
+            </div>
+          </div>
+          <button type="button" id="btnOrderGoogleAuth" class="btn btn-sm btn-outline" style="padding:5px 12px; font-size:0.8rem; font-weight:700;">
+            <i class="fa-brands fa-google" style="color:#ea4335;"></i> Sign in with Google
+          </button>
+        </div>
+
+        <form id="projectOrderFullForm">
+          
+          <!-- Section 1: Contact Details -->
+          <div class="order-section-block">
+            <h3 class="order-section-title">
+              <span class="order-section-num">1</span> Your Contact Information
+            </h3>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap:14px;">
+              <div style="grid-column:1 / -1;">
+                <div class="order-input-group">
+                  <label for="orderClientName">Full Name <span style="color:#ef4444;">*</span></label>
+                  <input type="text" id="orderClientName" class="order-input-control" placeholder="e.g. Rahul Sharma" required>
+                </div>
+              </div>
+              
+              <div>
+                <div class="order-input-group">
+                  <label for="orderClientPhone">WhatsApp / Phone Number <span style="color:#ef4444;">*</span></label>
+                  <input type="tel" id="orderClientPhone" class="order-input-control" placeholder="+91 98765 43210" required>
+                </div>
+              </div>
+
+              <div>
+                <div class="order-input-group">
+                  <label for="orderClientEmail">Email Address <span style="color:#ef4444;">*</span></label>
+                  <input type="email" id="orderClientEmail" class="order-input-control" placeholder="client@domain.com" required>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Choose Project Category / Solution -->
+          <div class="order-section-block">
+            <h3 class="order-section-title">
+              <span class="order-section-num">2</span> Select Project Category / Solution
+            </h3>
+
+            <div class="order-input-group">
+              <label for="modalOrderCategory">Choose Base Package or Custom Requirement:</label>
+              <select id="modalOrderCategory" class="order-input-control" style="font-weight:700;" onchange="window.updateOrderPagePricing()">
+                <option value="" disabled selected>Loading solutions from Firestore...</option>
+                <option value="Custom Requirement / Unique Idea" data-price="0" data-original="0" data-discount="100">💡 Custom Requirement / Unique Idea — ₹0 (Free Consultation &amp; Quote)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Section 3: Project Scope, Custom Features & Notes -->
+          <div class="order-section-block">
+            <h3 class="order-section-title">
+              <span class="order-section-num">3</span> Project Scope, Custom Features &amp; Requirements
+            </h3>
+
+            <!-- Hidden Features Input Sync -->
+            <input type="hidden" id="modalOrderFeatures" value="Complete Custom Software Development">
+
+            <div class="order-input-group">
+              <label for="modalOrderNotes">Describe Your Desired Features, Target Audience or Reference Links (Optional):</label>
+              <textarea id="modalOrderNotes" rows="3" class="order-input-control" placeholder="Enter specific features, user roles, payment requirements, database needs, or sample website/app links..."></textarea>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:6px; line-height:1.4;">
+                <i class="fa-solid fa-circle-info" style="color:var(--primary);"></i> <strong>Note:</strong> Your exact requirements and scope will be verified by Lead Engineer <strong>RS GULSHAN PRAJAPATI</strong> before coding begins.
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: Payment & Milestone Strategy -->
+          <div class="order-section-block">
+            <h3 class="order-section-title">
+              <span class="order-section-num">4</span> Choose Payment &amp; Milestone Method
+            </h3>
+
+            <!-- Option 1: Razorpay (% Based Advance) -->
+            <label class="order-pay-card selected" id="optPayRazorpay" onclick="window.selectPaymentMode('razorpay')">
+              <input type="radio" name="order_payment_mode" value="razorpay" checked>
+              <div style="flex:1;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+                  <strong style="font-size:0.92rem; color:var(--text-main);">
+                    <i class="fa-solid fa-credit-card" style="color:var(--primary);"></i> Razorpay (% Advance Payment)
+                  </strong>
+                  <span id="razorpayAdvanceBadge" style="background:rgba(18,102,232,0.15); color:var(--primary); font-weight:800; font-size:0.72rem; padding:2px 8px; border-radius:12px;">Min 10% Advance</span>
+                </div>
+                <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px; line-height:1.4;">
+                  Lock priority development schedule with flexible advance payment (% based, Min 10%). Supports UPI (GPay, PhonePe, Paytm), Cards &amp; NetBanking.
+                </div>
+
+                <!-- Percentage Selector Bar -->
+                <div id="advancePctSelector" style="display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; padding-top:8px; border-top:1px dashed var(--border-color);" onclick="event.stopPropagation();">
+                  <span style="font-size:0.78rem; font-weight:800; color:var(--text-main); align-self:center;">Select Advance %:</span>
+                  <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+                    <input type="radio" name="advance_pct" value="10" onchange="window.updateOrderPagePricing()"> 10% (Min)
+                  </label>
+                  <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+                    <input type="radio" name="advance_pct" value="25" onchange="window.updateOrderPagePricing()"> 25%
+                  </label>
+                  <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+                    <input type="radio" name="advance_pct" value="50" checked onchange="window.updateOrderPagePricing()"> 50%
+                  </label>
+                  <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+                    <input type="radio" name="advance_pct" value="100" onchange="window.updateOrderPagePricing()"> 100% (Full)
+                  </label>
+                </div>
+              </div>
+            </label>
+
+            <!-- Option 2: Pay After Demo (PAD) -->
+            <label class="order-pay-card" id="optPayCod" onclick="window.selectPaymentMode('pay_after_demo')">
+              <input type="radio" name="order_payment_mode" value="pay_after_demo">
+              <div style="flex:1;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+                  <strong style="font-size:0.92rem; color:var(--text-main);">
+                    <i class="fa-solid fa-laptop-code" style="color:#10b981;"></i> Pay After Demo (PAD)
+                  </strong>
+                  <span style="background:rgba(16,185,129,0.15); color:#10b981; font-weight:800; font-size:0.72rem; padding:2px 8px; border-radius:12px;">₹0 Upfront • Pay 10% After Demo</span>
+                </div>
+                <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px; line-height:1.4;">
+                  Book order &amp; discuss requirements on WhatsApp/Call. See wireframe/demo first, then pay 10% security deposit to start development.
+                </div>
+              </div>
+            </label>
+          </div>
+
+          <!-- Section 5: Promo Code / Coupon Section -->
+          <div class="order-section-block">
+            <h3 class="order-section-title">
+              <span class="order-section-num">5</span> Promo Code / Discount Coupon
+            </h3>
+
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="orderCouponInput" placeholder="Enter coupon e.g. GODOZ10 or LAUNCH1000" style="flex:1; text-transform:uppercase; padding:9px 14px; border:1.5px solid var(--border-color); border-radius:8px; font-weight:800; font-size:0.88rem; background:var(--bg-surface); color:var(--text-main); outline:none;">
+              <button type="button" id="btnApplyCoupon" onclick="window.applyOrderCoupon()" class="btn btn-sm btn-primary" style="padding:9px 18px; font-weight:800;">
+                Apply Coupon
+              </button>
+            </div>
+            <div id="orderCouponMessage" style="font-size:0.78rem; font-weight:800; margin-top:6px; display:none;"></div>
+          </div>
+
+          <!-- Submit Order Button -->
+          <button type="submit" id="btnSubmitOrder" class="btn btn-primary" style="width:100%; padding:15px; font-size:1.1rem; font-weight:800; box-shadow:var(--shadow-md);">
+            ⚡ Confirm &amp; Book Project Order
+          </button>
+          
+          <div style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:10px;">
+            <i class="fa-solid fa-shield-halved" style="color:#16a34a;"></i> 100% NDA Protected &bull; Direct WhatsApp response within 2 hours.
+          </div>
+
+        </form>
+
+      </div>
+
+      <!-- Right Column: Sticky Live Order Summary -->
+      <aside class="order-summary-sidebar">
+        <div class="order-summary-box">
+          
+          <div class="summary-header">
+            <h3><i class="fa-solid fa-receipt" style="color:var(--primary);"></i> Order Summary</h3>
+            <span style="font-size:0.72rem; font-weight:800; background:rgba(34,197,94,0.15); color:#16a34a; padding:3px 8px; border-radius:12px;">Verified Rate</span>
+          </div>
+
+          <!-- Item Preview Card -->
+          <div class="summary-item-preview">
+            <div id="summaryItemIcon" class="summary-item-icon">
+              <i class="fa-solid fa-laptop-code"></i>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div id="summaryItemCat" class="summary-item-cat">Solution</div>
+              <h4 id="summaryItemTitle" class="summary-item-title">Custom Software Solution</h4>
+            </div>
+          </div>
+
+          <!-- Scope / Included Features -->
+          <div style="margin-bottom:16px;">
+            <div style="font-size:0.75rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px;">Included Features &amp; Scope:</div>
+            <div id="summaryFeaturesText" style="font-size:0.82rem; color:var(--text-main); line-height:1.45; background:var(--bg-surface-alt); padding:10px 12px; border-radius:10px; border:1px solid var(--border-color); max-height:120px; overflow-y:auto; word-break:break-word;">
+              Standard Professional Architecture
+            </div>
+          </div>
+
+          <!-- Financial Breakdown Ledger -->
+          <div class="summary-ledger-row">
+            <span>Market Value:</span>
+            <span id="modalOrderOriginalDisplay" style="text-decoration:line-through; font-weight:700;">₹45,000</span>
+          </div>
+          
+          <div class="summary-ledger-row">
+            <span>Special Offer Price:</span>
+            <span id="modalOrderPriceDisplay" data-amount="19999" style="font-weight:900; color:#10b981; font-size:1.15rem;">₹19,999</span>
+          </div>
+
+          <div id="summaryDiscountRow" class="summary-ledger-row" style="color:#dc2626;">
+            <span>Package Discount:</span>
+            <span id="modalOrderDiscountBadge" style="background:#fee2e2; color:#dc2626; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:12px; border:1px solid #fca5a5;">55% OFF</span>
+          </div>
+
+          <div id="summaryCouponRow" class="summary-ledger-row" style="display:none; color:#16a34a; font-weight:800;">
+            <span>Coupon Discount:</span>
+            <span id="summaryCouponAmount">-₹0</span>
+          </div>
+
+          <div class="summary-ledger-row total-row">
+            <span>Total Investment:</span>
+            <span id="summaryFinalTotal" style="color:var(--text-main);">₹19,999</span>
+          </div>
+
+          <div class="summary-due-box">
+            <div>
+              <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Amount Due Today:</div>
+              <div id="modalOrderDueToday" style="font-size:1.15rem; font-weight:900; color:#16a34a;">₹0 (Pay After Demo)</div>
+            </div>
+            <i class="fa-solid fa-circle-check" style="color:#10b981; font-size:1.5rem;"></i>
+          </div>
+
+          <!-- Milestones List -->
+          <div style="font-size:0.75rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px;">Development Milestone Guarantee:</div>
+          <ul class="summary-milestones">
+            <li><i class="fa-solid fa-check-circle"></i> Direct contact with Lead Software Engineer</li>
+            <li><i class="fa-solid fa-check-circle"></i> Wireframe &amp; interactive prototype demo</li>
+            <li><i class="fa-solid fa-check-circle"></i> 100% full source code ownership &amp; Git repository</li>
+            <li><i class="fa-solid fa-check-circle"></i> Google Play Store &amp; Cloud Web deployment</li>
+          </ul>
+
+        </div>
+
+        <!-- WhatsApp Support Box -->
+        <div class="order-support-box">
+          <img src="./IMG-20250423-WA0052.jpg" alt="RS GULSHAN PRAJAPATI" class="order-support-avatar" onerror="this.src='./official logo.png'">
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:0.72rem; font-weight:800; color:var(--accent); text-transform:uppercase;">Have Questions Before Booking?</div>
+            <div style="font-size:0.86rem; font-weight:800; color:var(--text-main);">RS GULSHAN PRAJAPATI</div>
+            <a href="https://wa.me/919288521731?text=Hi%20Gulshan%20Sir,%20I%20have%20questions%20regarding%20an%20order%20booking." target="_blank" style="font-size:0.78rem; color:#16a34a; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:4px; margin-top:2px;">
+              <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp &bull; Fast Reply
+            </a>
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+
+  </main>
+
+  <!-- ========================================================================
+       4. Footer Section
+       ======================================================================== -->
+  <footer style="background:#060b18; padding:36px 8% 24px; color:#ffffff; margin-top:40px; border-top:1px solid rgba(255,255,255,0.08);">
+    <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:30px; margin-bottom:28px;">
+      
+      <div>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+          <img src="./official logo.png" alt="GoDoz Logo" style="height:36px; width:auto; border-radius:6px;" onerror="this.src='./logo w bg.png'">
+          <span style="font-size:1.35rem; font-weight:900;"><span style="color:#2788ff;">Go</span><span style="color:#ff6900;">Doz</span></span>
+        </div>
+        <p style="color:#94a3b8; line-height:1.6; font-size:0.84rem; margin-bottom:12px;">
+          <strong>GoDoz Technology</strong> — Software and digital development brand founded and developed by <strong>RS GULSHAN PRAJAPATI</strong>.
+        </p>
+      </div>
+
+      <div>
+        <h4 style="color:#ffffff; font-size:1rem; margin-bottom:12px; border-bottom:2px solid var(--accent, #ff6900); display:inline-block; padding-bottom:3px;">Quick Links</h4>
+        <ul style="list-style:none; padding:0; line-height:2; font-size:0.84rem;">
+          <li><a href="./index.html" style="color:#cbd5e1; text-decoration:none;">Home</a></li>
+          <li><a href="./index.html#services" style="color:#cbd5e1; text-decoration:none;">Professional Services</a></li>
+          <li><a href="./index.html#cost-estimator" style="color:#cbd5e1; text-decoration:none;">Cost Calculator</a></li>
+          <li><a href="./apps/index.html" style="color:#cbd5e1; text-decoration:none;">Apps Hub</a></li>
+          <li><a href="./contact.html" style="color:#cbd5e1; text-decoration:none;">Contact Support</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 style="color:#ffffff; font-size:1rem; margin-bottom:12px; border-bottom:2px solid var(--accent, #ff6900); display:inline-block; padding-bottom:3px;">Direct Contact</h4>
+        <ul style="list-style:none; padding:0; line-height:2; font-size:0.84rem; color:#cbd5e1;">
+          <li><i class="fa-solid fa-user-tie" style="color:var(--primary); margin-right:6px;"></i> RS GULSHAN PRAJAPATI</li>
+          <li><i class="fa-brands fa-whatsapp" style="color:#10b981; margin-right:6px;"></i> <a href="https://wa.me/919288521731" style="color:#cbd5e1; text-decoration:none;">+91 92885 21731</a></li>
+          <li><i class="fa-solid fa-envelope" style="color:#ea4335; margin-right:6px;"></i> <a href="mailto:godoz.info@gmail.com" style="color:#cbd5e1; text-decoration:none;">godoz.info@gmail.com</a></li>
+          <li><i class="fa-solid fa-location-dot" style="color:var(--accent); margin-right:6px;"></i> Dariyapur, Sheikhpura, Bihar, India</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:16px; text-align:center; color:#94a3b8; font-size:0.78rem;">
+      &copy; 2026 <strong>GoDoz Technology</strong>. All Rights Reserved. Founded &amp; Developed by <strong>RS GULSHAN PRAJAPATI</strong>.
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp Quick Action Button -->
+  <div class="floating-whatsapp-wrap">
+    <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir!%20I%20am%20on%20the%20order%20page%20and%20want%20to%20discuss%20a%20project." target="_blank" class="floating-whatsapp-pill">
+      <span class="pulse-dot"></span> Online &bull; Chat with Lead Engineer
+    </a>
+    <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir!%20I%20am%20on%20the%20order%20page%20and%20want%20to%20hire%20you%20for%20an%20App/Website%20project." target="_blank" class="floating-whatsapp" aria-label="Chat on WhatsApp">
+      <i class="fa-brands fa-whatsapp"></i>
+    </a>
+  </div>
+
+  <!-- Master Interactive Script -->
+  <script src="./script.js"></script>
+
+  <!-- Firebase Live Auth & Order Checkout Logic -->
+  <script type="module">
+    import { 
+      subscribeToAuth, 
+      saveOrderToFirestore, 
+      auth, 
+      googleProvider, 
+      recordRazorpayPayment,
+      RAZORPAY_CONFIG,
+      validateCouponInFirestore,
+      listenToProductsCatalog
+    } from "./firebase-init.js";
+    import { signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    let currentAuthUser = null;
+    let activeAppliedCoupon = null;
+    let allLoadedProducts = [];
+
+    // Parse URL Query Parameters (?service=...&price=...&features=...)
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetService = urlParams.get('service') || urlParams.get('category') || urlParams.get('product') || '';
+    const targetPrice = parseInt(urlParams.get('price') || '0', 10);
+    const targetFeatures = urlParams.get('features') || urlParams.get('scope') || urlParams.get('desc') || '';
+
+    // Pre-fill notes if features specified in URL
+    if (targetFeatures) {
+      const notesEl = document.getElementById('modalOrderNotes');
+      if (notesEl && !notesEl.value) {
+        notesEl.value = targetFeatures;
+      }
+      const featInput = document.getElementById('modalOrderFeatures');
+      if (featInput) featInput.value = targetFeatures;
+    }
+
+    // Pre-fill contact details from localStorage
+    const savedName = localStorage.getItem('godoz_user_name') || '';
+    const savedPhone = localStorage.getItem('godoz_user_phone') || '';
+    const savedEmail = localStorage.getItem('godoz_user_email') || '';
+    if (savedName && document.getElementById('orderClientName')) document.getElementById('orderClientName').value = savedName;
+    if (savedPhone && document.getElementById('orderClientPhone')) document.getElementById('orderClientPhone').value = savedPhone;
+    if (savedEmail && document.getElementById('orderClientEmail')) document.getElementById('orderClientEmail').value = savedEmail;
+
+    // Listen to Auth State
+    subscribeToAuth((user) => {
+      currentAuthUser = user;
+      const authPill = document.getElementById('orderAuthPill');
+      const avatarEl = document.getElementById('orderAuthUserAvatar');
+      const nameEl = document.getElementById('orderAuthUserName');
+      const emailEl = document.getElementById('orderAuthUserEmail');
+      const authBtn = document.getElementById('btnOrderGoogleAuth');
+
+      if (user) {
+        if (avatarEl) {
+          if (user.photoURL) {
+            avatarEl.innerHTML = `<img src="${user.photoURL}" alt="${user.displayName || 'Client'}" style="width:32px; height:32px; border-radius:50%; border:2px solid var(--primary); object-fit:cover;">`;
+          } else {
+            avatarEl.innerHTML = `<i class="fa-solid fa-circle-user" style="font-size:26px; color:var(--primary);"></i>`;
+          }
+        }
+        if (nameEl) nameEl.innerHTML = `Logged in: <strong>${user.displayName || 'Client'}</strong> <span style="font-size:0.75rem; background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:12px; margin-left:6px; font-weight:800;">✓ Verified</span>`;
+        if (emailEl) emailEl.textContent = user.email || '';
+        if (authBtn) authBtn.style.display = 'none';
+
+        // Pre-fill form inputs if empty
+        const clientNameInput = document.getElementById('orderClientName');
+        const clientEmailInput = document.getElementById('orderClientEmail');
+        if (clientNameInput && !clientNameInput.value && user.displayName) {
+          clientNameInput.value = user.displayName;
+        }
+        if (clientEmailInput && !clientEmailInput.value && user.email) {
+          clientEmailInput.value = user.email;
+        }
+      } else {
+        if (avatarEl) avatarEl.innerHTML = `<i class="fa-solid fa-user-circle" style="font-size:24px; color:var(--text-muted);"></i>`;
+        if (nameEl) nameEl.textContent = 'Guest Session';
+        if (emailEl) emailEl.textContent = 'Sign in to link order to your Client Portal';
+        if (authBtn) {
+          authBtn.style.display = 'inline-flex';
+          authBtn.onclick = async () => {
+            try {
+              await signInWithPopup(auth, googleProvider);
+            } catch(e) {
+              console.warn("Google sign-in notice:", e);
+            }
+          };
+        }
+      }
+    });
+
+    // Populate Category Dropdown from Firestore /products/ Catalog
+    function populateDropdown(products) {
+      allLoadedProducts = products;
+      const orderSelect = document.getElementById('modalOrderCategory');
+      if (!orderSelect) return;
+
+      orderSelect.innerHTML = '';
+
+      const proServices = products.filter(p => !p.category || p.category === 'professional_service');
+      const projTypes = products.filter(p => p.category === 'project_type');
+      const keyFeatures = products.filter(p => p.category === 'key_feature');
+      const otherServ = products.filter(p => p.category === 'other_service');
+
+      const createOption = (prod, defaultOriginal) => {
+        const opt = document.createElement('option');
+        opt.value = prod.title || 'Untitled Service';
+        const price = prod.offerPrice !== undefined ? prod.offerPrice : (prod.price || 0);
+        const original = prod.originalPrice || defaultOriginal || Math.round(price * 1.6);
+        const discount = original > price ? Math.round(((original - price) / original) * 100) : 0;
+        
+        opt.setAttribute('data-price', price);
+        opt.setAttribute('data-original', original);
+        opt.setAttribute('data-discount', discount);
+        opt.setAttribute('data-icon', prod.icon || '');
+        opt.setAttribute('data-color', prod.color || '');
+        opt.setAttribute('data-details', prod.details || '');
+        opt.setAttribute('data-category', prod.category || 'professional_service');
+        opt.textContent = `${prod.title} — ₹${Number(price).toLocaleString('en-IN')}${discount > 0 ? ` (${discount}% OFF)` : ''}`;
+        return opt;
+      };
+
+      // 1. Professional Services
+      if (proServices.length > 0) {
+        const grp = document.createElement('optgroup');
+        grp.label = "💼 1. Professional Services (Full-Stack Solutions)";
+        proServices.forEach(p => grp.appendChild(createOption(p, 45000)));
+        orderSelect.appendChild(grp);
+      }
+
+      // 2. Project Types
+      if (projTypes.length > 0) {
+        const grp = document.createElement('optgroup');
+        grp.label = "📱 2. Choose Your Project Type (Base Scope)";
+        projTypes.forEach(p => grp.appendChild(createOption(p, 30000)));
+        orderSelect.appendChild(grp);
+      }
+
+      // 3. Key Features
+      if (keyFeatures.length > 0) {
+        const grp = document.createElement('optgroup');
+        grp.label = "⚡ 3. Add-on Features & Integrations";
+        keyFeatures.forEach(p => grp.appendChild(createOption(p, 5000)));
+        orderSelect.appendChild(grp);
+      }
+
+      // 4. Other Services & Showcases
+      if (otherServ.length > 0) {
+        const grp = document.createElement('optgroup');
+        grp.label = "⭐ 4. Other Services & Showcase Suites";
+        otherServ.forEach(p => grp.appendChild(createOption(p, 25000)));
+        orderSelect.appendChild(grp);
+      }
+
+      // 5. Custom Requirement Option
+      const customOpt = document.createElement('option');
+      customOpt.value = "Custom Requirement / Unique Idea";
+      customOpt.setAttribute('data-price', "0");
+      customOpt.setAttribute('data-original', "0");
+      customOpt.setAttribute('data-discount', "100");
+      customOpt.setAttribute('data-icon', "fa-solid fa-lightbulb");
+      customOpt.setAttribute('data-color', "#eab308");
+      customOpt.setAttribute('data-details', "Custom consultation & requirements discovery.");
+      customOpt.textContent = "💡 Custom Requirement / Unique Idea — ₹0 (Free Consultation & Quote)";
+      orderSelect.appendChild(customOpt);
+
+      // Select Target Service if passed in URL
+      if (targetService) {
+        const lowerTarget = targetService.toLowerCase().trim();
+        for (let i = 0; i < orderSelect.options.length; i++) {
+          const optVal = orderSelect.options[i].value.toLowerCase();
+          if (optVal.includes(lowerTarget) || lowerTarget.includes(optVal)) {
+            orderSelect.selectedIndex = i;
+            break;
+          }
+        }
+      }
+
+      window.updateOrderPagePricing();
+    }
+
+    // 0ms Cache Pre-Hydration
+    try {
+      const cached = localStorage.getItem('godoz_cached_products_catalog');
+      if (cached) {
+        const list = JSON.parse(cached);
+        if (Array.isArray(list) && list.length > 0) {
+          populateDropdown(list);
+        }
+      }
+    } catch(e) {}
+
+    // Live Firestore Catalog Listener
+    listenToProductsCatalog((productsList) => {
+      const list = Array.isArray(productsList) ? productsList : [];
+      try {
+        localStorage.setItem('godoz_cached_products_catalog', JSON.stringify(list));
+      } catch(e) {}
+      populateDropdown(list);
+    });
+
+    // Update Pricing & Order Summary Logic
+    window.updateOrderPagePricing = function() {
+      const categorySelect = document.getElementById('modalOrderCategory');
+      if (!categorySelect) return;
+
+      const opt = categorySelect.options[categorySelect.selectedIndex] || categorySelect.options[0];
+      if (!opt) return;
+
+      let basePrice = parseInt(opt.getAttribute('data-price') || '0', 10);
+      if (targetPrice && targetPrice > 0 && opt.value.toLowerCase().includes(targetService.toLowerCase())) {
+        basePrice = targetPrice;
+      }
+
+      const originalPrice = parseInt(opt.getAttribute('data-original') || '0', 10);
+      const discount = opt.getAttribute('data-discount') || '0';
+      const prodIcon = opt.getAttribute('data-icon') || 'fa-solid fa-laptop-code';
+      const prodColor = opt.getAttribute('data-color') || 'var(--primary)';
+      const prodDetails = opt.getAttribute('data-details') || '';
+      const prodCategory = opt.getAttribute('data-category') || 'Professional Service';
+
+      // Update Form Hidden Fields & Elements
+      const priceDisplay = document.getElementById('modalOrderPriceDisplay');
+      const origDisplay = document.getElementById('modalOrderOriginalDisplay');
+      const discBadge = document.getElementById('modalOrderDiscountBadge');
+      const discRow = document.getElementById('summaryDiscountRow');
+
+      // Summary Sidebar Elements
+      const summaryTitle = document.getElementById('summaryItemTitle');
+      const summaryCat = document.getElementById('summaryItemCat');
+      const summaryIcon = document.getElementById('summaryItemIcon');
+      const summaryFeatures = document.getElementById('summaryFeaturesText');
+      const summaryFinal = document.getElementById('summaryFinalTotal');
+      const dueDisplay = document.getElementById('modalOrderDueToday');
+      const notesEl = document.getElementById('modalOrderNotes');
+
+      if (summaryTitle) summaryTitle.textContent = opt.value;
+      if (summaryCat) summaryCat.textContent = prodCategory.replace(/_/g, ' ');
+
+      // Summary Icon Rendering
+      if (summaryIcon) {
+        const rawIcon = prodIcon.trim();
+        const isImg = rawIcon.startsWith('http') || rawIcon.startsWith('data:') || /\.(png|jpg|jpeg|svg|webp)$/i.test(rawIcon);
+        if (isImg) {
+          summaryIcon.innerHTML = `<img src="${rawIcon}" alt="Logo" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;">`;
+          summaryIcon.style.background = 'transparent';
+        } else {
+          const norm = window.normalizeIconClass ? window.normalizeIconClass(rawIcon) : rawIcon;
+          summaryIcon.innerHTML = `<i class="${norm}"></i>`;
+          summaryIcon.style.background = `${prodColor}20`;
+          summaryIcon.style.color = prodColor;
+        }
+      }
+
+      // Feature Scope in Summary
+      if (summaryFeatures) {
+        const scope = (notesEl && notesEl.value.trim()) || targetFeatures || prodDetails || 'Complete production-grade architecture, responsive design, cloud DB sync & security verification.';
+        summaryFeatures.textContent = scope;
+      }
+
+      // Apply coupon discount if any
+      let couponDiscount = 0;
+      if (activeAppliedCoupon) {
+        if (activeAppliedCoupon.discountType === 'percentage') {
+          couponDiscount = Math.round((basePrice * Number(activeAppliedCoupon.discountValue || 0)) / 100);
+        } else {
+          couponDiscount = Number(activeAppliedCoupon.discountValue || 0);
+        }
+        if (activeAppliedCoupon.maxDiscount && couponDiscount > activeAppliedCoupon.maxDiscount) {
+          couponDiscount = activeAppliedCoupon.maxDiscount;
+        }
+      }
+      couponDiscount = Math.min(couponDiscount, basePrice);
+      const finalPrice = Math.max(0, basePrice - couponDiscount);
+
+      if (priceDisplay) {
+        priceDisplay.textContent = `₹${basePrice.toLocaleString('en-IN')}`;
+        priceDisplay.dataset.amount = finalPrice;
+      }
+      if (origDisplay) {
+        origDisplay.textContent = originalPrice > 0 ? `₹${originalPrice.toLocaleString('en-IN')}` : `₹${(basePrice * 1.5).toLocaleString('en-IN')}`;
+      }
+      if (discBadge) {
+        discBadge.textContent = `${discount}% OFF`;
+      }
+      if (discRow) {
+        discRow.style.display = discount > 0 ? 'flex' : 'none';
+      }
+
+      const couponRow = document.getElementById('summaryCouponRow');
+      const couponAmt = document.getElementById('summaryCouponAmount');
+      if (couponRow && couponAmt) {
+        if (couponDiscount > 0) {
+          couponRow.style.display = 'flex';
+          couponAmt.textContent = `-₹${couponDiscount.toLocaleString('en-IN')}`;
+        } else {
+          couponRow.style.display = 'none';
+        }
+      }
+
+      if (summaryFinal) {
+        summaryFinal.textContent = `₹${finalPrice.toLocaleString('en-IN')}`;
+      }
+
+      // Update Amount Due Today based on Payment Mode
+      const payMode = document.querySelector('input[name="order_payment_mode"]:checked')?.value || 'razorpay';
+      if (dueDisplay) {
+        if (payMode === 'razorpay') {
+          const selectedPct = parseInt(document.querySelector('input[name="advance_pct"]:checked')?.value || '50', 10);
+          const advanceAmount = Math.max(0, Math.round((finalPrice * selectedPct) / 100));
+          dueDisplay.textContent = `₹${advanceAmount.toLocaleString('en-IN')} (${selectedPct}% Advance)`;
+        } else {
+          dueDisplay.textContent = "₹0 (10% Pay After Demo)";
+        }
+      }
+    };
+
+    // Payment Mode Selection Helper
+    window.selectPaymentMode = function(mode) {
+      const cardRazorpay = document.getElementById('optPayRazorpay');
+      const cardCod = document.getElementById('optPayCod');
+      const radioRazorpay = document.querySelector('input[name="order_payment_mode"][value="razorpay"]');
+      const radioCod = document.querySelector('input[name="order_payment_mode"][value="pay_after_demo"]');
+
+      if (mode === 'razorpay') {
+        if (radioRazorpay) radioRazorpay.checked = true;
+        cardRazorpay?.classList.add('selected');
+        cardCod?.classList.remove('selected');
+      } else {
+        if (radioCod) radioCod.checked = true;
+        cardCod?.classList.add('selected');
+        cardRazorpay?.classList.remove('selected');
+      }
+      window.updateOrderPagePricing();
+    };
+
+    // Apply Coupon Code
+    window.applyOrderCoupon = async function() {
+      const input = document.getElementById('orderCouponInput');
+      const msg = document.getElementById('orderCouponMessage');
+      const btn = document.getElementById('btnApplyCoupon');
+      const categorySelect = document.getElementById('modalOrderCategory');
+      const opt = categorySelect?.options[categorySelect.selectedIndex];
+      const basePrice = parseInt(opt?.getAttribute('data-price') || '0', 10);
+
+      const code = (input?.value || '').trim();
+      if (!code) {
+        if (msg) {
+          msg.textContent = "Please enter a valid coupon code.";
+          msg.style.color = "#dc2626";
+          msg.style.display = "block";
+        }
+        return;
+      }
+
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Checking...';
+
+      const res = await validateCouponInFirestore(code, basePrice);
+      if (btn) btn.innerHTML = 'Apply Coupon';
+
+      if (res && res.valid) {
+        activeAppliedCoupon = res.coupon;
+        if (msg) {
+          msg.textContent = `✅ Coupon '${code.toUpperCase()}' applied successfully! (${res.coupon.discountType === 'percentage' ? res.coupon.discountValue + '% OFF' : '₹' + res.coupon.discountValue + ' OFF'})`;
+          msg.style.color = "#16a34a";
+          msg.style.display = "block";
+        }
+        window.updateOrderPagePricing();
+      } else {
+        activeAppliedCoupon = null;
+        if (msg) {
+          msg.textContent = `❌ ${res?.reason || 'Invalid or expired coupon code.'}`;
+          msg.style.color = "#dc2626";
+          msg.style.display = "block";
+        }
+        window.updateOrderPagePricing();
+      }
+    };
+
+    // Submit Order Form Action
+    document.getElementById('projectOrderFullForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = (document.getElementById('orderClientName')?.value || '').trim();
+      const phone = (document.getElementById('orderClientPhone')?.value || '').trim();
+      const email = (document.getElementById('orderClientEmail')?.value || '').trim();
+      const category = document.getElementById('modalOrderCategory')?.value || 'Custom Solution';
+      const notes = (document.getElementById('modalOrderNotes')?.value || '').trim();
+      const features = notes || targetFeatures || category || "Full-Stack Development";
+      
+      const priceDisplay = document.getElementById('modalOrderPriceDisplay');
+      const price = parseInt(priceDisplay?.dataset?.amount || '0', 10);
+      const paymentMode = document.querySelector('input[name="order_payment_mode"]:checked')?.value || 'pay_after_demo';
+
+      if (!name) {
+        alert("Please enter your Full Name.");
+        document.getElementById('orderClientName')?.focus();
+        return;
+      }
+      if (!phone) {
+        alert("Please enter your WhatsApp / Phone number.");
+        document.getElementById('orderClientPhone')?.focus();
+        return;
+      }
+      if (!email || !email.includes('@')) {
+        alert("Please enter a valid Email Address.");
+        document.getElementById('orderClientEmail')?.focus();
+        return;
+      }
+
+      localStorage.setItem('godoz_user_name', name);
+      localStorage.setItem('godoz_user_phone', phone);
+      localStorage.setItem('godoz_user_email', email);
+
+      const submitBtn = document.getElementById('btnSubmitOrder');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Registering Project Booking...';
+      }
+
+      const currentYear = new Date().getFullYear();
+      const generatedOrderId = "GoDoz-" + currentYear + "-" + Math.floor(100000 + Math.random() * 900000);
+
+      // Finalize Order and switch to Success Card
+      async function completeBooking(payStatus, payModeTitle, paymentId = "", paidAmount = 0) {
+        const orderPayload = {
+          id: generatedOrderId,
+          projectName: category,
+          features: features,
+          notes: notes,
+          clientName: name,
+          clientPhone: phone,
+          clientEmail: email,
+          userId: currentAuthUser ? currentAuthUser.uid : "",
+          price: price,
+          amountPaid: paidAmount,
+          remainingBalance: Math.max(0, price - paidAmount),
+          paymentMode: payModeTitle,
+          paymentStatus: payStatus,
+          paymentId: paymentId,
+          stage: "Step 01: Free Discovery & NDA",
+          progress: 15
+        };
+
+        await saveOrderToFirestore(orderPayload);
+
+        // Hide Form, Show Success Card
+        document.getElementById('orderFormLayout').style.display = 'none';
+        const successScreen = document.getElementById('orderSuccessScreen');
+        if (successScreen) {
+          successScreen.style.display = 'block';
+          window.scrollTo({ top: 120, behavior: 'smooth' });
+        }
+
+        document.getElementById('successOrderId').textContent = `#${generatedOrderId}`;
+        document.getElementById('successClientName').textContent = name;
+        document.getElementById('successProjectName').textContent = category;
+        document.getElementById('successPrice').textContent = `₹${price.toLocaleString('en-IN')}`;
+        document.getElementById('successPaymentMode').textContent = payModeTitle;
+
+        const whatsappMsg = `Hello RS GULSHAN PRAJAPATI Sir! I just booked a new project on GoDoz:%0A%0A*Order ID:* ${generatedOrderId}%0A*Client:* ${name}%0A*Contact:* ${phone || email}%0A*Project:* ${category}%0A*Included Scope:* ${features}%0A*Total Value:* ₹${price.toLocaleString('en-IN')}%0A*Payment Mode:* ${payModeTitle}%0A%0APlease confirm project start schedule!`;
+        const waBtn = document.getElementById('successWhatsappBtn');
+        if (waBtn) waBtn.href = `https://wa.me/919288521731?text=${whatsappMsg}`;
+
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '⚡ Confirm &amp; Book Project Order';
+        }
+      }
+
+      // Razorpay Payment or Pay After Demo
+      if (paymentMode === 'razorpay') {
+        if (!RAZORPAY_CONFIG.onlinePaymentsEnabled) {
+          alert("Online payments are temporarily in test verification. Proceeding with Pay After Demo (0% Advance).");
+          await completeBooking("PAD Requested (Pay After Demo)", "Pay After Demo (PAD)");
+          return;
+        }
+
+        const selectedPct = parseInt(document.querySelector('input[name="advance_pct"]:checked')?.value || '50', 10);
+        const tokenAmount = Math.max(1, Math.round((price * selectedPct) / 100));
+        let isPaymentCompleted = false;
+
+        if (typeof Razorpay !== 'undefined') {
+          const rzpOptions = {
+            key: RAZORPAY_CONFIG.keyId,
+            amount: tokenAmount * 100,
+            currency: RAZORPAY_CONFIG.currency,
+            name: RAZORPAY_CONFIG.merchantName,
+            description: `${selectedPct}% Advance for ${category} (#${generatedOrderId})`,
+            image: RAZORPAY_CONFIG.logoUrl,
+            handler: async function (response) {
+              isPaymentCompleted = true;
+              const payId = response.razorpay_payment_id || ('pay_' + Date.now());
+              try {
+                await recordRazorpayPayment({
+                  paymentId: payId,
+                  orderId: generatedOrderId,
+                  amount: tokenAmount,
+                  clientName: name,
+                  clientEmail: email,
+                  clientPhone: phone,
+                  projectRef: category
+                });
+              } catch(err) {
+                console.warn("Payment record err:", err);
+              }
+
+              await completeBooking(`${selectedPct}% Advance Paid (₹${tokenAmount.toLocaleString('en-IN')} via Razorpay - Ref: ${payId})`, `Razorpay Online (${selectedPct}% Advance)`, payId, tokenAmount);
+
+              const payTime = new Date().toLocaleString('en-IN');
+              setTimeout(() => {
+                window.location.href = `./payment-success.html?razorpay_payment_id=${encodeURIComponent(payId)}&amount=${tokenAmount}&order_id=${encodeURIComponent(generatedOrderId)}&client_name=${encodeURIComponent(name)}&client_phone=${encodeURIComponent(phone)}&project=${encodeURIComponent(category)}&time=${encodeURIComponent(payTime)}`;
+              }, 1200);
+            },
+            prefill: {
+              name: name,
+              email: email || "client@godoz.in",
+              contact: phone || "9288521731"
+            },
+            theme: {
+              color: RAZORPAY_CONFIG.themeColor
+            },
+            modal: {
+              ondismiss: function () {
+                if (isPaymentCompleted) return;
+                if (confirm("Razorpay window closed. Would you like to proceed with Pay After Demo (0% Advance) instead?")) {
+                  completeBooking("PAD Requested (Pay After Demo)", "Pay After Demo (PAD)");
+                } else if (submitBtn) {
+                  submitBtn.disabled = false;
+                  submitBtn.innerHTML = '⚡ Confirm &amp; Book Project Order';
+                }
+              }
+            }
+          };
+
+          try {
+            const rzp = new Razorpay(rzpOptions);
+            rzp.on('payment.failed', function (resp) {
+              if (isPaymentCompleted) return;
+              alert("Payment notice: " + (resp.error?.description || "Payment not completed. Proceeding with Pay After Demo (PAD)."));
+              completeBooking("PAD Requested (Pay After Demo)", "Pay After Demo (PAD)");
+            });
+            rzp.open();
+          } catch(e) {
+            console.warn("Razorpay error:", e);
+            await completeBooking("Token Booking (Online Processing)", "Razorpay Online Advance");
+          }
+        } else {
+          await completeBooking("Token Booking (Online Mode)", "Razorpay Online Advance");
+        }
+      } else {
+        // Pay After Demo (PAD)
+        await completeBooking("PAD Requested (Pay After Demo)", "Pay After Demo (PAD)");
+      }
+
+    });
+  </script>
+
+</body>
+</html>
