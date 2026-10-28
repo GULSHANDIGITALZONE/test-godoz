@@ -7,13 +7,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Immediate Theme Initializer -->
+  <!-- Immediate Theme Initializer & Drawer Handlers -->
   <script>
     (function(){
       const savedTheme = localStorage.getItem('godoz_theme') || 
         (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       document.documentElement.setAttribute('data-theme', savedTheme);
     })();
+
+    // Universal Instant Drawer Navigation Handlers (0ms response)
+    window.openMobileDrawer = window.openLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.add('open');
+      if (backdrop) backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeMobileDrawer = window.closeLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (drawer) drawer.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    window.toggleMobileDrawer = window.toggleLeftNav = function() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const isOpen = drawer && drawer.classList.contains('open');
+      if (isOpen) {
+        window.closeMobileDrawer();
+      } else {
+        window.openMobileDrawer();
+      }
+    };
   </script>
 
   <title>Book &amp; Order Project | GoDoz Technology - Direct Software Development</title>
@@ -478,6 +505,137 @@
         padding: 18px 14px;
       }
     }
+
+    /* ========================================================================
+       Off-Canvas Mobile Navigation Drawer & Backdrop
+       ======================================================================== */
+    .mobile-nav-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 9998;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .mobile-nav-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-nav-drawer {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 310px;
+      max-width: 86vw;
+      height: 100vh;
+      background: var(--bg-surface, #ffffff);
+      border-right: 1px solid var(--border-color, #e2e8f0);
+      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.25);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .mobile-nav-drawer.open {
+      transform: translateX(0) !important;
+    }
+
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color, #e2e8f0);
+      background: var(--bg-surface, #ffffff);
+      flex-shrink: 0;
+    }
+    .drawer-close-btn {
+      background: var(--bg-surface-alt, #f8fafc);
+      border: 1px solid var(--border-color, #e2e8f0);
+      color: var(--text-main, #0f172a);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .drawer-close-btn:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border-color: #ef4444;
+    }
+
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .drawer-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      color: var(--text-main, #0f172a);
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: all 0.18s ease;
+      background: transparent;
+    }
+    .drawer-nav-item i {
+      width: 20px;
+      text-align: center;
+    }
+    .drawer-nav-item:hover, .drawer-nav-item.active {
+      background: var(--bg-surface-alt, #f8fafc);
+      color: var(--primary, #1266e8);
+      transform: translateX(4px);
+    }
+
+    [data-theme="dark"] .mobile-nav-drawer {
+      background: #0d1526;
+      border-color: #1e2e4f;
+    }
+    [data-theme="dark"] .drawer-header {
+      background: #0d1526;
+      border-color: #1e2e4f;
+    }
+    [data-theme="dark"] .drawer-close-btn {
+      background: #18253f;
+      border-color: #2a3d68;
+      color: #f8fafc;
+    }
+    [data-theme="dark"] .drawer-nav-item {
+      color: #cbd5e1;
+    }
+    [data-theme="dark"] .drawer-nav-item:hover, [data-theme="dark"] .drawer-nav-item.active {
+      background: #18253f;
+      color: #38bdf8;
+    }
+
+    /* On Desktop (width >= 992px), hide hamburger toggle button */
+    @media (min-width: 992px) {
+      .mobile-menu-toggle {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -501,74 +659,72 @@
        2. Sticky Modern Header Navigation
        ======================================================================== -->
   <header class="navbar">
-    <div class="container">
-      <div class="navbar-inner">
+    <div class="container navbar-container">
+      
+      <!-- Brand Logo & Left Hamburger Toggle (Mobile Only) -->
+      <div class="navbar-left">
+        <button id="mobileMenuToggle" class="mobile-menu-toggle" aria-label="Toggle Navigation Menu" title="Toggle Navigation Menu" onclick="window.toggleMobileDrawer()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <a href="./index.html" class="brand-logo-wrap" style="display:flex; align-items:center; text-decoration:none;">
+          <img src="./godoz_logo_flat_vector.png" alt="GoDoz Technology" class="godoz-nav-logo-desktop" onerror="this.src='./godoz_logo_rectangle_w_bg.png'">
+          <img src="./godoz-logo-circle.png" alt="GoDoz Logo" class="godoz-nav-logo-mobile" onerror="this.src='./official logo.png'">
+        </a>
+      </div>
+
+      <!-- Center: Desktop Horizontal Navigation Menu -->
+      <nav class="desktop-nav-menu" aria-label="Desktop Main Navigation">
+        <a href="./index.html" class="desktop-nav-link"><i class="fa-solid fa-house" style="font-size:0.8rem;"></i> Home</a>
+        <a href="./index.html#services" class="desktop-nav-link"><i class="fa-solid fa-laptop-code" style="font-size:0.8rem; color:var(--primary);"></i> Services</a>
+        <a href="./index.html#cost-estimator" class="desktop-nav-link"><i class="fa-solid fa-calculator" style="font-size:0.8rem; color:#10b981;"></i> Calculator</a>
+        <a href="./apps/index.html" class="desktop-nav-link"><i class="fa-solid fa-mobile-screen" style="font-size:0.8rem; color:#0ea5e9;"></i> Apps Hub</a>
+        <a href="./order.html" class="desktop-nav-link active" style="color:var(--primary); font-weight:800;"><i class="fa-solid fa-bolt" style="font-size:0.8rem; color:#f59e0b;"></i> Book Project</a>
+        <a href="./contact.html" class="desktop-nav-link"><i class="fa-solid fa-comments" style="font-size:0.8rem;"></i> Contact</a>
+      </nav>
+
+      <!-- Right: Header Action Controls -->
+      <div class="header-actions">
         
-        <!-- Brand Logo & Left Hamburger Toggle -->
-        <div class="navbar-left">
-          <button id="mobileMenuToggle" class="mobile-menu-toggle" aria-label="Toggle Navigation Sidebar" title="Toggle Sidebar Navigation" onclick="window.toggleMobileDrawer()" style="display:inline-flex !important;">
-            <i class="fa-solid fa-bars"></i>
-          </button>
+        <!-- Track Order Quick Trigger -->
+        <button type="button" onclick="window.openTrackOrderModal()" class="btn btn-sm btn-outline header-btn-track" title="Track Live Project Order" style="padding:6px 11px; font-size:0.84rem; font-weight:700; border-color:var(--primary);">
+          <i class="fa-solid fa-magnifying-glass" style="color:var(--primary);"></i> <span class="btn-text">Track Order</span>
+        </button>
 
-          <a href="./index.html" class="brand-logo-wrap" style="display:flex; align-items:center; text-decoration:none;">
-            <img src="./godoz_logo_flat_vector.png" alt="GoDoz Technology" class="godoz-nav-logo-desktop" onerror="this.src='./godoz_logo_rectangle_w_bg.png'">
-            <img src="./godoz-logo-circle.png" alt="GoDoz Logo" class="godoz-nav-logo-mobile" onerror="this.src='./official logo.png'">
-          </a>
-        </div>
+        <!-- WhatsApp Chat Button (Desktop) -->
+        <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20want%20to%20hire%20you%20for%20an%20App/Website%20project!" target="_blank" class="btn btn-sm btn-accent header-btn-chat" title="Direct WhatsApp Chat" style="padding:6px 12px; font-size:0.84rem; font-weight:700;">
+          <i class="fa-brands fa-whatsapp"></i> <span class="btn-text">Chat Now</span>
+        </a>
 
-        <!-- Center: Desktop Horizontal Navigation Menu -->
-        <nav class="desktop-nav-menu" aria-label="Desktop Main Navigation">
-          <a href="./index.html" class="desktop-nav-link"><i class="fa-solid fa-house" style="font-size:0.8rem;"></i> Home</a>
-          <a href="./index.html#services" class="desktop-nav-link"><i class="fa-solid fa-laptop-code" style="font-size:0.8rem; color:var(--primary);"></i> Services</a>
-          <a href="./index.html#cost-estimator" class="desktop-nav-link"><i class="fa-solid fa-calculator" style="font-size:0.8rem; color:#10b981;"></i> Calculator</a>
-          <a href="./apps/index.html" class="desktop-nav-link"><i class="fa-solid fa-mobile-screen" style="font-size:0.8rem; color:#0ea5e9;"></i> Apps Hub</a>
-          <a href="./order.html" class="desktop-nav-link active" style="color:var(--primary); font-weight:800;"><i class="fa-solid fa-bolt" style="font-size:0.8rem; color:#f59e0b;"></i> Book Project</a>
-          <a href="./contact.html" class="desktop-nav-link"><i class="fa-solid fa-comments" style="font-size:0.8rem;"></i> Contact</a>
-        </nav>
+        <!-- Theme Toggle Button -->
+        <button id="themeToggleBtn" class="btn btn-sm btn-outline header-btn-theme" aria-label="Toggle Theme" title="Switch Theme" onclick="window.toggleGoDozTheme()" style="padding:6px 10px; border-radius:8px; cursor:pointer;">
+          <i class="fa-solid fa-moon"></i>
+        </button>
 
-        <!-- Right: Header Action Controls -->
-        <div class="header-actions">
-          
-          <!-- Track Order Quick Trigger -->
-          <button type="button" onclick="window.openTrackOrderModal()" class="btn btn-sm btn-outline header-btn-track" title="Track Live Project Order" style="padding:6px 11px; font-size:0.84rem; font-weight:700; border-color:var(--primary);">
-            <i class="fa-solid fa-magnifying-glass" style="color:var(--primary);"></i> <span class="btn-text">Track Order</span>
-          </button>
-
-          <!-- WhatsApp Chat Button (Desktop) -->
-          <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20want%20to%20hire%20you%20for%20an%20App/Website%20project!" target="_blank" class="btn btn-sm btn-accent header-btn-chat" title="Direct WhatsApp Chat" style="padding:6px 12px; font-size:0.84rem; font-weight:700;">
-            <i class="fa-brands fa-whatsapp"></i> <span class="btn-text">Chat Now</span>
-          </a>
-
-          <!-- Theme Toggle Button -->
-          <button id="themeToggleBtn" class="btn btn-sm btn-outline header-btn-theme" aria-label="Toggle Theme" title="Switch Theme" onclick="window.toggleGoDozTheme()" style="padding:6px 10px; border-radius:8px; cursor:pointer;">
-            <i class="fa-solid fa-moon"></i>
-          </button>
-
-          <!-- User Login / Profile Button -->
-          <a href="./profile.html" id="headerAuthBtn" class="btn btn-sm btn-outline header-btn-auth" title="Client Portal &amp; Profile">
-            <span id="headerAuthIcon"><i class="fa-solid fa-user"></i></span> <span id="headerAuthText" class="btn-text">Account</span>
-          </a>
-
-        </div>
+        <!-- User Login / Profile Button -->
+        <a href="./profile.html" id="headerAuthBtn" class="btn btn-sm btn-outline header-btn-auth" title="Client Portal &amp; Profile">
+          <span id="headerAuthIcon"><i class="fa-solid fa-user"></i></span> <span id="headerAuthText" class="btn-text">Account</span>
+        </a>
 
       </div>
+
     </div>
   </header>
 
   <!-- Mobile Navigation Drawer Backdrop -->
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="window.closeMobileDrawer()"></div>
 
-  <!-- Mobile Drawer Sidebar (Loaded & toggled via script.js) -->
-  <aside id="mobileDrawerNav" class="mobile-drawer-nav" aria-label="Mobile Navigation Drawer">
+  <!-- Slide-Out Mobile Navigation Drawer (Hidden Off-Canvas by Default) -->
+  <aside id="mobileNavDrawer" class="mobile-nav-drawer" aria-label="Mobile Navigation">
     <div class="drawer-header">
       <div style="display:flex; align-items:center; gap:8px;">
-        <img src="./official logo.png" alt="GoDoz" style="height:32px; width:auto; border-radius:6px;">
+        <img src="./official logo.png" alt="GoDoz" style="height:32px; width:auto; border-radius:6px;" onerror="this.src='./godoz-logo-circle.png'">
         <span style="font-size:1.2rem; font-weight:900;"><span style="color:var(--primary);">Go</span><span style="color:var(--accent);">Doz</span></span>
       </div>
       <button class="drawer-close-btn" onclick="window.closeMobileDrawer()" aria-label="Close menu">&times;</button>
     </div>
     <div class="drawer-body">
-      <nav class="drawer-nav-menu">
+      <nav class="drawer-nav-menu" style="display:flex; flex-direction:column; gap:6px;">
         <a href="./index.html" class="drawer-nav-item"><i class="fa-solid fa-house"></i> Home</a>
         <a href="./index.html#services" class="drawer-nav-item"><i class="fa-solid fa-laptop-code"></i> Services</a>
         <a href="./index.html#cost-estimator" class="drawer-nav-item"><i class="fa-solid fa-calculator"></i> Cost Calculator</a>
