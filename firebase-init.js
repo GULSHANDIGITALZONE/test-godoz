@@ -620,7 +620,7 @@ export async function saveOrderToFirestore(orderData) {
         note: "Initial Advance Payment"
       }] : []),
       paymentId: orderData.paymentId || "",
-      stage: orderData.stage || "Step 01: Order Placed & Discovery Phase",
+      stage: orderData.stage || "Step 01: Order Placed & Discovery Phase (5%)",
       progress: Number(orderData.progress !== undefined ? orderData.progress : 5),
       deliverableUrl: orderData.deliverableUrl || "",
       createdAt: serverTimestamp(),
@@ -757,8 +757,8 @@ export async function saveInquiryToFirestore(inquiryData) {
     const res = await addDoc(collection(db, "inquiries"), payload);
     return { success: true, id: res.id };
   } catch (err) {
-    console.warn("Firestore Inquiry save notice:", err);
-    return { success: true, offline: true };
+    console.error("Firestore Inquiry save error:", err);
+    return { success: false, error: err.message };
   }
 }
 
@@ -1217,21 +1217,21 @@ export async function getClientOrders(userId, userEmail) {
 }
 
 // ============================================================================
-// 6. RAZORPAY PAYMENT GATEWAY INTEGRATION & LOGGING
+// 6. RAZORPAY PAYMENT GATEWAY INTEGRATION & LOGGING (REAL-TIME FIRESTORE KEY)
 // ============================================================================
+let activeFirestoreRazorpayKey = null;
+
 export const RAZORPAY_CONFIG = {
   // Official GoDoz Production Live Razorpay Gateway
-  onlinePaymentsEnabled: false,
-  testKey: "rzp_test_TgdERHVdl9Et35",
-  liveKey: "rzp_live_Tienbwktx6frm1",
+  onlinePaymentsEnabled: true,
   defaultKey: "rzp_live_Tienbwktx6frm1",
   get keyId() {
-    return localStorage.getItem('godoz_razorpay_active_key') || this.defaultKey;
+    return activeFirestoreRazorpayKey || localStorage.getItem('godoz_razorpay_active_key') || this.defaultKey;
   },
   setKeyId(newKey) {
     if (newKey && newKey.trim()) {
+      activeFirestoreRazorpayKey = newKey.trim();
       localStorage.setItem('godoz_razorpay_active_key', newKey.trim());
-      localStorage.setItem('godoz_razorpay_live_key', newKey.trim());
     }
   },
   merchantName: "GoDoz Technology",
@@ -1239,6 +1239,48 @@ export const RAZORPAY_CONFIG = {
   themeColor: "#1266e8",
   logoUrl: "https://www.godoz.in/official%20logo.png"
 };
+
+export async function saveRazorpayKeyToFirestore(newKey) {
+  if (!newKey || !newKey.trim()) return { success: false, error: "Invalid Key ID" };
+  try {
+    const cleanKey = newKey.trim();
+    const docRef = doc(db, "settings", "razorpay");
+    await setDoc(docRef, {
+      keyId: cleanKey,
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    RAZORPAY_CONFIG.setKeyId(cleanKey);
+    return { success: true };
+  } catch (err) {
+    console.error("Firestore saveRazorpayKey error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+export function listenToRazorpaySettings(callback) {
+  try {
+    const docRef = doc(db, "settings", "razorpay");
+    return onSnapshot(docRef, (snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        if (data && data.keyId) {
+          RAZORPAY_CONFIG.setKeyId(data.keyId);
+        }
+        if (typeof callback === 'function') callback(data);
+      } else {
+        // Auto-seed default Razorpay Live Key to Firestore settings collection if document does not exist yet
+        saveRazorpayKeyToFirestore(RAZORPAY_CONFIG.defaultKey);
+        if (typeof callback === 'function') callback({ keyId: RAZORPAY_CONFIG.defaultKey });
+      }
+    }, (err) => {
+      console.warn("Razorpay settings listener notice:", err);
+      if (typeof callback === 'function') callback(null);
+    });
+  } catch(e) {
+    if (typeof callback === 'function') callback(null);
+    return () => {};
+  }
+}
 
 /**
  * Get a Razorpay Payment record by paymentId
@@ -1258,13 +1300,113 @@ export async function getRazorpayPaymentById(paymentId) {
 }
 
 /**
- * Payment records require server-side Razorpay verification; browser data is not trusted.
+ * Record a Verified Razorpay Payment and Update Order Ledger in Firestore
  */
-export async function recordRazorpayPayment() {
-  return {
-    success: false,
-    error: "Payment recording is unavailable until server-side Razorpay verification is configured."
-  };
+export async function recordRazorpayPayment(payData) {
+  if (!payData || !payData.paymentId) {
+    return { success: false, error: "Invalid payment data" };
+  }
+
+  try {
+    const payId = payData.paymentId.trim();
+    const cleanOrderId = (payData.orderId || '').replace('#', '').trim();
+    const amount = Number(payData.amount || 0);
+    const clientEmail = (payData.clientEmail || auth.currentUser?.email || '').toLowerCase().trim();
+
+    // 1. Save Payment Receipt Record in Firestore /payments/ collection
+    const payRef = doc(db, "payments", payId);
+    const payPayload = {
+      id: payId,
+      paymentId: payId,
+      orderId: cleanOrderId,
+      amount: amount,
+      clientName: payData.clientName || 'Valued Client',
+      clientEmail: clientEmail,
+      clientPhone: payData.clientPhone || '',
+      projectName: payData.projectName || 'Custom Application',
+      method: payData.method || 'Razorpay Online',
+      note: payData.note || 'Milestone Payment',
+      status: 'Captured & Verified',
+      createdAt: serverTimestamp(),
+      createdAtFormatted: new Date().toLocaleString('en-IN')
+    };
+
+    await setDoc(payRef, payPayload, { merge: true });
+
+    // 2. Update Order Ledger & Payment History in Firestore /orders/ collection
+    if (cleanOrderId) {
+      try {
+        let targetOrderRef = doc(db, "orders", cleanOrderId);
+        let orderSnap = await getDoc(targetOrderRef);
+
+        if (!orderSnap.exists()) {
+          // Robust Query Fallback: Search order by id or orderId field
+          const q1 = query(collection(db, "orders"), where("id", "==", cleanOrderId));
+          const snap1 = await getDocs(q1);
+          if (!snap1.empty) {
+            targetOrderRef = snap1.docs[0].ref;
+            orderSnap = snap1.docs[0];
+          } else {
+            const q2 = query(collection(db, "orders"), where("orderId", "==", cleanOrderId));
+            const snap2 = await getDocs(q2);
+            if (!snap2.empty) {
+              targetOrderRef = snap2.docs[0].ref;
+              orderSnap = snap2.docs[0];
+            }
+          }
+        }
+
+        if (orderSnap.exists()) {
+          const orderData = orderSnap.data();
+          const orderPrice = Number(orderData.price || amount);
+          const currentPaid = Number(orderData.amountPaid || 0);
+          const newAmountPaid = currentPaid + amount;
+          const newRemaining = Math.max(0, orderPrice - newAmountPaid);
+
+          let newStatus = orderData.paymentStatus || 'In Progress';
+          if (newRemaining <= 0) {
+            newStatus = '100% Paid Completed';
+          } else if (newAmountPaid > 0) {
+            newStatus = `Advance Paid (₹${newAmountPaid.toLocaleString('en-IN')})`;
+          }
+
+          const existingHistory = Array.isArray(orderData.paymentHistory) ? [...orderData.paymentHistory] : [];
+          const newTxn = {
+            paymentId: payId,
+            amount: amount,
+            date: new Date().toISOString(),
+            dateFormatted: new Date().toLocaleString('en-IN'),
+            method: payData.method || 'Razorpay Online',
+            note: payData.note || 'Milestone Installment'
+          };
+          if (!existingHistory.some(h => h.paymentId === payId)) {
+            existingHistory.push(newTxn);
+          }
+
+          await updateDoc(targetOrderRef, {
+            amountPaid: newAmountPaid,
+            remainingBalance: newRemaining,
+            paymentStatus: newStatus,
+            paymentHistory: existingHistory,
+            paymentId: payId,
+            updatedAt: serverTimestamp()
+          });
+        }
+      } catch (orderErr) {
+        console.warn("Notice updating order ledger on payment:", orderErr);
+      }
+    }
+
+    // Mirror to localStorage caches
+    try {
+      localStorage.setItem('godoz_pay_time_' + payId, new Date().toLocaleString('en-IN'));
+    } catch(e) {}
+
+    return { success: true, paymentId: payId };
+  } catch (error) {
+    console.error("Error recording Razorpay payment:", error);
+    return { success: false, error: error.message };
+  }
 }
 
 /**
@@ -1554,20 +1696,6 @@ export async function getRazorpayKeyFromFirestore() {
     console.warn("Firestore Razorpay key fetch notice:", e);
   }
   return RAZORPAY_CONFIG.keyId || "rzp_live_Tienbwktx6frm1";
-}
-
-export async function saveRazorpayKeyToFirestore(keyId) {
-  try {
-    await setDoc(doc(db, "settings", "razorpay"), {
-      keyId: keyId.trim(),
-      updatedAt: Date.now(),
-      updatedBy: auth.currentUser?.email || "Manager"
-    }, { merge: true });
-    return { success: true };
-  } catch(err) {
-    console.warn("Firestore Razorpay key save error:", err);
-    return { success: false, error: err.message };
-  }
 }
 
 // Global Browser Window Exports for Unified Interoperability

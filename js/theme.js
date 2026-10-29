@@ -2,10 +2,9 @@
    GoDoz Technology - Theme (Dark/Light) & Language Switcher (HI/EN) Module
    ========================================================================== */
 
-/* 1. Theme Switcher */
+/* 1. Theme Switcher (Default: Light Mode) */
 function initTheme() {
-  const savedTheme = localStorage.getItem('godoz_theme') ||
-    (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const savedTheme = localStorage.getItem('godoz_theme') || 'light';
 
   applyTheme(savedTheme, false);
 
@@ -16,14 +15,6 @@ function initTheme() {
       window.toggleGoDozTheme();
     }
   });
-
-  if (window.matchMedia) {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      if (!localStorage.getItem('godoz_theme')) {
-        applyTheme(e.matches ? 'dark' : 'light', false);
-      }
-    });
-  }
 }
 
 function applyTheme(theme, save = true) {

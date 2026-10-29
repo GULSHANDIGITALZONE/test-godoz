@@ -8,8 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <script>
     (function(){
-      const savedTheme = localStorage.getItem('godoz_theme') ||
-        (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      const savedTheme = localStorage.getItem('godoz_theme') || 'light';
       document.documentElement.setAttribute('data-theme', savedTheme);
     })();
 
@@ -2090,9 +2089,7 @@
       }
 
       const cleanPhoneDigits = (order.clientPhone || '').replace(/\D/g, '');
-      const progress = Number.isFinite(Number(order.progress))
-        ? Math.min(100, Math.max(0, Number(order.progress)))
-        : 5;
+      let progress = (order.stage?.includes('100%') || order.stage?.includes('Step 06')) ? 100 : ((order.stage?.includes('85%') || order.stage?.includes('Step 05')) ? 85 : ((order.stage?.includes('65%') || order.stage?.includes('Step 04')) ? 65 : ((order.stage?.includes('35%') || order.stage?.includes('Step 03')) ? 35 : ((order.stage?.includes('15%') || order.stage?.includes('Step 02')) ? 15 : (order.progress !== undefined ? Number(order.progress) : 5)))));
       const statusAttr = isOrderCancelled ? 'cancelled' : (isOrderOnHold ? 'on hold' : (isCompleted ? 'completed' : 'in progress'));
       const orderFeatures = String(order.features || '').trim();
       const orderScope = String(order.notes || '').trim();
@@ -2119,12 +2116,13 @@
             </div>
           </details>
           <select data-order-action="stage" data-order-id="${escapeHTML(order.id)}" style="margin-top:4px; padding:3px 6px; font-size:0.75rem; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-surface-alt); color:var(--text-main); font-weight:600; outline:none; cursor:pointer;" title="Click to update sprint stage instantly" ${isOrderCancelled || isOrderOnHold ? 'disabled' : ''}>
-            <option value="Step 01: Order Placed (5%)" ${order.stage?.includes('Step 01') || order.stage?.includes('Placed') ? 'selected' : ''}>Step 01: Order Placed (5%)</option>
-            <option value="Step 02: Discussed with Agent (15%)" ${order.stage?.includes('Step 02') || order.stage?.includes('Agent') || order.stage?.includes('Discussed') ? 'selected' : ''}>Step 02: Discussed with Agent (15%)</option>
-            <option value="Step 03: Work Started & Sample Preview Shown (35%)" ${order.stage?.includes('Step 03') || order.stage?.includes('Preview') || order.stage?.includes('Sample') ? 'selected' : ''}>Step 03: Work Started & Sample Preview (35%)</option>
-            <option value="Step 04: Active Coding & Core Dev (65%)" ${order.stage?.includes('Step 04') || order.stage?.includes('Coding') ? 'selected' : ''}>Step 04: Active Coding (65%)</option>
-            <option value="Step 05: QA Testing & Beta APK Demo (85%)" ${order.stage?.includes('Step 05') || order.stage?.includes('Testing') || order.stage?.includes('Demo') ? 'selected' : ''}>Step 05: QA Testing & Beta Demo (85%)</option>
-            <option value="Step 06: Live Launch & 100% Handover (100%)" ${order.stage?.includes('Step 06') || order.stage?.includes('Launch') || order.stage?.includes('Handover') ? 'selected' : ''}>Step 06: Live Launch & Handover (100%)</option>
+            <option value="Step 01: Order Placed (5%)" ${order.stage?.includes('Step 01') ? 'selected' : ''}>Step 01: Order Placed (5%)</option>
+            <option value="Step 02: Requirements Confirmed (15%)" ${order.stage?.includes('Step 02') ? 'selected' : ''}>Step 02: Requirements Confirmed (15%)</option>
+            <option value="Step 03: UI Design & Work Started (35%)" ${order.stage?.includes('Step 03') ? 'selected' : ''}>Step 03: UI Design & Work Started (35%)</option>
+            <option value="Step 04: Active Coding & Core Dev (60%)" ${order.stage?.includes('Step 04') ? 'selected' : ''}>Step 04: Active Coding & Core Dev (60%)</option>
+            <option value="Step 05: QA Testing & Beta Demo (75%)" ${order.stage?.includes('Step 05') ? 'selected' : ''}>Step 05: QA Testing & Beta Demo (75%)</option>
+            <option value="Step 06: Live Production Launch (90%)" ${order.stage?.includes('Step 06') || (order.stage?.includes('Launch') && !order.stage?.includes('Handover')) ? 'selected' : ''}>🚀 Step 06: Live Production Launch (90%)</option>
+            <option value="Step 07: Final Handover & Code Transfer (100%)" ${order.stage?.includes('Step 07') || order.stage?.includes('Handover') ? 'selected' : ''}>🏆 Step 07: Final Handover & Code Transfer (100%)</option>
             <option value="Order Cancelled & Closed (0%)" ${isOrderCancelled ? 'selected' : ''}>Order Cancelled</option>
           </select>
         </td>
@@ -2151,9 +2149,9 @@
         </td>
         <td>
           <div style="background:var(--border-color); height:6px; border-radius:4px; overflow:hidden; width:120px;">
-            <div style="background:${isOrderCancelled ? '#ef4444' : (isOrderOnHold ? '#f59e0b' : 'var(--primary)')}; width:${progress}%; height:100%;"></div>
+            <div style="background:${isOrderCancelled ? '#ef4444' : (isOrderOnHold ? '#f59e0b' : 'var(--primary)')}; width:${(order.stage?.includes('Step 07') || order.stage?.includes('Handover')) ? 100 : ((order.stage?.includes('Step 06') || order.stage?.includes('Launch')) ? 90 : ((order.stage?.includes('Step 05') || order.stage?.includes('Testing')) ? 75 : ((order.stage?.includes('Step 04') || order.stage?.includes('Coding')) ? 60 : ((order.stage?.includes('Step 03') || order.stage?.includes('Design')) ? 35 : ((order.stage?.includes('Step 02') || order.stage?.includes('Confirmed')) ? 15 : 5)))))}%; height:100%;"></div>
           </div>
-          <span style="font-size:0.72rem; color:var(--text-muted);">${progress}% completed ${isOrderCancelled ? '(Cancelled)' : (isOrderOnHold ? '(On Hold)' : '')}</span>
+          <span style="font-size:0.72rem; color:var(--text-muted);">${(order.stage?.includes('Step 07') || order.stage?.includes('Handover')) ? 100 : ((order.stage?.includes('Step 06') || order.stage?.includes('Launch')) ? 90 : ((order.stage?.includes('Step 05') || order.stage?.includes('Testing')) ? 75 : ((order.stage?.includes('Step 04') || order.stage?.includes('Coding')) ? 60 : ((order.stage?.includes('Step 03') || order.stage?.includes('Design')) ? 35 : ((order.stage?.includes('Step 02') || order.stage?.includes('Confirmed')) ? 15 : 5)))))}% completed ${isOrderCancelled ? '(Cancelled)' : (isOrderOnHold ? '(On Hold)' : '')}</span>
         </td>
         <td>
           <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
@@ -2879,7 +2877,7 @@
     }
   };
 
-  // Quick Stage Updater
+  // Quick Stage Updater (Distinct Step 06: Live Launch 90% vs Step 07: Handover 100%)
   window.quickStageUpdate = async function(id, newStage) {
     const order = currentOrders.find(o => o.id === id);
     if (!order) return;
@@ -2887,32 +2885,37 @@
     let newProgress = order.progress || 5;
     let newStatus = order.status || 'In Progress';
 
-    if (newStage.includes('Step 01') || newStage.includes('Placed')) {
+    if (newStage.includes('Step 01')) {
       newProgress = 5;
       if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
     }
-    else if (newStage.includes('Step 02') || newStage.includes('Agent') || newStage.includes('Discussed')) {
+    else if (newStage.includes('Step 02')) {
       newProgress = 15;
       if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
     }
-    else if (newStage.includes('Step 03') || newStage.includes('Preview') || newStage.includes('Sample')) {
+    else if (newStage.includes('Step 03')) {
       newProgress = 35;
       if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
     }
-    else if (newStage.includes('Step 04') || newStage.includes('Coding') || newStage.includes('Dev')) {
-      newProgress = 65;
+    else if (newStage.includes('Step 04')) {
+      newProgress = 60;
       if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
     }
-    else if (newStage.includes('Step 05') || newStage.includes('Testing') || newStage.includes('Demo')) {
-      newProgress = 85;
+    else if (newStage.includes('Step 05')) {
+      newProgress = 75;
       if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
     }
-    else if (newStage.includes('Step 06') || newStage.includes('Launch') || newStage.includes('Handover')) {
+    else if (newStage.includes('Step 06') || (newStage.includes('Launch') && !newStage.includes('Handover'))) {
+      newProgress = 90;
+      if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
+    }
+    else if (newStage.includes('Step 07') || newStage.includes('Handover') || newStage.includes('100%')) {
       newProgress = 100;
       newStatus = 'Completed';
     }
     else if (newStage.includes('Cancel')) {
       newStatus = 'Cancelled';
+      newProgress = 0;
     }
 
     const updatedData = { stage: newStage, progress: newProgress, status: newStatus };

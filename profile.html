@@ -8,8 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <script>
     (function(){
-      const savedTheme = localStorage.getItem('godoz_theme') || 
-        (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      const savedTheme = localStorage.getItem('godoz_theme') || 'light';
       document.documentElement.setAttribute('data-theme', savedTheme);
     })();
 
@@ -1165,6 +1164,7 @@
         <h1 style="font-size:clamp(1.5rem, 3vw, 2rem); font-weight:900; margin:0 0 6px; color:var(--text-main);">
           Client Management &amp; Projects Dashboard
         </h1>
+      </section>
 
     <!-- PROFILE SKELETON LOADER (Shown smoothly while loading) -->
     <div id="profileLoadingSkeleton" class="profile-layout-grid" style="display:grid; opacity:0.85;">
@@ -1424,16 +1424,44 @@
 
       </div>
 
-      <!-- Footer -->
-      <footer style="background:#0b1b36; color:#94a3b8; padding:24px; text-align:center; font-size:0.86rem; border-top:3px solid var(--primary); border-radius:16px; margin-top:30px;">
-        <div class="container">
-          <div style="font-size:1.2rem; font-weight:800; color:#fff; margin-bottom:6px;">
-            <span style="color:#2788ff;">Go</span><span style="color:#ff6900;">Doz</span> Technology
+      <!-- Footer (Spans 100% Equal Width Across Both Top Boxes Combined) -->
+      <footer style="grid-column:1 / -1; background:#060b18; color:#ffffff; padding:28px 24px 20px; border-radius:18px; margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); width:100%; box-sizing:border-box;">
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:24px; margin-bottom:20px;">
+
+          <div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+              <img src="./official logo.png" alt="GoDoz Logo" style="height:32px; width:auto; border-radius:6px;" onerror="this.src='./godoz-logo-circle.png'">
+              <span style="font-size:1.25rem; font-weight:900;"><span style="color:#2788ff;">Go</span><span style="color:#ff6900;">Doz</span></span>
+            </div>
+            <p style="color:#94a3b8; line-height:1.5; font-size:0.82rem; margin:0;">
+              <strong>GoDoz Technology</strong> &bull; Software &amp; digital solutions platform founded and developed by <strong>RS GULSHAN PRAJAPATI</strong>.
+            </p>
           </div>
-          <p style="margin:0 0 10px;">
-            Official Website: <a href="https://www.godoz.in" style="color:#38bdf8;">www.godoz.in</a> | Developer: <strong>RS GULSHAN PRAJAPATI</strong>
-          </p>
-          <div>&copy; 2026 GoDoz Technology. All Rights Reserved.</div>
+
+          <div>
+            <h4 style="color:#ffffff; font-size:0.92rem; margin:0 0 10px; border-bottom:2px solid var(--accent, #ff6900); display:inline-block; padding-bottom:2px;">Quick Links</h4>
+            <ul style="list-style:none; padding:0; margin:0; line-height:1.9; font-size:0.82rem;">
+              <li><a href="/index.html" style="color:#cbd5e1; text-decoration:none;">Home Page</a></li>
+              <li><a href="/index.html#services" style="color:#cbd5e1; text-decoration:none;">Services Offered</a></li>
+              <li><a href="/index.html#cost-estimator" style="color:#cbd5e1; text-decoration:none;">Cost Calculator</a></li>
+              <li><a href="/apps/index.html" style="color:#cbd5e1; text-decoration:none;">Apps Hub</a></li>
+              <li><a href="/contact.html" style="color:#cbd5e1; text-decoration:none;">Contact Support</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 style="color:#ffffff; font-size:0.92rem; margin:0 0 10px; border-bottom:2px solid var(--accent, #ff6900); display:inline-block; padding-bottom:2px;">Direct Contact</h4>
+            <ul style="list-style:none; padding:0; margin:0; line-height:1.9; font-size:0.82rem; color:#cbd5e1;">
+              <li><i class="fa-solid fa-user-tie" style="color:var(--primary); margin-right:6px;"></i> RS GULSHAN PRAJAPATI</li>
+              <li><i class="fa-brands fa-whatsapp" style="color:#10b981; margin-right:6px;"></i> <a href="https://wa.me/919288521731" style="color:#cbd5e1; text-decoration:none;">+91 92885 21731</a></li>
+              <li><i class="fa-solid fa-envelope" style="color:#ea4335; margin-right:6px;"></i> <a href="mailto:godoz.info@gmail.com" style="color:#cbd5e1; text-decoration:none;">godoz.info@gmail.com</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+        <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:14px; text-align:center; color:#94a3b8; font-size:0.76rem;">
+          &copy; 2026 <strong>GoDoz Technology</strong>. All Rights Reserved. Developer: <strong>RS GULSHAN PRAJAPATI</strong>.
         </div>
       </footer>
 
@@ -1455,7 +1483,8 @@
       isUserManager,
       recordRazorpayPayment,
       getOrderFinancials,
-      RAZORPAY_CONFIG
+      RAZORPAY_CONFIG,
+      listenToRazorpaySettings
     } from "./firebase-init.js";
 
     // DOM Elements
@@ -1617,10 +1646,6 @@
 
     // Trigger Razorpay for Modal Project-Specific Payment
     document.getElementById('btnExecuteProjectRazorpay')?.addEventListener('click', () => {
-      if (!RAZORPAY_CONFIG.onlinePaymentsEnabled) {
-        showError("Online payments are temporarily unavailable until server-side Razorpay verification is configured.");
-        return;
-      }
       const amount = Number(document.getElementById('modalCustomAmount').value);
       if (!amount || amount < 1) {
         showError("Please enter a valid amount of at least ₹1.");
@@ -1759,7 +1784,36 @@
       orders.forEach((order, index) => {
         const orderId = order.id || order.orderId || ('GoDoz-' + (index + 1));
         const projectName = order.projectName || order.name || 'Custom Application';
-        const progress = Number(order.progress !== undefined ? order.progress : 5);
+        let stageRaw = order.stage || 'Step 01: Order Placed (5%)';
+        let stageLower = stageRaw.toLowerCase();
+        let progress = 5;
+
+        if (stageLower.includes('step 01') || stageLower.includes('placed') || stageLower.includes('discovery') || stageLower.includes('ordered')) {
+          progress = 5;
+          stageRaw = 'Step 01: Order Placed (5%)';
+        } else if (stageLower.includes('step 07') || stageLower.includes('handover')) {
+          progress = 100;
+          stageRaw = 'Step 07: Final Handover & Code Transfer (100%)';
+        } else if (stageLower.includes('step 06') || stageLower.includes('launch')) {
+          progress = 90;
+          stageRaw = 'Step 06: Live Production Launch (90%)';
+        } else if (stageLower.includes('step 05') || stageLower.includes('testing')) {
+          progress = 75;
+          stageRaw = 'Step 05: QA Testing & Beta Demo (75%)';
+        } else if (stageLower.includes('step 04') || stageLower.includes('coding')) {
+          progress = 60;
+          stageRaw = 'Step 04: Active Coding & Core Dev (60%)';
+        } else if (stageLower.includes('step 03') || stageLower.includes('design')) {
+          progress = 35;
+          stageRaw = 'Step 03: UI Design & Work Started (35%)';
+        } else if (stageLower.includes('step 02') || stageLower.includes('confirmed')) {
+          progress = 15;
+          stageRaw = 'Step 02: Requirements Confirmed (15%)';
+        } else if (order.progress !== undefined && order.progress !== null) {
+          progress = Number(order.progress);
+        }
+
+        const stage = stageRaw;
         if (progress < 100) activeCount++;
 
         const fin = getOrderFinancials(order);
@@ -1770,7 +1824,6 @@
         const paidPercent = fin.paidPercent;
         totalCalculatedPaid += amountPaid;
 
-        const stage = order.stage || 'Step 01: Order Placed & Discovery Phase';
         const paymentMode = order.paymentMode || 'Milestone Escrow';
         const paymentStatus = order.paymentStatus || (isFullyPaid ? 'Full Paid (100%)' : (amountPaid > 0 ? `Partially Paid (₹${amountPaid})` : 'Payment Pending'));
         const deliverableUrl = order.deliverableUrl || '';
@@ -1827,6 +1880,18 @@
           `;
         }
 
+        // Calculate Timeline Dates (Order Placed Date, Last Update, Estimated Completion)
+        const createdDateObj = order.createdTime ? new Date(order.createdTime) : (order.createdAtDate ? new Date(order.createdAtDate) : new Date());
+        const applyDateFormatted = createdDateObj.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+        const updateDateObj = order.updatedAt ? (typeof order.updatedAt === 'string' ? new Date(order.updatedAt) : (order.updatedAt.toDate ? order.updatedAt.toDate() : new Date())) : createdDateObj;
+        const lastUpdateFormatted = updateDateObj.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+        const isExpress = (String(order.notes || '') + String(order.features || '')).toLowerCase().includes('express');
+        const timelineDays = isExpress ? 10 : 15;
+        const estDateObj = new Date(createdDateObj.getTime() + (timelineDays * 24 * 60 * 60 * 1000));
+        const estHandoverFormatted = estDateObj.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
         // Card HTML for My Products
         const orderCard = document.createElement('div');
         orderCard.className = 'product-order-item';
@@ -1849,21 +1914,37 @@
             </div>
           </div>
 
-          <div style="margin:0 0 14px; padding:10px 12px; border:1px solid var(--border-color); border-radius:10px; background:var(--bg-surface-alt); font-size:0.82rem; line-height:1.5;">
+          <div style="margin:0 0 12px; padding:10px 12px; border:1px solid var(--border-color); border-radius:10px; background:var(--bg-surface-alt); font-size:0.82rem; line-height:1.5;">
             <div style="font-weight:800; margin-bottom:4px; color:var(--text-main);"><i class="fa-solid fa-list-check" style="color:var(--primary); margin-right:6px;"></i> Project Scope &amp; Requirements</div>
             <div style="white-space:pre-wrap; overflow-wrap:anywhere; color:var(--text-main);">
               ${escapeHTML(orderScope || orderFeatures || 'Standard Package Features')}
             </div>
           </div>
 
+          <!-- Project Timeline Metadata Strip (Apply Date, Last Update, Est. Handover) -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin-bottom:14px; padding:10px 12px; background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:10px; font-size:0.78rem;">
+            <div>
+              <div style="color:var(--text-muted); font-weight:700;"><i class="fa-solid fa-calendar-check" style="color:var(--primary);"></i> Apply / Order Date</div>
+              <div style="font-weight:800; color:var(--text-main); margin-top:2px;">${applyDateFormatted}</div>
+            </div>
+            <div>
+              <div style="color:var(--text-muted); font-weight:700;"><i class="fa-solid fa-arrows-rotate" style="color:#0ea5e9;"></i> Last Stage Update</div>
+              <div style="font-weight:800; color:var(--text-main); margin-top:2px;">${lastUpdateFormatted}</div>
+            </div>
+            <div>
+              <div style="color:var(--text-muted); font-weight:700;"><i class="fa-solid fa-flag-checkered" style="color:#10b981;"></i> Est. Completion Date</div>
+              <div style="font-weight:800; color:#10b981; margin-top:2px;">${estHandoverFormatted} <span style="font-size:0.7rem; color:var(--text-muted);">(${timelineDays} Days Scope)</span></div>
+            </div>
+          </div>
+
           <!-- Project Development Sprint Progress Bar -->
           <div style="margin-bottom:14px;">
-            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-bottom:4px;">
-              <span>Development Stage Progress</span>
-              <span style="color:var(--primary);">${progress}%</span>
+            <div style="display:flex; justify-content:space-between; font-size:0.78rem; color:var(--text-muted); font-weight:700; margin-bottom:4px;">
+              <span>Current Sprint Stage: <strong style="color:var(--text-main); font-weight:800;">${escapeHTML(stage)}</strong></span>
+              <span style="color:var(--primary); font-weight:900; font-size:0.85rem;">${progress}%</span>
             </div>
-            <div style="height:7px; background:var(--border-color); border-radius:10px; overflow:hidden;">
-              <div style="width:${progress}%; height:100%; background:linear-gradient(90deg, var(--primary), #38bdf8); border-radius:10px; transition:width 0.4s ease;"></div>
+            <div style="height:8px; background:var(--border-color); border-radius:10px; overflow:hidden;">
+              <div style="width:${progress}%; height:100%; background:linear-gradient(90deg, var(--primary), #10b981); border-radius:10px; transition:width 0.4s ease;"></div>
             </div>
           </div>
 
@@ -2293,10 +2374,6 @@
 
     // Razorpay Integration General Checkout Trigger (Safe Optional Chaining)
     document.getElementById('btnTriggerRazorpay')?.addEventListener('click', () => {
-      if (!RAZORPAY_CONFIG.onlinePaymentsEnabled) {
-        showError("Online payments are temporarily unavailable until server-side Razorpay verification is configured.");
-        return;
-      }
       const customPayAmount = document.getElementById('customPayAmount');
       const paySelectProject = document.getElementById('paySelectProject');
       const amount = Number(customPayAmount?.value || 0);
@@ -2379,9 +2456,17 @@
       }
     });
 
-    // Edit Profile form submission
+    // Edit Profile form submission with Spinning Loading Indicator
     editProfileForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const saveBtn = document.getElementById('btnSaveProfile');
+      const originalBtnHtml = saveBtn ? saveBtn.innerHTML : '<i class="fa-solid fa-floppy-disk"></i> Save Profile Changes';
+
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="margin-right:6px;"></i> Saving Changes...';
+      }
+
       const newName = inputEditName.value.trim();
       const newPhone = inputEditPhone.value.trim();
       const newCompany = inputEditCompany.value.trim();
@@ -2395,14 +2480,23 @@
       const updatePayload = { displayName: newName };
       if (newAvatar) updatePayload.photoURL = newAvatar;
 
-      const res = await updateUserProfileData(updatePayload);
-      if (res.success) {
-        showSuccess("Profile information updated successfully!");
-        dashName.textContent = newName;
-        dashGreetingName.textContent = newName.split(' ')[0];
-        if (newAvatar) dashAvatar.src = newAvatar;
-      } else {
-        showError(res.error || "Failed to update profile.");
+      try {
+        const res = await updateUserProfileData(updatePayload);
+        if (res.success) {
+          showSuccess("Profile information updated successfully!");
+          dashName.textContent = newName;
+          dashGreetingName.textContent = newName.split(' ')[0];
+          if (newAvatar) dashAvatar.src = newAvatar;
+        } else {
+          showError(res.error || "Failed to update profile.");
+        }
+      } catch (err) {
+        showError("Error updating profile. Please try again.");
+      } finally {
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = originalBtnHtml;
+        }
       }
     });
 
@@ -2622,9 +2716,9 @@
     }, 1200);
   </script>
 
-  <!-- Modal: Project Milestone / Installment Payment Dialog -->
-  <div id="projectPayModal" class="godoz-modal-backdrop" onclick="if(event.target === this) window.closeProjectPayModal()">
-    <div class="godoz-modal-card">
+  <!-- Modal: Project Milestone / Installment Payment Dialog (100% Full Screen Immersive View) -->
+  <div id="projectPayModal" class="godoz-modal-backdrop godoz-order-modal-wide" style="display:none;" onclick="if(event.target === this) window.closeProjectPayModal()">
+    <div class="godoz-modal-box godoz-order-modal-wide">
       <div class="modal-head">
         <div style="display:flex; align-items:center; gap:8px;">
           <div style="width:34px; height:34px; border-radius:8px; background:rgba(18,102,232,0.1); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:1.05rem;">
@@ -2668,14 +2762,16 @@
           <button type="button" class="quick-amount-pill active" id="btnModalFullBalance" onclick="window.setModalPayRemaining(this)">Full Balance</button>
         </div>
 
+        <!-- Compact Payment Amount Input -->
         <div class="form-group" style="margin-bottom:14px;">
-          <label class="form-label" for="modalCustomAmount">Payment Amount to Pay (INR ₹):</label>
-          <input type="number" id="modalCustomAmount" class="form-input" min="1" style="padding-left:14px; font-weight:800; font-size:1.15rem; color:var(--primary);">
+          <label class="form-label" for="modalCustomAmount" style="display:block; font-weight:800; font-size:0.88rem; margin-bottom:6px; color:var(--text-main);">Payment Amount to Pay (INR ₹) *</label>
+          <input type="number" id="modalCustomAmount" class="form-input" min="1" style="max-width:240px; width:100%; box-sizing:border-box; padding:10px 14px; font-weight:800; font-size:1.15rem; color:var(--primary); border:1.5px solid var(--primary); border-radius:10px;">
         </div>
 
-        <div class="form-group" style="margin-bottom:18px;">
-          <label class="form-label" for="modalPayNote">Payment Note / Milestone Description:</label>
-          <input type="text" id="modalPayNote" class="form-input" value="Milestone Installment" style="padding-left:14px;">
+        <!-- Multi-line Textarea Payment Note -->
+        <div class="form-group" style="margin-bottom:20px; width:100%;">
+          <label class="form-label" for="modalPayNote" style="display:block; font-weight:800; font-size:0.88rem; margin-bottom:6px; color:var(--text-main);">Payment Note / Milestone Description (Multi-line)</label>
+          <textarea id="modalPayNote" class="form-input" rows="3" placeholder="Enter milestone description, payment notes, or instructions..." style="width:100%; box-sizing:border-box; padding:10px 12px; font-weight:600; font-size:0.9rem; border:1px solid var(--border-color); border-radius:10px; font-family:inherit; resize:vertical; min-height:80px;"></textarea>
         </div>
 
         <button type="button" id="btnExecuteProjectRazorpay" class="btn btn-accent" style="width:100%; padding:14px; font-size:1.05rem; font-weight:800; justify-content:center;">

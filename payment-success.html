@@ -14,7 +14,7 @@
   <!-- html2pdf Library for Instant PDF Receipt Download -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
-    const savedTheme = localStorage.getItem('godoz_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const savedTheme = localStorage.getItem('godoz_theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
 
     // Universal Instant Drawer Navigation Handlers (0ms response)
@@ -655,7 +655,7 @@
         <div style="display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 14px; border-bottom: 1.5px solid #e2e8f0; margin-bottom: 16px;">
           <div>
             <div style="margin-bottom: 2px;">
-              <img src="./godoz_logo_rectangle_w_bg.png" alt="GoDoz Technology" style="height: 36px; width: auto; max-width: 180px; object-fit: contain; border-radius: 4px;" onerror="this.src='./official logo.png'">
+              <img src="./godoz_logo_flat_vector.png" alt="GoDoz Technology" style="height: 36px; width: auto; max-width: 180px; object-fit: contain; border-radius: 4px;" onerror="this.src='./godoz_logo_flat_vector.png'">
               <div style="font-size: 9.5px; font-weight: 800; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 2px;">
                 Official Payment Receipt &amp; Tax Voucher
               </div>
@@ -787,6 +787,13 @@
         </div>
       `;
 
+      const btn = document.getElementById('btnDownloadPdf');
+      const originalBtnHtml = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="margin-right:8px;"></i> Generating PDF Receipt...';
+      }
+
       if (typeof window.html2pdf === 'function') {
         const opt = {
           margin:       [10, 10, 10, 10],
@@ -796,8 +803,23 @@
           jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
           pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
         };
-        window.html2pdf().set(opt).from(pdfWrapper).save();
+        window.html2pdf().set(opt).from(pdfWrapper).save().then(() => {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
+          }
+        }).catch((err) => {
+          console.warn("PDF generation notice:", err);
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
+          }
+        });
       } else {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = originalBtnHtml;
+        }
         const printWin = window.open('', '_blank');
         if (printWin) {
           printWin.document.write(`
@@ -901,11 +923,6 @@
       const qrImg = document.getElementById('onScreenQrCode');
       if (qrImg) {
         qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(shareableReceiptUrl)}`;
-        qrImg.style.display = 'block';
-      }
-      const qrImg = document.getElementById('onScreenQrCode');
-      if (qrImg) {
-        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.href)}`;
         qrImg.style.display = 'block';
       }
 

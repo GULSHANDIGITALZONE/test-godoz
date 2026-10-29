@@ -18,6 +18,16 @@
 > **Bina specially kahe kisi bhi purane feature, modal, button, ya code ko delete karna SAKHT MANA HAI!**
 
 ---
+
+> [!IMPORTANT]
+> ## 🚨 PRODUCTION LIVE WEBSITE RULE: 100% ALWAYS AVAILABLE (NO MOCK / NO DEMO BLOCKING)
+> **GODZ.IN / GODOZ.IN WEBSITE REAL LIVE PRODUCTION MEIN HAI!**
+>
+> **Jab tak Founder (RS GULSHAN PRAJAPATI) khud Na kahe, Tab tak existing production code mein KABHI BHI koi mock 'unavailable' alert, temporary payment blocking check, ya demo code insert NAHI kiya jayega!**
+>
+> **Online Payments, Project Booking Checkout, Product Catalog Sync, aur Client Portal functionality HAMESHA 100% AVAILABLE, CLICKABLE, AUR ACTIVE rahenge 24/7! Backend mein updates aur improvements chalti rahengi, lekin Client-side User Experience HAMESHA 100% AVAILABLE rahega.**
+
+---
 >## Dhyan rakhne yogy bate.
 > placeholder me kabhi ki kisi ka niji jnkari na ho jaise kisi ka name ya Number etc.
 ---

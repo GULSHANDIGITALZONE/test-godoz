@@ -8,8 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <script>
     (function(){
-      const savedTheme = localStorage.getItem('godoz_theme') || 
-        (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      const savedTheme = localStorage.getItem('godoz_theme') || 'light';
       document.documentElement.setAttribute('data-theme', savedTheme);
     })();
 
@@ -2761,35 +2760,35 @@
                         if (typeof window.autoFillUserInputs === 'function') window.autoFillUserInputs();
 
                         const isEmail = contact.includes('@');
-                        const digits = contact.replace(/\D/g, '');
-                        const targetUid = isEmail ? `user_${contact.replace(/[^a-zA-Z0-9]/g, '')}` : `phone_${digits.slice(-10)}`;
-
-                        const newDocRef = doc(collection(db, "messages"));
-                        await setDoc(newDocRef, {
-                          id: newDocRef.id,
-                          senderUid: targetUid,
-                          senderName: name,
-                          senderEmail: isEmail ? contact : `${digits}@phone.user`,
-                          senderPhone: !isEmail ? contact : null,
-                          messageText: `💬 [GoDoz Main Page Project Inquiry]:\n${msg}`,
-                          isLoggedIn: false,
-                          timestamp: Date.now(),
-                          replyText: null,
-                          repliedAt: null,
-                          status: "pending",
-                          adminNotes: "Submitted via GoDoz Main Homepage"
+                        const res = await saveInquiryToFirestore({
+                          name: name,
+                          email: isEmail ? contact : "",
+                          phone: !isEmail ? contact : "",
+                          service: "Direct Project Inquiry",
+                          message: msg,
+                          source: "Main Page Direct Inquiry Form"
                         });
 
-                        document.getElementById('godozWidgetMsg').value = '';
-                        statusDiv.style.display = 'block';
-                        statusDiv.style.background = '#ECFDF5';
-                        statusDiv.style.color = '#047857';
-                        statusDiv.innerHTML = '✅ Inquiry sent directly to Founder Desk! <a href="https://godoz.in/contactapp" target="_blank" style="color:#047857; font-weight:800; text-decoration:underline;">Track reply on godoz.in/contactapp ↗</a>';
+                        if (res && res.success) {
+                          document.getElementById('godozWidgetMsg').value = '';
+                          statusDiv.style.display = 'block';
+                          statusDiv.style.background = '#ECFDF5';
+                          statusDiv.style.color = '#047857';
+                          statusDiv.innerHTML = '✅ Inquiry sent directly to Founder Desk! We will connect with you shortly.';
+                        } else {
+                          statusDiv.style.display = 'block';
+                          statusDiv.style.background = '#FEF2F2';
+                          statusDiv.style.color = '#B91C1C';
+                          statusDiv.innerText = 'Error submitting: ' + (res?.error || 'Firestore write failed');
+                        }
                       } catch (e) {
                         statusDiv.style.display = 'block';
                         statusDiv.style.background = '#FEF2F2';
                         statusDiv.style.color = '#B91C1C';
                         statusDiv.innerText = 'Error submitting: ' + e.message;
+                      } finally {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Project Inquiry';
                       } finally {
                         btn.disabled = false;
                         btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Project Inquiry';
@@ -2820,38 +2819,25 @@
                       const digits = clientContact.replace(/\D/g, '');
 
                       try {
-                        // 1. Save to 'inquiries' collection (Appears in Admin Inquiries & Leads table!)
-                        await addDoc(collection(db, "inquiries"), {
+                        // 1. Save to 'inquiries' collection (Appears in Admin & Manager Inquiries Leads table!)
+                        const res = await saveInquiryToFirestore({
                           name: clientName,
                           email: isEmail ? clientContact : "",
                           phone: !isEmail ? clientContact : "",
                           service: "Project Cost Estimator Quote",
                           budget: calcPrice,
                           message: `📊 [Cost Estimator Breakdown]:\n${summaryText}\nCalculated Price: ${calcPrice}`,
-                          source: "Cost Calculator Widget",
-                          createdAt: Date.now(),
-                          createdAtDate: new Date().toISOString()
+                          source: "Cost Calculator Widget"
                         });
 
-                        // 2. Also save to 'messages' collection
-                        const targetUid = isEmail ? `user_${clientContact.replace(/[^a-zA-Z0-9]/g, '')}` : `phone_${digits.slice(-10)}`;
-                        const newDocRef = doc(collection(db, "messages"));
-                        await setDoc(newDocRef, {
-                          id: newDocRef.id,
-                          senderUid: targetUid,
-                          senderName: clientName,
-                          senderEmail: isEmail ? clientContact : `${digits}@phone.user`,
-                          senderPhone: !isEmail ? clientContact : null,
-                          messageText: `💬 [GoDoz Cost Estimator Discussion Request]:\n${summaryText}\nCalculated Price: ${calcPrice}`,
-                          isLoggedIn: Boolean(window.currentUser),
-                          timestamp: Date.now(),
-                          status: "pending",
-                          adminNotes: "Submitted via Cost Calculator Request Discuss Button"
-                        });
-
-                        alert(`✅ Thank you ${clientName}! Your project calculation (${calcPrice}) has been sent to GoDoz Founder Desk. We will connect with you shortly!`);
+                        if (res && res.success) {
+                          alert(`✅ Thank you ${clientName}! Your project calculation (${calcPrice}) has been sent to GoDoz Founder Desk. We will connect with you shortly!`);
+                        } else {
+                          alert(`❌ Error submitting quote request: ${res?.error || 'Firestore write failed'}. Please try again or chat on WhatsApp.`);
+                        }
                       } catch (err) {
-                        alert(`Error submitting request: ${err.message}`);
+                        console.error("Error submitting quote request:", err);
+                        alert(`❌ Error submitting request: ${err.message || 'Network error'}. Please try again.`);
                       }
                     });
                   </script>
@@ -4205,7 +4191,7 @@
        24. Interactive Client Project Order & Booking Modal
        ======================================================================== -->
   <div id="projectOrderModal" class="godoz-modal-backdrop" style="display:none;" aria-hidden="true">
-    <div class="godoz-modal-box" style="max-width:620px;">
+    <div class="godoz-modal-box godoz-order-modal-wide">
       
       <!-- Modal Header -->
       <div class="modal-header">
@@ -4316,8 +4302,8 @@
               
               <!-- Option 1: Razorpay Instant Online Pay (% Based Advance) - Default Selected -->
               <label class="pay-option-card selected" id="optPayRazorpay">
-                <input type="radio" name="order_payment_mode" value="razorpay" checked style="margin-top:3px;">
-                <div style="flex:1;">
+                <input type="radio" name="order_payment_mode" value="razorpay" checked style="margin-top:3px; flex-shrink:0;">
+                <div style="flex:1; min-width:0;">
                   <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
                     <strong style="font-size:0.92rem; color:var(--text-main);"><i class="fa-solid fa-credit-card" style="color:var(--primary);"></i> Razorpay (% Advance Payment)</strong>
                     <span id="razorpayAdvanceBadge" style="background:rgba(18,102,232,0.15); color:var(--primary); font-weight:800; font-size:0.72rem; padding:2px 8px; border-radius:12px;">Min 10% Advance</span>
@@ -4326,19 +4312,19 @@
                     Lock priority development schedule with flexible advance payment (% based, Min 10%). Supports UPI (GPay, PhonePe, Paytm), Cards &amp; NetBanking.
                   </div>
 
-                  <!-- Percentage Selection Bar (50% Default Checked) -->
-                  <div id="advancePctSelector" style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; padding-top:6px; border-top:1px dashed var(--border-color);">
-                    <span style="font-size:0.78rem; font-weight:800; color:var(--text-main); align-self:center;">Select Advance %:</span>
-                    <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+                  <!-- Percentage Selection Bar (Single Line Horizontal Scrollbar) -->
+                  <div id="advancePctSelector" style="display:flex; gap:6px; flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; margin-top:8px; padding-top:6px; border-top:1px dashed var(--border-color); -webkit-overflow-scrolling:touch;" onclick="event.stopPropagation();">
+                    <span style="font-size:0.78rem; font-weight:800; color:var(--text-main); align-self:center; flex-shrink:0;">Advance %:</span>
+                    <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px; flex-shrink:0; white-space:nowrap;">
                       <input type="radio" name="advance_pct" value="10"> 10% (Min)
                     </label>
-                    <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+                    <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px; flex-shrink:0; white-space:nowrap;">
                       <input type="radio" name="advance_pct" value="25"> 25%
                     </label>
-                    <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+                    <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px; flex-shrink:0; white-space:nowrap;">
                       <input type="radio" name="advance_pct" value="50" checked> 50%
                     </label>
-                    <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+                    <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px; flex-shrink:0; white-space:nowrap;">
                       <input type="radio" name="advance_pct" value="100"> 100% (Full)
                     </label>
                   </div>
@@ -4348,8 +4334,8 @@
               <!-- AI/maintainer note: PAD means Pay After Demo; it is a payment-timing agreement, not a payment method or proof of payment. -->
               <!-- Option 2: Pay After Demo (PAD) -->
               <label class="pay-option-card" id="optPayCod">
-                <input type="radio" name="order_payment_mode" value="pay_after_demo" style="margin-top:3px;">
-                <div style="flex:1;">
+                <input type="radio" name="order_payment_mode" value="pay_after_demo" style="margin-top:3px; flex-shrink:0;">
+                <div style="flex:1; min-width:0;">
                   <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
                     <div style="display:flex; align-items:center; gap:6px;">
                       <strong style="font-size:0.92rem; color:var(--text-main);"><i class="fa-solid fa-laptop-code" style="color:#10b981;"></i> Pay After Demo (PAD)</strong>
@@ -4368,13 +4354,13 @@
 
           <!-- Promo Code / Coupon Input Section -->
           <div style="background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:12px; padding:12px; margin-bottom:16px;">
-            <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:6px;">8. 
+            <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:6px;">
               <i class="fa-solid fa-ticket" style="color:var(--accent);"></i> Have a Promo Code / Discount Coupon?
             </label>
-            <div style="display:flex; gap:8px;">
-              <input type="text" id="orderCouponInput" placeholder="Enter coupon e.g. GODZO10 or LAUNCH1000" style="flex:1; text-transform:uppercase; padding:8px 12px; border:1.5px solid var(--border-color); border-radius:8px; font-weight:800; font-size:0.88rem; background:var(--bg-surface); color:var(--text-main); outline:none;">
-              <button type="button" id="btnApplyCoupon" onclick="window.applyOrderCoupon()" class="btn btn-sm btn-primary" style="padding:8px 16px; font-weight:800;">
-                Apply Coupon
+            <div style="display:flex; gap:6px; align-items:center; flex-wrap:nowrap;">
+              <input type="text" id="orderCouponInput" placeholder="Enter Promo Coupon (e.g. GODZ10)" style="flex:1; min-width:0; text-transform:uppercase; padding:8px 10px; border:1.5px solid var(--border-color); border-radius:8px; font-weight:800; font-size:0.82rem; background:var(--bg-surface); color:var(--text-main); outline:none;">
+              <button type="button" id="btnApplyCoupon" onclick="window.applyOrderCoupon()" class="btn btn-sm btn-primary" style="padding:8px 12px; font-weight:800; font-size:0.82rem; flex-shrink:0; white-space:nowrap;">
+                Apply
               </button>
             </div>
             <div id="orderCouponMessage" style="font-size:0.78rem; font-weight:800; margin-top:6px; display:none;"></div>
@@ -4593,7 +4579,8 @@
     import { 
       subscribeToAuth, 
       isUserAdmin, 
-      saveOrderToFirestore, 
+      saveOrderToFirestore,
+      saveInquiryToFirestore,
       auth, 
       googleProvider, 
       syncUserProfile,
@@ -4601,9 +4588,12 @@
       RAZORPAY_CONFIG,
       validateCouponInFirestore,
       listenToProductsCatalog,
-      listenToEstimatorAddons
+      listenToEstimatorAddons,
+      listenToRazorpaySettings
     } from "./firebase-init.js";
     import { signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    window.saveInquiryToFirestore = saveInquiryToFirestore;
 
     let currentAuthUser = null;
     let activeAppliedCoupon = null;
@@ -4639,6 +4629,12 @@
     listenToEstimatorAddons((addonsData) => {
       if (typeof window.applyEstimatorAddonsUI === 'function') {
         window.applyEstimatorAddonsUI(addonsData);
+      }
+    });
+
+    listenToRazorpaySettings((settings) => {
+      if (settings && settings.keyId) {
+        console.log("⚡ Real-time Active Razorpay Key ID updated on index.html:", settings.keyId);
       }
     });
 
@@ -4797,11 +4793,18 @@
 
     // Update Due amount when payment mode changes
     function updateDueToday() {
+      const razorpayRadio = document.querySelector('input[name="order_payment_mode"][value="razorpay"]');
+      const padRadio = document.querySelector('input[name="order_payment_mode"][value="pay_after_demo"]');
+
+      if (razorpayRadio && razorpayRadio.style.display !== 'none' && !razorpayRadio.checked && !padRadio?.checked) {
+        razorpayRadio.checked = true;
+      }
+
       const selectedMode = document.querySelector('input[name="order_payment_mode"]:checked')?.value || 'razorpay';
       const dueDisplay = document.getElementById('modalOrderDueToday');
       const priceDisplay = document.getElementById('modalOrderPriceDisplay');
       const advancePctBox = document.getElementById('advancePctSelector');
-      const total = parseInt(priceDisplay?.dataset.amount || '19999', 10);
+      const total = parseInt(priceDisplay?.dataset.amount || '0', 10);
 
       document.querySelectorAll('.pay-option-card').forEach(c => c.classList.remove('selected'));
       if (selectedMode === 'razorpay') {
@@ -4809,15 +4812,22 @@
         if (advancePctBox) advancePctBox.style.display = 'flex';
 
         const selectedPct = parseInt(document.querySelector('input[name="advance_pct"]:checked')?.value || '50', 10);
-        const calcAdvance = Math.max(1, Math.round((total * selectedPct) / 100));
+        const calcAdvance = total > 0 ? Math.max(1, Math.round((total * selectedPct) / 100)) : 0;
 
-        if (dueDisplay) dueDisplay.textContent = `₹${calcAdvance.toLocaleString('en-IN')} (${selectedPct}% Online Advance)`;
+        if (dueDisplay) {
+          dueDisplay.style.color = '#16a34a';
+          dueDisplay.textContent = `₹${calcAdvance.toLocaleString('en-IN')} (${selectedPct}% Online Advance)`;
+        }
       } else {
         document.getElementById('optPayCod')?.classList.add('selected');
         if (advancePctBox) advancePctBox.style.display = 'none';
-        if (dueDisplay) dueDisplay.textContent = '₹0 (10% Pay After Demo)';
+        if (dueDisplay) {
+          dueDisplay.style.color = '#16a34a';
+          dueDisplay.textContent = '₹0 (Pay After Demo)';
+        }
       }
     }
+    window.updateDueToday = updateDueToday;
 
     document.querySelectorAll('input[name="order_payment_mode"]').forEach(r => {
       r.addEventListener('change', updateDueToday);
@@ -5008,17 +5018,8 @@
         }
       }
 
-      // AI/maintainer note: PAD means Pay After Demo, never Cash on Delivery (COD) or a payment instrument.
       // Razorpay Live Gateway or Pay After Demo
       if (paymentMode === 'razorpay') {
-        if (!RAZORPAY_CONFIG.onlinePaymentsEnabled) {
-          alert("Online payments are temporarily unavailable until server-side Razorpay verification is configured. Please choose Pay After Demo (PAD) or contact support.");
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '⚡ Confirm &amp; Book Project Order';
-          }
-          return;
-        }
         const selectedPct = parseInt(document.querySelector('input[name="advance_pct"]:checked')?.value || '10', 10);
         const tokenAmount = Math.max(1, Math.round((price * selectedPct) / 100)); // Minimum ₹1 for Razorpay API
         let isPaymentCompleted = false;
@@ -5072,10 +5073,7 @@
             modal: {
               ondismiss: function () {
                 if (isPaymentCompleted) return;
-                // If user closed without paying, offer Pay After Demo as the fallback.
-                if (confirm("Razorpay window closed. Would you like to proceed with Pay After Demo (PAD) instead?")) {
-                  completeBooking("PAD Requested (Pay After Demo)", "Pay After Demo (PAD)");
-                } else if (submitBtn) {
+                if (submitBtn) {
                   submitBtn.disabled = false;
                   submitBtn.innerHTML = '⚡ Confirm &amp; Book Project Order';
                 }
@@ -5087,16 +5085,27 @@
             const rzp = new Razorpay(rzpOptions);
             rzp.on('payment.failed', function (resp) {
               if (isPaymentCompleted) return;
-              alert("Payment notice: " + (resp.error?.description || "Payment was not completed. Proceeding with Pay After Demo (PAD)."));
-              completeBooking("PAD Requested (Pay After Demo)", "Pay After Demo (PAD)");
+              alert("Payment notice: " + (resp.error?.description || "Payment could not be completed. Your order was not placed."));
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '⚡ Confirm &amp; Book Project Order';
+              }
             });
             rzp.open();
           } catch (e) {
             console.warn("Razorpay init error:", e);
-            await completeBooking("Token Booking (Online Processing)", "Razorpay Online Advance");
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = '⚡ Confirm &amp; Book Project Order';
+            }
+            alert("Payment Gateway Notice: Unable to open Razorpay checkout. Please check network or select Pay After Demo (PAD).");
           }
         } else {
-          await completeBooking("Token Booking (Online Mode)", "Razorpay Online Advance");
+          alert("Razorpay SDK not loaded. Please refresh page or select Pay After Demo (PAD).");
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '⚡ Confirm &amp; Book Project Order';
+          }
         }
       } else {
         // Pay After Demo

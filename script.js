@@ -933,12 +933,10 @@ window.showGoDozToast = function(message, type = 'info') {
 };
 
 /* ==========================================================================
-   1. Theme Switcher (Dark / Light Mode)
+   1. Theme Switcher (Default: Light Mode)
    ========================================================================== */
 function initTheme() {
-  const savedTheme = localStorage.getItem('godoz_theme') || 
-    (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  
+  const savedTheme = localStorage.getItem('godoz_theme') || 'light';
   applyTheme(savedTheme, false);
 
   // Global Click Event Delegation for any Theme Toggle Button
@@ -949,15 +947,6 @@ function initTheme() {
       window.toggleGoDozTheme();
     }
   });
-
-  // Listen to OS Dark Mode Preference changes
-  if (window.matchMedia) {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      if (!localStorage.getItem('godoz_theme')) {
-        applyTheme(e.matches ? 'dark' : 'light', false);
-      }
-    });
-  }
 }
 
 function applyTheme(theme, save = true) {

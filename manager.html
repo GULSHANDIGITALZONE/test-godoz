@@ -8,8 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <script>
     (function(){
-      const savedTheme = localStorage.getItem('godoz_theme') ||
-        (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      const savedTheme = localStorage.getItem('godoz_theme') || 'light';
       document.documentElement.setAttribute('data-theme', savedTheme);
     })();
 
@@ -1576,91 +1575,122 @@
   </main>
 </div>
 
-<!-- 3. MODAL: EDIT / UPDATE PROJECT STATUS & PAD ACCEPTANCE -->
-<div id="editOrderModal" class="modal-overlay" style="display:none;">
-  <div class="modal-content">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
-      <h3 style="margin:0; font-size:1.2rem; color:var(--text-main);"><i class="fa-solid fa-sliders"></i> Update Order &amp; Progress</h3>
-      <button onclick="closeEditModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-muted);">&times;</button>
+<!-- 3. MODAL: EDIT / UPDATE PROJECT STATUS, SCOPE, BUDGET & DELIVERABLES -->
+<div id="editOrderModal" class="godoz-modal-backdrop godoz-order-modal-wide" style="display:none;" role="dialog" aria-modal="true">
+  <div class="godoz-modal-box godoz-order-modal-wide">
+    <div class="modal-header">
+      <div>
+        <h3 style="margin:0; font-size:1.25rem; font-weight:900; color:var(--text-main); display:flex; align-items:center; gap:8px;">
+          <span style="color:var(--primary);"><i class="fa-solid fa-sliders"></i></span> Update Order, Scope &amp; Budget
+        </h3>
+        <p style="margin:2px 0 0; font-size:0.8rem; color:var(--text-muted);">Master Manager Control &bull; Official Order Editor</p>
+      </div>
+      <button type="button" onclick="closeEditModal()" style="background:none; border:none; font-size:1.5rem; color:var(--text-muted); cursor:pointer; padding:4px 8px; border-radius:8px; line-height:1;" aria-label="Close modal">&times;</button>
     </div>
 
-    <form id="editOrderForm" style="display:flex; flex-direction:column; gap:14px;">
-      <input type="hidden" id="editOrderId">
+    <div class="modal-body">
+      <form id="editOrderForm" style="display:flex; flex-direction:column; gap:14px;">
+        <input type="hidden" id="editOrderId">
 
-      <div>
-        <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Project Title / Name</label>
-        <input type="text" id="editProjectName" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);" required>
-      </div>
-
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
         <div>
-          <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Client Name</label>
-          <input type="text" id="editClientName" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);" required>
+          <label style="display:block; font-size:0.82rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Project Title / Name *</label>
+          <input type="text" id="editProjectName" style="width:100%; padding:10px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface); color:var(--text-main); font-weight:700;" required>
         </div>
+
+        <!-- Editable Total Budget / Price & Payment Mode (Manager Control) -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap:12px;">
+          <div>
+            <label style="display:block; font-size:0.82rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">
+              <i class="fa-solid fa-indian-rupee-sign" style="color:#16a34a;"></i> Total Project Budget / Price (₹) *
+            </label>
+            <input type="number" id="editOrderPrice" min="0" placeholder="19999" required style="width:100%; padding:10px 12px; border:1.5px solid var(--primary); border-radius:8px; background:var(--bg-surface); color:var(--text-main); font-weight:800; font-size:1.05rem;">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.82rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">
+              <i class="fa-solid fa-credit-card" style="color:var(--primary);"></i> Payment Agreement / Mode
+            </label>
+            <input type="text" id="editOrderPaymentMode" placeholder="e.g. Pay After Demo (PAD) or Razorpay Online" style="width:100%; padding:10px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface); color:var(--text-main); font-weight:700; font-size:0.9rem;">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap:12px;">
+          <div>
+            <label style="display:block; font-size:0.82rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Client Name *</label>
+            <input type="text" id="editClientName" style="width:100%; padding:9px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface); color:var(--text-main);" required>
+          </div>
+          <div>
+            <label style="display:block; font-size:0.82rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Client Email (Required) *</label>
+            <input type="email" id="editClientEmail" autocomplete="email" style="width:100%; padding:9px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface); color:var(--text-main);" required>
+          </div>
+          <div>
+            <label style="display:block; font-size:0.82rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Client Phone (Optional)</label>
+            <input type="tel" id="editClientPhone" autocomplete="tel" style="width:100%; padding:9px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface); color:var(--text-main);">
+          </div>
+        </div>
+
+        <!-- Editable Project Scope & Requirements Textarea (Manager Control) -->
         <div>
-          <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Client Email (Required)</label>
-          <input type="email" id="editClientEmail" autocomplete="email" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);" required>
-        </div>
-      </div>
-
-      <div>
-        <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Client Phone (Optional)</label>
-        <input type="tel" id="editClientPhone" autocomplete="tel" style="width:100%; padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main);">
-      </div>
-
-      <!-- Single Editable Sprint Stage & Progress Selection -->
-      <div>
-        <label style="display:block; font-size:0.82rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">
-          <i class="fa-solid fa-list-check" style="color:var(--primary);"></i> Sprint Stage &amp; Progress (Choose Preset or Edit Custom)
-        </label>
-        <div style="position:relative;">
-          <input type="text" id="editStage" list="stagePresetsDatalist" oninput="window.syncStageProgressFromInput(this.value)" placeholder="Choose stage preset or type custom stage title..." style="width:100%; padding:10px 14px; border:1.5px solid var(--border-color); border-radius:10px; background:var(--bg-surface-alt); color:var(--text-main); font-weight:700; font-size:0.92rem; outline:none;" required>
-          <datalist id="stagePresetsDatalist">
-            <option value="Step 01: Order Placed (5%)">
-            <option value="Step 02: Discussed with Agent (15%)">
-            <option value="Step 03: Work Started &amp; Sample Preview Shown (35%)">
-            <option value="Step 04: Active Coding &amp; Core Dev (65%)">
-            <option value="Step 05: QA Testing &amp; Beta APK Demo (85%)">
-            <option value="Step 06: Live Launch &amp; 100% Handover (100%)">
-          </datalist>
-        </div>
-        <input type="hidden" id="editProgress" value="5">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px; font-size:0.78rem; color:var(--text-muted);">
-          <span>Detected Sprint Progress:</span>
-          <span id="editStageProgressBadge" style="background:rgba(37,99,235,0.12); color:var(--primary); font-weight:800; padding:2px 10px; border-radius:12px;">
-            5% Progress
-          </span>
-        </div>
-      </div>
-
-      <!-- Multiple Deliverable / Preview Links -->
-      <div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-          <label style="display:block; font-size:0.82rem; font-weight:700; color:var(--text-muted); margin:0;">
-            <i class="fa-solid fa-link" style="color:var(--primary);"></i> Beta APK / Live Preview / Demo Links (Multiple)
+          <label style="display:block; font-size:0.82rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">
+            <i class="fa-solid fa-list-check" style="color:var(--accent);"></i> Project Scope, Custom Features &amp; Requirements
           </label>
-          <button type="button" onclick="window.addEditDeliverableLinkRow()" class="btn btn-sm btn-outline" style="padding:3px 10px; font-size:0.75rem; font-weight:700; border-color:var(--primary); color:var(--primary);">
-            <i class="fa-solid fa-plus"></i> Add Link
-          </button>
+          <textarea id="editOrderNotes" rows="3" placeholder="Enter detailed project scope, custom features, or client requirements..." style="width:100%; padding:10px 12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface); color:var(--text-main); font-size:0.88rem; font-family:inherit; resize:vertical;"></textarea>
         </div>
-        <div id="editDeliverableLinksContainer" style="display:flex; flex-direction:column; gap:8px;">
-          <!-- Dynamic link input rows appended here -->
+
+        <!-- Single Editable Sprint Stage & Progress Selection -->
+        <div>
+          <label style="display:block; font-size:0.82rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">
+            <i class="fa-solid fa-bars-progress" style="color:var(--primary);"></i> Sprint Stage &amp; Progress (Choose Preset or Edit Custom)
+          </label>
+          <div style="position:relative;">
+            <input type="text" id="editStage" list="stagePresetsDatalist" oninput="window.syncStageProgressFromInput(this.value)" placeholder="Choose stage preset or type custom stage title..." style="width:100%; padding:10px 14px; border:1.5px solid var(--border-color); border-radius:10px; background:var(--bg-surface-alt); color:var(--text-main); font-weight:700; font-size:0.92rem; outline:none;" required>
+            <datalist id="stagePresetsDatalist">
+              <option value="Step 01: Order Placed (5%)">
+              <option value="Step 02: Requirements Confirmed (15%)">
+              <option value="Step 03: UI Design &amp; Work Started (35%)">
+              <option value="Step 04: Active Coding &amp; Core Dev (60%)">
+              <option value="Step 05: QA Testing &amp; Beta Demo (75%)">
+              <option value="Step 06: Live Production Launch (90%)">
+              <option value="Step 07: Final Handover &amp; Code Transfer (100%)">
+            </datalist>
+          </div>
+          <input type="hidden" id="editProgress" value="5">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px; font-size:0.78rem; color:var(--text-muted);">
+            <span>Detected Sprint Progress:</span>
+            <span id="editStageProgressBadge" style="background:rgba(37,99,235,0.12); color:var(--primary); font-weight:800; padding:2px 10px; border-radius:12px;">
+              5% Progress
+            </span>
+          </div>
         </div>
-      </div>
 
-      <!-- Assign Admin (Manager Only Assignment Control) -->
-      <div>
-        <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--primary); margin-bottom:4px;"><i class="fa-solid fa-user-gear"></i> Assigned Support Admin / Staff Agent</label>
-        <select id="editAssignedAdmin" style="width:100%; padding:8px 12px; border:1.5px solid var(--primary); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main); font-weight:700;">
-          <option value="">Unassigned (Master Manager View Only)</option>
-        </select>
-      </div>
+        <!-- Multiple Deliverable / Preview Links -->
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label style="display:block; font-size:0.82rem; font-weight:800; color:var(--text-main); margin:0;">
+              <i class="fa-solid fa-link" style="color:var(--primary);"></i> Beta APK / Live Preview / Demo Links (Multiple)
+            </label>
+            <button type="button" onclick="window.addEditDeliverableLinkRow()" class="btn btn-sm btn-outline" style="padding:3px 10px; font-size:0.75rem; font-weight:700; border-color:var(--primary); color:var(--primary);">
+              <i class="fa-solid fa-plus"></i> Add Link
+            </button>
+          </div>
+          <div id="editDeliverableLinksContainer" style="display:flex; flex-direction:column; gap:8px;">
+            <!-- Dynamic link input rows appended here -->
+          </div>
+        </div>
 
-      <div style="display:flex; gap:10px; margin-top:8px;">
-        <button type="submit" class="btn btn-primary" style="flex:1; padding:10px;"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
-        <button type="button" onclick="closeEditModal()" class="btn btn-outline" style="padding:10px;">Cancel</button>
-      </div>
-    </form>
+        <!-- Assign Admin (Manager Only Assignment Control) -->
+        <div>
+          <label style="display:block; font-size:0.82rem; font-weight:800; color:var(--primary); margin-bottom:4px;"><i class="fa-solid fa-user-gear"></i> Assigned Support Admin / Staff Agent</label>
+          <select id="editAssignedAdmin" style="width:100%; padding:9px 12px; border:1.5px solid var(--primary); border-radius:8px; background:var(--bg-surface-alt); color:var(--text-main); font-weight:700;">
+            <option value="">Unassigned (Master Manager View Only)</option>
+          </select>
+        </div>
+
+        <div style="display:flex; gap:12px; margin-top:10px;">
+          <button type="submit" class="btn btn-primary" style="flex:1; padding:12px; font-weight:800;"><i class="fa-solid fa-floppy-disk"></i> Save Order Changes</button>
+          <button type="button" onclick="closeEditModal()" class="btn btn-outline" style="padding:12px 20px; font-weight:700;">Cancel</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
@@ -1979,7 +2009,9 @@
     deleteProductFromFirestore,
     listenToProductsCatalog,
     saveEstimatorAddonsToFirestore,
-    listenToEstimatorAddons
+    listenToEstimatorAddons,
+    saveRazorpayKeyToFirestore,
+    listenToRazorpaySettings
   } from "./firebase-init.js";
 
   let currentOrders = [];
@@ -2706,12 +2738,13 @@
             </div>
           </details>
           <select onchange="window.quickStageUpdate('${escapeHTML(order.id)}', this.value)" style="margin-top:4px; padding:3px 6px; font-size:0.75rem; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-surface-alt); color:var(--text-main); font-weight:600; outline:none; cursor:pointer;" title="Click to update sprint stage instantly" ${isOrderCancelled || isOrderOnHold ? 'disabled' : ''}>
-            <option value="Step 01: Order Placed (5%)" ${order.stage?.includes('Step 01') || order.stage?.includes('Placed') ? 'selected' : ''}>Step 01: Order Placed (5%)</option>
-            <option value="Step 02: Discussed with Agent (15%)" ${order.stage?.includes('Step 02') || order.stage?.includes('Agent') || order.stage?.includes('Discussed') ? 'selected' : ''}>Step 02: Discussed with Agent (15%)</option>
-            <option value="Step 03: Work Started & Sample Preview Shown (35%)" ${order.stage?.includes('Step 03') || order.stage?.includes('Preview') || order.stage?.includes('Sample') ? 'selected' : ''}>Step 03: Work Started & Sample Preview (35%)</option>
-            <option value="Step 04: Active Coding & Core Dev (65%)" ${order.stage?.includes('Step 04') || order.stage?.includes('Coding') ? 'selected' : ''}>Step 04: Active Coding (65%)</option>
-            <option value="Step 05: QA Testing & Beta APK Demo (85%)" ${order.stage?.includes('Step 05') || order.stage?.includes('Testing') || order.stage?.includes('Demo') ? 'selected' : ''}>Step 05: QA Testing & Beta Demo (85%)</option>
-            <option value="Step 06: Live Launch & 100% Handover (100%)" ${order.stage?.includes('Step 06') || order.stage?.includes('Launch') || order.stage?.includes('Handover') ? 'selected' : ''}>Step 06: Live Launch & Handover (100%)</option>
+            <option value="Step 01: Order Placed (5%)" ${order.stage?.includes('Step 01') ? 'selected' : ''}>Step 01: Order Placed (5%)</option>
+            <option value="Step 02: Requirements Confirmed (15%)" ${order.stage?.includes('Step 02') ? 'selected' : ''}>Step 02: Requirements Confirmed (15%)</option>
+            <option value="Step 03: UI Design & Work Started (35%)" ${order.stage?.includes('Step 03') ? 'selected' : ''}>Step 03: UI Design & Work Started (35%)</option>
+            <option value="Step 04: Active Coding & Core Dev (60%)" ${order.stage?.includes('Step 04') ? 'selected' : ''}>Step 04: Active Coding & Core Dev (60%)</option>
+            <option value="Step 05: QA Testing & Beta Demo (75%)" ${order.stage?.includes('Step 05') ? 'selected' : ''}>Step 05: QA Testing & Beta Demo (75%)</option>
+            <option value="Step 06: Live Production Launch (90%)" ${order.stage?.includes('Step 06') || (order.stage?.includes('Launch') && !order.stage?.includes('Handover')) ? 'selected' : ''}>🚀 Step 06: Live Production Launch (90%)</option>
+            <option value="Step 07: Final Handover & Code Transfer (100%)" ${order.stage?.includes('Step 07') || order.stage?.includes('Handover') ? 'selected' : ''}>🏆 Step 07: Final Handover & Code Transfer (100%)</option>
             <option value="Order Cancelled & Closed (0%)" ${isOrderCancelled ? 'selected' : ''}>Order Cancelled</option>
           </select>
         </td>
@@ -2738,9 +2771,9 @@
         </td>
         <td>
           <div style="background:var(--border-color); height:6px; border-radius:4px; overflow:hidden; width:120px;">
-            <div style="background:${isOrderCancelled ? '#ef4444' : (isOrderOnHold ? '#f59e0b' : 'var(--primary)')}; width:${order.progress !== undefined ? order.progress : 5}%; height:100%;"></div>
+            <div style="background:${isOrderCancelled ? '#ef4444' : (isOrderOnHold ? '#f59e0b' : 'var(--primary)')}; width:${(order.stage?.includes('Step 07') || order.stage?.includes('Handover')) ? 100 : ((order.stage?.includes('Step 06') || order.stage?.includes('Launch')) ? 90 : ((order.stage?.includes('Step 05') || order.stage?.includes('Testing')) ? 75 : ((order.stage?.includes('Step 04') || order.stage?.includes('Coding')) ? 60 : ((order.stage?.includes('Step 03') || order.stage?.includes('Design')) ? 35 : ((order.stage?.includes('Step 02') || order.stage?.includes('Confirmed')) ? 15 : 5)))))}% height:100%;"></div>
           </div>
-          <span style="font-size:0.72rem; color:var(--text-muted);">${order.progress !== undefined ? order.progress : 5}% completed ${isOrderCancelled ? '(Cancelled)' : (isOrderOnHold ? '(On Hold)' : '')}</span>
+          <span style="font-size:0.72rem; color:var(--text-muted);">${(order.stage?.includes('Step 07') || order.stage?.includes('Handover')) ? 100 : ((order.stage?.includes('Step 06') || order.stage?.includes('Launch')) ? 90 : ((order.stage?.includes('Step 05') || order.stage?.includes('Testing')) ? 75 : ((order.stage?.includes('Step 04') || order.stage?.includes('Coding')) ? 60 : ((order.stage?.includes('Step 03') || order.stage?.includes('Design')) ? 35 : ((order.stage?.includes('Step 02') || order.stage?.includes('Confirmed')) ? 15 : 5)))))}% completed ${isOrderCancelled ? '(Cancelled)' : (isOrderOnHold ? '(On Hold)' : '')}</span>
           <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">
             <i class="fa-solid fa-user-check"></i> Assigned: <strong style="color:var(--text-main);">${escapeHTML(assignedStaff || 'Unassigned')}</strong>
           </div>
@@ -3721,23 +3754,46 @@
     });
   }
 
-  // Save Razorpay Live Key
-  document.getElementById('formSaveRazorpayKey')?.addEventListener('submit', (e) => {
+  // Save Razorpay Key ID directly to Firestore (/settings/razorpay)
+  document.getElementById('formSaveRazorpayKey')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const keyVal = document.getElementById('inputLiveRazorpayKey').value.trim();
+    const keyVal = document.getElementById('inputLiveRazorpayKey')?.value.trim();
     if (!keyVal) {
-      alert("Please enter a valid Razorpay Key ID (e.g. rzp_live_xxxxxxxxxxxx).");
+      alert("Please enter a valid Razorpay Key ID (e.g. rzp_live_xxxxxxxxxxxx or rzp_test_xxxxxxxxxxxx).");
       return;
     }
 
-    RAZORPAY_CONFIG.setKeyId(keyVal);
-    const alertBox = document.getElementById('keySaveAlert');
-    if (alertBox) {
-      alertBox.textContent = `✅ Razorpay Live Key '${keyVal.substring(0, 12)}...' successfully saved! All online payments on the website and client portal are now LIVE.`;
-      alertBox.style.display = 'block';
-      setTimeout(() => { alertBox.style.display = 'none'; }, 5000);
+    const res = await saveRazorpayKeyToFirestore(keyVal);
+    if (res && res.success) {
+      const isTest = keyVal.startsWith('rzp_test_');
+      const alertBox = document.getElementById('keySaveAlert');
+      if (alertBox) {
+        alertBox.textContent = isTest
+          ? `🟡 Razorpay TEST Key '${keyVal.substring(0, 12)}...' saved in Firestore! All clients are now using Test Mode.`
+          : `🟢 Razorpay LIVE Key '${keyVal.substring(0, 12)}...' saved in Firestore! All clients are now using Live Gateway.`;
+        alertBox.style.display = 'block';
+        setTimeout(() => { alertBox.style.display = 'none'; }, 6000);
+      }
+      alert(isTest
+        ? `🟡 TEST Razorpay Key Saved & Published Live in Firestore!\n\nKey ID: ${keyVal}\n\nAll clients on the website & client portal will now use this Test Key in real-time.`
+        : `🟢 LIVE Razorpay Key Saved & Published Live in Firestore!\n\nKey ID: ${keyVal}\n\nAll clients on the website & client portal will now use this Live Key in real-time.`);
+    } else {
+      alert("❌ Error saving Razorpay Key ID: " + (res?.error || 'Firestore write failed. Check Manager permissions.'));
     }
-    alert(`✅ Live Razorpay Key Saved Successfully!\n\nKey: ${keyVal}\n\nAll client checkout buttons and order advance booking modals are now connected to your live Razorpay account.`);
+  });
+
+  // Listen to Razorpay Gateway Key from Firestore in real-time
+  listenToRazorpaySettings((settings) => {
+    if (settings && settings.keyId) {
+      const inputKey = document.getElementById('inputLiveRazorpayKey');
+      if (inputKey) inputKey.value = settings.keyId;
+      const statusBadge = document.getElementById('gatewayStatusBadge');
+      const isTest = settings.keyId.startsWith('rzp_test_');
+      if (statusBadge) {
+        statusBadge.textContent = isTest ? '🟡 Test Key Active' : '🟢 Live Key Active';
+        statusBadge.className = isTest ? 'admin-badge badge-pending' : 'admin-badge badge-paid';
+      }
+    }
   });
 
   // AI/maintainer note: PAD = Pay After Demo. Accepting the PAD agreement is not payment verification.
@@ -3838,7 +3894,7 @@
     return links;
   };
 
-  // Open & Close Edit Modal
+  // Open & Close Edit Modal (100% Full Screen Immersive View)
   window.openEditModal = function(id) {
     const order = currentOrders.find(o => o.id === id);
     if (!order) return;
@@ -3848,6 +3904,15 @@
     document.getElementById('editClientName').value = order.clientName || '';
     document.getElementById('editClientEmail').value = order.clientEmail || '';
     document.getElementById('editClientPhone').value = order.clientPhone || '';
+
+    const editPriceInput = document.getElementById('editOrderPrice');
+    if (editPriceInput) editPriceInput.value = order.price !== undefined ? order.price : (order.totalPrice || 0);
+
+    const editPayModeInput = document.getElementById('editOrderPaymentMode');
+    if (editPayModeInput) editPayModeInput.value = order.paymentMode || 'Pay After Demo (PAD)';
+
+    const editNotesInput = document.getElementById('editOrderNotes');
+    if (editNotesInput) editNotesInput.value = order.notes || order.features || '';
 
     const currentStage = order.stage || 'Step 01: Order Placed (5%)';
     document.getElementById('editStage').value = currentStage;
@@ -3895,17 +3960,29 @@
       assignSelect.value = (order.assignedAdmin || order.assignedTo || '').toLowerCase().trim();
     }
 
-    document.getElementById('editOrderModal').style.display = 'flex';
+    const modal = document.getElementById('editOrderModal');
+    if (modal) {
+      modal.style.display = 'flex';
+      setTimeout(() => modal.classList.add('active'), 10);
+      document.body.style.overflow = 'hidden';
+    }
   };
 
   window.closeEditModal = function() {
-    document.getElementById('editOrderModal').style.display = 'none';
+    const modal = document.getElementById('editOrderModal');
+    if (modal) {
+      modal.classList.remove('active');
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
   };
 
-  // Save Edit Form
+  // Save Edit Form (Updates Budget, Scope, Client Info & Deliverables)
   document.getElementById('editOrderForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('editOrderId').value;
+    const order = currentOrders.find(o => o.id === id) || {};
+
     const emailInput = document.getElementById('editClientEmail');
     const clientEmail = emailInput.value.trim().toLowerCase();
     if (!emailInput.checkValidity()) {
@@ -3915,11 +3992,19 @@
     const linksData = window.getEditDeliverableLinksData();
     const primaryUrl = linksData.length > 0 ? linksData[0].url : '';
 
+    const newPrice = Math.max(0, Number(document.getElementById('editOrderPrice')?.value || order.price || 0));
+    const amountPaid = Number(order.amountPaid || 0);
+    const newRemaining = Math.max(0, newPrice - amountPaid);
+
     const updateData = {
       projectName: document.getElementById('editProjectName').value.trim(),
       clientName: document.getElementById('editClientName').value.trim(),
       clientEmail,
       clientPhone: document.getElementById('editClientPhone').value.trim(),
+      price: newPrice,
+      remainingBalance: newRemaining,
+      paymentMode: document.getElementById('editOrderPaymentMode')?.value.trim() || order.paymentMode || 'Pay After Demo (PAD)',
+      notes: document.getElementById('editOrderNotes')?.value.trim() || '',
       stage: document.getElementById('editStage').value.trim(),
       progress: Number(document.getElementById('editProgress').value || 5),
       deliverableLinks: linksData,
@@ -4131,7 +4216,7 @@
     }
   };
 
-  // Quick Stage Updater
+  // Quick Stage Updater (Distinct Step 06: Live Launch 90% vs Step 07: Handover 100%)
   window.quickStageUpdate = async function(id, newStage) {
     const order = currentOrders.find(o => o.id === id);
     if (!order) return;
@@ -4139,32 +4224,37 @@
     let newProgress = order.progress || 5;
     let newStatus = order.status || 'In Progress';
 
-    if (newStage.includes('Step 01') || newStage.includes('Placed')) {
+    if (newStage.includes('Step 01')) {
       newProgress = 5;
       if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
     }
-    else if (newStage.includes('Step 02') || newStage.includes('Agent') || newStage.includes('Discussed')) {
+    else if (newStage.includes('Step 02')) {
       newProgress = 15;
       if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
     }
-    else if (newStage.includes('Step 03') || newStage.includes('Preview') || newStage.includes('Sample')) {
+    else if (newStage.includes('Step 03')) {
       newProgress = 35;
       if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
     }
-    else if (newStage.includes('Step 04') || newStage.includes('Coding') || newStage.includes('Dev')) {
-      newProgress = 65;
+    else if (newStage.includes('Step 04')) {
+      newProgress = 60;
       if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
     }
-    else if (newStage.includes('Step 05') || newStage.includes('Testing') || newStage.includes('Demo')) {
-      newProgress = 85;
+    else if (newStage.includes('Step 05')) {
+      newProgress = 75;
       if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
     }
-    else if (newStage.includes('Step 06') || newStage.includes('Launch') || newStage.includes('Handover')) {
+    else if (newStage.includes('Step 06') || (newStage.includes('Launch') && !newStage.includes('Handover'))) {
+      newProgress = 90;
+      if (newStatus === 'Cancelled' || newStatus === 'On Hold') newStatus = 'In Progress';
+    }
+    else if (newStage.includes('Step 07') || newStage.includes('Handover') || newStage.includes('100%')) {
       newProgress = 100;
       newStatus = 'Completed';
     }
     else if (newStage.includes('Cancel')) {
       newStatus = 'Cancelled';
+      newProgress = 0;
     }
 
     const updatedData = { stage: newStage, progress: newProgress, status: newStatus };
