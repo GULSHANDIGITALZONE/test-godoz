@@ -1461,17 +1461,6 @@ function initEstimator() {
     }
   }
 
-  /* ==========================================================================
-     Global Order & Project Booking Navigation (Dedicated Full Page Experience)
-     ========================================================================== */
-  window.openOrderModal = function(category = '', price = 0, features = '') {
-    const params = new URLSearchParams();
-    if (category) params.set('service', category);
-    if (price !== undefined && price !== null && !isNaN(price) && Number(price) > 0) params.set('price', price);
-    if (features) params.set('features', features);
-    window.location.href = './order.html?' + params.toString();
-  };
-
   // Printable / Downloadable Official Quotation Engine
   window.downloadEstimatorQuotation = function() {
     const selectedType = document.querySelector('input[name="project_type"]:checked');
