@@ -60,7 +60,7 @@
   <link rel="stylesheet" href="./style.css">
 
   <style>
-    /* Dedicated Full Page Order & Checkout Styles (Executive Vercel/Stripe-Grade) */
+    /* Dedicated Compact Full Page Order & Checkout Styles (Ultra-Compact Viewport-Optimized) */
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
     }
@@ -68,127 +68,14 @@
     .order-page-wrapper {
       max-width: 1220px;
       margin: 0 auto;
-      padding: 32px 20px 90px;
-    }
-
-    .order-breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.86rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-bottom: 24px;
-    }
-    .order-breadcrumb a {
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .order-breadcrumb a:hover {
-      color: var(--primary);
-    }
-    .order-breadcrumb i {
-      font-size: 0.72rem;
-      opacity: 0.7;
-    }
-    .order-breadcrumb span {
-      color: var(--primary);
-      font-weight: 800;
-    }
-
-    .order-hero-header {
-      background: linear-gradient(135deg, rgba(18, 102, 232, 0.09), rgba(124, 58, 237, 0.06), rgba(255, 105, 0, 0.05));
-      border: 1.5px solid var(--border-color);
-      border-radius: 24px;
-      padding: 32px 28px;
-      margin-bottom: 28px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-    }
-    .order-hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(18, 102, 232, 0.12);
-      color: var(--primary);
-      padding: 5px 14px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 800;
-      margin-bottom: 14px;
-      letter-spacing: 0.3px;
-    }
-    .order-hero-title {
-      font-size: 2rem;
-      font-weight: 900;
-      color: var(--text-main);
-      margin: 0 0 10px;
-      line-height: 1.22;
-      letter-spacing: -0.6px;
-    }
-    .order-hero-subtitle {
-      font-size: 0.98rem;
-      color: var(--text-muted);
-      line-height: 1.55;
-      margin: 0;
-      max-width: 820px;
-      font-weight: 500;
-    }
-
-    /* Trust Highlights Grid */
-    .order-trust-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 32px;
-    }
-    .order-trust-card {
-      background: var(--bg-surface);
-      border: 1.5px solid var(--border-color);
-      border-radius: 18px;
-      padding: 16px 18px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .order-trust-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.08);
-      border-color: var(--primary);
-    }
-    .order-trust-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-    }
-    .order-trust-text h4 {
-      margin: 0 0 3px;
-      font-size: 0.9rem;
-      font-weight: 800;
-      color: var(--text-main);
-      letter-spacing: -0.2px;
-    }
-    .order-trust-text p {
-      margin: 0;
-      font-size: 0.76rem;
-      color: var(--text-muted);
-      font-weight: 600;
+      padding: 12px 16px 40px;
     }
 
     /* Main 2-Column Responsive Checkout Layout */
     .order-checkout-layout {
       display: grid;
-      grid-template-columns: 1.42fr 1fr;
-      gap: 32px;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 20px;
       align-items: start;
     }
 
@@ -196,15 +83,15 @@
     .order-form-panel {
       background: var(--bg-surface);
       border: 1.5px solid var(--border-color);
-      border-radius: 24px;
-      padding: 32px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      border-radius: 18px;
+      padding: 20px 22px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
     }
 
     .order-section-block {
-      margin-bottom: 28px;
-      padding-bottom: 24px;
-      border-bottom: 1.5px solid var(--border-color);
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
     }
     .order-section-block:last-child {
       margin-bottom: 0;
@@ -213,76 +100,75 @@
     }
 
     .order-section-title {
-      font-size: 1.1rem;
+      font-size: 0.98rem;
       font-weight: 800;
       color: var(--text-main);
-      margin: 0 0 16px;
+      margin: 0 0 10px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      letter-spacing: -0.3px;
+      gap: 8px;
+      letter-spacing: -0.2px;
     }
     .order-section-num {
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       background: var(--primary);
       color: #ffffff;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 900;
-      box-shadow: 0 4px 10px rgba(18, 102, 232, 0.3);
     }
 
     /* Auth Banner Card */
     .order-auth-pill {
       background: var(--bg-surface-alt);
-      border: 1.5px dashed var(--primary);
-      border-radius: 16px;
-      padding: 14px 18px;
+      border: 1px dashed var(--primary);
+      border-radius: 12px;
+      padding: 8px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 24px;
+      gap: 8px;
+      margin-bottom: 14px;
     }
     .order-auth-left {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 0.88rem;
+      gap: 10px;
+      font-size: 0.84rem;
       font-weight: 700;
       color: var(--text-main);
     }
     .order-auth-left img {
-      width: 36px;
-      height: 36px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid var(--primary);
+      border: 1.5px solid var(--primary);
     }
 
     /* Form Inputs */
     .order-input-group {
-      margin-bottom: 16px;
+      margin-bottom: 10px;
     }
     .order-input-group label {
       display: block;
-      font-size: 0.86rem;
+      font-size: 0.82rem;
       font-weight: 800;
       color: var(--text-main);
-      margin-bottom: 8px;
+      margin-bottom: 4px;
       letter-spacing: -0.2px;
     }
     .order-input-control {
       width: 100%;
-      padding: 12px 16px;
+      padding: 8px 12px;
       border: 1.5px solid var(--border-color);
-      border-radius: 12px;
-      font-size: 0.92rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
       font-weight: 600;
       background: var(--bg-surface);
       color: var(--text-main);
@@ -292,127 +178,126 @@
     }
     .order-input-control:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(18, 102, 232, 0.12);
+      box-shadow: 0 0 0 3px rgba(18, 102, 232, 0.12);
       background: var(--bg-surface);
     }
     textarea.order-input-control {
       resize: vertical;
-      min-height: 105px;
-      line-height: 1.55;
+      min-height: 65px;
+      line-height: 1.45;
     }
 
     /* Payment Option Radio Cards */
     .order-pay-card {
       border: 1.5px solid var(--border-color);
-      border-radius: 16px;
-      padding: 18px 20px;
-      margin-bottom: 12px;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
       cursor: pointer;
       display: flex;
       align-items: flex-start;
-      gap: 14px;
+      gap: 10px;
       background: var(--bg-surface);
       transition: all 0.22s ease;
     }
     .order-pay-card:hover {
       border-color: var(--primary);
       background: rgba(18, 102, 232, 0.02);
-      transform: translateY(-1px);
     }
     .order-pay-card.selected {
       border-color: var(--primary);
       background: rgba(18, 102, 232, 0.04);
-      box-shadow: 0 6px 20px rgba(18, 102, 232, 0.12);
+      box-shadow: 0 4px 12px rgba(18, 102, 232, 0.1);
     }
     .order-pay-card input[type="radio"] {
-      margin-top: 4px;
+      margin-top: 3px;
       accent-color: var(--primary);
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       cursor: pointer;
     }
 
     /* Right: Sticky Order Summary Card */
     .order-summary-sidebar {
       position: sticky;
-      top: 90px;
+      top: 85px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 14px;
     }
 
     .order-summary-box {
       background: var(--bg-surface);
       border: 1.5px solid var(--border-color);
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      border-radius: 18px;
+      padding: 18px 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
     }
 
     .summary-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 18px;
+      padding-bottom: 12px;
       border-bottom: 1.5px solid var(--border-color);
-      margin-bottom: 18px;
+      margin-bottom: 12px;
     }
     .summary-header h3 {
       margin: 0;
-      font-size: 1.2rem;
+      font-size: 1.08rem;
       font-weight: 900;
       color: var(--text-main);
       display: flex;
       align-items: center;
-      gap: 10px;
-      letter-spacing: -0.4px;
+      gap: 8px;
+      letter-spacing: -0.3px;
     }
 
     .summary-item-preview {
       display: flex;
       align-items: center;
-      gap: 14px;
-      padding: 14px 16px;
+      gap: 12px;
+      padding: 10px 12px;
       background: var(--bg-surface-alt);
       border: 1px solid var(--border-color);
-      border-radius: 16px;
-      margin-bottom: 18px;
+      border-radius: 12px;
+      margin-bottom: 12px;
     }
     .summary-item-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 14px;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+      font-size: 20px;
       flex-shrink: 0;
       overflow: hidden;
       background: rgba(18, 102, 232, 0.15);
       color: var(--primary);
     }
     .summary-item-title {
-      font-size: 1.02rem;
+      font-size: 0.92rem;
       font-weight: 800;
       color: var(--text-main);
-      margin: 0 0 3px;
-      line-height: 1.3;
+      margin: 0 0 2px;
+      line-height: 1.25;
       letter-spacing: -0.3px;
     }
     .summary-item-cat {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 800;
       color: var(--primary);
       text-transform: uppercase;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
     }
 
     .summary-ledger-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
-      font-size: 0.9rem;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
       color: var(--text-muted);
       font-weight: 600;
     }
@@ -840,14 +725,14 @@
 
         <form id="projectOrderFullForm">
           
-          <!-- Section 1: Contact Details -->
+          <!-- Section 1: Contact Details (Horizontal 1-Row Grid) -->
           <div class="order-section-block">
             <h3 class="order-section-title">
               <span class="order-section-num">1</span> Your Contact Information
             </h3>
 
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap:14px;">
-              <div style="grid-column:1 / -1;">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:10px;">
+              <div>
                 <div class="order-input-group">
                   <label for="orderClientName">Full Name <span style="color:#ef4444;">*</span></label>
                   <input type="text" id="orderClientName" class="order-input-control" placeholder="e.g. Rahul Sharma" required>
@@ -856,7 +741,7 @@
               
               <div>
                 <div class="order-input-group">
-                  <label for="orderClientPhone">WhatsApp / Phone Number <span style="color:#ef4444;">*</span></label>
+                  <label for="orderClientPhone">WhatsApp / Phone <span style="color:#ef4444;">*</span></label>
                   <input type="tel" id="orderClientPhone" class="order-input-control" placeholder="+91 98765 43210" required>
                 </div>
               </div>
@@ -876,7 +761,7 @@
               <span class="order-section-num">2</span> Select Project Category / Solution
             </h3>
 
-            <div class="order-input-group">
+            <div class="order-input-group" style="margin-bottom:0;">
               <label for="modalOrderCategory">Choose Base Package or Custom Requirement:</label>
               <select id="modalOrderCategory" class="order-input-control" style="font-weight:700;" onchange="window.updateOrderPagePricing()">
                 <option value="" disabled selected>Loading solutions from Firestore...</option>
@@ -894,99 +779,93 @@
             <!-- Hidden Features Input Sync -->
             <input type="hidden" id="modalOrderFeatures" value="Complete Custom Software Development">
 
-            <div class="order-input-group">
-              <label for="modalOrderNotes">Describe Your Desired Features, Target Audience or Reference Links (Optional):</label>
-              <textarea id="modalOrderNotes" rows="3" class="order-input-control" placeholder="Enter specific features, user roles, payment requirements, database needs, or sample website/app links..." oninput="if(typeof window.updateOrderPagePricing==='function') window.updateOrderPagePricing();"></textarea>
+            <div class="order-input-group" style="margin-bottom:0;">
+              <label for="modalOrderNotes">Describe Your Desired Features or Reference Links (Optional):</label>
+              <textarea id="modalOrderNotes" rows="2" class="order-input-control" placeholder="Enter specific features, user roles, payment requirements, database needs, or sample website/app links..." oninput="if(typeof window.updateOrderPagePricing==='function') window.updateOrderPagePricing();"></textarea>
               
               <!-- Quick Requirement Preset Chips -->
-              <div style="margin-top:10px;">
-                <div style="font-size:0.75rem; font-weight:800; color:var(--text-muted); margin-bottom:6px;">
+              <div style="margin-top:6px;">
+                <div style="font-size:0.72rem; font-weight:800; color:var(--text-muted); margin-bottom:4px;">
                   <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--accent);"></i> 1-Click Insert Features:
                 </div>
-                <div style="display:flex; flex-wrap:wrap; gap:6px;">
-                  <button type="button" class="btn btn-sm btn-outline" onclick="window.appendScopeChip('User Login & OTP Auth')" style="padding:3px 8px; font-size:0.72rem; font-weight:700;">+ User Login</button>
-                  <button type="button" class="btn btn-sm btn-outline" onclick="window.appendScopeChip('Razorpay & UPI Payment Gateway')" style="padding:3px 8px; font-size:0.72rem; font-weight:700;">+ Payment Gateway</button>
-                  <button type="button" class="btn btn-sm btn-outline" onclick="window.appendScopeChip('Dedicated Admin Master Panel')" style="padding:3px 8px; font-size:0.72rem; font-weight:700;">+ Admin Panel</button>
-                  <button type="button" class="btn btn-sm btn-outline" onclick="window.appendScopeChip('Live GPS Tracking & Maps')" style="padding:3px 8px; font-size:0.72rem; font-weight:700;">+ GPS Tracking</button>
-                  <button type="button" class="btn btn-sm btn-outline" onclick="window.appendScopeChip('Push Notifications & WhatsApp Alerts')" style="padding:3px 8px; font-size:0.72rem; font-weight:700;">+ Push Notifications</button>
+                <div style="display:flex; flex-wrap:wrap; gap:4px;">
+                  <button type="button" class="btn btn-sm btn-outline" onclick="window.appendScopeChip('User Login & OTP Auth')" style="padding:2px 6px; font-size:0.7rem; font-weight:700;">+ User Login</button>
+                  <button type="button" class="btn btn-sm btn-outline" onclick="window.appendScopeChip('Razorpay & UPI Payment Gateway')" style="padding:2px 6px; font-size:0.7rem; font-weight:700;">+ Payment Gateway</button>
+                  <button type="button" class="btn btn-sm btn-outline" onclick="window.appendScopeChip('Dedicated Admin Master Panel')" style="padding:2px 6px; font-size:0.7rem; font-weight:700;">+ Admin Panel</button>
+                  <button type="button" class="btn btn-sm btn-outline" onclick="window.appendScopeChip('Live GPS Tracking & Maps')" style="padding:2px 6px; font-size:0.7rem; font-weight:700;">+ GPS Tracking</button>
+                  <button type="button" class="btn btn-sm btn-outline" onclick="window.appendScopeChip('Push Notifications & WhatsApp Alerts')" style="padding:2px 6px; font-size:0.7rem; font-weight:700;">+ Push Notifications</button>
                 </div>
-              </div>
-
-              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px; line-height:1.4;">
-                <i class="fa-solid fa-circle-info" style="color:var(--primary);"></i> <strong>Note:</strong> Your exact requirements and scope will be verified by Lead Engineer <strong>RS GULSHAN PRAJAPATI</strong> before coding begins.
               </div>
             </div>
           </div>
 
-          <!-- Section 4: Payment & Milestone Strategy -->
+          <!-- Section 4: Payment & Milestone Strategy (Side-by-Side Horizontal Cards) -->
           <div class="order-section-block">
             <h3 class="order-section-title">
               <span class="order-section-num">4</span> Choose Payment &amp; Milestone Method
             </h3>
 
-            <!-- Option 1: Razorpay (% Based Advance) -->
-            <label class="order-pay-card selected" id="optPayRazorpay" onclick="window.selectPaymentMode('razorpay')">
-              <input type="radio" name="order_payment_mode" value="razorpay" checked>
-              <div style="flex:1;">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-                  <strong style="font-size:0.92rem; color:var(--text-main);">
-                    <i class="fa-solid fa-credit-card" style="color:var(--primary);"></i> Razorpay (% Advance Payment)
-                  </strong>
-                  <span id="razorpayAdvanceBadge" style="background:rgba(18,102,232,0.15); color:var(--primary); font-weight:800; font-size:0.72rem; padding:2px 8px; border-radius:12px;">Min 10% Advance</span>
-                </div>
-                <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px; line-height:1.4;">
-                  Lock priority development schedule with flexible advance payment (% based, Min 10%). Supports UPI (GPay, PhonePe, Paytm), Cards &amp; NetBanking.
-                </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap:10px;">
+              <!-- Option 1: Razorpay (% Based Advance) -->
+              <label class="order-pay-card selected" id="optPayRazorpay" onclick="window.selectPaymentMode('razorpay')" style="margin-bottom:0;">
+                <input type="radio" name="order_payment_mode" value="razorpay" checked>
+                <div style="flex:1;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">
+                    <strong style="font-size:0.88rem; color:var(--text-main);">
+                      <i class="fa-solid fa-credit-card" style="color:var(--primary);"></i> Razorpay Advance
+                    </strong>
+                    <span id="razorpayAdvanceBadge" style="background:rgba(18,102,232,0.15); color:var(--primary); font-weight:800; font-size:0.68rem; padding:2px 6px; border-radius:10px;">Min 10% Advance</span>
+                  </div>
+                  <div style="font-size:0.74rem; color:var(--text-muted); margin-top:3px; line-height:1.3;">
+                    Supports UPI, Cards &amp; NetBanking.
+                  </div>
 
-                <!-- Percentage Selector Bar -->
-                <div id="advancePctSelector" style="display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; padding-top:8px; border-top:1px dashed var(--border-color);" onclick="event.stopPropagation();">
-                  <span style="font-size:0.78rem; font-weight:800; color:var(--text-main); align-self:center;">Select Advance %:</span>
-                  <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
-                    <input type="radio" name="advance_pct" value="10" onchange="window.updateOrderPagePricing()"> 10% (Min)
-                  </label>
-                  <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
-                    <input type="radio" name="advance_pct" value="25" onchange="window.updateOrderPagePricing()"> 25%
-                  </label>
-                  <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
-                    <input type="radio" name="advance_pct" value="50" checked onchange="window.updateOrderPagePricing()"> 50%
-                  </label>
-                  <label style="font-size:0.78rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
-                    <input type="radio" name="advance_pct" value="100" onchange="window.updateOrderPagePricing()"> 100% (Full)
-                  </label>
+                  <!-- Percentage Selector Bar -->
+                  <div id="advancePctSelector" style="display:flex; gap:4px; flex-wrap:wrap; margin-top:6px; padding-top:6px; border-top:1px dashed var(--border-color);" onclick="event.stopPropagation();">
+                    <span style="font-size:0.72rem; font-weight:800; color:var(--text-main); align-self:center;">Advance %:</span>
+                    <label style="font-size:0.72rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:2px 6px; border-radius:4px; display:inline-flex; align-items:center; gap:2px;">
+                      <input type="radio" name="advance_pct" value="10" onchange="window.updateOrderPagePricing()"> 10%
+                    </label>
+                    <label style="font-size:0.72rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:2px 6px; border-radius:4px; display:inline-flex; align-items:center; gap:2px;">
+                      <input type="radio" name="advance_pct" value="25" onchange="window.updateOrderPagePricing()"> 25%
+                    </label>
+                    <label style="font-size:0.72rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:2px 6px; border-radius:4px; display:inline-flex; align-items:center; gap:2px;">
+                      <input type="radio" name="advance_pct" value="50" checked onchange="window.updateOrderPagePricing()"> 50%
+                    </label>
+                    <label style="font-size:0.72rem; font-weight:800; cursor:pointer; background:rgba(18,102,232,0.1); color:var(--primary); padding:2px 6px; border-radius:4px; display:inline-flex; align-items:center; gap:2px;">
+                      <input type="radio" name="advance_pct" value="100" onchange="window.updateOrderPagePricing()"> 100%
+                    </label>
+                  </div>
                 </div>
-              </div>
-            </label>
+              </label>
 
-            <!-- Option 2: Pay After Demo (PAD) -->
-            <label class="order-pay-card" id="optPayCod" onclick="window.selectPaymentMode('pay_after_demo')">
-              <input type="radio" name="order_payment_mode" value="pay_after_demo">
-              <div style="flex:1;">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-                  <strong style="font-size:0.92rem; color:var(--text-main);">
-                    <i class="fa-solid fa-laptop-code" style="color:#10b981;"></i> Pay After Demo (PAD)
-                  </strong>
-                  <span style="background:rgba(16,185,129,0.15); color:#10b981; font-weight:800; font-size:0.72rem; padding:2px 8px; border-radius:12px;">₹0 Upfront • Pay 10% After Demo</span>
+              <!-- Option 2: Pay After Demo (PAD) -->
+              <label class="order-pay-card" id="optPayCod" onclick="window.selectPaymentMode('pay_after_demo')" style="margin-bottom:0;">
+                <input type="radio" name="order_payment_mode" value="pay_after_demo">
+                <div style="flex:1;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">
+                    <strong style="font-size:0.88rem; color:var(--text-main);">
+                      <i class="fa-solid fa-laptop-code" style="color:#10b981;"></i> Pay After Demo (PAD)
+                    </strong>
+                    <span style="background:rgba(16,185,129,0.15); color:#10b981; font-weight:800; font-size:0.68rem; padding:2px 6px; border-radius:10px;">₹0 Upfront</span>
+                  </div>
+                  <div style="font-size:0.74rem; color:var(--text-muted); margin-top:3px; line-height:1.3;">
+                    Book order &amp; see demo first, then pay 10% after demo review.
+                  </div>
                 </div>
-                <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px; line-height:1.4;">
-                  Book order &amp; discuss requirements on WhatsApp/Call. See wireframe/demo first, then pay 10% security deposit to start development.
-                </div>
-              </div>
-            </label>
+              </label>
+            </div>
           </div>
 
           <!-- Section 5: Promo Code / Coupon Section -->
           <div class="order-section-block">
-            <h3 class="order-section-title">
-              <span class="order-section-num">5</span> Promo Code / Discount Coupon
-            </h3>
-
-            <div style="display:flex; gap:8px;">
-              <input type="text" id="orderCouponInput" placeholder="Enter coupon e.g. GODOZ10 or LAUNCH1000" style="flex:1; text-transform:uppercase; padding:9px 14px; border:1.5px solid var(--border-color); border-radius:8px; font-weight:800; font-size:0.88rem; background:var(--bg-surface); color:var(--text-main); outline:none;">
-              <button type="button" id="btnApplyCoupon" onclick="window.applyOrderCoupon()" class="btn btn-sm btn-primary" style="padding:9px 18px; font-weight:800;">
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input type="text" id="orderCouponInput" placeholder="Enter Promo Coupon (e.g. GODOZ10)" style="flex:1; text-transform:uppercase; padding:7px 12px; border:1.5px solid var(--border-color); border-radius:8px; font-weight:800; font-size:0.82rem; background:var(--bg-surface); color:var(--text-main); outline:none;">
+              <button type="button" id="btnApplyCoupon" onclick="window.applyOrderCoupon()" class="btn btn-sm btn-primary" style="padding:7px 14px; font-weight:800;">
                 Apply Coupon
               </button>
             </div>
-            <div id="orderCouponMessage" style="font-size:0.78rem; font-weight:800; margin-top:6px; display:none;"></div>
+            <div id="orderCouponMessage" style="font-size:0.75rem; font-weight:800; margin-top:4px; display:none;"></div>
           </div>
 
           <!-- Submit Order Button -->
