@@ -2700,7 +2700,7 @@
                       <textarea id="godozWidgetMsg" placeholder="Describe the Android App, Website, or Custom Feature you want to build..." style="width: 100%; min-height: 85px; padding: 10px 12px; border: 1.5px solid var(--border-color, #cbd5e1); border-radius: 10px; font-size: 14px; outline: none; box-sizing: border-box; resize: vertical; background: var(--bg-surface, #ffffff); color:var(--text-main); font-family:inherit;"></textarea>
                     </div>
 
-                    <button id="godozWidgetSubmitBtn" onclick="submitGodozFeedbackWidget()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, var(--accent, #ff6900), #ea580c); color: white; font-weight: 800; font-size: 14px; border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 14px rgba(255, 105, 0, 0.35);">
+                    <button type="button" id="godozWidgetSubmitBtn" style="width: 100%; padding: 12px; background: linear-gradient(135deg, var(--accent, #ff6900), #ea580c); color: white; font-weight: 800; font-size: 14px; border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 14px rgba(255, 105, 0, 0.35);">
                       <i class="fa-solid fa-paper-plane"></i> Submit Project Inquiry
                     </button>
 
@@ -2716,39 +2716,27 @@
 
                   <!-- Firebase Firestore Script for Main Page Widget -->
                   <script type="module">
-                    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-                    import { getFirestore, collection, doc, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-                    const firebaseConfig = {
-                      apiKey: "AIzaSyABHJz_4ERnwrT_uB3BgBz-BD_3JZjlVNE",
-                      authDomain: "godoz-official.firebaseapp.com",
-                      projectId: "godoz-official",
-                      storageBucket: "godoz-official.firebasestorage.app",
-                      messagingSenderId: "977883022920",
-                      appId: "1:977883022920:web:3cc3e9bce8c6324edb3a7d",
-                      measurementId: "G-QKH3K4HV8P"
-                    };
-
-                    const app = initializeApp(firebaseConfig, "mainIndexFeedbackApp");
-                    const db = getFirestore(app);
-
-                    window.submitGodozFeedbackWidget = async function() {
-                      const name = document.getElementById('godozWidgetName').value.trim();
-                      const contact = document.getElementById('godozWidgetContact').value.trim();
-                      const msg = document.getElementById('godozWidgetMsg').value.trim();
+                    const handleDirectInquirySubmit = async function() {
+                      const name = (document.getElementById('godozWidgetName')?.value || '').trim();
+                      const contact = (document.getElementById('godozWidgetContact')?.value || '').trim();
+                      const msg = (document.getElementById('godozWidgetMsg')?.value || '').trim();
                       const statusDiv = document.getElementById('godozWidgetStatus');
                       const btn = document.getElementById('godozWidgetSubmitBtn');
 
                       if (!name || !contact || !msg) {
-                        statusDiv.style.display = 'block';
-                        statusDiv.style.background = '#FFFBEB';
-                        statusDiv.style.color = '#B45309';
-                        statusDiv.innerText = '⚠️ Please fill Name, Contact, and Project Details!';
+                        if (statusDiv) {
+                          statusDiv.style.display = 'block';
+                          statusDiv.style.background = '#FFFBEB';
+                          statusDiv.style.color = '#B45309';
+                          statusDiv.innerText = '⚠️ Please fill Name, Contact, and Project Details!';
+                        }
                         return;
                       }
 
-                      btn.disabled = true;
-                      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Dispatching...';
+                      if (btn) {
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="margin-right:6px;"></i> Dispatching Inquiry...';
+                      }
 
                       try {
                         if (name) localStorage.setItem('godoz_user_name', name);
@@ -2770,27 +2758,40 @@
                         });
 
                         if (res && res.success) {
-                          document.getElementById('godozWidgetMsg').value = '';
-                          statusDiv.style.display = 'block';
-                          statusDiv.style.background = '#ECFDF5';
-                          statusDiv.style.color = '#047857';
-                          statusDiv.innerHTML = '✅ Inquiry sent directly to Founder Desk! We will connect with you shortly.';
+                          const msgInput = document.getElementById('godozWidgetMsg');
+                          if (msgInput) msgInput.value = '';
+                          if (statusDiv) {
+                            statusDiv.style.display = 'block';
+                            statusDiv.style.background = '#ECFDF5';
+                            statusDiv.style.color = '#047857';
+                            statusDiv.innerHTML = '✅ Inquiry sent directly to Founder Desk! We will connect with you shortly.';
+                          }
                         } else {
+                          if (statusDiv) {
+                            statusDiv.style.display = 'block';
+                            statusDiv.style.background = '#FEF2F2';
+                            statusDiv.style.color = '#B91C1C';
+                            statusDiv.innerText = 'Error submitting: ' + (res?.error || 'Firestore write failed');
+                          }
+                        }
+                      } catch (e) {
+                        if (statusDiv) {
                           statusDiv.style.display = 'block';
                           statusDiv.style.background = '#FEF2F2';
                           statusDiv.style.color = '#B91C1C';
-                          statusDiv.innerText = 'Error submitting: ' + (res?.error || 'Firestore write failed');
+                          statusDiv.innerText = 'Error submitting: ' + e.message;
                         }
-                      } catch (e) {
-                        statusDiv.style.display = 'block';
-                        statusDiv.style.background = '#FEF2F2';
-                        statusDiv.style.color = '#B91C1C';
-                        statusDiv.innerText = 'Error submitting: ' + e.message;
                       } finally {
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Project Inquiry';
+                        if (btn) {
+                          btn.disabled = false;
+                          btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Project Inquiry';
+                        }
                       }
                     };
+
+                    window.submitGodozFeedbackWidget = handleDirectInquirySubmit;
+
+                    document.getElementById('godozWidgetSubmitBtn')?.addEventListener('click', handleDirectInquirySubmit);
 
                     // Cost Estimator - Request Discuss & Submit Quote Handler
                     document.getElementById('btnRequestDiscussInquiry')?.addEventListener('click', async () => {
