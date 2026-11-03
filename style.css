@@ -1,13 +1,26 @@
 /* ==========================================================================
-   GoDoz Technology & Digital Solutions - Master CSS Bundle Entrypoint
+   GoDoz Technology & Digital Solutions - Master Custom CSS Overrides
    Brand: GoDoz (Founder: RS GULSHAN PRAJAPATI)
    ========================================================================== */
 
-@import url('./css/base.css');
-@import url('./css/buttons.css');
-@import url('./css/modals.css');
-@import url('./css/admin.css');
-@import url('./css/faq.css');
+/* CLS Layout Shift Prevention & Reserved Dimensions */
+.godoz-nav-logo-desktop {
+  width: 160px !important;
+  height: 42px !important;
+  aspect-ratio: 160 / 42;
+  object-fit: contain;
+}
+
+.godoz-nav-logo-mobile {
+  width: 38px !important;
+  height: 38px !important;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
+.godoz-ticker-bar {
+  min-height: 40px;
+}
 
 :root {
   /* Brand Palette */
@@ -32,8 +45,8 @@
   --border-color-hover: #cbd5e1;
 
   --text-main: #0f172a;
-  --text-muted: #64748b;
-  --text-light: #94a3b8;
+  --text-muted: #475569;
+  --text-light: #64748b;
   
   --glass-bg: rgba(255, 255, 255, 0.92);
   --glass-border: rgba(226, 232, 240, 0.85);

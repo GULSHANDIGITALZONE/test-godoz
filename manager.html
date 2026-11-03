@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="hi" data-theme="light">
 <head>
-  <!-- Google AdSense -->
-  <meta name="google-adsense-account" content="ca-pub-4514064358809691">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4514064358809691" crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <script>
@@ -47,10 +44,15 @@
   <title>GoDoz Manager Hub | Master Control, Revenue &amp; Staff Center</title>
   <meta name="description" content="Official GoDoz Technology Master Manager Control Center. Real-time Firestore synchronization for revenue analytics, master orders, staff lead assignments, managers and admins collections.">
   <meta name="robots" content="noindex, nofollow">
-  <link rel="shortcut icon" href="./official logo.png" type="image/x-icon">
+  <link rel="shortcut icon" href="./official-logo.png" type="image/x-icon">
 
-  <!-- Font Awesome & Base Styles -->
+  <!-- Font Awesome & Parallel Modular CSS Files -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/buttons.css">
+  <link rel="stylesheet" href="./css/modals.css">
+  <link rel="stylesheet" href="./css/admin.css">
+  <link rel="stylesheet" href="./css/faq.css">
   <link rel="stylesheet" href="./style.css">
 
   <style>
@@ -380,7 +382,7 @@
 <div id="globalPageLoader" class="godoz-page-loader">
   <div class="godoz-spinner-wrap">
     <div class="godoz-spinner-ring"></div>
-    <img src="./official logo.png" alt="GoDoz Logo" class="godoz-spinner-logo">
+    <img src="./official-logo.png" alt="GoDoz Logo" class="godoz-spinner-logo">
   </div>
   <div class="godoz-loader-text">Loading GoDoz Admin...</div>
 </div>
@@ -399,7 +401,7 @@
 
       <a href="/index.html" class="brand-logo-wrap" style="display:flex; align-items:center; gap:8px; text-decoration:none;">
         <img src="./godoz_logo_flat_vector.png" alt="GoDoz Technology" class="godoz-nav-logo-desktop" onerror="this.src='./godoz_logo_rectangle_w_bg.png'">
-        <img src="./godoz-logo-circle.png" alt="GoDoz Logo" class="godoz-nav-logo-mobile" onerror="this.src='./official logo.png'">
+        <img src="./godoz-logo-circle.png" alt="GoDoz Logo" class="godoz-nav-logo-mobile" onerror="this.src='./official-logo.png'">
         <span id="roleIndicatorBadge" style="font-size:0.65rem; background:#7c3aed; color:#fff; padding:2px 7px; border-radius:8px; vertical-align:middle; margin-left:2px;">MANAGER</span>
       </a>
     </div>
@@ -877,7 +879,7 @@
     <div id="adminLoadingSkeleton" style="display:block; opacity:0.95; text-align:center; padding:30px 10px;">
       <div class="godoz-spinner-wrap" style="margin:0 auto 12px;">
         <div class="godoz-spinner-ring"></div>
-        <img src="./official logo.png" alt="GoDoz Logo" class="godoz-spinner-logo">
+        <img src="./official-logo.png" alt="GoDoz Logo" class="godoz-spinner-logo">
       </div>
       <div style="font-size:0.9rem; font-weight:800; color:var(--primary);">Verifying Admin Permissions...</div>
       <!-- Skeleton Header Bar -->
@@ -1457,6 +1459,47 @@
           </div>
         </div>
 
+        <!-- ============================================================================ -->
+        <!-- 5. CLONE APPS & SOURCE COPY CATALOG ("Order App Clone") -->
+        <!-- ============================================================================ -->
+        <div class="admin-card" style="margin-bottom:24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h3 style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);"><i class="fa-solid fa-copy" style="color:var(--accent, #ff6900);"></i> 5. Clone Apps &amp; Source Copy Catalog ("Order App Clone")</h3>
+              <p style="margin:0; font-size:0.84rem; color:var(--text-muted);">Manage ready-to-deploy clone apps &amp; source code copies displayed on index.html. Storage: <code>/products/{productId}</code></p>
+            </div>
+            <button class="btn btn-accent" onclick="window.openAddCloneAppModal()" style="padding:8px 16px; font-weight:800; background:var(--accent, #ff6900); border-color:var(--accent, #ff6900); color:#ffffff;">
+              <i class="fa-solid fa-plus"></i> Add Clone App Offering
+            </button>
+          </div>
+
+          <div class="order-table-wrap">
+            <table class="admin-table" style="width:100%; border-collapse:collapse; text-align:left;">
+              <thead>
+                <tr style="background:var(--bg-surface-alt); border-bottom:2px solid var(--border-color);">
+                  <th style="padding:10px; width:60px; text-align:center; font-weight:800;">S.L no</th>
+                  <th style="padding:10px; width:220px; font-weight:800;">Clone App Title</th>
+                  <th style="padding:10px; font-weight:800;">App Details &amp; Included Modules</th>
+                  <th style="padding:10px; width:120px; text-align:center; font-weight:800;">Dusre jagah</th>
+                  <th style="padding:10px; width:110px; text-align:center; font-weight:800;">Yaha Rate</th>
+                  <th style="padding:10px; width:110px; text-align:center; font-weight:800;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="cloneAppsTableBody">
+                <tr id="cloneAppsLoaderRow">
+                  <td colspan="6" style="text-align:center; padding:30px 20px; color:var(--text-muted);">
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;">
+                      <i class="fa-solid fa-circle-notch fa-spin" style="color:var(--accent); font-size:1.9rem;"></i>
+                      <span style="font-weight:800; font-size:0.95rem; color:var(--text-main);">Loading Clone Apps from Firestore...</span>
+                      <span style="font-size:0.78rem; color:var(--text-muted);">Fetching App Clone offerings in /products/</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </section>
 
       <!-- ==================== TAB 6: RAZORPAY LIVE GATEWAY & RECEIPTS ==================== -->
@@ -1573,6 +1616,51 @@
     </div>
 
   </main>
+</div>
+
+<!-- Universal E2EE Encrypted Project Chat Modal (Manager & Admin View) -->
+<div id="projectChatModal" class="godoz-modal-backdrop godoz-order-modal-wide" style="display:none;" role="dialog" aria-modal="true">
+  <div class="godoz-modal-box godoz-order-modal-wide" style="display:flex; flex-direction:column; height:100vh; padding:0; background:var(--bg-surface);">
+
+    <!-- Chat Top Bar -->
+    <div style="padding:14px 20px; background:var(--bg-surface-alt); border-bottom:1.5px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div style="width:38px; height:38px; border-radius:10px; background:rgba(16,185,129,0.12); color:#10b981; display:flex; align-items:center; justify-content:center; font-size:1.15rem;">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <div>
+          <div style="font-weight:900; font-size:1.05rem; color:var(--text-main); display:flex; align-items:center; gap:8px;">
+            <span id="chatModalProjectTitle">Project Live Chat</span>
+            <span id="chatModalOrderIdBadge" style="background:rgba(18,102,232,0.1); color:var(--primary); font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:6px;">#GoDoz-2026</span>
+          </div>
+          <div style="font-size:0.75rem; color:#10b981; font-weight:700; display:flex; align-items:center; gap:4px; margin-top:2px;">
+            <i class="fa-solid fa-shield-halved"></i> 256-Bit End-to-End Encrypted Channel &bull; Client: <strong id="chatModalAssignedStaff" style="color:var(--text-main);">Valued Client</strong>
+          </div>
+        </div>
+      </div>
+      <button type="button" onclick="window.closeProjectChatModal()" style="background:none; border:none; font-size:1.5rem; color:var(--text-muted); cursor:pointer; padding:4px 8px; border-radius:8px;" aria-label="Close Chat">&times;</button>
+    </div>
+
+    <!-- Chat Messages Stream Body -->
+    <div id="chatMessagesStream" style="flex:1; padding:20px 8%; overflow-y:auto; display:flex; flex-direction:column; gap:12px; background:var(--bg-surface);">
+      <div style="text-align:center; padding:30px; color:var(--text-muted); font-size:0.85rem;">
+        <i class="fa-solid fa-spinner fa-spin" style="color:var(--primary); font-size:1.5rem; margin-bottom:8px; display:block;"></i>
+        Loading End-to-End Encrypted Messages...
+      </div>
+    </div>
+
+    <!-- Chat Input Footer -->
+    <div style="padding:14px 8%; background:var(--bg-surface-alt); border-top:1.5px solid var(--border-color); flex-shrink:0;">
+      <form id="chatMessageForm" onsubmit="window.handleSendProjectChatMessage(event)" style="display:flex; gap:10px; align-items:center;">
+        <input type="hidden" id="chatModalOrderIdInput">
+        <textarea id="chatMessageInput" rows="1" placeholder="Type an encrypted reply for your Client / Lead Engineer..." style="flex:1; padding:12px 14px; border:1.5px solid var(--border-color); border-radius:10px; background:var(--bg-surface); color:var(--text-main); font-size:0.9rem; font-family:inherit; resize:none; max-height:100px; outline:none;" required></textarea>
+        <button type="submit" id="btnSendChatMessage" class="btn btn-primary" style="padding:12px 20px; font-weight:800; border-radius:10px; display:inline-flex; align-items:center; gap:6px;">
+          <i class="fa-solid fa-paper-plane"></i> Send
+        </button>
+      </form>
+    </div>
+
+  </div>
 </div>
 
 <!-- 3. MODAL: EDIT / UPDATE PROJECT STATUS, SCOPE, BUDGET & DELIVERABLES -->
@@ -1843,6 +1931,7 @@
           <option value="project_type">🚀 2. Project Type (Cost Estimator Step 1 - "Choose your project type")</option>
           <option value="key_feature">⚡ 3. Key Feature (Cost Estimator Step 2 - "Add features you need", e.g. Login, DB, Payment)</option>
           <option value="other_service">⭐ 4. Other Service / Showcase (Hero Section - "Android App &amp; Web Portal Views")</option>
+          <option value="clone_app">📱 5. Clone App &amp; Source Copy ("Order App Clone")</option>
         </select>
       </div>
 
@@ -1967,6 +2056,22 @@
         <div>
           <label id="labelOfferPrice" style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Yaha Rate (GoDoz Price ₹) *</label>
           <input type="number" id="productOfferPriceInput" placeholder="3999" required min="0" style="width:100%; padding:9px 12px; border:1.5px solid var(--primary); border-radius:8px; font-weight:800; font-size:0.9rem; background:var(--bg-surface); color:var(--text-main);">
+        </div>
+      </div>
+
+      <!-- Dynamic Multiple Links Builder for Offerings (Play Store, Web Demo, Details, Source Code, Figma, etc.) -->
+      <div style="background:var(--bg-surface-alt); border:1px solid var(--border-color); border-radius:10px; padding:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-main); margin:0;">
+            <i class="fa-solid fa-link" style="color:var(--primary);"></i> Action Buttons &amp; Showcase Links (Multiple Links)
+          </label>
+          <button type="button" onclick="window.addProductOfferingLinkRow()" class="btn btn-sm btn-outline" style="padding:3px 10px; font-size:0.75rem; font-weight:700; border-color:var(--primary); color:var(--primary);">
+            <i class="fa-solid fa-plus"></i> Add Link
+          </button>
+        </div>
+
+        <div id="productLinksContainer" style="display:flex; flex-direction:column; gap:8px;">
+          <!-- Dynamic link rows appended here -->
         </div>
       </div>
 
@@ -2805,6 +2910,10 @@
                 </button>
               ` : ''}
 
+              <button type="button" class="btn btn-sm btn-outline btn-open-project-chat" data-order-id="${escapeHTML(order.id)}" data-project-title="${escapeHTML(order.projectName || 'Project')}" data-client-name="${escapeHTML(order.clientName || 'Client')}" style="padding:4px 8px; font-size:0.75rem; color:var(--primary); border-color:var(--primary); font-weight:700;" title="Open E2EE Encrypted Project Live Chat">
+                <i class="fa-solid fa-comments"></i> Chat
+              </button>
+
               <button onclick="window.openEditModal('${escapeHTML(order.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem;" title="Edit Order Details">
                 <i class="fa-solid fa-pen-to-square"></i> Edit
               </button>
@@ -3214,6 +3323,56 @@
     window.openAddProductModal('other_service');
   };
 
+  window.openAddCloneAppModal = function() {
+    window.openAddProductModal('clone_app');
+  };
+
+  // Helper Functions for Product Offering Dynamic Multiple Links
+  window.addProductOfferingLinkRow = function(label = '', url = '') {
+    const container = document.getElementById('productLinksContainer');
+    if (!container) return;
+
+    const row = document.createElement('div');
+    row.className = 'product-offering-link-row';
+    row.style.cssText = 'display:flex; gap:6px; align-items:center;';
+
+    const cleanLabel = escapeHTML(label);
+    const cleanUrl = escapeHTML(url);
+
+    row.innerHTML = `
+      <input type="text" class="product-link-label-input" placeholder="Label (e.g. Play Store / Web / Details)" value="${cleanLabel}" style="width:38%; padding:8px 10px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface); color:var(--text-main); font-size:0.82rem; font-weight:600;">
+      <input type="url" class="product-link-url-input" placeholder="https://..." value="${cleanUrl}" style="flex:1; padding:8px 10px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-surface); color:var(--text-main); font-size:0.82rem;">
+      <button type="button" onclick="this.closest('.product-offering-link-row').remove()" class="btn btn-sm btn-outline" style="padding:7px 10px; color:#ef4444; border-color:#fca5a5; font-size:0.75rem;" title="Remove link">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+    `;
+
+    container.appendChild(row);
+  };
+
+  window.getProductOfferingLinksData = function() {
+    const container = document.getElementById('productLinksContainer');
+    if (!container) return [];
+
+    const rows = container.querySelectorAll('.product-offering-link-row');
+    const links = [];
+
+    rows.forEach(row => {
+      const labelInput = row.querySelector('.product-link-label-input');
+      const urlInput = row.querySelector('.product-link-url-input');
+      const label = (labelInput ? labelInput.value : '').trim();
+      const url = (urlInput ? urlInput.value : '').trim();
+      if (url) {
+        links.push({
+          label: label || 'Link',
+          url: url
+        });
+      }
+    });
+
+    return links;
+  };
+
   window.openAddProductModal = function(cat = 'professional_service') {
     const editIndexEl = document.getElementById('productEditIndex');
     if (editIndexEl) editIndexEl.value = "-1";
@@ -3234,6 +3393,15 @@
     document.getElementById('productDetailsInput').value = "";
     document.getElementById('productOriginalPriceInput').value = "";
     document.getElementById('productOfferPriceInput').value = "";
+
+    // Dynamic Links Initialization
+    const linksContainer = document.getElementById('productLinksContainer');
+    if (linksContainer) {
+      linksContainer.innerHTML = '';
+      window.addProductOfferingLinkRow('Play Store', '');
+      window.addProductOfferingLinkRow('Web Demo', '');
+    }
+
     document.getElementById('addProductModal').style.display = 'flex';
   };
 
@@ -3265,6 +3433,29 @@
     document.getElementById('productDetailsInput').value = prod.details || "";
     document.getElementById('productOriginalPriceInput').value = prod.originalPrice || "";
     document.getElementById('productOfferPriceInput').value = prod.offerPrice || "";
+
+    // Dynamic Links Population
+    const linksContainer = document.getElementById('productLinksContainer');
+    if (linksContainer) {
+      linksContainer.innerHTML = '';
+      const existingLinks = Array.isArray(prod.appLinks) && prod.appLinks.length > 0
+        ? prod.appLinks
+        : [
+            ...(prod.playStoreUrl || prod.playUrl ? [{ label: 'Play Store', url: prod.playStoreUrl || prod.playUrl }] : []),
+            ...(prod.webUrl ? [{ label: 'Web Demo', url: prod.webUrl }] : []),
+            ...(prod.detailsUrl ? [{ label: 'Details', url: prod.detailsUrl }] : [])
+          ];
+
+      if (existingLinks.length > 0) {
+        existingLinks.forEach(link => {
+          window.addProductOfferingLinkRow(link.label || 'Link', link.url || '');
+        });
+      } else {
+        window.addProductOfferingLinkRow('Play Store', '');
+        window.addProductOfferingLinkRow('Web Demo', '');
+      }
+    }
+
     document.getElementById('addProductModal').style.display = 'flex';
   };
 
@@ -3532,6 +3723,57 @@
         });
       }
     }
+
+    // 5. Table 5: Clone Apps & Source Copies
+    const cloneApps = currentProductsCatalog.filter(p => p.category === 'clone_app');
+    const cloneTbody = document.getElementById('cloneAppsTableBody');
+    if (cloneTbody) {
+      if (cloneApps.length === 0) {
+        cloneTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px 20px; color:var(--text-muted);"><i class="fa-solid fa-copy" style="font-size:1.8rem; margin-bottom:8px; color:var(--accent); display:block;"></i> No clone app offerings in Firestore. Click <strong>\'+ Add Clone App Offering\'</strong> to create clone app prices!</td></tr>';
+      } else {
+        cloneTbody.innerHTML = '';
+        cloneApps.forEach((prod, idx) => {
+          const tr = document.createElement('tr');
+          tr.style.borderBottom = '1px solid var(--border-color)';
+          const rawIcon = (prod.icon || '').trim();
+          const isImg = rawIcon.startsWith('http://') || rawIcon.startsWith('https://') || rawIcon.startsWith('data:') || rawIcon.startsWith('./') || rawIcon.startsWith('/') || /\.(png|jpg|jpeg|svg|webp|gif)$/i.test(rawIcon);
+          const itemIcon = prod.icon ? window.normalizeIconClass(prod.icon) : 'fa-solid fa-copy';
+          const itemColor = prod.color || '#ff6900';
+          const iconDisplay = isImg
+            ? `<div style="width:34px; height:34px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; border:1px solid var(--border-color); background:transparent;"><img src="${rawIcon}" alt="Logo" style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'fa-solid fa-copy\\'></i>';"></div>`
+            : `<div style="width:34px; height:34px; border-radius:8px; background:${itemColor}20; color:${itemColor}; display:inline-flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; border:1px solid ${itemColor}30;"><i class="${itemIcon}"></i></div>`;
+          tr.innerHTML = `
+            <td style="padding:12px; text-align:center; font-weight:800; color:var(--text-muted);">${idx + 1}</td>
+            <td style="padding:12px; font-weight:800; color:var(--text-main); font-size:0.92rem;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                ${iconDisplay}
+                <span>${escapeHTML(prod.title || 'Untitled Clone App')}</span>
+              </div>
+            </td>
+            <td style="padding:12px; font-size:0.83rem; color:var(--text-main); line-height:1.5; white-space:pre-wrap; max-width:320px;">
+              ${escapeHTML(prod.details || 'Customized App Clone & Source Copy')}
+            </td>
+            <td style="padding:12px; text-align:center; font-weight:800; color:#ef4444; font-size:0.95rem; text-decoration:line-through;">
+              ₹${Number(prod.originalPrice || 0).toLocaleString('en-IN')}
+            </td>
+            <td style="padding:12px; text-align:center; font-weight:800; color:#16a34a; font-size:1.05rem;">
+              ₹${Number(prod.offerPrice || 0).toLocaleString('en-IN')}
+            </td>
+            <td style="padding:12px; text-align:center;">
+              <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                <button onclick="window.editProductById('${escapeHTML(prod.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:var(--accent); border-color:var(--accent);" title="Edit Clone Offering">
+                  <i class="fa-solid fa-pen"></i> Edit
+                </button>
+                <button onclick="window.deleteProductById('${escapeHTML(prod.id)}')" class="btn btn-sm btn-outline" style="padding:4px 8px; font-size:0.75rem; color:#ef4444; border-color:#ef4444;" title="Delete Clone Offering">
+                  <i class="fa-solid fa-trash"></i> Delete
+                </button>
+              </div>
+            </td>
+          `;
+          cloneTbody.appendChild(tr);
+        });
+      }
+    }
   };
 
   // Add / Edit Product Form submit (100% Firestore Document Storage)
@@ -3546,6 +3788,11 @@
     const originalPrice = Math.max(0, parseInt(document.getElementById('productOriginalPriceInput').value || '0', 10));
     const offerPrice = Math.max(0, parseInt(document.getElementById('productOfferPriceInput').value || '0', 10));
 
+    const appLinks = window.getProductOfferingLinksData();
+    const playStoreLinkObj = appLinks.find(l => (l.label || '').toLowerCase().includes('play')) || appLinks[0];
+    const webLinkObj = appLinks.find(l => (l.label || '').toLowerCase().includes('web')) || appLinks[1];
+    const detailsLinkObj = appLinks.find(l => (l.label || '').toLowerCase().includes('detail')) || appLinks[2];
+
     const finalId = docId || ('prod_' + Date.now());
     const existingProd = currentProductsCatalog.find(p => p.id === finalId);
     const newProd = {
@@ -3558,6 +3805,11 @@
       color: color,
       originalPrice: originalPrice,
       offerPrice: offerPrice,
+      appLinks: appLinks,
+      playStoreUrl: playStoreLinkObj ? playStoreLinkObj.url : '',
+      playUrl: playStoreLinkObj ? playStoreLinkObj.url : '',
+      webUrl: webLinkObj ? webLinkObj.url : '',
+      detailsUrl: detailsLinkObj ? detailsLinkObj.url : '',
       updatedAt: new Date().toISOString()
     };
 
@@ -3753,6 +4005,178 @@
       tbody.appendChild(tr);
     });
   }
+
+  // Global Delegated Click Listener for Chat Buttons (100% Reliable Trigger)
+  document.addEventListener('click', (e) => {
+    const chatBtn = e.target.closest('.btn-open-project-chat');
+    if (chatBtn) {
+      e.preventDefault();
+      const orderId = chatBtn.dataset.orderId || '';
+      const title = chatBtn.dataset.projectTitle || 'Project Live Chat';
+      const clientName = chatBtn.dataset.clientName || 'Valued Client';
+      if (typeof window.openProjectChatModal === 'function') {
+        window.openProjectChatModal(orderId, title, clientName);
+      }
+    }
+  });
+
+  // Real-Time Unread Chat Listener for Manager Hub
+  if (typeof listenToAllUnreadChats === 'function') {
+    listenToAllUnreadChats('manager', ({ totalUnread, unreadMap }) => {
+      document.querySelectorAll('.btn-open-project-chat').forEach(btn => {
+        const orderId = (btn.dataset.orderId || '').replace('#', '').trim();
+        const count = unreadMap[orderId] || 0;
+        let badge = btn.querySelector('.chat-unread-badge');
+        if (count > 0) {
+          if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'chat-unread-badge';
+            badge.style.cssText = 'background:#ef4444; color:#ffffff; font-size:0.68rem; font-weight:900; padding:1px 6px; border-radius:10px; margin-left:5px; box-shadow:0 0 8px rgba(239,68,68,0.5);';
+            btn.appendChild(badge);
+          }
+          badge.textContent = `${count} New`;
+          btn.style.borderColor = '#ef4444';
+          btn.style.color = '#ef4444';
+        } else {
+          if (badge) badge.remove();
+          btn.style.borderColor = 'var(--primary)';
+          btn.style.color = 'var(--primary)';
+        }
+      });
+    });
+  }
+
+  // E2EE Project Live Chat Modal Functions (Manager View)
+  window.openProjectChatModal = function(orderId, projectTitle, clientName) {
+    const modal = document.getElementById('projectChatModal');
+    if (!modal) return;
+
+    const cleanOrderId = (orderId || '').replace('#', '').trim();
+    const idInput = document.getElementById('chatModalOrderIdInput');
+    if (idInput) idInput.value = cleanOrderId;
+    const badgeEl = document.getElementById('chatModalOrderIdBadge');
+    if (badgeEl) badgeEl.textContent = '#' + cleanOrderId;
+    const titleEl = document.getElementById('chatModalProjectTitle');
+    if (titleEl) titleEl.textContent = projectTitle || 'Project Live Chat';
+    const staffEl = document.getElementById('chatModalAssignedStaff');
+    if (staffEl) staffEl.textContent = clientName || 'Valued Client';
+
+    const stream = document.getElementById('chatMessagesStream');
+    if (stream) {
+      stream.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size:1.5rem; color:var(--primary);"></i> Loading Encrypted Messages...</div>';
+    }
+
+    if (window._activeChatUnsub) window._activeChatUnsub();
+
+    if (typeof listenToProjectChatMessages === 'function') {
+      window._activeChatUnsub = listenToProjectChatMessages(cleanOrderId, (messages) => {
+        window.renderChatMessagesStream(messages, cleanOrderId);
+      });
+    }
+
+    if (typeof markProjectChatMessagesAsRead === 'function') {
+      markProjectChatMessagesAsRead(cleanOrderId, 'manager');
+    }
+
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('active'), 10);
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeProjectChatModal = function() {
+    const modal = document.getElementById('projectChatModal');
+    if (modal) {
+      modal.classList.remove('active');
+      setTimeout(() => {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+      }, 200);
+    }
+    if (window._activeChatUnsub) {
+      window._activeChatUnsub();
+      window._activeChatUnsub = null;
+    }
+  };
+
+  window.renderChatMessagesStream = function(messages, orderId) {
+    const stream = document.getElementById('chatMessagesStream');
+    const modal = document.getElementById('projectChatModal');
+    if (!stream) return;
+
+    const isModalOpen = modal && modal.style.display !== 'none';
+    if (isModalOpen && typeof markProjectChatMessagesAsRead === 'function') {
+      markProjectChatMessagesAsRead(orderId, 'manager');
+    }
+
+    if (!Array.isArray(messages) || messages.length === 0) {
+      stream.innerHTML = `
+        <div style="text-align:center; padding:40px 20px; color:var(--text-muted); background:var(--bg-surface-alt); border-radius:14px; border:1px solid var(--border-color); margin:auto; max-width:420px;">
+          <i class="fa-solid fa-shield-halved" style="font-size:2rem; color:#10b981; margin-bottom:10px; display:block;"></i>
+          <div style="font-weight:800; font-size:0.95rem; color:var(--text-main);">End-to-End Encrypted Project Chat Channel</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">Messages are encrypted locally. Type below to send encrypted updates or replies!</div>
+        </div>
+      `;
+      return;
+    }
+
+    const currentUser = (typeof auth !== 'undefined' ? auth : window.GoDozFirebase?.auth)?.currentUser;
+    const currentUid = currentUser?.uid;
+
+    stream.innerHTML = '';
+    messages.forEach(msg => {
+      const isMe = currentUid ? (msg.senderUid === currentUid) : (msg.senderRole === 'manager' || msg.senderRole === 'admin');
+      const roleBadge = msg.senderRole === 'manager' ? '👑 Master Manager' : (msg.senderRole === 'admin' ? '🛡️ Support Admin' : '👤 Client');
+
+      const statusTickHtml = isMe
+        ? (msg.read
+            ? `<span style="color:#38bdf8; font-size:0.72rem; font-weight:800; margin-left:6px;" title="Seen at ${msg.seenAtFormatted || 'Just now'}"><i class="fa-solid fa-check-double"></i> Seen ${msg.seenAtFormatted ? '(' + msg.seenAtFormatted + ')' : ''}</span>`
+            : `<span style="color:rgba(255,255,255,0.7); font-size:0.7rem; font-weight:600; margin-left:6px;" title="Delivered"><i class="fa-solid fa-check-double"></i> Delivered</span>`)
+        : '';
+
+      const bubble = document.createElement('div');
+      bubble.style.cssText = `display:flex; flex-direction:column; align-self:${isMe ? 'flex-end' : 'flex-start'}; max-width:75%;`;
+
+      bubble.innerHTML = `
+        <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:3px; font-weight:700; display:flex; align-items:center; gap:6px; justify-content:${isMe ? 'flex-end' : 'flex-start'};">
+          <span>${escapeHTML(msg.senderName || 'User')} (${roleBadge})</span>
+          <span style="font-size:0.68rem; color:var(--text-muted);">${msg.createdAtFormatted || 'Just now'}</span>
+          <button type="button" onclick="window.deleteProjectChatMessage('${msg.id}')" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:0.75rem; padding:0 4px;" title="Delete message">&times;</button>
+        </div>
+        <div style="background:${isMe ? 'var(--primary)' : 'var(--bg-surface-alt)'}; color:${isMe ? '#ffffff' : 'var(--text-main)'}; border:${isMe ? 'none' : '1px solid var(--border-color)'}; padding:10px 14px; border-radius:${isMe ? '14px 14px 2px 14px' : '14px 14px 14px 2px'}; font-size:0.88rem; line-height:1.5; word-break:break-word; box-shadow:var(--shadow-sm);">
+          ${escapeHTML(msg.text || '')}
+          ${statusTickHtml ? `<div style="text-align:right; margin-top:2px;">${statusTickHtml}</div>` : ''}
+        </div>
+      `;
+      stream.appendChild(bubble);
+    });
+
+    stream.scrollTop = stream.scrollHeight;
+  };
+
+  window.handleSendProjectChatMessage = async function(e) {
+    if (e) e.preventDefault();
+    const orderId = document.getElementById('chatModalOrderIdInput')?.value;
+    const input = document.getElementById('chatMessageInput');
+    const text = input?.value.trim();
+    if (!orderId || !text) return;
+
+    const btn = document.getElementById('btnSendChatMessage');
+    if (btn) btn.disabled = true;
+
+    const res = await sendProjectChatMessage({
+      orderId: orderId,
+      text: text,
+      senderRole: 'manager'
+    });
+
+    if (res && res.success) {
+      if (input) input.value = '';
+    } else {
+      alert("Error sending message: " + (res?.error || "Send failed"));
+    }
+
+    if (btn) btn.disabled = false;
+  };
 
   // Save Razorpay Key ID directly to Firestore (/settings/razorpay)
   document.getElementById('formSaveRazorpayKey')?.addEventListener('submit', async (e) => {

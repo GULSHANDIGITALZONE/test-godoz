@@ -99,7 +99,7 @@ window.renderLiveServicesGrid = function(products) {
     const rawIcon = (prod.icon || '').trim();
     const isImg = rawIcon.startsWith('http://') || rawIcon.startsWith('https://') || rawIcon.startsWith('data:') || rawIcon.startsWith('./') || rawIcon.startsWith('/') || /\.(png|jpg|jpeg|svg|webp|gif)$/i.test(rawIcon);
     const iconClass = prod.icon ? window.normalizeIconClass(prod.icon) : window.getProductDefaultIcon(prod.title || '', 'professional_service');
-    const badgeContent = isImg 
+    const badgeContent = isImg
       ? `<img src="${rawIcon}" alt="Logo" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'${iconClass}\\'></i>';">`
       : `<i class="${iconClass}"></i>`;
 
@@ -393,6 +393,7 @@ window.applyProductsCatalogUI = function(products) {
   const projectTypes = products.filter(p => p.category === 'project_type');
   const keyFeatures = products.filter(p => p.category === 'key_feature');
   const otherServices = products.filter(p => p.category === 'other_service');
+  const cloneApps = products.filter(p => p.category === 'clone_app');
 
   // 1. Render Professional Services ("What We Can Build For Your Business")
   window.renderLiveServicesGrid(professionalServices);
@@ -406,8 +407,174 @@ window.applyProductsCatalogUI = function(products) {
   // 4. Render Other Services / Hero Showcases ("Android App View & Web Portal View")
   window.renderOtherServicesShowcases(otherServices);
 
-  // 5. Populate Live Booking Modal with ALL 4 options
-  window.populateOrderModalCategories(professionalServices, projectTypes, keyFeatures, otherServices);
+  // 5. Render Clone Apps Showcase & Update Cards
+  window.renderCloneAppsShowcase(cloneApps);
+
+  // 6. Populate Live Booking Modal with ALL options
+  window.populateOrderModalCategories(professionalServices, projectTypes, keyFeatures, otherServices, cloneApps);
+};
+
+function getCloneAppPlayLink(prod, title) {
+  if (prod.playStoreUrl) return prod.playStoreUrl;
+  if (prod.playUrl) return prod.playUrl;
+  const t = (title || '').toLowerCase();
+  if (t.includes('localwork')) return 'https://play.google.com/store/apps/details?id=com.gdz.kamkaro';
+  if (t.includes('mynotepad')) return 'https://play.google.com/store/apps/details?id=com.gdz.MyNotepad';
+  if (t.includes('pdf')) return 'https://play.google.com/store/apps/details?id=com.gdz.smartpdfviewer';
+  if (t.includes('fruits')) return 'https://play.google.com/store/apps/details?id=com.gdz.fruitscrushgdz';
+  if (t.includes('bhulekh')) return 'https://play.google.com/store/apps/details?id=com.gdz.bhulekh';
+  if (t.includes('scanner') || t.includes('tools')) return 'https://play.google.com/store/apps/details?id=com.gdz.GDZ_Smart_Tools';
+  return '';
+}
+
+function getCloneAppWebLink(prod, title) {
+  if (prod.webUrl) return prod.webUrl;
+  const t = (title || '').toLowerCase();
+  if (t.includes('localwork')) return 'https://localwork.co.in/';
+  if (t.includes('mynotepad')) return '/apps/mynotepad/home.html';
+  if (t.includes('pdf')) return '/apps/smart-pdf-viewer/index2105026.html';
+  return '';
+}
+
+function getCloneAppDetailsLink(prod, title) {
+  if (prod.detailsUrl) return prod.detailsUrl;
+  const t = (title || '').toLowerCase();
+  if (t.includes('localwork')) return '/apps/localwork/index.html';
+  if (t.includes('mynotepad')) return '/apps/mynotepad/index.html';
+  if (t.includes('pdf')) return '/apps/smart-pdf-viewer/index.html';
+  if (t.includes('fruits')) return '/apps/Fruits-crush/index.html';
+  if (t.includes('bhulekh')) return '/apps/Bhulekh/index.html';
+  if (t.includes('scanner') || t.includes('tools')) return '/apps/smart-tools-app/index.html';
+  return '/apps/photo-to-pdf-lite/index.html';
+}
+
+/* Render Live Clone Apps Showcase directly from Firestore /products/ (100% Dynamic Firestore Grid) */
+window.renderCloneAppsShowcase = function(cloneApps) {
+  const container = document.querySelector('.portfolio-grid');
+  if (!container) return;
+
+  const list = Array.isArray(cloneApps) ? cloneApps : [];
+  if (list.length === 0) return;
+
+  container.innerHTML = ''; // Clear spinner! Render 100% Live Firestore Data Cards!
+
+  list.forEach(prod => {
+    const title = (prod.title || 'Custom App').trim();
+    const offerPrice = Number(prod.offerPrice || 2999);
+    const origPrice = Number(prod.originalPrice || 9999);
+    const discPct = Math.round(((origPrice - offerPrice) / Math.max(1, origPrice)) * 100) || 70;
+    const rawIcon = (prod.icon || '').trim();
+    const isImg = rawIcon.startsWith('http://') || rawIcon.startsWith('https://') || rawIcon.startsWith('data:') || rawIcon.startsWith('./') || rawIcon.startsWith('/') || /\.(png|jpg|jpeg|svg|webp|gif)$/i.test(rawIcon);
+    const itemIcon = prod.icon ? window.normalizeIconClass(prod.icon) : 'fa-solid fa-copy';
+
+    const iconHtml = isImg
+      ? `<img src="${rawIcon}" alt="${escapeHTML(title)} Logo" loading="lazy" decoding="async" style="width:52px; height:52px; border-radius:12px; box-shadow:var(--shadow-sm); object-fit:cover;" onerror="this.src='./official-logo.png'">`
+      : `<div style="width:52px; height:52px; border-radius:12px; background:rgba(255,105,0,0.15); color:var(--accent); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;"><i class="${itemIcon}"></i></div>`;
+
+    const playLink = getCloneAppPlayLink(prod, title);
+    const webLink = getCloneAppWebLink(prod, title);
+    const detailsLink = getCloneAppDetailsLink(prod, title);
+
+    const linksList = Array.isArray(prod.appLinks) && prod.appLinks.length > 0
+      ? prod.appLinks
+      : [
+          ...(playLink ? [{ label: 'Play Store', url: playLink, icon: 'fa-brands fa-google-play' }] : []),
+          ...(webLink ? [{ label: 'Web', url: webLink, icon: 'fa-solid fa-globe' }] : []),
+          ...(detailsLink ? [{ label: 'Details', url: detailsLink, icon: 'fa-solid fa-circle-info' }] : [])
+        ];
+
+    const extraButtonsHtml = linksList.map(l => {
+      const lbl = (l.label || 'Link').trim();
+      const isPlay = lbl.toLowerCase().includes('play') || (l.icon || '').includes('google-play');
+      const icon = l.icon || (isPlay ? 'fa-brands fa-google-play' : (lbl.toLowerCase().includes('web') ? 'fa-solid fa-globe' : 'fa-solid fa-circle-info'));
+      const btnClass = isPlay ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline';
+      return `<a href="${escapeHTML(l.url)}" target="_blank" class="${btnClass}"><i class="${icon}"></i> ${escapeHTML(lbl)}</a>`;
+    }).join('');
+
+    const card = document.createElement('article');
+    card.className = 'product-showcase-card';
+    card.setAttribute('data-category', 'apps');
+    card.innerHTML = `
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; gap:8px;">
+          <span style="background:rgba(255,105,0,0.12); color:var(--accent); font-weight:700; font-size:0.75rem; padding:4px 10px; border-radius:20px;">
+            🚀 App Clone &amp; Source Copy
+          </span>
+          <span style="font-size:0.8rem; color:var(--text-muted);"><i class="fa-brands fa-google-play"></i> Android App</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:14px; margin-bottom:14px;">
+          ${iconHtml}
+          <div>
+            <h3 style="font-size:1.2rem; margin-bottom:2px; color:var(--text-main); font-weight:800;">${escapeHTML(title)}</h3>
+            <div style="font-size:0.8rem; color:var(--primary, #1266e8); font-weight:700;">Customized Source Copy</div>
+          </div>
+        </div>
+
+        <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55; margin-bottom:14px;">
+          ${escapeHTML(prod.details || 'Full customizable source code copy with your company branding, custom admin panel, and Play Store publishing.')}
+        </p>
+
+        <div style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:16px;">
+          <span class="official-tag">Source Code Copy</span>
+          <span class="official-tag">Custom Branding</span>
+          <span class="official-tag">Play Store Ready</span>
+        </div>
+
+        <div class="clone-price-strip" style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,105,0,0.08); border:1px solid rgba(255,105,0,0.2); border-radius:8px; padding:6px 10px; margin-bottom:12px; font-size:0.78rem;">
+          <span style="font-weight:700; color:var(--text-muted);"><i class="fa-solid fa-copy" style="color:var(--accent);"></i> Custom App Clone Rate:</span>
+          <div style="display:flex; align-items:baseline; gap:6px;">
+            <span style="text-decoration:line-through; color:var(--text-muted); font-size:0.75rem;">₹${origPrice.toLocaleString('en-IN')}</span>
+            <strong style="color:#16a34a; font-size:0.95rem;">₹${offerPrice.toLocaleString('en-IN')}</strong>
+            <span style="background:#fee2e2; color:#dc2626; font-size:0.68rem; font-weight:800; padding:1px 5px; border-radius:10px;">${discPct}% OFF</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:6px; flex-wrap:wrap; border-top:1px solid var(--border-color, #e2e8f0); padding-top:14px; margin-top:auto;">
+        <button type="button" class="btn btn-sm btn-accent btn-order-app-clone" data-clone-title="${escapeHTML(title)}" data-clone-price="${offerPrice}" data-clone-details="${escapeHTML(prod.details || 'I want a customized clone/copy of ' + title)}" style="flex:1; justify-content:center; font-weight:800;" title="Order a customized clone / source copy of this app for ₹${offerPrice.toLocaleString('en-IN')}">
+          <i class="fa-solid fa-copy"></i> Order App Clone (₹${offerPrice.toLocaleString('en-IN')})
+        </button>
+        ${extraButtonsHtml}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+};
+
+// Global Delegated Click Event Listener for App Clone Buttons (100% Syntax Safe)
+document.addEventListener('click', (e) => {
+  const cloneBtn = e.target.closest('.btn-order-app-clone');
+  if (cloneBtn) {
+    e.preventDefault();
+    const title = cloneBtn.dataset.cloneTitle || 'App Clone';
+    const price = Number(cloneBtn.dataset.clonePrice || 2999);
+    const details = cloneBtn.dataset.cloneDetails || '';
+    if (typeof window.openOrderModal === 'function') {
+      window.openOrderModal(`Clone App / Source Copy: ${title}`, price, details);
+    }
+  }
+});
+
+/* 1-Click Formatted Itemized WhatsApp Quote Generator for Cost Estimator */
+window.generateWhatsAppEstimatorQuote = function() {
+  const selectedTypeEl = document.querySelector('.estimator-type-tile.selected h4, .estimator-type-tile.selected .est-type-title, .estimator-type-card.selected h4');
+  const pType = selectedTypeEl ? selectedTypeEl.textContent.trim() : 'Custom Application';
+  const price = document.getElementById('estimatorTotalPrice')?.textContent.trim() || '₹4,999';
+
+  const selectedFeats = Array.from(document.querySelectorAll('.estimator-feature-tile.selected, .estimator-feature-card.selected')).map(c => {
+    const titleEl = c.querySelector('h4, .est-feat-title');
+    return titleEl ? titleEl.textContent.trim() : '';
+  }).filter(Boolean);
+  const featListStr = selectedFeats.length > 0 ? selectedFeats.join(', ') : 'Standard Core Features';
+
+  const text = `Hi Gulshan Sir! I calculated a custom project estimate on GoDoz.in:\n\n` +
+               `🚀 *Project Type:* ${pType}\n` +
+               `⚡ *Selected Features:* ${featListStr}\n` +
+               `💰 *Calculated Price:* ${price}\n\n` +
+               `Please share the official project roadmap & discount options!`;
+
+  window.open(`https://wa.me/919288521731?text=${encodeURIComponent(text)}`, '_blank');
 };
 
 /* Render Live Key Features (Calculator Step 2) directly from Firestore /products/ */
@@ -523,7 +690,15 @@ window.renderOtherServicesShowcases = function(otherServices) {
     const themeColor = colorVal || defaultColor;
 
     if (isImage) {
-      badgeEl.innerHTML = `<img src="${rawIcon}" alt="Logo" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'${defaultIconClass}\\'></i>';">`;
+      badgeEl.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = rawIcon;
+      img.alt = 'Logo';
+      img.style.cssText = 'width:100%; height:100%; object-fit:cover; border-radius:inherit;';
+      img.onerror = function() {
+        badgeEl.innerHTML = `<i class="${defaultIconClass}"></i>`;
+      };
+      badgeEl.appendChild(img);
       badgeEl.style.background = 'transparent';
       badgeEl.style.color = 'inherit';
       badgeEl.style.border = '1px solid var(--border-color)';
@@ -552,6 +727,19 @@ window.renderOtherServicesShowcases = function(otherServices) {
     btnEl.innerHTML = `${iconHtml}${escapeHTML(title || btnEl.textContent.trim())}`;
   };
 
+  const formatDetailsHTML = function(detailsStr) {
+    if (!detailsStr) return '';
+    const lines = detailsStr.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+    if (lines.length === 0) return '';
+    if (lines.length === 1) {
+      return escapeHTML(lines[0]);
+    }
+    return `<div style="margin-bottom:6px; font-weight:700; color:var(--text-main); font-size:0.88rem;">${escapeHTML(lines[0])}</div>` +
+           `<ul style="margin:0; padding-left:18px; font-size:0.82rem; color:var(--text-muted); line-height:1.55;">` +
+           lines.slice(1).map(l => `<li>${escapeHTML(l)}</li>`).join('') +
+           `</ul>`;
+  };
+
   // 1. Android App Showcase View
   const appProd = otherServices.find(p => (p.title || '').toLowerCase().includes('android') || (p.title || '').toLowerCase().includes('app')) || otherServices[0];
   if (appProd) {
@@ -566,8 +754,7 @@ window.renderOtherServicesShowcases = function(otherServices) {
     if (titleEl) titleEl.textContent = appProd.title;
     if (priceEl) priceEl.textContent = `Starting ₹${Number(appProd.offerPrice || 0).toLocaleString('en-IN')}`;
     if (descEl && appProd.details) {
-      const lines = appProd.details.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-      descEl.textContent = lines[0] || appProd.details;
+      descEl.innerHTML = formatDetailsHTML(appProd.details);
     }
     if (orderBtn) {
       orderBtn.onclick = function() {
@@ -594,8 +781,7 @@ window.renderOtherServicesShowcases = function(otherServices) {
     if (titleEl) titleEl.textContent = webProd.title;
     if (priceEl) priceEl.textContent = `Starting ₹${Number(webProd.offerPrice || 0).toLocaleString('en-IN')}`;
     if (descEl && webProd.details) {
-      const lines = webProd.details.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-      descEl.textContent = lines[0] || webProd.details;
+      descEl.innerHTML = formatDetailsHTML(webProd.details);
     }
     if (orderBtn) {
       orderBtn.onclick = function() {
@@ -666,9 +852,9 @@ window.renderOtherServicesShowcases = function(otherServices) {
               <div style="font-size:0.75rem; color:${extraColor}; font-weight:700;">Full-Stack Custom Engine</div>
             </div>
           </div>
-          <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.45; margin-bottom:12px;">
-            ${escapeHTML(mainDesc)}
-          </p>
+          <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.45; margin-bottom:12px;">
+            ${formatDetailsHTML(extraProd.details)}
+          </div>
         </div>
         <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-surface); padding:8px 12px; border-radius:10px; border:1px solid var(--border-color);">
           <span style="font-size:0.82rem; font-weight:800; color:var(--text-main);">Starting ₹${Number(extraProd.offerPrice || 0).toLocaleString('en-IN')}</span>
@@ -1342,7 +1528,7 @@ function initEstimator() {
   const typeRadios = document.querySelectorAll('input[name="project_type"]');
   const featureCheckboxes = document.querySelectorAll('input[name="feature_addon"]');
   const timelineRadios = document.querySelectorAll('input[name="timeline"]');
-  
+
   const totalPriceDisplay = document.getElementById('estimatorTotalPrice');
   const projectSummaryDisplay = document.getElementById('estimatorSummaryText');
   const whatsappQuoteBtn = document.getElementById('estimatorWhatsappBtn');
@@ -2118,7 +2304,7 @@ window.trackOrderById = function(queryOverride) {
     if (orderIdEl) orderIdEl.textContent = `#${matchedOrder.id}`;
     if (projectEl) projectEl.textContent = matchedOrder.projectName || "Custom Project";
     if (clientEl) clientEl.innerHTML = `Client: <strong>${matchedOrder.clientName || 'Partner'}</strong> &bull; Value: <strong>₹${(matchedOrder.price || 9999).toLocaleString('en-IN')}</strong>`;
-    
+
     // Progress calculation
     const progress = matchedOrder.progress || 35;
     if (progressBar) progressBar.style.width = `${progress}%`;
@@ -2176,7 +2362,7 @@ window.printCompanyBrochure = function() {
 window.searchExternal = function(engine) {
   const input = document.getElementById('globalSearchInput');
   const query = encodeURIComponent(input && input.value.trim() ? input.value.trim() : 'GoDoz Technology RS GULSHAN PRAJAPATI');
-  
+
   let targetUrl = '';
   switch (engine) {
     case 'google':
@@ -2210,7 +2396,7 @@ window.openLeftNav = window.openMobileDrawer = function() {
   const sidebar = document.getElementById('appSidebar');
   const drawer = document.getElementById('mobileNavDrawer');
   const backdrop = document.getElementById('mobileNavBackdrop');
-  
+
   if (window.innerWidth <= 1080) {
     if (sidebar) sidebar.classList.add('open');
     if (drawer) drawer.classList.add('open');
@@ -2225,7 +2411,7 @@ window.closeLeftNav = window.closeMobileDrawer = function() {
   const sidebar = document.getElementById('appSidebar');
   const drawer = document.getElementById('mobileNavDrawer');
   const backdrop = document.getElementById('mobileNavBackdrop');
-  
+
   if (sidebar) sidebar.classList.remove('open');
   if (drawer) drawer.classList.remove('open');
   if (backdrop) backdrop.classList.remove('open');
@@ -2235,7 +2421,7 @@ window.closeLeftNav = window.closeMobileDrawer = function() {
 window.toggleLeftNav = window.toggleMobileDrawer = function() {
   const sidebar = document.getElementById('appSidebar');
   const drawer = document.getElementById('mobileNavDrawer');
-  
+
   if (window.innerWidth <= 1080) {
     const isOpen = (sidebar && sidebar.classList.contains('open')) || (drawer && drawer.classList.contains('open'));
     if (isOpen) {
@@ -2309,11 +2495,11 @@ function initAppSidebar() {
     link.addEventListener('click', (e) => {
       const targetId = link.getAttribute('href');
       if (!targetId || targetId === '#' || targetId.startsWith('#!')) return;
-      
+
       const targetEl = document.querySelector(targetId);
       if (targetEl) {
         e.preventDefault();
-        
+
         // Update active class
         document.querySelectorAll('.app-menu-item, .drawer-nav-item').forEach(l => l.classList.remove('active'));
         link.classList.add('active');
@@ -2347,7 +2533,7 @@ function initAppSidebar() {
 
     const scrollPos = window.scrollY + 160;
     const sections = document.querySelectorAll('section[id], footer[id], header[id]');
-    
+
     let activeSectionId = '';
     sections.forEach(sec => {
       const top = sec.offsetTop;
@@ -2508,7 +2694,7 @@ window.updateNavAuthStatus = function(isLoggedIn, userData = {}) {
       btn.onclick = null;
 
       const avatarPhoto = userData.photoURL || localStorage.getItem('godoz_user_avatar');
-      
+
       if (isManager) {
         btn.href = prefix + 'manager.html';
         btn.innerHTML = `<i class="fa-solid fa-crown" style="color:#7c3aed; font-size:1rem;"></i> <span class="btn-text" style="font-weight:800; color:#7c3aed;">Manager Hub</span>`;
@@ -2722,8 +2908,8 @@ function resolveGoDozUrl(rawHref) {
 
   // Top level known pages
   const rootPages = [
-    'contact.html', 'About.html', 'feedback.html', 'login.html', 'profile.html', 
-    'admin.html', 'terms.html', 'privacy-policy.html', 'GoDoz_About.html', 
+    'contact.html', 'About.html', 'feedback.html', 'login.html', 'profile.html',
+    'admin.html', 'terms.html', 'privacy-policy.html', 'GoDoz_About.html',
     'RS_GULSHAN_PRAJAPATI_About.html', 'payment-success.html', '404.html'
   ];
 
@@ -3111,5 +3297,4 @@ window.loadPageSeamless = async function(url, pushState = true) {
     }
   }
 };
-
 

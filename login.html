@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="hi" data-theme="light">
 <head>
-  <!-- Google AdSense -->
-  <meta name="google-adsense-account" content="ca-pub-4514064358809691">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4514064358809691" crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <script>
@@ -52,17 +49,20 @@
   <meta name="author" content="RS GULSHAN PRAJAPATI">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.godoz.in/login.html">
-  <link rel="shortcut icon" href="./official logo.png" type="image/x-icon">
+  <link rel="shortcut icon" href="./official-logo.png" type="image/x-icon">
   
   <!-- Open Graph / Social Meta -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.godoz.in/login.html">
   <meta property="og:title" content="Client Portal Login | GoDoz Technology">
   <meta property="og:description" content="Secure Client Access for Mobile App & Web Development by GoDoz Technology.">
-  <meta property="og:image" content="https://www.godoz.in/official%20logo.png">
+  <meta property="og:image" content="https://www.godoz.in/official-logo.png">
 
-  <!-- Font Awesome & Base Stylesheet -->
+  <!-- Font Awesome & Page-Specific Modular CSS Files -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/buttons.css">
+  <link rel="stylesheet" href="./css/modals.css">
   <link rel="stylesheet" href="./style.css">
 
   <!-- Silo SEO JSON-LD Structured Data -->
@@ -559,7 +559,7 @@
   <div id="globalPageLoader" class="godoz-page-loader">
     <div class="godoz-spinner-wrap">
       <div class="godoz-spinner-ring"></div>
-      <img src="./official logo.png" alt="GoDoz Logo" class="godoz-spinner-logo">
+      <img src="./official-logo.png" alt="GoDoz Logo" class="godoz-spinner-logo">
     </div>
     <div class="godoz-loader-text">Loading GoDoz...</div>
   </div>
@@ -578,7 +578,7 @@
 
         <a href="/index.html" class="brand-logo-wrap" style="display:flex; align-items:center; text-decoration:none;">
           <img src="./godoz_logo_flat_vector.png" alt="GoDoz Technology" class="godoz-nav-logo-desktop" onerror="this.src='./godoz_logo_rectangle_w_bg.png'">
-          <img src="./godoz-logo-circle.png" alt="GoDoz Logo" class="godoz-nav-logo-mobile" onerror="this.src='./official logo.png'">
+          <img src="./godoz-logo-circle.png" alt="GoDoz Logo" class="godoz-nav-logo-mobile" onerror="this.src='./official-logo.png'">
         </a>
       </div>
 
@@ -1065,7 +1065,7 @@
 
         <!-- LOGGED-IN STATE VIEW (Hidden by default) -->
         <div id="userProfileView" class="user-profile-box">
-          <img id="userAvatar" src="./official logo.png" alt="User Avatar" class="user-avatar-img">
+          <img id="userAvatar" src="./official-logo.png" alt="User Avatar" class="user-avatar-img">
           <h3 id="userName" style="margin:0 0 4px; font-size:1.25rem; color:var(--text-main);">Client User</h3>
           <p id="userEmail" style="color:var(--text-muted); font-size:0.88rem; margin:0 0 16px;">client@godoz.in</p>
           
@@ -1283,7 +1283,7 @@
       <div class="auth-loader-pulse-wrap">
         <div class="auth-ring-glow"></div>
         <div class="auth-ring-spinner"></div>
-        <img src="./official logo.png" alt="GoDoz Logo" class="auth-loader-logo" onerror="this.src='./logo w bg.png'">
+        <img src="./official-logo.png" alt="GoDoz Logo" class="auth-loader-logo" onerror="this.src='./logo-w-bg.png'">
       </div>
 
       <h3 id="authOverlayTitle" class="auth-overlay-title">Connecting to Google...</h3>
@@ -1731,7 +1731,7 @@
         if (user.photoURL) {
           userAvatar.src = user.photoURL;
         } else {
-          userAvatar.src = "./official logo.png";
+          userAvatar.src = "./official-logo.png";
         }
 
         const isMgr = await isUserManager(user);

@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="hi" data-theme="light">
 <head>
-  <!-- Google AdSense -->
-  <meta name="google-adsense-account" content="ca-pub-4514064358809691">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4514064358809691" crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <script>
@@ -52,11 +49,16 @@
   <meta name="author" content="RS GULSHAN PRAJAPATI">
   <meta name="robots" content="noindex, follow">
   <link rel="canonical" href="https://www.godoz.in/profile.html">
-  <link rel="shortcut icon" href="./official logo.png" type="image/x-icon">
+  <link rel="shortcut icon" href="./official-logo.png" type="image/x-icon">
   <link rel="manifest" href="./manifest.json">
 
-  <!-- Font Awesome & Base Stylesheet -->
+  <!-- Font Awesome & Parallel Modular CSS Files -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/buttons.css">
+  <link rel="stylesheet" href="./css/modals.css">
+  <link rel="stylesheet" href="./css/admin.css">
+  <link rel="stylesheet" href="./css/faq.css">
   <link rel="stylesheet" href="./style.css">
 
   <!-- Razorpay Official Checkout SDK -->
@@ -670,7 +672,7 @@
   <div id="globalPageLoader" class="godoz-page-loader">
     <div class="godoz-spinner-wrap">
       <div class="godoz-spinner-ring"></div>
-      <img src="./official logo.png" alt="GoDoz Logo" class="godoz-spinner-logo">
+      <img src="./official-logo.png" alt="GoDoz Logo" class="godoz-spinner-logo">
     </div>
     <div class="godoz-loader-text">Loading Client Dashboard...</div>
   </div>
@@ -689,7 +691,7 @@
 
         <a href="/index.html" class="brand-logo-wrap" style="display:flex; align-items:center; text-decoration:none;">
           <img src="./godoz_logo_flat_vector.png" alt="GoDoz Technology" class="godoz-nav-logo-desktop" onerror="this.src='./godoz_logo_rectangle_w_bg.png'">
-          <img src="./godoz-logo-circle.png" alt="GoDoz Logo" class="godoz-nav-logo-mobile" onerror="this.src='./official logo.png'">
+          <img src="./godoz-logo-circle.png" alt="GoDoz Logo" class="godoz-nav-logo-mobile" onerror="this.src='./official-logo.png'">
         </a>
       </div>
 
@@ -1172,7 +1174,7 @@
       <aside class="profile-sidebar" style="pointer-events:none; text-align:center;">
         <div class="godoz-spinner-wrap" style="margin:0 auto 12px;">
           <div class="godoz-spinner-ring"></div>
-          <img src="./official logo.png" alt="GoDoz Logo" class="godoz-spinner-logo">
+          <img src="./official-logo.png" alt="GoDoz Logo" class="godoz-spinner-logo">
         </div>
         <div style="font-size:0.85rem; font-weight:800; color:var(--primary); margin-bottom:12px;">Syncing Dashboard...</div>
         <div class="skeleton-shimmer" style="width:84px; height:84px; border-radius:50%; margin:0 auto 14px;"></div>
@@ -1221,7 +1223,7 @@
       <!-- Left Profile Sidebar -->
       <aside class="profile-sidebar">
         <div class="profile-avatar-wrapper">
-          <img id="dashAvatar" src="./official logo.png" alt="Profile Avatar" class="profile-avatar-img">
+          <img id="dashAvatar" src="./official-logo.png" alt="Profile Avatar" class="profile-avatar-img">
           <div class="avatar-edit-badge" title="Edit Avatar URL" id="btnEditAvatar"><i class="fa-solid fa-camera"></i></div>
         </div>
         <h3 id="dashName" style="margin:0 0 4px; font-size:1.2rem; color:var(--text-main);">Client Name</h3>
@@ -1430,7 +1432,7 @@
 
           <div>
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
-              <img src="./official logo.png" alt="GoDoz Logo" style="height:32px; width:auto; border-radius:6px;" onerror="this.src='./godoz-logo-circle.png'">
+              <img src="./official-logo.png" alt="GoDoz Logo" style="height:32px; width:auto; border-radius:6px;" onerror="this.src='./godoz-logo-circle.png'">
               <span style="font-size:1.25rem; font-weight:900;"><span style="color:#2788ff;">Go</span><span style="color:#ff6900;">Doz</span></span>
             </div>
             <p style="color:#94a3b8; line-height:1.5; font-size:0.82rem; margin:0;">
@@ -1679,6 +1681,7 @@
           color: RAZORPAY_CONFIG.themeColor
         },
         payment_capture: 1,
+        capture: 1,
         handler: async function (response) {
           isPaymentCompleted = true;
           const payId = response.razorpay_payment_id || ('pay_' + Date.now());
@@ -1987,6 +1990,9 @@
                   <i class="fa-solid fa-arrow-up-right-from-square"></i> ${escapeHTML(link.label || 'Live Deliverable / Preview')}
                 </a>
               `).join('')}
+              <button type="button" class="btn btn-sm btn-outline btn-open-project-chat" data-order-id="${escapeHTML(orderId)}" data-project-title="${escapeHTML(projectName)}" data-staff-name="${escapeHTML(order.assignedAdmin || order.assignedTo || 'Lead Architect RS GULSHAN PRAJAPATI')}" style="color:var(--primary); border-color:var(--primary); font-weight:800;">
+                <i class="fa-solid fa-comments"></i> Project Encrypted Chat
+              </button>
               <a href="https://wa.me/919288521731?text=Hello%20Gulshan%20Sir,%20I%20have%20a%20question%20regarding%20my%20Order%20%23${escapeHTML(orderId)}%20(${encodeURIComponent(projectName)})." target="_blank" class="btn btn-sm btn-outline" style="color:#16a34a;">
                 <i class="fa-brands fa-whatsapp"></i> Chat Support
               </a>
@@ -2410,6 +2416,7 @@
           color: RAZORPAY_CONFIG.themeColor
         },
         payment_capture: 1,
+        capture: 1,
         handler: async function (response) {
           isPaymentCompleted = true;
           const payId = response.razorpay_payment_id || ('pay_' + Date.now());
@@ -2455,6 +2462,177 @@
         showError("Unable to initialize Razorpay checkout. Please check internet connection.");
       }
     });
+
+    // Global Delegated Click Listener for Chat Buttons (100% Reliable Trigger)
+    document.addEventListener('click', (e) => {
+      const chatBtn = e.target.closest('.btn-open-project-chat');
+      if (chatBtn) {
+        e.preventDefault();
+        const orderId = chatBtn.dataset.orderId || '';
+        const title = chatBtn.dataset.projectTitle || 'Project Live Chat';
+        const staffName = chatBtn.dataset.staffName || chatBtn.dataset.clientName || 'Support Admin';
+        if (typeof window.openProjectChatModal === 'function') {
+          window.openProjectChatModal(orderId, title, staffName);
+        }
+      }
+    });
+
+    // Real-Time Unread Chat Listener for Client Portal
+    if (typeof listenToAllUnreadChats === 'function') {
+      listenToAllUnreadChats('client', ({ totalUnread, unreadMap }) => {
+        document.querySelectorAll('.btn-open-project-chat').forEach(btn => {
+          const orderId = (btn.dataset.orderId || '').replace('#', '').trim();
+          const count = unreadMap[orderId] || 0;
+          let badge = btn.querySelector('.chat-unread-badge');
+          if (count > 0) {
+            if (!badge) {
+              badge = document.createElement('span');
+              badge.className = 'chat-unread-badge';
+              badge.style.cssText = 'background:#ef4444; color:#ffffff; font-size:0.68rem; font-weight:900; padding:1px 6px; border-radius:10px; margin-left:5px; box-shadow:0 0 8px rgba(239,68,68,0.5);';
+              btn.appendChild(badge);
+            }
+            badge.textContent = `${count} New`;
+            btn.style.borderColor = '#ef4444';
+            btn.style.color = '#ef4444';
+          } else {
+            if (badge) badge.remove();
+            btn.style.borderColor = 'var(--primary)';
+            btn.style.color = 'var(--primary)';
+          }
+        });
+      });
+    }
+
+    // E2EE Project Live Chat Modal Functions
+    window.openProjectChatModal = function(orderId, projectTitle, assignedStaff) {
+      const modal = document.getElementById('projectChatModal');
+      if (!modal) return;
+
+      const cleanOrderId = (orderId || '').replace('#', '').trim();
+      const idInput = document.getElementById('chatModalOrderIdInput');
+      if (idInput) idInput.value = cleanOrderId;
+      const badgeEl = document.getElementById('chatModalOrderIdBadge');
+      if (badgeEl) badgeEl.textContent = '#' + cleanOrderId;
+      const titleEl = document.getElementById('chatModalProjectTitle');
+      if (titleEl) titleEl.textContent = projectTitle || 'Project Live Chat';
+      const staffEl = document.getElementById('chatModalAssignedStaff');
+      if (staffEl) staffEl.textContent = assignedStaff || 'Support Admin';
+
+      const stream = document.getElementById('chatMessagesStream');
+      if (stream) {
+        stream.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size:1.5rem; color:var(--primary);"></i> Loading Encrypted Messages...</div>';
+      }
+
+      if (window._activeChatUnsub) window._activeChatUnsub();
+
+      if (typeof listenToProjectChatMessages === 'function') {
+        window._activeChatUnsub = listenToProjectChatMessages(cleanOrderId, (messages) => {
+          window.renderChatMessagesStream(messages, cleanOrderId);
+        });
+      }
+
+      if (typeof markProjectChatMessagesAsRead === 'function') {
+        markProjectChatMessagesAsRead(cleanOrderId, 'client');
+      }
+
+      modal.style.display = 'flex';
+      setTimeout(() => modal.classList.add('active'), 10);
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeProjectChatModal = function() {
+      const modal = document.getElementById('projectChatModal');
+      if (modal) {
+        modal.classList.remove('active');
+        setTimeout(() => {
+          modal.style.display = 'none';
+          document.body.style.overflow = '';
+        }, 200);
+      }
+      if (window._activeChatUnsub) {
+        window._activeChatUnsub();
+        window._activeChatUnsub = null;
+      }
+    };
+
+    window.renderChatMessagesStream = function(messages, orderId) {
+      const stream = document.getElementById('chatMessagesStream');
+      const modal = document.getElementById('projectChatModal');
+      if (!stream) return;
+
+      const isModalOpen = modal && modal.style.display !== 'none';
+      if (isModalOpen && typeof markProjectChatMessagesAsRead === 'function') {
+        markProjectChatMessagesAsRead(orderId, 'client');
+      }
+
+      if (!Array.isArray(messages) || messages.length === 0) {
+        stream.innerHTML = `
+          <div style="text-align:center; padding:40px 20px; color:var(--text-muted); background:var(--bg-surface-alt); border-radius:14px; border:1px solid var(--border-color); margin:auto; max-width:420px;">
+            <i class="fa-solid fa-shield-halved" style="font-size:2rem; color:#10b981; margin-bottom:10px; display:block;"></i>
+            <div style="font-weight:800; font-size:0.95rem; color:var(--text-main);">End-to-End Encrypted Project Chat Channel</div>
+            <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">Messages are encrypted locally before sending. Type below to start direct project discussion!</div>
+          </div>
+        `;
+        return;
+      }
+
+      const currentUser = (typeof auth !== 'undefined' ? auth : window.GoDozFirebase?.auth)?.currentUser;
+      const currentUid = currentUser?.uid;
+
+      stream.innerHTML = '';
+      messages.forEach(msg => {
+        const isMe = currentUid ? (msg.senderUid === currentUid) : (msg.senderRole === 'client');
+        const roleBadge = msg.senderRole === 'manager' ? '👑 Master Manager' : (msg.senderRole === 'admin' ? '🛡️ Support Admin' : '👤 Client');
+
+        const statusTickHtml = isMe
+          ? (msg.read
+              ? `<span style="color:#38bdf8; font-size:0.72rem; font-weight:800; margin-left:6px;" title="Seen at ${msg.seenAtFormatted || 'Just now'}"><i class="fa-solid fa-check-double"></i> Seen ${msg.seenAtFormatted ? '(' + msg.seenAtFormatted + ')' : ''}</span>`
+              : `<span style="color:rgba(255,255,255,0.7); font-size:0.7rem; font-weight:600; margin-left:6px;" title="Delivered"><i class="fa-solid fa-check-double"></i> Delivered</span>`)
+          : '';
+
+        const bubble = document.createElement('div');
+        bubble.style.cssText = `display:flex; flex-direction:column; align-self:${isMe ? 'flex-end' : 'flex-start'}; max-width:75%;`;
+
+        bubble.innerHTML = `
+          <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:3px; font-weight:700; display:flex; align-items:center; gap:6px; justify-content:${isMe ? 'flex-end' : 'flex-start'};">
+            <span>${escapeHTML(msg.senderName || 'User')} (${roleBadge})</span>
+            <span style="font-size:0.68rem; color:var(--text-muted);">${msg.createdAtFormatted || 'Just now'}</span>
+          </div>
+          <div style="background:${isMe ? 'var(--primary)' : 'var(--bg-surface-alt)'}; color:${isMe ? '#ffffff' : 'var(--text-main)'}; border:${isMe ? 'none' : '1px solid var(--border-color)'}; padding:10px 14px; border-radius:${isMe ? '14px 14px 2px 14px' : '14px 14px 14px 2px'}; font-size:0.88rem; line-height:1.5; word-break:break-word; box-shadow:var(--shadow-sm);">
+            ${escapeHTML(msg.text || '')}
+            ${statusTickHtml ? `<div style="text-align:right; margin-top:2px;">${statusTickHtml}</div>` : ''}
+          </div>
+        `;
+        stream.appendChild(bubble);
+      });
+
+      stream.scrollTop = stream.scrollHeight;
+    };
+
+    window.handleSendProjectChatMessage = async function(e) {
+      if (e) e.preventDefault();
+      const orderId = document.getElementById('chatModalOrderIdInput')?.value;
+      const input = document.getElementById('chatMessageInput');
+      const text = input?.value.trim();
+      if (!orderId || !text) return;
+
+      const btn = document.getElementById('btnSendChatMessage');
+      if (btn) btn.disabled = true;
+
+      const res = await sendProjectChatMessage({
+        orderId: orderId,
+        text: text,
+        senderRole: 'client'
+      });
+
+      if (res && res.success) {
+        if (input) input.value = '';
+      } else {
+        alert("Error sending message: " + (res?.error || "Send failed"));
+      }
+
+      if (btn) btn.disabled = false;
+    };
 
     // Edit Profile form submission with Spinning Loading Indicator
     editProfileForm.addEventListener('submit', async (e) => {
@@ -2546,7 +2724,7 @@
           const name = user.displayName || localStorage.getItem('godoz_user_name') || (isMgr ? "RS GULSHAN PRAJAPATI" : "Client User");
           const email = user.email || localStorage.getItem('godoz_user_email') || "client@email.com";
           const phone = user.phoneNumber || localStorage.getItem('godoz_user_phone') || "";
-          const photo = user.photoURL || localStorage.getItem('godoz_user_avatar') || "./official logo.png";
+          const photo = user.photoURL || localStorage.getItem('godoz_user_avatar') || "./official-logo.png";
 
           dashName.textContent = name;
           dashGreetingName.textContent = name.split(' ')[0];
@@ -2715,6 +2893,51 @@
       }
     }, 1200);
   </script>
+
+  <!-- Universal E2EE Encrypted Project Chat Modal -->
+  <div id="projectChatModal" class="godoz-modal-backdrop godoz-order-modal-wide" style="display:none;" role="dialog" aria-modal="true">
+    <div class="godoz-modal-box godoz-order-modal-wide" style="display:flex; flex-direction:column; height:100vh; padding:0; background:var(--bg-surface);">
+
+      <!-- Chat Top Bar -->
+      <div style="padding:14px 20px; background:var(--bg-surface-alt); border-bottom:1.5px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:38px; height:38px; border-radius:10px; background:rgba(16,185,129,0.12); color:#10b981; display:flex; align-items:center; justify-content:center; font-size:1.15rem;">
+            <i class="fa-solid fa-lock"></i>
+          </div>
+          <div>
+            <div style="font-weight:900; font-size:1.05rem; color:var(--text-main); display:flex; align-items:center; gap:8px;">
+              <span id="chatModalProjectTitle">Project Live Chat</span>
+              <span id="chatModalOrderIdBadge" style="background:rgba(18,102,232,0.1); color:var(--primary); font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:6px;">#GoDoz-2026</span>
+            </div>
+            <div style="font-size:0.75rem; color:#10b981; font-weight:700; display:flex; align-items:center; gap:4px; margin-top:2px;">
+              <i class="fa-solid fa-shield-halved"></i> 256-Bit End-to-End Encrypted Channel &bull; Assigned: <strong id="chatModalAssignedStaff" style="color:var(--text-main);">Support Admin</strong>
+            </div>
+          </div>
+        </div>
+        <button type="button" onclick="window.closeProjectChatModal()" style="background:none; border:none; font-size:1.5rem; color:var(--text-muted); cursor:pointer; padding:4px 8px; border-radius:8px;" aria-label="Close Chat">&times;</button>
+      </div>
+
+      <!-- Chat Messages Stream Body -->
+      <div id="chatMessagesStream" style="flex:1; padding:20px 8%; overflow-y:auto; display:flex; flex-direction:column; gap:12px; background:var(--bg-surface);">
+        <div style="text-align:center; padding:30px; color:var(--text-muted); font-size:0.85rem;">
+          <i class="fa-solid fa-spinner fa-spin" style="color:var(--primary); font-size:1.5rem; margin-bottom:8px; display:block;"></i>
+          Loading End-to-End Encrypted Messages...
+        </div>
+      </div>
+
+      <!-- Chat Input Footer -->
+      <div style="padding:14px 8%; background:var(--bg-surface-alt); border-top:1.5px solid var(--border-color); flex-shrink:0;">
+        <form id="chatMessageForm" onsubmit="window.handleSendProjectChatMessage(event)" style="display:flex; gap:10px; align-items:center;">
+          <input type="hidden" id="chatModalOrderIdInput">
+          <textarea id="chatMessageInput" rows="1" placeholder="Type an encrypted message for your Lead Engineer / Support Admin..." style="flex:1; padding:12px 14px; border:1.5px solid var(--border-color); border-radius:10px; background:var(--bg-surface); color:var(--text-main); font-size:0.9rem; font-family:inherit; resize:none; max-height:100px; outline:none;" required></textarea>
+          <button type="submit" id="btnSendChatMessage" class="btn btn-primary" style="padding:12px 20px; font-weight:800; border-radius:10px; display:inline-flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-paper-plane"></i> Send
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
 
   <!-- Modal: Project Milestone / Installment Payment Dialog (100% Full Screen Immersive View) -->
   <div id="projectPayModal" class="godoz-modal-backdrop godoz-order-modal-wide" style="display:none;" onclick="if(event.target === this) window.closeProjectPayModal()">

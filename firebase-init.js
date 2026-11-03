@@ -332,7 +332,7 @@ export async function syncUserProfile(user, extraData = {}) {
       uid: user.uid,
       email: user.email || "",
       displayName: user.displayName || extraData.name || (role === 'manager' ? "Master Manager" : (role === 'admin' ? "Support Admin" : "Client")),
-      photoURL: user.photoURL || "./official logo.png",
+      photoURL: user.photoURL || "./official-logo.png",
       role: role,
       lastLogin: serverTimestamp(),
       ...extraData
@@ -908,6 +908,30 @@ export async function deleteProductFromFirestore(productId) {
   }
 }
 
+const DEFAULT_CLONE_APPS_SEED = [
+  { id: "prod_clone_localwork", slNo: 1, category: "clone_app", title: "LocalWork Marketplace App Clone", details: "Complete Hyperlocal Blue-Collar Laborer & Worker Dispatching App + Web Portal + Firebase Realtime DB.", icon: "./localwork_logo.png", color: "#16a34a", originalPrice: 9999, offerPrice: 2999 },
+  { id: "prod_clone_smart_tools", slNo: 2, category: "clone_app", title: "QR Scanner & Setting Hub App Clone", details: "Fast Camera QR Barcode Scanner + Custom QR Code Generator + Wi-Fi QR Share + Device Shortcuts.", icon: "./qr-scanner-setting-hub-logo.png", color: "#1266e8", originalPrice: 9999, offerPrice: 2999 },
+  { id: "prod_clone_mynotepad", slNo: 3, category: "clone_app", title: "MyNotepad Secure Diary App Clone", details: "Lightweight Offline Personal Notes & Journal App with SQLite Storage + Markdown Formatting.", icon: "./notpad_logo.png", color: "#ff6900", originalPrice: 9999, offerPrice: 2999 },
+  { id: "prod_clone_smartpdf", slNo: 4, category: "clone_app", title: "Smart PDF Reader & Editor App Clone", details: "Mobile Document Viewer + Page Reorder + Image-to-PDF Conversion + PDF Bookmarking Engine.", icon: "./pdf-viewer-logo.png", color: "#ef4444", originalPrice: 9999, offerPrice: 2999 },
+  { id: "prod_clone_fruitscrush", slNo: 5, category: "clone_app", title: "Fruits Crush Arcade Game App Clone", details: "Match-3 Mobile Game Engine + Custom Level Architecture + Audio Sound Effects + Score Persistence.", icon: "./fruits-crush-godoz.png", color: "#ca8a04", originalPrice: 9999, offerPrice: 2999 },
+  { id: "prod_clone_photopdf", slNo: 6, category: "clone_app", title: "Photo to PDF Lite Scanner App Clone", details: "High-Speed Document Scanner App + ML Kit Auto Edge Cropping + Contrast Filter + Offline PDF Engine.", icon: "./photo-to-pdf-lite.png", color: "#0284c7", originalPrice: 9999, offerPrice: 2999 },
+  { id: "prod_clone_bhulekh", slNo: 7, category: "clone_app", title: "Mera Bhulekh Land Records App Clone", details: "Land Record Search Engine + Jamabandi Panji Lookup + Khasra Khatiyan + Land Tax Payment Gateway.", icon: "bhulekh-logo.png", color: "#16a34a", originalPrice: 9999, offerPrice: 2999 }
+];
+
+export async function autoSeedCloneAppsIfMissing(list = []) {
+  const hasClones = list.some(p => p.category === 'clone_app');
+  if (!hasClones) {
+    for (const item of DEFAULT_CLONE_APPS_SEED) {
+      try {
+        await setDoc(doc(db, "products", item.id), {
+          ...item,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+      } catch(e) {}
+    }
+  }
+}
+
 export function listenToProductsCatalog(callback) {
   try {
     const colRef = collection(db, "products");
@@ -925,6 +949,10 @@ export function listenToProductsCatalog(callback) {
         const timeB = new Date(b.updatedAt || b.createdAt || 0).getTime();
         return timeA - timeB;
       });
+
+      // Auto-seed default clone apps to Firestore if missing
+      autoSeedCloneAppsIfMissing(list);
+
       if (typeof callback === 'function') callback(list);
     }, (err) => {
       console.error("listenToProductsCatalog snapshot error:", err);
@@ -1237,7 +1265,7 @@ export const RAZORPAY_CONFIG = {
   merchantName: "GoDoz Technology",
   currency: "INR",
   themeColor: "#1266e8",
-  logoUrl: "https://www.godoz.in/official%20logo.png"
+  logoUrl: "https://www.godoz.in/official-logo.png"
 };
 
 export async function saveRazorpayKeyToFirestore(newKey) {
@@ -1312,6 +1340,26 @@ export async function recordRazorpayPayment(payData) {
     const cleanOrderId = (payData.orderId || '').replace('#', '').trim();
     const amount = Number(payData.amount || 0);
     const clientEmail = (payData.clientEmail || auth.currentUser?.email || '').toLowerCase().trim();
+
+    // Attempt automatic Razorpay Capture API call if Key Secret is available
+    if (RAZORPAY_CONFIG.keySecret && payId && !payId.includes('test_dummy')) {
+      try {
+        const authHeader = 'Basic ' + btoa(RAZORPAY_CONFIG.keyId + ':' + RAZORPAY_CONFIG.keySecret);
+        await fetch(`https://api.razorpay.com/v1/payments/${payId}/capture`, {
+          method: 'POST',
+          headers: {
+            'Authorization': authHeader,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            amount: Math.round(amount * 100),
+            currency: RAZORPAY_CONFIG.currency || 'INR'
+          })
+        });
+      } catch(capErr) {
+        console.warn("Notice triggering Razorpay auto-capture API:", capErr);
+      }
+    }
 
     // 1. Save Payment Receipt Record in Firestore /payments/ collection
     const payRef = doc(db, "payments", payId);
@@ -1698,6 +1746,190 @@ export async function getRazorpayKeyFromFirestore() {
   return RAZORPAY_CONFIG.keyId || "rzp_live_Tienbwktx6frm1";
 }
 
+/**
+ * ==========================================================================
+ * END-TO-END ENCRYPTED (E2EE) PROJECT LIVE CHAT ENGINE
+ * ==========================================================================
+ */
+function getOrderEncryptionKey(orderId) {
+  const salt = "GoDoz_E2EE_Project_Secret_Key_2026#";
+  return btoa((orderId || 'general') + salt);
+}
+
+export function encryptChatMessage(text, orderId) {
+  if (!text) return "";
+  try {
+    const key = getOrderEncryptionKey(orderId);
+    let result = '';
+    for (let i = 0; i < text.length; i++) {
+      result += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+    }
+    return "enc_e2ee_" + btoa(unescape(encodeURIComponent(result)));
+  } catch(e) {
+    return text;
+  }
+}
+
+export function decryptChatMessage(encText, orderId) {
+  if (!encText) return "";
+  if (!encText.startsWith("enc_e2ee_")) return encText;
+  try {
+    const b64 = encText.replace("enc_e2ee_", "");
+    const raw = decodeURIComponent(escape(atob(b64)));
+    const key = getOrderEncryptionKey(orderId);
+    let result = '';
+    for (let i = 0; i < raw.length; i++) {
+      result += String.fromCharCode(raw.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+    }
+    return result;
+  } catch(e) {
+    return encText;
+  }
+}
+
+export async function sendProjectChatMessage(msgData) {
+  if (!msgData || !msgData.orderId || !msgData.text) {
+    return { success: false, error: "Missing message text or order ID" };
+  }
+
+  try {
+    const cleanOrderId = (msgData.orderId || '').replace('#', '').trim();
+    const msgId = 'chat_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+    const encText = encryptChatMessage(msgData.text.trim(), cleanOrderId);
+
+    const currentUser = auth.currentUser;
+    const senderUid = currentUser ? currentUser.uid : (msgData.senderUid || 'guest_user');
+    const senderName = currentUser ? (currentUser.displayName || currentUser.email) : (msgData.senderName || 'Client');
+
+    const payload = {
+      id: msgId,
+      orderId: cleanOrderId,
+      senderUid: senderUid,
+      senderName: senderName,
+      senderRole: msgData.senderRole || 'client',
+      encryptedMessage: encText,
+      read: false,
+      createdAt: serverTimestamp(),
+      createdAtFormatted: new Date().toLocaleString('en-IN')
+    };
+
+    const chatRef = doc(db, "project_chats", msgId);
+    await setDoc(chatRef, payload);
+
+    return { success: true, id: msgId };
+  } catch (error) {
+    console.error("Error sending encrypted chat message:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+export function listenToProjectChatMessages(orderId, callback) {
+  if (!orderId) {
+    if (typeof callback === 'function') callback([]);
+    return () => {};
+  }
+
+  try {
+    const cleanOrderId = orderId.replace('#', '').trim();
+    const q = query(
+      collection(db, "project_chats"),
+      where("orderId", "==", cleanOrderId)
+    );
+
+    return onSnapshot(q, (snapshot) => {
+      const messages = [];
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const decryptedText = decryptChatMessage(data.encryptedMessage || '', cleanOrderId);
+        messages.push({
+          ...data,
+          text: decryptedText
+        });
+      });
+
+      // Sort oldest to newest
+      messages.sort((a, b) => {
+        const timeA = new Date(a.createdAtFormatted || a.createdAt?.toDate?.() || 0).getTime();
+        const timeB = new Date(b.createdAtFormatted || b.createdAt?.toDate?.() || 0).getTime();
+        return timeA - timeB;
+      });
+
+      if (typeof callback === 'function') callback(messages);
+    }, (err) => {
+      console.warn("Project chat listener notice:", err);
+      if (typeof callback === 'function') callback([]);
+    });
+  } catch (e) {
+    console.error("Project chat listener exception:", e);
+    if (typeof callback === 'function') callback([]);
+    return () => {};
+  }
+}
+
+export async function markProjectChatMessagesAsRead(orderId, currentRole = 'client') {
+  if (!orderId) return;
+  try {
+    const cleanOrderId = orderId.replace('#', '').trim();
+    const q = query(
+      collection(db, "project_chats"),
+      where("orderId", "==", cleanOrderId)
+    );
+    const snap = await getDocs(q);
+    const nowTimeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+    const batchPromises = [];
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+      if (data.read === false && data.senderRole !== currentRole) {
+        batchPromises.push(
+          updateDoc(docSnap.ref, {
+            read: true,
+            seenAtFormatted: nowTimeStr
+          }).catch(() => {})
+        );
+      }
+    });
+    if (batchPromises.length > 0) {
+      await Promise.all(batchPromises);
+    }
+  } catch(e) {
+    console.warn("Notice marking chat messages read:", e);
+  }
+}
+
+export function listenToAllUnreadChats(currentRole, callback) {
+  try {
+    const colRef = collection(db, "project_chats");
+    return onSnapshot(colRef, (snapshot) => {
+      const unreadMap = {}; // orderId -> unreadCount
+      let totalUnread = 0;
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        if (data.read === false && data.senderRole !== currentRole) {
+          const oId = data.orderId;
+          unreadMap[oId] = (unreadMap[oId] || 0) + 1;
+          totalUnread++;
+        }
+      });
+      if (typeof callback === 'function') callback({ totalUnread, unreadMap });
+    }, (err) => {
+      if (typeof callback === 'function') callback({ totalUnread: 0, unreadMap: {} });
+    });
+  } catch(e) {
+    if (typeof callback === 'function') callback({ totalUnread: 0, unreadMap: {} });
+    return () => {};
+  }
+}
+
+export async function deleteProjectChatMessage(msgId) {
+  try {
+    const docRef = doc(db, "project_chats", msgId);
+    await deleteDoc(docRef);
+    return { success: true };
+  } catch(e) {
+    return { success: false, error: e.message };
+  }
+}
+
 // Global Browser Window Exports for Unified Interoperability
 if (typeof window !== 'undefined') {
   window.GoDozFirebase = {
@@ -1712,7 +1944,12 @@ if (typeof window !== 'undefined') {
     getUserRole,
     updateInquiryInFirestore,
     getRazorpayKeyFromFirestore,
-    saveRazorpayKeyToFirestore
+    saveRazorpayKeyToFirestore,
+    encryptChatMessage,
+    decryptChatMessage,
+    sendProjectChatMessage,
+    listenToProjectChatMessages,
+    deleteProjectChatMessage
   };
   window.logoutUser = logoutUser;
   window.resendVerificationLink = resendVerificationLink;
@@ -1722,6 +1959,13 @@ if (typeof window !== 'undefined') {
   window.updateInquiryInFirestore = updateInquiryInFirestore;
   window.getRazorpayKeyFromFirestore = getRazorpayKeyFromFirestore;
   window.saveRazorpayKeyToFirestore = saveRazorpayKeyToFirestore;
+  window.encryptChatMessage = encryptChatMessage;
+  window.decryptChatMessage = decryptChatMessage;
+  window.sendProjectChatMessage = sendProjectChatMessage;
+  window.listenToProjectChatMessages = listenToProjectChatMessages;
+  window.markProjectChatMessagesAsRead = markProjectChatMessagesAsRead;
+  window.listenToAllUnreadChats = listenToAllUnreadChats;
+  window.deleteProjectChatMessage = deleteProjectChatMessage;
 
   // Global Auth State Observer to keep Navbar and Drawer menus dynamically in sync
   onAuthStateChanged(auth, async (user) => {

@@ -4,7 +4,7 @@
  * Domain: https://www.godoz.in
  */
 
-const CACHE_NAME = 'godoz-cache-v2.0';
+const CACHE_NAME = 'godoz-cache-v18.0';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -18,7 +18,7 @@ const STATIC_ASSETS = [
   './style.css',
   './script.js',
   './firebase-init.js',
-  './official logo.png',
+  './official-logo.png',
   './manifest.json'
 ];
 
